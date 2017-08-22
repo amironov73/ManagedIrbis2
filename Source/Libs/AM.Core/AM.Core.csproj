@@ -10,6 +10,15 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
+    <Version>2.0.0</Version>
+    <Authors>Alexey Mironov</Authors>
+    <ApplicationIcon>BlueBook.ico</ApplicationIcon>
+    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <PackageProjectUrl>https://arsmagna.ru</PackageProjectUrl>
+    <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
