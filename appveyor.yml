@@ -1,0 +1,25 @@
+version: 2.0.0.{build}
+configuration: Debug
+image: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf true
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.cs'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+
+nuget:
+  account_feed: false
+  project_feed: false
+
+before_build:
+- cmd: nuget restore Source\ManagedIrbis2.sln
+
+build:
+  project: Source\ManagedIrbis2.sln
+  publish_nuget: false
+  parallel: true
+  verbosity: minimal
