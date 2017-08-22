@@ -19,6 +19,7 @@
     <PackageProjectUrl>https://arsmagna.ru</PackageProjectUrl>
     <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,7 +28,6 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
-    <PackageReference Include="MoonSharp" Version="2.0.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="YamlDotNet.Signed" Version="4.2.1" />
   </ItemGroup>

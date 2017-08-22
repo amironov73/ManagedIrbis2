@@ -11,8 +11,6 @@
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace AM
@@ -21,7 +19,6 @@ namespace AM
     /// Empty array shared instance to reduce memory traffic.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public static class EmptyArray<T>
     {
         #region Fields
