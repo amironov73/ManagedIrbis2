@@ -23,3 +23,9 @@ build:
   publish_nuget: false
   parallel: true
   verbosity: minimal
+
+artifacts:
+  - path: *.dll
+    name: ManagedIrbis2
+  - path: *.nupkg
+    name: Nuget
