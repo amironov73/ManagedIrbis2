@@ -25,7 +25,7 @@ build:
   verbosity: minimal
 
 artifacts:
-  - path: '*.dll'
+  - path: 'Source\Libs\**\*.dll'
     name: Binaries
-  - path: '*.nupkg'
+  - path: '**\*.nupkg'
     name: Nuget
