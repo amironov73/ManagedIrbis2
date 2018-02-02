@@ -30,5 +30,5 @@ after_build:
 artifacts:
   - path: Binaries
     name: ManagedIrbis2
-  - path: '**\*.nupkg'
+  - path: 'Binaries\DebugCore\**\*.nupkg'
     name: Nuget
