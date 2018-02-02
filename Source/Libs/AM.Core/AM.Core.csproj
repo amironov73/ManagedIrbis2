@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -29,6 +30,13 @@
     <DocumentationFile>bin\Debug\netstandard2.0\AM.Core.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>bin\Release\netstandard2.0\AM.Core.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
@@ -36,7 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AM\IO\" />
+    <Folder Include="AM" />
+    <Folder Include="Properties" />
   </ItemGroup>
 
 </Project>
