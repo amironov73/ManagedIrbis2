@@ -24,8 +24,11 @@ build:
   parallel: true
   verbosity: minimal
 
+after_build:
+- cmd: compile.cmd
+
 artifacts:
-  - path: Source\Libs\ManagedIrbis2\bin\Debug\netstandard2.0
-    name: Binaries
+  - path: Binaries
+    name: ManagedIrbis2
   - path: '**\*.nupkg'
     name: Nuget
