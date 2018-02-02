@@ -16,7 +16,7 @@ nuget:
   project_feed: false
 
 before_build:
-- cmd: nuget restore Source\ManagedIrbis2.sln
+- cmd: nuget restore Source\ManagedIrbis.sln
 
 build:
   project: Source\ManagedIrbis.sln
