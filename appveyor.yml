@@ -19,7 +19,7 @@ before_build:
 - cmd: nuget restore Source\ManagedIrbis2.sln
 
 build:
-  project: Source\ManagedIrbis2.sln
+  project: Source\ManagedIrbis.sln
   publish_nuget: false
   parallel: true
   verbosity: minimal
