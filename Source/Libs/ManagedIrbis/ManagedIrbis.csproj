@@ -22,7 +22,7 @@
     <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
     <PackageProjectUrl>https://arsmagna.ru</PackageProjectUrl>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly Condition="'$(OS)' != 'Windows_NT'">true</SignAssembly>
     <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
