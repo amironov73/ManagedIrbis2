@@ -2,6 +2,6 @@ language: csharp
 mono: none
 dotnet: 2.0.0
 script:
-  - dotnet restore
+  - dotnet restore ./Source/
   - dotnet build ./Source/
   - dotnet test --no-build ./Source/Tests/UnitTests/
