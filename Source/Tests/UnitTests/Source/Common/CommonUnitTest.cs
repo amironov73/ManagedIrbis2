@@ -52,7 +52,7 @@ namespace UnitTests.Common
                 string result = Path.Combine
                     (
                         UnitTestDllPath,
-                        @"..\..\..\..\..\..\TestData"
+                        @"../../../../../../TestData"
                     );
                 result = Path.GetFullPath(result);
 
