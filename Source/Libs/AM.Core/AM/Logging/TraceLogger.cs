@@ -29,9 +29,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Debug" />
         public void Debug
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -41,9 +41,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Error" />
         public void Error
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -53,9 +53,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Fatal" />
         public void Fatal
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -65,9 +65,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Info" />
         public void Info
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -77,9 +77,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Trace" />
         public void Trace
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
@@ -89,9 +89,9 @@ namespace AM.Logging
 
         /// <inheritdoc cref="IAmLogger.Warn" />
         public void Warn
-        (
-            string text
-        )
+            (
+                string text
+            )
         {
             if (!string.IsNullOrEmpty(text))
             {
