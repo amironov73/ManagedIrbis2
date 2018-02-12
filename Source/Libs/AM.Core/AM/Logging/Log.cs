@@ -10,7 +10,7 @@
 #region Using directives
 
 using System;
-
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 #endregion
@@ -48,6 +48,7 @@ namespace AM.Logging
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForConsoleApplication()
         {
             TeeLogger root = new TeeLogger();
@@ -65,10 +66,9 @@ namespace AM.Logging
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForServiceApplication()
         {
-#if CLASSIC || DESKTOP
-
             TeeLogger root = new TeeLogger();
             Logger = root;
             root.Loggers.AddRange
@@ -78,17 +78,14 @@ namespace AM.Logging
                         new TraceLogger()
                     }
                 );
-
-#endif
         }
 
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForWindowedApplication()
         {
-#if CLASSIC || DESKTOP
-
             TeeLogger root = new TeeLogger();
             Logger = root;
             root.Loggers.AddRange
@@ -98,8 +95,6 @@ namespace AM.Logging
                         new TraceLogger()
                     }
                 );
-
-#endif
         }
 
         /// <summary>
@@ -110,17 +105,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Debug(text);
-                }
+                Logger?.Debug(text);
             }
         }
 
@@ -132,17 +124,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Error(text);
-                }
+                Logger?.Error(text);
             }
         }
 
@@ -154,17 +143,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Fatal(text);
-                }
+                Logger?.Fatal(text);
             }
         }
 
@@ -176,17 +162,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Info(text);
-                }
+                Logger?.Info(text);
             }
         }
 
@@ -218,17 +201,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Trace(text);
-                }
+                Logger?.Trace(text);
             }
         }
 
@@ -260,17 +240,14 @@ namespace AM.Logging
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return;
             }
 
             lock (SyncRoot)
             {
-                if (!ReferenceEquals(Logger, null))
-                {
-                    Logger.Warn(text);
-                }
+                Logger?.Warn(text);
             }
         }
 

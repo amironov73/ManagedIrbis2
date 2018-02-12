@@ -9,13 +9,7 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -30,6 +24,7 @@ namespace AM.Logging
     /// <see cref="SysDebug.WriteLine(string)"/>
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public sealed class DebugLogger
         : IAmLogger
     {

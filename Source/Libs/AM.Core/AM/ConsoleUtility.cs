@@ -10,6 +10,7 @@
 #region Using directives
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 
@@ -25,6 +26,7 @@ namespace AM
     /// Useful routines for console manipulation.
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public static class ConsoleUtility
     {
         /// <summary>

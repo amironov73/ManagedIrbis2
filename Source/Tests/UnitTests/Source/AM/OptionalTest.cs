@@ -88,17 +88,17 @@ namespace UnitTests.AM
             Assert.AreEqual(1, third.GetHashCode());
         }
 
-        //[TestMethod]
-        //public void Optional_ToString_1()
-        //{
-        //    Optional<int> first = 1;
-        //    Assert.AreEqual("1", first.ToString());
+        [TestMethod]
+        public void Optional_ToString_1()
+        {
+            Optional<int> first = 1;
+            Assert.AreEqual("1", first.ToString());
 
-        //    Optional<int> second = new Optional<int>();
-        //    Assert.AreEqual("(not set)", second.ToString());
+            Optional<int> second = new Optional<int>();
+            Assert.AreEqual("(not set)", second.ToString());
 
-        //    Optional<string> third = new Optional<string>(null);
-        //    Assert.AreEqual("(null)", third.ToString());
-        //}
+            Optional<string> third = new Optional<string>(null);
+            Assert.AreEqual("(null)", third.ToString());
+        }
     }
 }

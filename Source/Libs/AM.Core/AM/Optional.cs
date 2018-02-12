@@ -153,11 +153,12 @@ namespace AM
         }
 
         /// <inheritdoc cref="object.ToString" />
+        [Pure]
         public override string ToString()
         {
             if (!HasValue)
             {
-                return "(null)";
+                return "(not set)";
             }
 
             if (ReferenceEquals(Value, null))

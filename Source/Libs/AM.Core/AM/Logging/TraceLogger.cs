@@ -9,6 +9,8 @@
 
 #region Using directives
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 using SysTrace=System.Diagnostics.Trace;
@@ -22,6 +24,7 @@ namespace AM.Logging
     /// <see cref="System.Diagnostics.Trace.WriteLine(string)"/>
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public sealed class TraceLogger
         : IAmLogger
     {

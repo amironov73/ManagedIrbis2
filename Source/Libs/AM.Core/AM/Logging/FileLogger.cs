@@ -11,7 +11,6 @@
 #region Using directives
 
 using System.IO;
-using System.Text;
 
 using JetBrains.Annotations;
 

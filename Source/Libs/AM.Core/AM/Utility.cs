@@ -21,6 +21,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable InvokeAsExtensionMethod
+
 namespace AM
 {
     /// <summary>
@@ -36,6 +38,7 @@ namespace AM
         /// </summary>
         /// <returns>Для <c>null</c> возвращается "(null)".
         /// </returns>
+        [Pure]
         [NotNull]
         public static string ToVisibleString<T>
             (
@@ -49,7 +52,7 @@ namespace AM
 
             string result = value.ToString();
 
-            return result.ToVisibleString();
+            return StringUtility.ToVisibleString(result);
         }
 
         #endregion

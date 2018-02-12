@@ -30,21 +30,23 @@ namespace AM.Text
         #region Properties
 
         /// <summary>
-        /// Default encoding.
+        /// Gets the CP866 (cyrillic) <see cref="Encoding"/>.
         /// </summary>
-        /// <remarks>
-        /// Reduce if/else preprocessing.
-        /// </remarks>
         [NotNull]
-        public static Encoding DefaultEncoding
+        public static Encoding Cp866
         {
+            [DebuggerStepThrough]
             get
             {
-                return Encoding.GetEncoding(0);
+                if (ReferenceEquals(_cp866, null))
+                {
+                    RegisterRequiredProviders();
+                    _cp866 = Encoding.GetEncoding(866);
+                }
+
+                return _cp866;
             }
         }
-
-        private static Encoding _windows1251;
 
         /// <summary>
         /// Gets the Windows-1251 (cyrillic) <see cref="Encoding"/>.
@@ -57,12 +59,19 @@ namespace AM.Text
             {
                 if (ReferenceEquals(_windows1251, null))
                 {
+                    RegisterRequiredProviders();
                     _windows1251 = Encoding.GetEncoding(1251);
                 }
 
                 return _windows1251;
             }
         }
+
+        #endregion
+
+        #region Private members
+
+        private static Encoding _cp866, _windows1251;
 
         #endregion
 
@@ -88,34 +97,17 @@ namespace AM.Text
             }
 
             byte[] bytes = toEncoding.GetBytes(text);
-            string result = GetString
-                (
-                    fromEncoding,
-                    bytes
-                );
+            string result = fromEncoding.GetString(bytes);
 
             return result;
         }
 
         /// <summary>
-        /// Get string from bytes.
+        /// Register required encoding providers.
         /// </summary>
-        /// <remarks>
-        /// Reduce if/else preprocessing.
-        /// </remarks>
-        [NotNull]
-        public static string GetString
-            (
-                [NotNull] Encoding encoding,
-                [NotNull] byte[] bytes
-            )
+        public static void RegisterRequiredProviders()
         {
-            Sure.NotNull(encoding, "encoding");
-            Sure.NotNull(bytes, "bytes");
-
-            string result = encoding.GetString(bytes);
-
-            return result;
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         #endregion

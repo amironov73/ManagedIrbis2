@@ -158,6 +158,7 @@ namespace AM
         #region Object members
 
         /// <inheritdoc cref="object.ToString" />
+        [Pure]
         public override string ToString()
         {
             return _target.ToVisibleString();

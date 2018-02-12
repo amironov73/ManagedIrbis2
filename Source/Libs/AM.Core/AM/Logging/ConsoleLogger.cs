@@ -10,6 +10,7 @@
 #region Using directives
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using JetBrains.Annotations;
 
@@ -21,6 +22,7 @@ namespace AM.Logging
     /// 
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public sealed class ConsoleLogger
         : IAmLogger
     {

@@ -61,6 +61,7 @@ namespace AM
         /// <summary>
         /// Сравнивает две строки с точностью до регистра символов.
         /// </summary>
+        [Pure]
         public static bool CompareNoCase
             (
                 [CanBeNull] string left,
@@ -78,6 +79,7 @@ namespace AM
         /// <summary>
         /// Сравнивает два символа с точностью до регистра.
         /// </summary>
+        [Pure]
         public static bool CompareNoCase
             (
                 char left,
@@ -91,18 +93,19 @@ namespace AM
         /// <summary>
         /// Состоит ли строка только из указанного символа.
         /// </summary>
+        [Pure]
         public static bool ConsistOf
             (
-                [CanBeNull] this string value,
+                [CanBeNull] this string text,
                 char c
             )
         {
-            if (string.IsNullOrEmpty(value))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return false;
             }
 
-            foreach (char c1 in value)
+            foreach (char c1 in text)
             {
                 if (c1 != c)
                 {
@@ -116,18 +119,19 @@ namespace AM
         /// <summary>
         /// Состоит ли строка только из указанных символов.
         /// </summary>
+        [Pure]
         public static bool ConsistOf
             (
-                [CanBeNull] this string value,
+                [CanBeNull] this string text,
                 params char[] array
             )
         {
-            if (string.IsNullOrEmpty(value))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return false;
             }
 
-            foreach (char c in value)
+            foreach (char c in text)
             {
                 if (Array.IndexOf(array, c) < 0)
                 {
@@ -142,6 +146,7 @@ namespace AM
         /// Превращает строку в видимую.
         /// Пример: "(null)".
         /// </summary>
+        [Pure]
         [NotNull]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToVisibleString

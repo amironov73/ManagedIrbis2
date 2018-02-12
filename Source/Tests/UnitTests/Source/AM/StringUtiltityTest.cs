@@ -180,6 +180,14 @@ namespace UnitTests.AM
         //    Assert.AreEqual(0, "aga".CountSubstrings(""));
         //}
 
+        [TestMethod]
+        public void StringUtility_EmptyArray_1()
+        {
+            string[] array = StringUtility.EmptyArray;
+            Assert.IsNotNull(array);
+            Assert.AreEqual(0, array.Length);
+        }
+
         //[TestMethod]
         //public void StringUtility_EmptyToNull_1()
         //{

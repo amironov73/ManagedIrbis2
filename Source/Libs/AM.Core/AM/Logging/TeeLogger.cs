@@ -49,14 +49,6 @@ namespace AM.Logging
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region IAmLogger members
 
         /// <inheritdoc cref="IAmLogger.Debug" />

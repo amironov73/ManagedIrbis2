@@ -9,6 +9,8 @@
 
 #region Using directives
 
+using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -44,6 +46,7 @@ namespace AM
         /// <summary>
         /// Default constructor.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         protected BinaryAttachment()
         {
         }
@@ -68,13 +71,10 @@ namespace AM
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
         #region Public methods
 
         /// <inheritdoc cref="object.ToString" />
+        [Pure]
         public override string ToString()
         {
             string result = string.Format
