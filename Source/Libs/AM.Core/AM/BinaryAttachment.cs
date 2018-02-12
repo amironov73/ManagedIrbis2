@@ -77,12 +77,7 @@ namespace AM
         [Pure]
         public override string ToString()
         {
-            string result = string.Format
-                (
-                    "{0}: {1} bytes",
-                    Name,
-                    Content.Length
-                );
+            string result = $"{Name}: {Content.Length} bytes";
 
             return result;
         }

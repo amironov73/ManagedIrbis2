@@ -85,7 +85,7 @@ namespace AM.Collections
                 [NotNull] IEnumerable<T> range
             )
         {
-            Sure.NotNull(range, "range");
+            Sure.NotNull(range, nameof(range));
 
             foreach (T item in range)
             {
@@ -104,7 +104,7 @@ namespace AM.Collections
                 [NotNull] T[] array
             )
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             AddCapacity(array.Length);
             foreach (T item in array)
@@ -124,7 +124,7 @@ namespace AM.Collections
                 [NotNull] IList<T> list
             )
         {
-            Sure.NotNull(list, "list");
+            Sure.NotNull(list, nameof(list));
 
             AddCapacity(list.Count);
             foreach (T item in list)
@@ -175,7 +175,7 @@ namespace AM.Collections
                 T item
             )
         {
-            Sure.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             base.InsertItem(index, item);
         }
@@ -187,7 +187,7 @@ namespace AM.Collections
                 T item
             )
         {
-            Sure.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             base.SetItem(index, item);
         }

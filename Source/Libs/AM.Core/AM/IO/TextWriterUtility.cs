@@ -36,8 +36,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             StreamWriter result = new StreamWriter
                 (
@@ -58,8 +58,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             StreamWriter result = new StreamWriter
                 (

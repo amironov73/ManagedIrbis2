@@ -45,7 +45,7 @@ namespace AM.Logging
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             FileName = fileName;
         }

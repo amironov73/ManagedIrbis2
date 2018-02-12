@@ -38,8 +38,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             StreamReader result = new StreamReader
                 (
@@ -59,7 +59,7 @@ namespace AM.IO
                 [NotNull] this TextReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             string result = reader.ReadLine();
             if (ReferenceEquals(result, null))

@@ -38,8 +38,8 @@ namespace AM
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             StreamWriter stdOutput = TextWriterUtility.Create
                 (
@@ -59,7 +59,7 @@ namespace AM
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(encoding, nameof(encoding));
 
             StreamWriter stdOutput = new StreamWriter
                 (
@@ -104,7 +104,7 @@ namespace AM
                 [NotNull] string codePage
             )
         {
-            Sure.NotNullNorEmpty(codePage, "codePage");
+            Sure.NotNullNorEmpty(codePage, nameof(codePage));
 
             SetOutputCodePage
                 (
