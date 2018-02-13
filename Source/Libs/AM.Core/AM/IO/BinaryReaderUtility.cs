@@ -41,7 +41,7 @@ namespace AM.IO
             )
             where T: class, IHandmadeSerializable, new ()
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             T[] array = reader.ReadArray<T>();
             NonNullCollection<T> result = new NonNullCollection<T>();
@@ -59,7 +59,7 @@ namespace AM.IO
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int count = reader.ReadPackedInt32();
             T[] result = new T[count];
@@ -82,7 +82,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int length = reader.ReadPackedInt32();
             byte[] result = new byte[length];
@@ -102,8 +102,8 @@ namespace AM.IO
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, "reader");
-            Sure.NotNull(collection, "collection");
+            Sure.NotNull(reader, nameof(reader));
+            Sure.NotNull(collection, nameof(collection));
 
             collection.Clear();
 
@@ -126,25 +126,11 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
-
-#if WINMOBILE || PocketPC || SILVERLIGHT
-
-            Log.Error
-                (
-                    "BinaryReaderUtility::ReadDateTime: "
-                    + "not implemented"
-                );
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNull(reader, nameof(reader));
 
             DateTime result = DateTime.FromBinary(reader.ReadInt64());
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -156,19 +142,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
-
-#if WINMOBILE || PocketPC || SILVERLIGHT
-
-            Log.Error
-                (
-                    "BinaryReaderUtility::ReadDateTime: "
-                    + "not implemented"
-                );
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNull(reader, nameof(reader));
 
             DateTime? result = null;
 
@@ -179,8 +153,6 @@ namespace AM.IO
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -192,7 +164,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int length = reader.ReadPackedInt32();
             short[] result = new short[length];
@@ -213,7 +185,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int length = reader.ReadPackedInt32();
             int[] result = new int[length];
@@ -234,7 +206,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int length = reader.ReadPackedInt32();
             long[] result = new long[length];
@@ -256,7 +228,7 @@ namespace AM.IO
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int count = reader.ReadPackedInt32();
             List<T> result = new List<T>(count);
@@ -272,31 +244,6 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Reads list of items from the stream.
-        /// </summary>
-        [NotNull]
-        public static BinaryReader ReadList<T>
-            (
-                [NotNull] this BinaryReader reader,
-                [NotNull] List<T> list 
-            )
-            where T : IHandmadeSerializable, new()
-        {
-            Sure.NotNull(reader, "reader");
-            Sure.NotNull(list, "list");
-
-            int count = reader.ReadPackedInt32();
-            for (int i = 0; i < count; i++)
-            {
-                T item = new T();
-                item.RestoreFromStream(reader);
-                list.Add(item);
-            }
-
-            return reader;
-        }
-
-        /// <summary>
         /// Read nullable byte.
         /// </summary>
         [CanBeNull]
@@ -305,7 +252,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -322,7 +269,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -339,27 +286,13 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
-
-#if SILVERLIGHT
-
-            Log.Error
-                (
-                    "BinaryReaderUtility::ReadNullableDecimal: "
-                    + "not implemented"
-                );
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
 
             return flag
                 ? (decimal?)reader.ReadDecimal()
                 : null;
-
-#endif
         }
 
         /// <summary>
@@ -371,7 +304,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -388,7 +321,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -405,7 +338,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool isNull = !reader.ReadBoolean();
             if (isNull)
@@ -433,7 +366,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -450,7 +383,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool flag = reader.ReadBoolean();
             return flag
@@ -467,7 +400,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             string[] result = null;
             if (reader.ReadBoolean())
@@ -493,7 +426,7 @@ namespace AM.IO
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             T[] result = null;
 
@@ -522,28 +455,31 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            int count = 0;
-            int shift = 0;
-            byte b;
-            do
+            unchecked
             {
-                if (shift == 5*7)
+                int count = 0;
+                int shift = 0;
+                byte b;
+                do
                 {
-                    Log.Error
-                        (
-                            "BinaryReaderUtility::ReadPackedInt: "
-                            + "value too long"
-                        );
+                    if (shift == 5 * 7)
+                    {
+                        Log.Error
+                            (
+                                "BinaryReaderUtility::ReadPackedInt: "
+                                + "value too long"
+                            );
 
-                    throw new FormatException();
-                }
+                        throw new FormatException();
+                    }
 
-                b = reader.ReadByte();
-                count |= (b & 0x7F) << shift; //-V3134
-                shift += 7;
-            } while ((b & 0x80) != 0);
+                    b = reader.ReadByte();
+                    count |= (b & 0x7F) << shift; //-V3134
+                    shift += 7;
+                } while ((b & 0x80) != 0);
 
-            return count;
+                return count;
+            }
         }
 
         /// <summary>
@@ -557,17 +493,20 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            long count = 0;
-            int shift = 0;
-            long b;
-            do
+            unchecked
             {
-                b = reader.ReadByte();
-                count |= (b & 0x7F) << shift;
-                shift += 7;
-            } while ((b & 0x80) != 0);
+                long count = 0;
+                int shift = 0;
+                long b;
+                do
+                {
+                    b = reader.ReadByte();
+                    count |= (b & 0x7F) << shift;
+                    shift += 7;
+                } while ((b & 0x80) != 0);
 
-            return count;
+                return count;
+            }
         }
 
         /// <summary>
@@ -580,8 +519,8 @@ namespace AM.IO
                 int count
             )
         {
-            Sure.NotNull(reader, "reader");
-            Sure.Positive(count, "count");
+            Sure.NotNull(reader, nameof(reader));
+            Sure.Positive(count, nameof(count));
 
             char[] characters = reader.ReadChars(count);
             string result = new string(characters);
@@ -598,7 +537,7 @@ namespace AM.IO
                 [NotNull] this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             int length = reader.ReadPackedInt32();
             string[] result = new string[length];

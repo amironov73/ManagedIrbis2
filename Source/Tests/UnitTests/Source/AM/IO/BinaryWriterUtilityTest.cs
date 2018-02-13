@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AM.Collections;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using AM.Collections;
 using AM.IO;
 using AM.Runtime;
 
