@@ -20,6 +20,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable ForCanBeConvertedToForeach
+
 namespace AM.IO
 {
     /// <summary>
@@ -41,7 +43,7 @@ namespace AM.IO
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.WriteArray(collection.ToArray());
 
@@ -58,7 +60,7 @@ namespace AM.IO
                 [CanBeNull] byte? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -83,7 +85,7 @@ namespace AM.IO
                 [CanBeNull] short? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -108,7 +110,7 @@ namespace AM.IO
                 [CanBeNull] int? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -133,7 +135,7 @@ namespace AM.IO
                 [CanBeNull] long? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -158,7 +160,7 @@ namespace AM.IO
                 [CanBeNull] decimal? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -183,26 +185,12 @@ namespace AM.IO
                 DateTime value
             )
         {
-            Sure.NotNull(writer, "writer");
-
-#if WINMOBILE || PocketPC || SILVERLIGHT
-
-            Log.Error
-                (
-                    "BinaryWriterUtility::Write(DateTime): "
-                    + "not implemented"
-                );
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNull(writer, nameof(writer));
 
             long ticks = value.ToBinary();
             writer.Write(ticks);
 
             return writer;
-
-#endif
         }
 
         /// <summary>
@@ -215,21 +203,9 @@ namespace AM.IO
                 [CanBeNull] DateTime? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
-#if WINMOBILE || PocketPC || SILVERLIGHT
-
-            Log.Error
-                (
-                    "BinaryWriterUtility::Write(DateTime?): "
-                    + "not implemented"
-                );
-
-            throw new NotImplementedException();
-
-#else
-
-            if (!ReferenceEquals(value, null))
+            if (value != null)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -240,8 +216,6 @@ namespace AM.IO
             }
 
             return writer;
-
-#endif
         }
 
         /// <summary>
@@ -254,7 +228,7 @@ namespace AM.IO
                 [CanBeNull] double? value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -279,8 +253,8 @@ namespace AM.IO
                 [NotNull] byte[] array
             )
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "array");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             writer.Write(array);
@@ -298,8 +272,8 @@ namespace AM.IO
                 [NotNull] short[] array
             )
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "array");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             for (int i = 0; i < array.Length; i++)
@@ -320,8 +294,8 @@ namespace AM.IO
                 [NotNull] int[] array
             )
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "writer");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             for (int i = 0; i < array.Length; i++)
@@ -342,8 +316,8 @@ namespace AM.IO
                 [NotNull] long[] array
             )
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "array");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             for (int i = 0; i < array.Length; i++)
@@ -364,8 +338,8 @@ namespace AM.IO
                 [NotNull] string[] array
             )
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "array");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             for (int i = 0; i < array.Length; i++)
@@ -387,37 +361,13 @@ namespace AM.IO
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(array, "array");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(array, nameof(array));
 
             writer.WritePackedInt32(array.Length);
             for (int i = 0; i < array.Length; i++)
             {
                 T item = array[i];
-                item.SaveToStream(writer);
-            }
-
-            return writer;
-        }
-
-        /// <summary>
-        /// Writes the collection to the stream.
-        /// </summary>
-        [NotNull]
-        public static BinaryWriter WriteCollection<T>
-            (
-                [NotNull] this BinaryWriter writer,
-                [NotNull][ItemNotNull] NonNullCollection<T> collection
-            )
-            where T : class, IHandmadeSerializable, new()
-        {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(collection, "collection");
-
-            writer.WritePackedInt32(collection.Count);
-            for (int i = 0; i < collection.Count; i++)
-            {
-                T item = collection[i];
                 item.SaveToStream(writer);
             }
 
@@ -435,8 +385,8 @@ namespace AM.IO
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, "writer");
-            Sure.NotNull(list, "list");
+            Sure.NotNull(writer, nameof(writer));
+            Sure.NotNull(list, nameof(list));
 
             writer.WritePackedInt32(list.Count);
             for (int i = 0; i < list.Count; i++)
@@ -458,7 +408,7 @@ namespace AM.IO
                 [CanBeNull] string value
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (value != null)
             {
@@ -483,7 +433,7 @@ namespace AM.IO
                 [CanBeNull] int[] array
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (ReferenceEquals(array, null))
             {
@@ -512,7 +462,7 @@ namespace AM.IO
                 [CanBeNull] string[] array
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (ReferenceEquals(array, null))
             {
@@ -542,7 +492,7 @@ namespace AM.IO
             )
             where T : IHandmadeSerializable
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (ReferenceEquals(array, null))
             {
