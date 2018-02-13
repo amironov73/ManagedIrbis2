@@ -143,6 +143,185 @@ namespace AM
         }
 
         /// <summary>
+        /// Mangle given text with the escape character.
+        /// </summary>
+        [CanBeNull]
+        public static string Mangle
+            (
+                [CanBeNull] string text,
+                char escape,
+                [NotNull] char[] badCharacters
+            )
+        {
+            if (ReferenceEquals(text, null) || text.Length == 0)
+            {
+                return text;
+            }
+
+            StringBuilder result = new StringBuilder(text.Length);
+
+            foreach (char c in text)
+            {
+                if (c.OneOf(badCharacters)
+                    || c == escape)
+                {
+                    result.Append(escape);
+                }
+                result.Append(c);
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Проверяет, является ли искомая строка одной
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомая строка.</param>
+        /// <param name="many">Источник проверяемых строк.</param>
+        /// <returns>Найдена ли искомая строка.</returns>
+        public static bool OneOf
+            (
+                [CanBeNull] this string one,
+                [NotNull] IEnumerable<string> many
+            )
+        {
+            foreach (string s in many)
+            {
+                if (one.SameString(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, является ли искомая строка одной
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомая строка.</param>
+        /// <param name="many">Массив проверяемых строк.</param>
+        /// <returns>Найдена ли искомая строка.</returns>
+        public static bool OneOf
+            (
+                [CanBeNull] this string one,
+                params string[] many
+            )
+        {
+            foreach (string s in many)
+            {
+                if (one.SameString(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, является ли искомый символ одним
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомый символ.</param>
+        /// <param name="many">Массив проверяемых символов.</param>
+        /// <returns>Найден ли искомый символ.</returns>
+        public static bool OneOf
+            (
+                this char one,
+                [NotNull] IEnumerable<char> many
+            )
+        {
+            foreach (char s in many)
+            {
+                if (one.SameChar(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, является ли искомый символ одним
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомый символ.</param>
+        /// <param name="many">Массив проверяемых символов.</param>
+        /// <returns>Найден ли искомый символ.</returns>
+        public static bool OneOf
+            (
+                this char one,
+                params char[] many
+            )
+        {
+            foreach (char s in many)
+            {
+                if (one.SameChar(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Сравнивает символы с точностью до регистра.
+        /// </summary>
+        /// <param name="one">Первый символ.</param>
+        /// <param name="two">Второй символ.</param>
+        /// <returns>Символы совпадают с точностью до регистра.</returns>
+        public static bool SameChar
+            (
+                this char one,
+                char two
+            )
+        {
+            return char.ToUpperInvariant(one) == char.ToUpperInvariant(two);
+        }
+
+        /// <summary>
+        /// Сравнивает строки с точностью до регистра.
+        /// </summary>
+        /// <param name="one">Первая строка.</param>
+        /// <param name="two">Вторая строка.</param>
+        /// <returns>Строки совпадают с точностью до регистра.</returns>
+        public static bool SameString
+            (
+                [CanBeNull] this string one,
+                [CanBeNull] string two
+            )
+        {
+            return string.Compare
+                   (
+                       one,
+                       two,
+                       StringComparison.OrdinalIgnoreCase
+                   ) == 0;
+        }
+
+        /// <summary>
+        /// Сравнивает строки.
+        /// </summary>
+        public static bool SameStringSensitive
+            (
+                [CanBeNull] this string one,
+                [CanBeNull] string two
+            )
+        {
+            return string.Compare
+                   (
+                       one,
+                       two,
+                       StringComparison.Ordinal
+                   ) == 0;
+        }
+
+        /// <summary>
         /// Превращает строку в видимую.
         /// Пример: "(null)".
         /// </summary>

@@ -47,6 +47,8 @@
   <ItemGroup>
     <Folder Include="AM\Logging\" />
     <Folder Include="AM\Collections\" />
+    <Folder Include="AM\Runtime\" />
+    <Folder Include="AM\Parameters\" />
     <Folder Include="Properties" />
   </ItemGroup>
 
