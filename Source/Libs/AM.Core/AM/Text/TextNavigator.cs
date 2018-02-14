@@ -1501,7 +1501,6 @@ namespace AM.Text
             }
         }
 
-
         /// <summary>
         /// Skip non-word characters.
         /// </summary>
@@ -1726,11 +1725,13 @@ namespace AM.Text
 
             while (!IsEOF)
             {
-                SkipWhileNot(goodCharacters);
-                string word = ReadWhile(goodCharacters);
-                if (!string.IsNullOrEmpty(word))
+                if (SkipWhileNot(goodCharacters))
                 {
-                    result.Add(word);
+                    string word = ReadWhile(goodCharacters);
+                    if (!string.IsNullOrEmpty(word))
+                    {
+                        result.Add(word);
+                    }
                 }
             }
 
@@ -1754,10 +1755,6 @@ namespace AM.Text
                 }
 
                 string word = ReadWord();
-                if (string.IsNullOrEmpty(word))
-                {
-                    break;
-                }
                 result.Add(word);
             }
 
@@ -1784,11 +1781,6 @@ namespace AM.Text
                 }
 
                 string word = ReadWord(additionalWordCharacters);
-                if (string.IsNullOrEmpty(word))
-                {
-                    break;
-                }
-
                 result.Add(word);
             }
 
