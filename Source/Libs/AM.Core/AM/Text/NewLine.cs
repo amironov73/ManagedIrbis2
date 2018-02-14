@@ -98,7 +98,7 @@ namespace AM.Text
                 [CanBeNull] this string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }
@@ -126,7 +126,7 @@ namespace AM.Text
                 [CanBeNull] this string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }
@@ -154,7 +154,7 @@ namespace AM.Text
                 [CanBeNull] this string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }

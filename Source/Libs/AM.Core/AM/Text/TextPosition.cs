@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TextPosition.cs --
+/* TextPosition.cs -- cursor position in the TextNavigator
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM.Text
 {
     /// <summary>
-    /// Position in <see cref="TextNavigator"/>.
+    /// Cursor position in <see cref="TextNavigator"/>.
     /// </summary>
     [PublicAPI]
     [DebuggerDisplay("Column={Column} Line={Line} Position={Position}")]
@@ -29,17 +29,17 @@ namespace AM.Text
         /// <summary>
         /// Column number.
         /// </summary>
-        public int Column { get; private set; }
+        public int Column { get; }
 
         /// <summary>
         /// Line number.
         /// </summary>
-        public int Line { get; private set; }
+        public int Line { get; }
 
         /// <summary>
         /// Absolute position.
         /// </summary>
-        public int Position { get; private set; }
+        public int Position { get; }
 
         #endregion
 
@@ -53,7 +53,7 @@ namespace AM.Text
                 [NotNull] TextNavigator navigator
             )
         {
-            Sure.NotNull(navigator, "navigator");
+            Sure.NotNull(navigator, nameof(navigator));
 
             Column = navigator.Column;
             Line = navigator.Line;

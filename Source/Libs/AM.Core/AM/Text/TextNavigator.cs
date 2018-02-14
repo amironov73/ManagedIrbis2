@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using AM.Logging;
@@ -47,7 +48,11 @@ namespace AM.Text
         /// <summary>
         /// Текст закончился?
         /// </summary>
-        public bool IsEOF { get { return _position >= _length; } }
+        public bool IsEOF
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return _position >= _length; }
+        }
 
         /// <summary>
         /// Длина текста.
@@ -75,23 +80,32 @@ namespace AM.Text
         #region Construction
 
         /// <summary>
-        /// Конструктор.
+        /// Constructor.
+        /// </summary>
+        public TextNavigator
+            (
+                [NotNull] string text,
+                bool normalize
+            )
+        {
+            Sure.NotNull(text, nameof(text));
+
+            _text = normalize ? text.Normalize() : text;
+            _position = 0;
+            _length = _text.Length;
+            _line = 1;
+            _column = 1;
+        }
+
+        /// <summary>
+        /// Constructor.
         /// </summary>
         public TextNavigator
             (
                 [NotNull] string text
             )
+            : this(text, false)
         {
-            Sure.NotNull(text, "text");
-
-            // Not supported in .NET Core
-            //_text = text.Normalize();
-            _text = text;
-
-            _position = 0;
-            _length = _text.Length;
-            _line = 1;
-            _column = 1;
         }
 
         #endregion
@@ -134,7 +148,7 @@ namespace AM.Text
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.FileExists(fileName, nameof(fileName));
 
             string text = File.ReadAllText(fileName, encoding);
             TextNavigator result = new TextNavigator(text);
@@ -151,7 +165,7 @@ namespace AM.Text
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.FileExists(fileName, nameof(fileName));
 
             string text = File.ReadAllText(fileName, Encoding.UTF8);
             TextNavigator result = new TextNavigator(text);
@@ -164,6 +178,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
+        [Pure]
         [CanBeNull]
         public string GetRemainingText()
         {
@@ -184,90 +199,99 @@ namespace AM.Text
         /// <summary>
         /// Управляющий символ?
         /// </summary>
+        [Pure]
         public bool IsControl()
         {
             char c = PeekChar();
+
             return char.IsControl(c);
         }
 
         /// <summary>
         /// Цифра?
         /// </summary>
+        [Pure]
         public bool IsDigit()
         {
             char c = PeekChar();
+
             return char.IsDigit(c);
         }
 
         /// <summary>
         /// Буква?
         /// </summary>
+        [Pure]
         public bool IsLetter()
         {
             char c = PeekChar();
+
             return char.IsLetter(c);
         }
 
         /// <summary>
         /// Буква или цифра?
         /// </summary>
+        [Pure]
         public bool IsLetterOrDigit()
         {
             char c = PeekChar();
+
             return char.IsLetterOrDigit(c);
         }
 
         /// <summary>
         /// Часть числа?
         /// </summary>
+        [Pure]
         public bool IsNumber()
         {
             char c = PeekChar();
+
             return char.IsNumber(c);
         }
 
         /// <summary>
         /// Знак пунктуации?
         /// </summary>
+        [Pure]
         public bool IsPunctuation()
         {
             char c = PeekChar();
+
             return char.IsPunctuation(c);
         }
 
         /// <summary>
         /// Разделитель?
         /// </summary>
+        [Pure]
         public bool IsSeparator()
         {
             char c = PeekChar();
-            return char.IsSeparator(c);
-        }
 
-        /// <summary>
-        /// Суррогат?
-        /// </summary>
-        public bool IsSurrogate()
-        {
-            char c = PeekChar();
-            return char.IsSurrogate(c);
+            return char.IsSeparator(c);
         }
 
         /// <summary>
         /// Символ?
         /// </summary>
+        [Pure]
         public bool IsSymbol()
         {
             char c = PeekChar();
+
             return char.IsSymbol(c);
         }
 
         /// <summary>
         /// Пробельный символ?
         /// </summary>
+        [Pure]
         public bool IsWhiteSpace()
         {
             char c = PeekChar();
+
             return char.IsWhiteSpace(c);
         }
 
@@ -277,6 +301,7 @@ namespace AM.Text
         /// <remarks>Это на 1 позицию дальше,
         /// чем <see cref="PeekChar()"/>
         /// </remarks>
+        [Pure]
         public char LookAhead()
         {
             int newPosition = _position + 1;
@@ -291,12 +316,13 @@ namespace AM.Text
         /// <summary>
         /// Заглядывание вперёд.
         /// </summary>
+        [Pure]
         public char LookAhead
             (
                 int distance
             )
         {
-            Sure.NonNegative(distance, "distance");
+            Sure.NonNegative(distance, nameof(distance));
 
             int newPosition = _position + distance;
             if (newPosition >= _length)
@@ -310,6 +336,7 @@ namespace AM.Text
         /// <summary>
         /// Заглядывание назад.
         /// </summary>
+        [Pure]
         public char LookBehind()
         {
             if (_position == 0)
@@ -323,12 +350,13 @@ namespace AM.Text
         /// <summary>
         /// Заглядывание назад.
         /// </summary>
+        [Pure]
         public char LookBehind
             (
                 int distance
             )
         {
-            Sure.Positive(distance, "distance");
+            Sure.Positive(distance, nameof(distance));
 
             if (_position < distance)
             {
@@ -341,7 +369,8 @@ namespace AM.Text
         /// <summary>
         /// Смещение указателя.
         /// </summary>
-        public void Move
+        [NotNull]
+        public TextNavigator Move
             (
                 int distance
             )
@@ -350,11 +379,14 @@ namespace AM.Text
 
             _position += distance;
             _column += distance;
+
+            return this;
         }
 
         /// <summary>
         /// Подглядывание текущего символа.
         /// </summary>
+        [Pure]
         public char PeekChar()
         {
             if (_position >= _length)
@@ -363,23 +395,6 @@ namespace AM.Text
             }
 
             return _text[_position];
-        }
-
-        /// <summary>
-        /// Подглядывание текущего символа за исключением CR/LF.
-        /// </summary>
-        public char PeekCharNoCrLf()
-        {
-            int distance = 0;
-            char result = LookAhead(distance);
-
-            while (result == '\r'
-                || result == '\n')
-            {
-                result = LookAhead(++distance);
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -393,7 +408,7 @@ namespace AM.Text
                 int length
             )
         {
-            Sure.Positive(length, "length");
+            Sure.Positive(length, nameof(length));
 
             if (IsEOF)
             {
@@ -407,45 +422,6 @@ namespace AM.Text
             for (int i = 0; i < length; i++)
             {
                 char c = ReadChar();
-                if (c == EOF)
-                {
-                    break;
-                }
-                result.Append(c);
-            }
-
-            _position = savePosition;
-            _column = saveColumn;
-            _line = saveLine;
-
-            return result.ToString();
-        }
-
-        /// <summary>
-        /// Подглядывание строки вплоть до указанной длины.
-        /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekStringNoCrLf
-            (
-                int length
-            )
-        {
-            Sure.Positive(length, "length");
-
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            int savePosition = _position, saveColumn = _column,
-                saveLine = _line;
-            StringBuilder result = new StringBuilder(length);
-
-            for (int i = 0; i < length; i++)
-            {
-                char c = ReadCharNoCrLf();
                 if (c == EOF)
                 {
                     break;
@@ -600,22 +576,6 @@ namespace AM.Text
         }
 
         /// <summary>
-        /// Считывание следующего символа, исключая CR/LF.
-        /// </summary>
-        public char ReadCharNoCrLf()
-        {
-            char result = ReadChar();
-
-            while (result == '\r'
-                || result == '\n')
-            {
-                result = ReadChar();
-            }
-
-            return result;
-        }
-
-        /// <summary>
         /// Считывание экранированной строки вплоть до разделителя
         /// (не включая его).
         /// </summary>
@@ -649,7 +609,10 @@ namespace AM.Text
                     {
                         Log.Error
                             (
-                                "TextNavigator::ReadEscapedUntil: "
+                                nameof(TextNavigator)
+                                + "::"
+                                + nameof(ReadEscapedUntil)
+                                + ": "
                                 + "unexpected end of stream"
                             );
 
@@ -859,7 +822,7 @@ namespace AM.Text
                 int length
             )
         {
-            Sure.Positive(length, "length");
+            Sure.Positive(length, nameof(length));
 
             if (IsEOF)
             {
@@ -929,7 +892,7 @@ namespace AM.Text
                 [NotNull] string stopString
             )
         {
-            Sure.NotNullNorEmpty(stopString, "stopString");
+            Sure.NotNullNorEmpty(stopString, nameof(stopString));
 
             if (IsEOF)
             {
@@ -1060,7 +1023,7 @@ namespace AM.Text
                 [NotNull] string stopString
             )
         {
-            Sure.NotNullNorEmpty(stopString, "stopString");
+            Sure.NotNullNorEmpty(stopString, nameof(stopString));
 
             if (IsEOF)
             {
@@ -1102,45 +1065,6 @@ namespace AM.Text
                     _position - savePosition - stopString.Length
                 );
             _position -= stopString.Length;
-
-            return result;
-        }
-
-
-        /// <summary>
-        /// Считывание вплоть до указанного символа
-        /// (не включая его).
-        /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadUntilNoCrLf
-            (
-                char stopChar
-            )
-        {
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            int savePosition = _position;
-
-            while (true)
-            {
-                char c = PeekCharNoCrLf();
-                if (c == EOF || c == stopChar)
-                {
-                    break;
-                }
-                ReadCharNoCrLf();
-            }
-
-            string result = _text.Substring
-            (
-                savePosition,
-                _position - savePosition
-            );
 
             return result;
         }
@@ -1246,35 +1170,6 @@ namespace AM.Text
                 );
 
             return result;
-        }
-
-        /// <summary>
-        /// Считывание строки, пока не будет
-        /// встречен пробельный символ или конец текста.
-        /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadUntilWhiteSpace()
-        {
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            StringBuilder result = new StringBuilder();
-
-            while (!IsEOF)
-            {
-                char c = ReadChar();
-                if (char.IsWhiteSpace(c))
-                {
-                    break;
-                }
-                result.Append(c);
-            }
-
-            return result.ToString();
         }
 
         /// <summary>
@@ -1425,6 +1320,7 @@ namespace AM.Text
         /// <summary>
         /// Get recent text.
         /// </summary>
+        [Pure]
         [NotNull]
         public string RecentText
             (
@@ -1437,9 +1333,14 @@ namespace AM.Text
                 length += start;
                 start = 0;
             }
-            if (start + length > _length)
+            if (start >= _length)
             {
-                length = _length - start;
+                length = 0;
+                start = _length - 1;
+            }
+            if (length < 0)
+            {
+                length = 0;
             }
 
             return _text.Substring
@@ -1467,6 +1368,7 @@ namespace AM.Text
         /// <summary>
         /// Save current position.
         /// </summary>
+        [Pure]
         [NotNull]
         public TextPosition SavePosition()
         {
@@ -1486,6 +1388,7 @@ namespace AM.Text
             if (PeekChar() == c)
             {
                 ReadChar();
+
                 return true;
             }
 
@@ -1539,6 +1442,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 if (IsControl())
                 {
                     ReadChar();
@@ -1561,6 +1465,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 if (IsPunctuation())
                 {
                     ReadChar();
@@ -1583,6 +1488,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (!char.IsLetterOrDigit(c))
                 {
@@ -1610,6 +1516,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (!char.IsLetterOrDigit(c)
                     && Array.LastIndexOf(additionalWordCharacters, c) < 0)
@@ -1639,6 +1546,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (c >= fromChar && c <= toChar)
                 {
@@ -1665,6 +1573,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (c == skipChar)
                 {
@@ -1691,6 +1600,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (Array.IndexOf(skipChars, c) >= 0)
                 {
@@ -1724,6 +1634,7 @@ namespace AM.Text
                 {
                     return true;
                 }
+
                 ReadChar();
             }
         }
@@ -1742,6 +1653,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 char c = PeekChar();
                 if (Array.IndexOf(goodChars, c) < 0)
                 {
@@ -1765,6 +1677,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 if (IsWhiteSpace())
                 {
                     ReadChar();
@@ -1787,6 +1700,7 @@ namespace AM.Text
                 {
                     return false;
                 }
+
                 if (IsWhiteSpace() || IsPunctuation())
                 {
                     ReadChar();
@@ -1838,6 +1752,7 @@ namespace AM.Text
                 {
                     break;
                 }
+
                 string word = ReadWord();
                 if (string.IsNullOrEmpty(word))
                 {
@@ -1867,11 +1782,13 @@ namespace AM.Text
                 {
                     break;
                 }
+
                 string word = ReadWord(additionalWordCharacters);
                 if (string.IsNullOrEmpty(word))
                 {
                     break;
                 }
+
                 result.Add(word);
             }
 
@@ -1881,6 +1798,7 @@ namespace AM.Text
         /// <summary>
         /// Get substring.
         /// </summary>
+        [Pure]
         [NotNull]
         public string Substring
             (
