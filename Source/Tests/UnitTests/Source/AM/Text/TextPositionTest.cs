@@ -18,6 +18,7 @@ namespace UnitTests.AM.Text
             Assert.AreEqual(navigator.Line, position.Line);
             Assert.AreEqual(navigator.Position, position.Position);
         }
+
         [TestMethod]
         public void TextPosition_ToString()
         {
