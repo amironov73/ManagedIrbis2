@@ -5,11 +5,14 @@ image: Visual Studio 2017
 init:
   - git config --global core.autocrlf true
 
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: '**\AssemblyInfo.cs'
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
   assembly_version: '{version}'
-  assembly_file_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 
 nuget:
   account_feed: false
