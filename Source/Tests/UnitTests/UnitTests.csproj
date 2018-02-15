@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Source\AM\Reflection\" />
     <Folder Include="Source\AM\Parameters\" />
   </ItemGroup>
 

@@ -10,12 +10,10 @@
 #region Using directives
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
+
+using AM.Logging;
 
 using JetBrains.Annotations;
 
@@ -32,6 +30,90 @@ namespace AM
     public static class Utility
     {
         #region Public methods
+
+        /// <summary>
+        /// Throw <see cref="ArgumentNullException"/>
+        /// if given value is <c>null</c>.
+        /// </summary>
+        [NotNull]
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ThrowIfNull<T>
+            (
+                [CanBeNull] this T value
+            )
+            where T : class
+        {
+            if (ReferenceEquals(value, null))
+            {
+                Log.Error
+                    (
+                        nameof(Utility) + "::" + nameof(ThrowIfNull)
+                    );
+
+                throw new ArgumentException(nameof(value));
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Throw <see cref="ArgumentNullException"/>
+        /// if given value is <c>null</c>.
+        /// </summary>
+        [NotNull]
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T1 ThrowIfNull<T1, T2>
+        (
+            [CanBeNull] this T1 value
+        )
+            where T1 : class
+            where T2 : Exception, new()
+        {
+            if (ReferenceEquals(value, null))
+            {
+                Log.Error
+                    (
+                        nameof(Utility) + "::" + nameof(ThrowIfNull)
+                    );
+
+                throw new T2();
+            }
+
+            return value;
+        }
+
+        /// <summary>
+        /// Throw <see cref="ArgumentNullException"/>
+        /// if given value is <c>null</c>.
+        /// </summary>
+        [NotNull]
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ThrowIfNull<T>
+        (
+            [CanBeNull] this T value,
+            [NotNull] string message
+        )
+            where T : class
+        {
+            Sure.NotNull(message, nameof(message));
+
+            if (ReferenceEquals(value, null))
+            {
+                Log.Error
+                    (
+                        nameof(Utility) + "::" + nameof(ThrowIfNull)
+                        + ": "
+                        + message
+                    );
+
+                throw new ArgumentException(message);
+            }
+
+            return value;
+        }
 
         /// <summary>
         /// Преобразование любого значения в строку.

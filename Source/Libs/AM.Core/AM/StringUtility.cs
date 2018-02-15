@@ -270,6 +270,23 @@ namespace AM
         }
 
         /// <summary>
+        /// Сравнение строк.
+        /// </summary>
+        public static int SafeCompare
+            (
+                [CanBeNull] this string s1,
+                string s2
+            )
+        {
+            return string.Compare
+                (
+                    s1,
+                    s2,
+                    StringComparison.InvariantCultureIgnoreCase
+                );
+        }
+
+        /// <summary>
         /// Сравнивает символы с точностью до регистра.
         /// </summary>
         /// <param name="one">Первый символ.</param>
