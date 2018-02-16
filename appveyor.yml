@@ -8,7 +8,7 @@ init:
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
+  version: '{version}-alpha1'
   package_version: '{version}-alpha1'
   assembly_version: '{version}'
   file_version: '{version}'
