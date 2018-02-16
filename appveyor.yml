@@ -1,4 +1,4 @@
-version: 2.0.0.{build}-beta
+version: 2.0.0.{build}
 configuration: Debug
 image: Visual Studio 2017
 
@@ -9,10 +9,10 @@ dotnet_csproj:
   patch: true
   file: '**\*.csproj'
   version: '{version}'
-  package_version: '{version}'
+  package_version: '{version}-alpha1'
   assembly_version: '{version}'
   file_version: '{version}'
-  informational_version: '{version}'
+  informational_version: '{version}-alpha1'
 
 nuget:
   account_feed: false
