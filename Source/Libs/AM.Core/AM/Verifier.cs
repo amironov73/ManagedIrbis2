@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* Verifier.cs --
+/* Verifier.cs -- helper class for IVerifiable interface
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,11 +20,11 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// Helper for <see cref="IVerifiable"/>
+    /// Helper class for <see cref="IVerifiable"/> interface.
     /// </summary>
     [PublicAPI]
     public sealed class Verifier<T>
-        where T: IVerifiable
+        where T : IVerifiable
     {
         #region Properties
 
@@ -32,7 +32,7 @@ namespace AM
         /// Prefix.
         /// </summary>
         [CanBeNull]
-        private string Prefix { get; set; }
+        public string Prefix { get; set; }
 
         /// <summary>
         /// Result.
@@ -42,12 +42,12 @@ namespace AM
         /// <summary>
         /// Target.
         /// </summary>
-        public T Target { get { return _target; } }
+        public T Target { get; }
 
         /// <summary>
         /// Throw on error.
         /// </summary>
-        public bool ThrowOnError { get { return _throwOnError; } }
+        public bool ThrowOnError { get; }
 
         #endregion
 
@@ -62,8 +62,8 @@ namespace AM
                 bool throwOnError
             )
         {
-            _target = target;
-            _throwOnError = throwOnError;
+            Target = target;
+            ThrowOnError = throwOnError;
             Result = true;
         }
 
@@ -71,10 +71,7 @@ namespace AM
 
         #region Private members
 
-        private readonly T _target;
-
-        private readonly bool _throwOnError;
-        private void _Throw ()
+        private void _Throw()
         {
             if (!Result && ThrowOnError)
             {
@@ -117,21 +114,12 @@ namespace AM
             {
                 if (!string.IsNullOrEmpty(Prefix))
                 {
-                    string message = Prefix + ": "
-                        + string.Format
-                            (
-                                format,
-                                arguments
-                            );
+                    string message = Prefix + ": " + string.Format(format, arguments);
                     Throw(message);
                 }
                 else
                 {
-                    Throw
-                        (
-                            format,
-                            arguments
-                        );
+                    Throw(format, arguments);
                 }
             }
         }
@@ -173,6 +161,7 @@ namespace AM
         /// <summary>
         /// Assert.
         /// </summary>
+        [StringFormatMethod("format")]
         public Verifier<T> Assert
             (
                 bool condition,
@@ -181,11 +170,7 @@ namespace AM
             )
         {
             Result = Result && condition;
-            _Throw
-                (
-                    format,
-                    arguments
-                );
+            _Throw(format, arguments);
 
             return this;
         }
@@ -201,6 +186,7 @@ namespace AM
         {
             if (string.IsNullOrEmpty(path))
             {
+                Result = false;
                 _Throw
                     (
                         "Directory '{0}': path not specified",
@@ -210,6 +196,7 @@ namespace AM
 
             if (!Directory.Exists(path))
             {
+                Result = false;
                 _Throw
                     (
                         "Directory '{0}' is set to '{1}': path not exist",
@@ -232,6 +219,7 @@ namespace AM
         {
             if (string.IsNullOrEmpty(path))
             {
+                Result = false;
                 _Throw
                     (
                         "File '{0}': path not specified",
@@ -241,6 +229,7 @@ namespace AM
 
             if (!File.Exists(path))
             {
+                Result = false;
                 _Throw
                     (
                         "File '{0}' is set to '{1}': path not exist",
@@ -260,10 +249,7 @@ namespace AM
                 object value
             )
         {
-            return Assert
-                (
-                    !ReferenceEquals(value, null)
-                );
+            return Assert(!ReferenceEquals(value, null));
         }
 
         /// <summary>
@@ -290,10 +276,7 @@ namespace AM
                 string value
             )
         {
-            return Assert
-                (
-                    !string.IsNullOrEmpty(value)
-                );
+            return Assert(!string.IsNullOrEmpty(value));
         }
 
         /// <summary>
@@ -321,11 +304,7 @@ namespace AM
                 string name
             )
         {
-            return Assert
-            (
-                value > 0,
-                name
-            );
+            return Assert(value > 0, name);
         }
 
         /// <summary>
@@ -350,10 +329,7 @@ namespace AM
         /// </summary>
         public void Throw()
         {
-            Log.Error
-                (
-                    "Verifier::Throw"
-                );
+            Log.Error(nameof(Verifier<T>) + "::" + nameof(Throw));
 
             throw new VerificationException();
         }
@@ -368,8 +344,8 @@ namespace AM
         {
             Log.Error
                 (
-                    "Verifier::Throw: "
-                    + message
+                    nameof(Verifier<T>) + "::" + nameof(Throw)
+                    + ": " + message
                 );
 
             throw new VerificationException(message);
@@ -402,7 +378,7 @@ namespace AM
                 [NotNull] IVerifiable verifiable
             )
         {
-            Sure.NotNull(verifiable, "verifiable");
+            Sure.NotNull(verifiable, nameof(verifiable));
 
             Assert(verifiable.Verify(ThrowOnError));
 
@@ -418,8 +394,8 @@ namespace AM
                 [NotNull] string name
             )
         {
-            Sure.NotNull(verifiable, "verifiable");
-            Sure.NotNullNorEmpty(name, "name");
+            Sure.NotNull(verifiable, nameof(verifiable));
+            Sure.NotNullNorEmpty(name, nameof(name));
 
             Assert(verifiable.Verify(ThrowOnError), name);
 
