@@ -33,8 +33,8 @@ after_build:
 - cmd: compile.cmd
 
 test_script:
-- OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=Source/Tests/UnitTests/results.trx /p:DebugType=full Source/Tests/UnitTests/UnitTests.csproj" -filter:"+[AM.Core]AM.* +[ManagedIrbis]* -[*]ManagedIrbis.Biblio.*" -excludebyattribute:"*.ExcludeFromCodeCoverage*" -output:"coverage.xml" -oldStyle
-- codecov -f "coverage.xml" -t b086eb50-83b2-419f-a1e2-47cc7750b482
+- OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=Source/Tests/UnitTests/results.trx /p:DebugType=full Source/Tests/UnitTests/UnitTests.csproj" -filter:"+[AM.Core]AM.* +[ManagedIrbis]* -[*]ManagedIrbis.Biblio.*" -excludebyattribute:"*.ExcludeFromCodeCoverage*" -output:"%TEMP%\coverage.xml" -oldStyle
+- codecov -f "%TEMP%\coverage.xml" -t b086eb50-83b2-419f-a1e2-47cc7750b482
 
 artifacts:
   - path: Binaries
