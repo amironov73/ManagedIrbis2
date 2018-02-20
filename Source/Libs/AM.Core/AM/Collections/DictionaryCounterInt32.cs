@@ -130,10 +130,10 @@ namespace AM.Collections
         {
             lock (_syncRoot)
             {
-                int value;
-                TryGetValue(key, out value);
+                TryGetValue(key, out int value);
                 value += increment;
                 this[key] = value;
+
                 return value;
             }
         }
@@ -146,11 +146,12 @@ namespace AM.Collections
                 [NotNull] TKey key
             )
         {
-            int result;
+            lock (_syncRoot)
+            {
+                TryGetValue(key, out int result);
 
-            TryGetValue(key, out result);
-
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -161,11 +162,7 @@ namespace AM.Collections
                 [NotNull] TKey key
             )
         {
-            return Augment
-                (
-                    key,
-                    1
-                );
+            return Augment(key, 1);
         }
 
         #endregion

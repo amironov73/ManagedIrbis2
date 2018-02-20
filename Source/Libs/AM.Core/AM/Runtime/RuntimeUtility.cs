@@ -43,16 +43,10 @@ namespace AM.Runtime
         {
             get
             {
-                string result = Path.GetDirectoryName
-                    (
-                        typeof(int).Assembly.Location
-                    );
+                string result = Path.GetDirectoryName(typeof(int).Assembly.Location);
                 if (string.IsNullOrEmpty(result))
                 {
-                    throw new ArsMagnaException
-                        (
-                            "Can't determine framework location"
-                        );
+                    throw new ArsMagnaException("Can't determine framework location");
                 }
 
                 return result;

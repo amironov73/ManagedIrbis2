@@ -45,6 +45,7 @@ namespace AM.Collections
                     {
                         result += value;
                     }
+
                     return result;
                 }
             }
@@ -67,9 +68,9 @@ namespace AM.Collections
         /// </summary>
         /// <param name="comparer">The comparer.</param>
         public DictionaryCounterDouble
-        (
-            [NotNull] IEqualityComparer<TKey> comparer
-        )
+            (
+                [NotNull] IEqualityComparer<TKey> comparer
+            )
             : base(comparer)
         {
         }
@@ -128,11 +129,11 @@ namespace AM.Collections
         {
             lock (_syncRoot)
             {
-                double value;
-                TryGetValue(key, out value);
-                value += increment;
-                this[key] = value;
-                return value;
+                TryGetValue(key, out double result);
+                result += increment;
+                this[key] = result;
+
+                return result;
             }
         }
 
@@ -144,11 +145,12 @@ namespace AM.Collections
                 [NotNull] TKey key
             )
         {
-            double result;
+            lock (_syncRoot)
+            {
+                TryGetValue(key, out double result);
 
-            TryGetValue(key, out result);
-
-            return result;
+                return result;
+            }
         }
 
         /// <summary>
@@ -159,11 +161,7 @@ namespace AM.Collections
                 [NotNull] TKey key
             )
         {
-            return Augment
-                (
-                    key,
-                    1.0
-                );
+            return Augment(key, 1.0);
         }
 
         #endregion

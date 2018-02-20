@@ -47,7 +47,7 @@ namespace AM
                 Type sourceType = value.GetType();
                 Type targetType = typeof(T);
 
-                if (targetType == sourceType)
+                if (ReferenceEquals(targetType, sourceType))
                 {
                     return true;
                 }
@@ -58,24 +58,22 @@ namespace AM
                 }
 
                 IConvertible convertible = value as IConvertible;
-                if (convertible != null)
+                if (!ReferenceEquals(convertible, null))
                 {
                     return true; // ???
                 }
 
-                //TypeConverter converterFrom
-                //    = TypeDescriptor.GetConverter(value);
-                //if (converterFrom.CanConvertTo(targetType))
-                //{
-                //    return true;
-                //}
+                TypeConverter converterFrom = TypeDescriptor.GetConverter(value);
+                if (converterFrom.CanConvertTo(targetType))
+                {
+                    return true;
+                }
 
-                //TypeConverter converterTo
-                //    = TypeDescriptor.GetConverter(targetType);
-                //if (converterTo.CanConvertFrom(sourceType))
-                //{
-                //    return true;
-                //}
+                TypeConverter converterTo = TypeDescriptor.GetConverter(targetType);
+                if (converterTo.CanConvertFrom(sourceType))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -90,7 +88,7 @@ namespace AM
                 [CanBeNull] object value
             )
         {
-            if (value == null)
+            if (ReferenceEquals(value, null))
             {
                 return default(T);
             }
@@ -108,53 +106,48 @@ namespace AM
                 return (T)value;
             }
 
-#if !WINMOBILE && !PocketPC
-
             IConvertible convertible = value as IConvertible;
-            if (convertible != null)
+            if (ReferenceEquals(convertible, null))
             {
                 return (T)Convert.ChangeType(value, targetType);
             }
 
-#endif
+            TypeConverter converterFrom = TypeDescriptor.GetConverter(value);
+            if (converterFrom.CanConvertTo(targetType))
+            {
+                return (T)converterFrom.ConvertTo
+                            (
+                                value,
+                                targetType
+                            );
+            }
 
-            //TypeConverter converterFrom
-            //    = TypeDescriptor.GetConverter(value);
-            //if (converterFrom.CanConvertTo(targetType))
-            //{
-            //    return (T)converterFrom.ConvertTo
-            //                (
-            //                    value,
-            //                    targetType
-            //                );
-            //}
+            TypeConverter converterTo
+                = TypeDescriptor.GetConverter(targetType);
+            if (converterTo.CanConvertFrom(sourceType))
+            {
+                return (T)converterTo.ConvertFrom(value);
+            }
 
-            //TypeConverter converterTo
-            //    = TypeDescriptor.GetConverter(targetType);
-            //if (converterTo.CanConvertFrom(sourceType))
-            //{
-            //    return (T)converterTo.ConvertFrom(value);
-            //}
-
-            //foreach (MethodInfo miOpChangeType in
-            //    sourceType.GetMethods(BindingFlags.Public | BindingFlags.Static))
-            //{
-            //    if (miOpChangeType.IsSpecialName
-            //         && (miOpChangeType.Name == "op_Implicit"
-            //              || miOpChangeType.Name == "op_Explicit"
-            //            )
-            //         && miOpChangeType.ReturnType.IsAssignableFrom(targetType)
-            //        )
-            //    {
-            //        ParameterInfo[] psOpChangeType = miOpChangeType.GetParameters();
-            //        if ((psOpChangeType.Length == 1)
-            //             && (psOpChangeType[0].ParameterType == sourceType)
-            //            )
-            //        {
-            //            return (T)miOpChangeType.Invoke(null, new [] { value });
-            //        }
-            //    }
-            //}
+            foreach (MethodInfo miOpChangeType in
+                sourceType.GetMethods(BindingFlags.Public | BindingFlags.Static))
+            {
+                if (miOpChangeType.IsSpecialName
+                     && (miOpChangeType.Name == "op_Implicit"
+                          || miOpChangeType.Name == "op_Explicit"
+                        )
+                     && miOpChangeType.ReturnType.IsAssignableFrom(targetType)
+                    )
+                {
+                    ParameterInfo[] psOpChangeType = miOpChangeType.GetParameters();
+                    if ((psOpChangeType.Length == 1)
+                         && (psOpChangeType[0].ParameterType == sourceType)
+                        )
+                    {
+                        return (T)miOpChangeType.Invoke(null, new[] { value });
+                    }
+                }
+            }
 
             throw new ArsMagnaException();
         }
@@ -186,14 +179,6 @@ namespace AM
 
             bool result;
 
-#if !WINMOBILE && !PocketPC
-
-            if (bool.TryParse(value as string, out result))
-            {
-                return result;
-            }
-
-#else
             try
             {
                 result = bool.Parse(value as string);
@@ -205,7 +190,6 @@ namespace AM
             {
                 // Pass through
             }
-#endif
 
             string svalue = value as string;
             if (svalue == "false"
