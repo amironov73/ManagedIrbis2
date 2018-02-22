@@ -136,23 +136,23 @@ namespace AM
         /// <summary>
         /// Get max or default value for the sequence.
         /// </summary>
-        public static U MaxOrDefault<T,U>
+        public static TOutput MaxOrDefault<TInput,TOutput>
             (
-                [NotNull] this IEnumerable<T> sequence,
-                [NotNull] Func<T,U> selector,
-                U defaultValue
+                [NotNull] this IEnumerable<TInput> sequence,
+                [NotNull] Func<TInput,TOutput> selector,
+                TOutput defaultValue
             )
         {
             Sure.NotNull(sequence, nameof(sequence));
             Sure.NotNull(selector, nameof(selector));
 
-            T[] array = sequence.ToArray();
+            TInput[] array = sequence.ToArray();
             if (array.Length == 0)
             {
                 return defaultValue;
             }
 
-            U result = array.Max(selector);
+            TOutput result = array.Max(selector);
 
             return result;
         }

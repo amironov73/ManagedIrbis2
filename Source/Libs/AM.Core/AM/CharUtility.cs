@@ -72,6 +72,40 @@ namespace AM
                 || c == 'Ё' || c == 'ё';
         }
 
+        /// <summary>
+        /// Is URL-safe char?
+        /// </summary>
+        /// <remarks>Set of safe chars, from RFC 1738.4 minus '+'</remarks>
+        public static bool IsUrlSafeChar
+            (
+                char ch
+            )
+        {
+            if (ch >= 'a' && ch <= 'z'
+                || ch >= 'A' && ch <= 'Z'
+                || ch >= '0' && ch <= '9'
+            )
+            {
+                return true;
+            }
+
+            switch (ch)
+            {
+                case '-':
+                case '_':
+                case '.':
+                case '!':
+                case '*':
+                case '(':
+                case ')':
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         #endregion
     }
 }

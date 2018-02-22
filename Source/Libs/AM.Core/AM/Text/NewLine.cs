@@ -15,6 +15,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable InconsistentNaming
+
 namespace AM.Text
 {
     //

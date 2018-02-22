@@ -19,6 +19,7 @@ using AM.Runtime;
 using JetBrains.Annotations;
 
 using Newtonsoft.Json;
+// ReSharper disable All
 
 #endregion
 

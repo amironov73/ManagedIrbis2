@@ -89,19 +89,19 @@ namespace UnitTests.AM
         [TestMethod]
         public void StringUtility_CompareNoCase_1()
         {
-            Assert.IsTrue(StringUtility.CompareNoCase('A', 'a'));
-            Assert.IsTrue(StringUtility.CompareNoCase('A', 'A'));
-            Assert.IsTrue(StringUtility.CompareNoCase(' ', ' '));
-            Assert.IsFalse(StringUtility.CompareNoCase(' ', 'A'));
+            Assert.IsTrue(StringUtility.CompareNoCase('A', 'a') == 0);
+            Assert.IsTrue(StringUtility.CompareNoCase('A', 'A') == 0);
+            Assert.IsTrue(StringUtility.CompareNoCase(' ', ' ') == 0);
+            Assert.IsFalse(StringUtility.CompareNoCase(' ', 'A') == 0);
         }
 
         [TestMethod]
         public void StringUtility_CompareNoCase_2()
         {
-            Assert.IsTrue(StringUtility.CompareNoCase(string.Empty, string.Empty));
-            Assert.IsTrue(StringUtility.CompareNoCase(" ", " "));
-            Assert.IsTrue(StringUtility.CompareNoCase("Hello", "HELLO"));
-            Assert.IsFalse(StringUtility.CompareNoCase("Hello", "HELLO2"));
+            Assert.IsTrue(StringUtility.CompareNoCase(string.Empty, string.Empty) == 0);
+            Assert.IsTrue(StringUtility.CompareNoCase(" ", " ") == 0);
+            Assert.IsTrue(StringUtility.CompareNoCase("Hello", "HELLO") == 0);
+            Assert.IsFalse(StringUtility.CompareNoCase("Hello", "HELLO2") == 0);
         }
 
         [TestMethod]

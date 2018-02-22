@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 using AM.Logging;
@@ -34,6 +33,7 @@ namespace AM.Text
         /// <summary>
         /// Признак конца текста.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public const char EOF = '\0';
 
         #endregion
@@ -43,37 +43,34 @@ namespace AM.Text
         /// <summary>
         /// Текущая колонка текста. Нумерация с 1.
         /// </summary>
-        public int Column { get { return _column; } }
+        public int Column => _column;
 
         /// <summary>
         /// Текст закончился?
         /// </summary>
-        public bool IsEOF
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get { return _position >= _length; }
-        }
+        // ReSharper disable once InconsistentNaming
+        public bool IsEOF => _position >= _length;
 
         /// <summary>
         /// Длина текста.
         /// </summary>
-        public int Length { get { return _length; } }
+        public int Length => _length;
 
         /// <summary>
         /// Текущая строка текста. Нумерация с 1.
         /// </summary>
-        public int Line { get { return _line; } }
+        public int Line => _line;
 
         /// <summary>
         /// Текущая позиция.
         /// </summary>
-        public int Position { get { return _position; } }
+        public int Position => _position;
 
         /// <summary>
         /// Обрабатываемый текст.
         /// </summary>
         [NotNull]
-        public string Text { get { return _text; } }
+        public string Text => _text;
 
         #endregion
 
@@ -85,7 +82,7 @@ namespace AM.Text
         public TextNavigator
             (
                 [NotNull] string text,
-                bool normalize
+                bool normalize = false
             )
         {
             Sure.NotNull(text, nameof(text));
@@ -95,17 +92,6 @@ namespace AM.Text
             _length = _text.Length;
             _line = 1;
             _column = 1;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public TextNavigator
-            (
-                [NotNull] string text
-            )
-            : this(text, false)
-        {
         }
 
         #endregion
@@ -1358,7 +1344,7 @@ namespace AM.Text
                 [NotNull] TextPosition saved
             )
         {
-            Sure.NotNull(saved, "saved");
+            Sure.NotNull(saved, nameof(saved));
 
             _column = saved.Column;
             _line = saved.Line;

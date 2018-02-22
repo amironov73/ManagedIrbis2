@@ -10,19 +10,12 @@
 #region Using directives
 
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 
-using AM.IO;
-using AM.Runtime;
 using AM.Text;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 #endregion
 
@@ -64,7 +57,7 @@ namespace AM.Parameters
                 [NotNull] Parameter[] parameters
             )
         {
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             StringBuilder result = new StringBuilder();
 
@@ -109,8 +102,8 @@ namespace AM.Parameters
                 [CanBeNull] string defaultValue
             )
         {
-            Sure.NotNull(parameters, "parameters");
-            Sure.NotNullNorEmpty(name, "name");
+            Sure.NotNull(parameters, nameof(parameters));
+            Sure.NotNullNorEmpty(name, nameof(name));
 
             Parameter found = parameters
                 .FirstOrDefault(p => p.Name.SameString(name));
@@ -133,8 +126,8 @@ namespace AM.Parameters
                 [CanBeNull] T defaultValue
             )
         {
-            Sure.NotNull(parameters, "parameters");
-            Sure.NotNullNorEmpty(name, "name");
+            Sure.NotNull(parameters, nameof(parameters));
+            Sure.NotNullNorEmpty(name, nameof(name));
 
             Parameter found = parameters
                 .FirstOrDefault(p => p.Name.SameString(name));
@@ -168,7 +161,7 @@ namespace AM.Parameters
                 [NotNull] string text
             )
         {
-            Sure.NotNull(text, "text");
+            Sure.NotNull(text, nameof(text));
 
             List<Parameter> result = new List<Parameter>();
             TextNavigator navigator = new TextNavigator(text);

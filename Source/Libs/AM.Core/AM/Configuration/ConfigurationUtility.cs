@@ -32,13 +32,7 @@ namespace AM.Configuration
     {
         #region Private members
 
-        private static IFormatProvider _FormatProvider
-        {
-            get
-            {
-                return CultureInfo.InvariantCulture;
-            }
-        }
+        private static IFormatProvider InvariantCulture => CultureInfo.InvariantCulture;
 
         #endregion
 
@@ -48,17 +42,11 @@ namespace AM.Configuration
         /// Application.exe.config file name with full path.
         /// </summary>
         [NotNull]
-        public static string ConfigFileName
-        {
-            get
-            {
-                return string.Concat
-                    (
-                        RuntimeUtility.ExecutableFileName,
-                        ".config"
-                    );
-            }
-        }
+        public static string ConfigFileName => string.Concat
+            (
+                RuntimeUtility.ExecutableFileName,
+                ".config"
+            );
 
         /// <summary>
         /// Получаем сеттинг из возможных кандидатов.
@@ -87,14 +75,14 @@ namespace AM.Configuration
         public static bool GetBoolean
             (
                 [NotNull] string key,
-                bool defaultValue
+                bool defaultValue = false
             )
         {
             bool result = defaultValue;
-            string s = CM.AppSettings[key];
-            if (!string.IsNullOrEmpty(s))
+            string setting = CM.AppSettings[key];
+            if (!string.IsNullOrEmpty(setting))
             {
-                result = ConversionUtility.ToBoolean(s);
+                result = ConversionUtility.ToBoolean(setting);
             }
 
             return result;
@@ -106,25 +94,16 @@ namespace AM.Configuration
         public static short GetInt16
             (
                 [NotNull] string key,
-                short defaultValue
+                short defaultValue = 0
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            short result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseInt16(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt16(setting, out short result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -134,25 +113,16 @@ namespace AM.Configuration
         public static ushort GetUInt16
             (
                 [NotNull] string key,
-                ushort defaultValue
+                ushort defaultValue = 0
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            ushort result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseUInt16(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseUInt16(setting, out ushort result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -162,25 +132,16 @@ namespace AM.Configuration
         public static int GetInt32
             (
                 [NotNull] string key,
-                int defaultValue
+                int defaultValue = 0
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            int result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseInt32(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt32(setting, out int result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -191,25 +152,16 @@ namespace AM.Configuration
         public static uint GetUInt32
             (
                 [NotNull] string key,
-                uint defaultValue
+                uint defaultValue = 0
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            uint result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseUInt32(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseUInt32(setting, out uint result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -219,25 +171,16 @@ namespace AM.Configuration
         public static long GetInt64
             (
                 [NotNull] string key,
-                long defaultValue
+                long defaultValue = 0L
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            long result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseInt64(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt64(setting, out long result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -251,22 +194,13 @@ namespace AM.Configuration
                 ulong defaultValue
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            ulong result;
             string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseUInt64(s, out result))
+            if (!NumericUtility.TryParseUInt64(s, out ulong result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -275,25 +209,16 @@ namespace AM.Configuration
         public static float GetSingle
             (
                 [NotNull] string key,
-                float defaultValue
+                float defaultValue = 0.0f
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            float result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseFloat(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseFloat(setting, out float result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -302,25 +227,16 @@ namespace AM.Configuration
         public static double GetDouble
             (
                 [NotNull] string key,
-                double defaultValue
+                double defaultValue = 0.0
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            double result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseDouble(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseDouble(setting, out double result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -329,25 +245,16 @@ namespace AM.Configuration
         public static decimal GetDecimal
             (
                 [NotNull] string key,
-                decimal defaultValue
+                decimal defaultValue = 0.0m
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            decimal result;
-            string s = CM.AppSettings[key];
-
-            if (!NumericUtility.TryParseDecimal(s, out result))
+            string setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseDecimal(setting, out decimal result))
             {
                 result = defaultValue;
             }
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -357,7 +264,7 @@ namespace AM.Configuration
         public static string GetString
             (
                 [NotNull] string key,
-                [CanBeNull] string defaultValue
+                [CanBeNull] string defaultValue = null
             )
         {
             Sure.NotNullNorEmpty(key, nameof(key));
@@ -376,28 +283,15 @@ namespace AM.Configuration
         /// <summary>
         /// Get string value from application configuration.
         /// </summary>
-        [CanBeNull]
-        public static string GetString
-            (
-                [NotNull] string key
-            )
-        {
-            return GetString(key, null);
-        }
-
-        /// <summary>
-        /// Get string value from application configuration.
-        /// </summary>
         [NotNull]
         public static string RequireString
             (
                 [NotNull] string key
             )
         {
-            Sure.NotNullNorEmpty(key, "key");
+            Sure.NotNullNorEmpty(key, nameof(key));
 
-            string result = GetString(key, null);
-
+            string result = GetString(key);
             if (ReferenceEquals(result, null))
             {
                 Log.Error
@@ -408,10 +302,7 @@ namespace AM.Configuration
                         + "' not set"
                     );
 
-                throw new ArgumentNullException
-                    (
-                        "configuration key '" + key + "' not set"
-                    );
+                throw new ArgumentNullException("configuration key '" + key + "' not set");
             }
 
             return result;
@@ -426,25 +317,13 @@ namespace AM.Configuration
                 DateTime defaultValue
             )
         {
-#if DROID || ANDROID || UAP
-
-            return defaultValue;
-#else
-
-            string s = CM.AppSettings[key];
-
-            if (!string.IsNullOrEmpty(s))
+            string setting = CM.AppSettings[key];
+            if (!string.IsNullOrEmpty(setting))
             {
-                defaultValue = DateTime.Parse
-                    (
-                        s,
-                        _FormatProvider
-                    );
+                defaultValue = DateTime.Parse(setting, InvariantCulture);
             }
 
             return defaultValue;
-
-#endif
         }
 
         #endregion

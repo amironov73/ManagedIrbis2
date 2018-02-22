@@ -11,7 +11,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
 
@@ -38,7 +37,7 @@ namespace AM.Collections
         {
             get
             {
-                lock (_syncRoot)
+                lock (SyncRoot)
                 {
                     int result = 0;
                     foreach (int value in Values)
@@ -103,14 +102,7 @@ namespace AM.Collections
 
         #region Private members
 
-        private object _syncRoot
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return ((ICollection)this).SyncRoot;
-            }
-        }
+        private object SyncRoot => ((ICollection)this).SyncRoot;
 
         #endregion
 
@@ -128,7 +120,7 @@ namespace AM.Collections
                 int increment
             )
         {
-            lock (_syncRoot)
+            lock (SyncRoot)
             {
                 TryGetValue(key, out int value);
                 value += increment;
@@ -146,7 +138,7 @@ namespace AM.Collections
                 [NotNull] TKey key
             )
         {
-            lock (_syncRoot)
+            lock (SyncRoot)
             {
                 TryGetValue(key, out int result);
 
