@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using AM;
 
+// ReSharper disable ReturnValueOfPureMethodIsNotUsed
 // ReSharper disable ConvertToLocalFunction
 
 namespace UnitTests.AM

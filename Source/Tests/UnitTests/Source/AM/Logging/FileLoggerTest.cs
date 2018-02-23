@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
-using AM;
 using AM.Logging;
 using AM.Text;
 

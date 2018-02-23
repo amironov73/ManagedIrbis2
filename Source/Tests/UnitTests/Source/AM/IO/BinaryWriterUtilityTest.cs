@@ -75,6 +75,7 @@ namespace UnitTests.AM.IO
 
             byte? actual = BinaryReaderUtility.ReadNullableByte(reader);
             Assert.IsTrue(actual.HasValue);
+            Assert.IsNotNull(expected);
             Assert.AreEqual(expected.Value, actual.Value);
         }
 
@@ -215,6 +216,7 @@ namespace UnitTests.AM.IO
 
             short? actual = BinaryReaderUtility.ReadNullableInt16(reader);
             Assert.IsTrue(actual.HasValue);
+            Assert.IsNotNull(expected);
             Assert.AreEqual(expected.Value, actual.Value);
         }
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using AM;
-using AM.Text;
+﻿using AM;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -14,71 +10,71 @@ namespace UnitTests.AM
     [TestClass]
     public class UtilityTest
     {
-        class MyClass1
-        {
-            public int X { get; set; }
-            public int Y { get; set; }
-        }
+        //class MyClass1
+        //{
+        //    public int X { get; set; }
+        //    public int Y { get; set; }
+        //}
 
-        class MyClass2
-        {
-            public string X { get; set; }
-            public string Y { get; set; }
-        }
+        //class MyClass2
+        //{
+        //    public string X { get; set; }
+        //    public string Y { get; set; }
+        //}
 
-        class MyClass3
-        {
-            public int X, Y;
-        }
+        //class MyClass3
+        //{
+        //    public int X, Y;
+        //}
 
-        class MyClass4
-        {
-            public string X, Y;
-        }
+        //class MyClass4
+        //{
+        //    public string X, Y;
+        //}
 
-        class MyClass5
-        {
-            public int X;
+        //class MyClass5
+        //{
+        //    public int X;
 
-            bool Equals(MyClass5 other)
-            {
-                return X == other.X;
-            }
+        //    bool Equals(MyClass5 other)
+        //    {
+        //        return X == other.X;
+        //    }
 
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((MyClass5)obj);
-            }
+        //    public override bool Equals(object obj)
+        //    {
+        //        if (ReferenceEquals(null, obj)) return false;
+        //        if (ReferenceEquals(this, obj)) return true;
+        //        if (obj.GetType() != this.GetType()) return false;
+        //        return Equals((MyClass5)obj);
+        //    }
 
-            public override int GetHashCode()
-            {
-                return X;
-            }
-        }
+        //    public override int GetHashCode()
+        //    {
+        //        return X;
+        //    }
+        //}
 
-        class MyClass6
-        {
-            public MyClass5 X;
-        }
+        //class MyClass6
+        //{
+        //    public MyClass5 X;
+        //}
 
-        class MyClass7
-        {
-            public int[] X;
-        }
+        //class MyClass7
+        //{
+        //    public int[] X;
+        //}
 
-        class MyClass8
-        {
-            public MyClass7 X;
-        }
+        //class MyClass8
+        //{
+        //    public MyClass7 X;
+        //}
 
-        class MyClass9
-        {
-            public MyClass7 X { get; set; }
-            public MyClass7 Y { get; set; }
-        }
+        //class MyClass9
+        //{
+        //    public MyClass7 X { get; set; }
+        //    public MyClass7 Y { get; set; }
+        //}
 
         //[TestMethod]
         //public void Utility_DumpBytes_1()

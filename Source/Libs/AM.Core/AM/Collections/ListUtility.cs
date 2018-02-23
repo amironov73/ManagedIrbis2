@@ -202,6 +202,7 @@ namespace AM.Collections
         /// Throw <see cref="ArgumentNullException"/>
         /// if the list is <c>null</c> or empty.
         /// </summary>
+        [Pure]
         [NotNull]
         public static IList<T> ThrowIfNullOrEmpty<T>
             (

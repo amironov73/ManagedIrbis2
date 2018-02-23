@@ -1,11 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 
-using AM;
 using AM.Reflection;
-using AM.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

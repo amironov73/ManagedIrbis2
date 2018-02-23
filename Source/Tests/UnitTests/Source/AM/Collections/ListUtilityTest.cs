@@ -7,6 +7,7 @@ using AM.Collections;
 
 // ReSharper disable ExpressionIsAlwaysNull
 // ReSharper disable InvokeAsExtensionMethod
+// ReSharper disable ReturnValueOfPureMethodIsNotUsed
 
 namespace UnitTests.AM.Collections
 {
@@ -97,7 +98,7 @@ namespace UnitTests.AM.Collections
         public void ListUtility_ThrowIfNullOrEmpty_2()
         {
             List<int> list = new List<int>();
-            ListUtility.ThrowIfNullOrEmpty(list, "list");
+            ListUtility.ThrowIfNullOrEmpty(list, nameof(list));
         }
 
         [TestMethod]

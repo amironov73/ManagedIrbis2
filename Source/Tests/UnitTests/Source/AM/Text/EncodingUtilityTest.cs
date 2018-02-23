@@ -1,7 +1,5 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
-using AM;
 using AM.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
