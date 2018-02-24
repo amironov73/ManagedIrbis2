@@ -11,6 +11,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -27,6 +28,7 @@ namespace AM.Runtime
     /// Some useful methods for runtime.
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public static class RuntimeUtility
     {
         #region Properties

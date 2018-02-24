@@ -60,7 +60,7 @@ namespace AM.Reflection
             )
             where T : Attribute
         {
-            Sure.NotNull(classType, "classType");
+            Sure.NotNull(classType, nameof(classType));
 
             var all = classType.GetCustomAttributes
                 (
@@ -82,7 +82,7 @@ namespace AM.Reflection
             )
             where T : Attribute
         {
-            Sure.NotNull(classType, "classType");
+            Sure.NotNull(classType, nameof(classType));
 
             var all = classType.GetCustomAttributes
                 (
@@ -103,7 +103,7 @@ namespace AM.Reflection
             )
             where T : Attribute
         {
-            Sure.NotNull(member, "member");
+            Sure.NotNull(member, nameof(member));
 
             var all = member.GetCustomAttributes
                 (
@@ -124,7 +124,7 @@ namespace AM.Reflection
             )
             where T : Attribute
         {
-            Sure.NotNull(fieldInfo, "fieldInfo");
+            Sure.NotNull(fieldInfo, nameof(fieldInfo));
 
             var all = fieldInfo.GetCustomAttributes
                 (
@@ -145,7 +145,7 @@ namespace AM.Reflection
             )
             where T : Attribute
         {
-            Sure.NotNull(propertyInfo, "propertyInfo");
+            Sure.NotNull(propertyInfo, nameof(propertyInfo));
 
             var all = propertyInfo.GetCustomAttributes
                 (
@@ -198,7 +198,7 @@ namespace AM.Reflection
                 [NotNull] string fieldName
             )
         {
-            Sure.NotNullNorEmpty(fieldName, "fieldName");
+            Sure.NotNullNorEmpty(fieldName, nameof(fieldName));
 
             FieldInfo fieldInfo = typeof(T).GetField
                 (
@@ -210,12 +210,12 @@ namespace AM.Reflection
             {
                 Log.Error
                     (
-                        "ReflectionUtility::GeFieldValue: "
-                        + "can't find field="
+                        nameof(ReflectionUtility) + "::" + nameof(GetFieldValue)
+                        + ": can't find field="
                         + fieldName
                     );
 
-                throw new ArgumentException("fieldName");
+                throw new ArgumentException(fieldName);
             }
 
             return fieldInfo.GetValue(target);
@@ -226,12 +226,12 @@ namespace AM.Reflection
         /// </summary>
         public static bool HasAttribute<T>
             (
-                Type type,
+                [NotNull] Type type,
                 bool inherit
             )
             where T : Attribute
         {
-            Sure.NotNull(type, "type");
+            Sure.NotNull(type, nameof(type));
 
             return !ReferenceEquals
                 (
@@ -245,11 +245,11 @@ namespace AM.Reflection
         /// </summary>
         public static bool HasAttribute<T>
             (
-                MemberInfo member
+                [NotNull] MemberInfo member
             )
             where T : Attribute
         {
-            Sure.NotNull(member, "member");
+            Sure.NotNull(member, nameof(member));
 
             return !ReferenceEquals
                 (
@@ -269,7 +269,7 @@ namespace AM.Reflection
             )
             where TTarget : class
         {
-            Sure.NotNullNorEmpty(fieldName, "fieldName");
+            Sure.NotNullNorEmpty(fieldName, nameof(fieldName));
 
             FieldInfo fieldInfo = typeof(TTarget).GetField
                 (
@@ -281,12 +281,12 @@ namespace AM.Reflection
             {
                 Log.Error
                     (
-                        "ReflectionUtility::SetFieldValue: "
-                        + "can't find field="
+                        nameof(ReflectionUtility) + "::" + nameof(SetFieldValue)
+                        + ": can't find field="
                         + fieldName
                     );
 
-                throw new ArgumentException("fieldName");
+                throw new ArgumentException(fieldName);
             }
 
             fieldInfo.SetValue(target, value);
@@ -301,7 +301,7 @@ namespace AM.Reflection
                 [NotNull] string propertyName
             )
         {
-            Sure.NotNullNorEmpty(propertyName, "propertyName");
+            Sure.NotNullNorEmpty(propertyName, nameof(propertyName));
 
             PropertyInfo propertyInfo = typeof(T).GetProperty
                 (
@@ -313,12 +313,12 @@ namespace AM.Reflection
             {
                 Log.Error
                     (
-                        "ReflectionUtility::GetPropertyValue: "
-                        + "can't find property="
+                        nameof(ReflectionUtility) + "::" + nameof(GetPropertyValue)
+                        + ": can't find property="
                         + propertyName
                     );
 
-                throw new ArgumentException("propertyName");
+                throw new ArgumentException(propertyName);
             }
 
             return propertyInfo.GetValue(target, null);
@@ -333,7 +333,7 @@ namespace AM.Reflection
                 BindingFlags bindingFlags
             )
         {
-            Sure.NotNull(type, "type");
+            Sure.NotNull(type, nameof(type));
 
             List<PropertyOrField> result = new List<PropertyOrField>();
             foreach (PropertyInfo property in type.GetProperties(bindingFlags))
@@ -358,7 +358,7 @@ namespace AM.Reflection
                 TValue value
             )
         {
-            Sure.NotNullNorEmpty(propertyName, "propertyName");
+            Sure.NotNullNorEmpty(propertyName, nameof(propertyName));
 
             PropertyInfo propertyInfo = typeof(TTarget).GetProperty
                 (
@@ -370,12 +370,12 @@ namespace AM.Reflection
             {
                 Log.Error
                     (
-                        "ReflectionUtility::SetPropertyValue: "
-                        + "can't find property="
+                        nameof(ReflectionUtility) + "::" + nameof(SetPropertyValue)
+                        + ": can't find property="
                         + propertyName
                     );
 
-                throw new ArgumentException("propertyName");
+                throw new ArgumentException(propertyName);
             }
 
             propertyInfo.SetValue(target, value, null);

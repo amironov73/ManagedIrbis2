@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 namespace UnitTests.AM.Reflection
 {
     class CanaryClass

@@ -11,6 +11,7 @@
 #region Using directives
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 using AM.Logging;
@@ -28,6 +29,7 @@ namespace AM.Configuration
     /// Some useful routines for System.Configuration.
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public static class ConfigurationUtility
     {
         #region Private members
