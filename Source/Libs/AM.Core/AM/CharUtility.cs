@@ -9,6 +9,8 @@
 
 #region Using directives
 
+using System.Collections.Generic;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -85,6 +87,63 @@ namespace AM
 
             return false;
         }
+
+        /// <summary>
+        /// Проверяет, является ли искомый символ одним
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомый символ.</param>
+        /// <param name="many">Массив проверяемых символов.</param>
+        /// <returns>Найден ли искомый символ.</returns>
+        public static bool OneOf
+            (
+                this char one,
+                [NotNull] IEnumerable<char> many
+            )
+        {
+            foreach (char s in many)
+            {
+                if (one.SameChar(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Проверяет, является ли искомый символ одним
+        /// из перечисленных. Регистр символов не учитывается.
+        /// </summary>
+        /// <param name="one">Искомый символ.</param>
+        /// <param name="many">Массив проверяемых символов.</param>
+        /// <returns>Найден ли искомый символ.</returns>
+        public static bool OneOf
+            (
+                this char one,
+                params char[] many
+            )
+        {
+            foreach (char s in many)
+            {
+                if (one.SameChar(s))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Сравнивает символы с точностью до регистра.
+        /// </summary>
+        /// <param name="one">Первый символ.</param>
+        /// <param name="two">Второй символ.</param>
+        /// <returns>Символы совпадают с точностью до регистра.</returns>
+        public static bool SameChar(this char one, char two)
+            => char.ToUpperInvariant(one) == char.ToUpperInvariant(two);
 
         #endregion
     }

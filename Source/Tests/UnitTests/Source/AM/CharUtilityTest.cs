@@ -1,6 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
 
 using AM;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+// ReSharper disable InvokeAsExtensionMethod
 
 namespace UnitTests.AM
 {
@@ -61,5 +65,39 @@ namespace UnitTests.AM
             Assert.IsFalse(CharUtility.IsUrlSafeChar('\0'));
         }
 
+        [TestMethod]
+        public void CharUtility_OneOf_1()
+        {
+            List<char> list = new List<char>
+            {
+                'a',
+                'b',
+                'c'
+            };
+            Assert.IsTrue(CharUtility.OneOf('a', list));
+            Assert.IsTrue(CharUtility.OneOf('b', list));
+            Assert.IsTrue(CharUtility.OneOf('c', list));
+            Assert.IsFalse(CharUtility.OneOf('d', list));
+            Assert.IsFalse(CharUtility.OneOf(' ', list));
+        }
+
+        [TestMethod]
+        public void CharUtility_OneOf_2()
+        {
+            Assert.IsTrue(CharUtility.OneOf('a', 'a', 'b', 'c'));
+            Assert.IsTrue(CharUtility.OneOf('b', 'a', 'b', 'c'));
+            Assert.IsTrue(CharUtility.OneOf('c', 'a', 'b', 'c'));
+            Assert.IsFalse(CharUtility.OneOf('d', 'a', 'b', 'c'));
+            Assert.IsFalse(CharUtility.OneOf(' ', 'a', 'b', 'c'));
+        }
+
+        [TestMethod]
+        public void CharUtility_SameChar_1()
+        {
+            Assert.IsTrue(CharUtility.SameChar('a', 'a'));
+            Assert.IsTrue(CharUtility.SameChar('a', 'A'));
+            Assert.IsTrue(CharUtility.SameChar('A', 'A'));
+            Assert.IsFalse(CharUtility.SameChar('a', 'B'));
+        }
     }
 }

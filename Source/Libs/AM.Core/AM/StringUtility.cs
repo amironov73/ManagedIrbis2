@@ -265,7 +265,15 @@ namespace AM
                 return first;
             }
 
-            return others.FirstOrDefault(s => !string.IsNullOrEmpty(s));
+            foreach (string other in others)
+            {
+                if (!string.IsNullOrEmpty(other))
+                {
+                    return other;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -467,54 +475,6 @@ namespace AM
         }
 
         /// <summary>
-        /// Проверяет, является ли искомый символ одним
-        /// из перечисленных. Регистр символов не учитывается.
-        /// </summary>
-        /// <param name="one">Искомый символ.</param>
-        /// <param name="many">Массив проверяемых символов.</param>
-        /// <returns>Найден ли искомый символ.</returns>
-        public static bool OneOf
-            (
-                this char one,
-                [NotNull] IEnumerable<char> many
-            )
-        {
-            foreach (char s in many)
-            {
-                if (one.SameChar(s))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Проверяет, является ли искомый символ одним
-        /// из перечисленных. Регистр символов не учитывается.
-        /// </summary>
-        /// <param name="one">Искомый символ.</param>
-        /// <param name="many">Массив проверяемых символов.</param>
-        /// <returns>Найден ли искомый символ.</returns>
-        public static bool OneOf
-            (
-                this char one,
-                params char[] many
-            )
-        {
-            foreach (char s in many)
-            {
-                if (one.SameChar(s))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Replicates given string.
         /// </summary>
         /// <param name="text">String to replicate.</param>
@@ -585,11 +545,15 @@ namespace AM
             }
 
             value = value.ToLowerInvariant();
-            foreach (string s in list)
+            for (int i = 0; i < list.Length; i++)
             {
-                if (value.Contains(s.ToLowerInvariant()))
+                string s = list[i];
+                if (!string.IsNullOrEmpty(s))
                 {
-                    return true;
+                    if (value.Contains(s.ToLowerInvariant()))
+                    {
+                        return true;
+                    }
                 }
             }
 
@@ -642,29 +606,10 @@ namespace AM
             {
                 width = length - offset;
             }
-            if (width <= 0)
-            {
-                return string.Empty;
-            }
 
             string result = text.Substring(offset, width);
 
             return result;
-        }
-
-        /// <summary>
-        /// Сравнивает символы с точностью до регистра.
-        /// </summary>
-        /// <param name="one">Первый символ.</param>
-        /// <param name="two">Второй символ.</param>
-        /// <returns>Символы совпадают с точностью до регистра.</returns>
-        public static bool SameChar
-            (
-                this char one,
-                char two
-            )
-        {
-            return char.ToUpperInvariant(one) == char.ToUpperInvariant(two);
         }
 
         /// <summary>
@@ -673,6 +618,7 @@ namespace AM
         /// <param name="one">Первая строка.</param>
         /// <param name="two">Вторая строка.</param>
         /// <returns>Строки совпадают с точностью до регистра.</returns>
+        [Pure]
         public static bool SameString
             (
                 [CanBeNull] this string one,
@@ -690,6 +636,7 @@ namespace AM
         /// <summary>
         /// Сравнивает строки.
         /// </summary>
+        [Pure]
         public static bool SameStringSensitive
             (
                 [CanBeNull] this string one,
