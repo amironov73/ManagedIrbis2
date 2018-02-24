@@ -8,7 +8,7 @@ namespace UnitTests.AM
     public class CharUtilityTest
     {
         [TestMethod]
-        public void CharUtility_IsArabicDigit()
+        public void CharUtility_IsArabicDigit_1()
         {
             Assert.IsTrue('0'.IsArabicDigit());
             Assert.IsTrue('9'.IsArabicDigit());
@@ -17,7 +17,7 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        public void CharUtility_IsLatinLetter()
+        public void CharUtility_IsLatinLetter_1()
         {
             Assert.IsTrue('A'.IsLatinLetter());
             Assert.IsTrue('z'.IsLatinLetter());
@@ -26,7 +26,7 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        public void CharUtility_IsLatinLetterOrArabicDigit()
+        public void CharUtility_IsLatinLetterOrArabicDigit_1()
         {
             Assert.IsTrue('0'.IsLatinLetterOrArabicDigit());
             Assert.IsTrue('9'.IsLatinLetterOrArabicDigit());
@@ -39,12 +39,26 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        public void CharUtility_IsRussianLetter()
+        public void CharUtility_IsRussianLetter_1()
         {
             Assert.IsTrue('А'.IsRussianLetter());
             Assert.IsTrue('Я'.IsRussianLetter());
             Assert.IsFalse('A'.IsRussianLetter());
             Assert.IsFalse('0'.IsRussianLetter());
+        }
+
+        [TestMethod]
+        public void CharUtility_IsUrlSafeChar_1()
+        {
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('A'));
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('Z'));
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('a'));
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('z'));
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('_'));
+            Assert.IsTrue(CharUtility.IsUrlSafeChar('-'));
+            Assert.IsFalse(CharUtility.IsUrlSafeChar('%'));
+            Assert.IsFalse(CharUtility.IsUrlSafeChar('/'));
+            Assert.IsFalse(CharUtility.IsUrlSafeChar('\0'));
         }
 
     }

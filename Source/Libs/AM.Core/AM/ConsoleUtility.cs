@@ -90,10 +90,7 @@ namespace AM
                 int codePage
             )
         {
-            SetOutputCodePage
-                (
-                    Encoding.GetEncoding(codePage)
-                );
+            SetOutputCodePage(Encoding.GetEncoding(codePage));
         }
 
         /// <summary>
@@ -106,10 +103,7 @@ namespace AM
         {
             Sure.NotNullNorEmpty(codePage, nameof(codePage));
 
-            SetOutputCodePage
-                (
-                    Encoding.GetEncoding(codePage)
-                );
+            SetOutputCodePage(Encoding.GetEncoding(codePage));
         }
     }
 }

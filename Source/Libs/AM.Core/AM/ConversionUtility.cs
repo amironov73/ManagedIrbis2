@@ -11,7 +11,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Reflection;
 
 using AM.Logging;
 
@@ -75,6 +74,7 @@ namespace AM
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -106,14 +106,14 @@ namespace AM
                 return (T)value;
             }
 
-            IConvertible convertible = value as IConvertible;
-            if (ReferenceEquals(convertible, null))
+            if (value is IConvertible)
             {
                 return (T)Convert.ChangeType(value, targetType);
             }
 
             TypeConverter converterFrom = TypeDescriptor.GetConverter(value);
-            if (converterFrom.CanConvertTo(targetType))
+            if (!ReferenceEquals(converterFrom, null)
+                && converterFrom.CanConvertTo(targetType))
             {
                 return (T)converterFrom.ConvertTo
                             (
@@ -122,31 +122,11 @@ namespace AM
                             );
             }
 
-            TypeConverter converterTo
-                = TypeDescriptor.GetConverter(targetType);
-            if (converterTo.CanConvertFrom(sourceType))
+            TypeConverter converterTo = TypeDescriptor.GetConverter(targetType);
+            if (!ReferenceEquals(converterTo, null)
+                && converterTo.CanConvertFrom(sourceType))
             {
                 return (T)converterTo.ConvertFrom(value);
-            }
-
-            foreach (MethodInfo miOpChangeType in
-                sourceType.GetMethods(BindingFlags.Public | BindingFlags.Static))
-            {
-                if (miOpChangeType.IsSpecialName
-                     && (miOpChangeType.Name == "op_Implicit"
-                          || miOpChangeType.Name == "op_Explicit"
-                        )
-                     && miOpChangeType.ReturnType.IsAssignableFrom(targetType)
-                    )
-                {
-                    ParameterInfo[] psOpChangeType = miOpChangeType.GetParameters();
-                    if ((psOpChangeType.Length == 1)
-                         && (psOpChangeType[0].ParameterType == sourceType)
-                        )
-                    {
-                        return (T)miOpChangeType.Invoke(null, new[] { value });
-                    }
-                }
             }
 
             throw new ArsMagnaException();
@@ -172,16 +152,9 @@ namespace AM
                 return (bool)value;
             }
 
-            //if (value is bool?)
-            //{
-            //    return ((bool?)value).Value;
-            //}
-
-            bool result;
-
             try
             {
-                result = bool.Parse(value as string);
+                bool result = bool.Parse(value as string);
 
                 return result;
             }
@@ -192,73 +165,62 @@ namespace AM
             }
 
             string svalue = value as string;
-            if (svalue == "false"
-                 || svalue == "0"
-                 || svalue == "no"
-                 || svalue == "n"
-                 || svalue == "off"
-                 || svalue == "negative"
-                 || svalue == "neg"
-                 || svalue == "disabled"
-                 || svalue == "incorrect"
-                 || svalue == "wrong"
-                 || svalue == "нет"
+            if (!ReferenceEquals(svalue, null))
+            {
+                svalue = svalue.ToLowerInvariant();
+
+                if (svalue == "false"
+                    || svalue == "0"
+                    || svalue == "no"
+                    || svalue == "n"
+                    || svalue == "off"
+                    || svalue == "negative"
+                    || svalue == "neg"
+                    || svalue == "disabled"
+                    || svalue == "incorrect"
+                    || svalue == "wrong"
+                    || svalue == "нет"
                 )
-            {
-                return false;
-            }
+                {
+                    return false;
+                }
 
-            if (svalue == "true"
-                 || svalue == "1"
-                 || svalue == "yes"
-                 || svalue == "y"
-                 || svalue == "on"
-                 || svalue == "positiva"
-                 || svalue == "pos"
-                 || svalue == "enabled"
-                 || svalue == "correct"
-                 || svalue == "right"
-                 || svalue == "да"
+                if (svalue == "true"
+                    || svalue == "1"
+                    || svalue == "yes"
+                    || svalue == "y"
+                    || svalue == "on"
+                    || svalue == "positiva"
+                    || svalue == "pos"
+                    || svalue == "enabled"
+                    || svalue == "correct"
+                    || svalue == "right"
+                    || svalue == "да"
                 )
-            {
-                return true;
+                {
+                    return true;
+                }
             }
 
-            if (value is int
-                 || value is uint
-                 || value is byte
-                 || value is sbyte)
+            if (value is IConvertible)
             {
-                int intValue = (int)value;
-                return intValue != 0;
+                return Convert.ToBoolean(value);
             }
 
-            if (value is long
-                 || value is ulong
-                )
+            TypeConverter converterFrom = TypeDescriptor.GetConverter(value);
+            if (!ReferenceEquals(converterFrom, null)
+                && converterFrom.CanConvertTo(typeof(bool)))
             {
-                long longValue = (long)value;
-                return longValue != 0L;
-            }
-
-            if (value is decimal)
-            {
-                decimal doubleValue = (decimal)value;
-                return doubleValue != 0m;
-            }
-
-            if (value is float
-                 || value is double)
-            {
-                double doubleValue = (double)value;
-
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                return doubleValue != 0.0;
+                return (bool)converterFrom.ConvertTo
+                    (
+                        value,
+                        typeof(bool)
+                    );
             }
 
             Log.Error
                 (
-                    "ConversionUtility::ToBoolean: "
+                    nameof(ConversionUtility) + "::" + nameof(ToBoolean)
                     + "bad value="
                     + value
                 );

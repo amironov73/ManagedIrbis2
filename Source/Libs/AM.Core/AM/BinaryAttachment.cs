@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* BinaryAttachment.cs --
+/* BinaryAttachment.cs -- binary attachment for ArsMagnaException
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -16,11 +16,12 @@ using JetBrains.Annotations;
 #endregion
 
 // ReSharper disable VirtualMemberCallInConstructor
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace AM
 {
     /// <summary>
-    /// Binary attachment.
+    /// Binary attachment (e. g. for <see cref="ArsMagnaException"/>).
     /// </summary>
     [PublicAPI]
     public class BinaryAttachment
