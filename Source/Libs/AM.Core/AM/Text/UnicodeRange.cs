@@ -19,7 +19,6 @@ using AM.Runtime;
 using JetBrains.Annotations;
 
 using Newtonsoft.Json;
-// ReSharper disable All
 
 #endregion
 
@@ -102,14 +101,14 @@ namespace AM.Text
         /// </summary>
         [XmlAttribute("from")]
         [JsonProperty("from")]
-        public char From { get; private set; }
+        public char From { get; set; }
 
         /// <summary>
         /// To (including).
         /// </summary>
         [XmlAttribute("to")]
         [JsonProperty("to")]
-        public char To { get; private set; }
+        public char To { get; set; }
 
         #endregion
 
