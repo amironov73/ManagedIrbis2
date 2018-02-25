@@ -40,11 +40,7 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
-            bool isNull = !reader.ReadBoolean();
-            if (isNull)
-            {
-                return null;
-            }
+            Sure.NotNull(reader, nameof(reader));
 
             int count = reader.ReadPackedInt32();
             T[] result = new T[count];
@@ -69,6 +65,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
+            Sure.FileExists(fileName, nameof(fileName));
+
             using (Stream stream = File.OpenRead(fileName))
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -87,6 +85,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
+            Sure.FileExists(fileName, nameof(fileName));
+
             using (Stream stream = File.OpenRead(fileName))
             using (DeflateStream deflate = new DeflateStream
                 (
@@ -108,7 +108,7 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (Stream stream = new MemoryStream(array))
             using (BinaryReader reader = new BinaryReader(stream))
@@ -126,7 +126,7 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (Stream stream = new MemoryStream(array))
             using (DeflateStream deflate = new DeflateStream
@@ -150,7 +150,7 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             bool isNull = !reader.ReadBoolean();
             if (isNull)
@@ -174,6 +174,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
+            Sure.FileExists(fileName, nameof(fileName));
+
             using (Stream stream = File.OpenRead(fileName))
             using (BinaryReader reader = new BinaryReader(stream))
             {
@@ -195,6 +197,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
+            Sure.FileExists(fileName, nameof(fileName));
+
             using (Stream stream = File.OpenRead(fileName))
             using (DeflateStream deflate = new DeflateStream
                 (
@@ -219,7 +223,7 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (Stream stream = new MemoryStream(array))
             using (BinaryReader reader = new BinaryReader(stream))
@@ -235,10 +239,11 @@ namespace AM.Runtime
             (
                 [NotNull] this string text
             )
-            where T: class, IHandmadeSerializable, new()
+            where T : class, IHandmadeSerializable, new()
         {
             byte[] bytes = Convert.FromBase64String(text);
             T result = bytes.RestoreObjectFromZipMemory<T>();
+
             return result;
         }
 
@@ -249,9 +254,9 @@ namespace AM.Runtime
             (
                 [NotNull] this byte[] array
             )
-            where T: class, IHandmadeSerializable, new()
+            where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (Stream stream = new MemoryStream(array))
             using (DeflateStream deflate = new DeflateStream
@@ -261,7 +266,10 @@ namespace AM.Runtime
                 ))
             using (BinaryReader reader = new BinaryReader(deflate))
             {
-                return reader.RestoreNullable<T>();
+                T result = new T();
+                result.RestoreFromStream(reader);
+
+                return result;
             }
         }
 
@@ -270,25 +278,18 @@ namespace AM.Runtime
         /// </summary>
         public static void SaveToStream<T>
             (
-                [CanBeNull][ItemNotNull] this T[] array,
+                [NotNull][ItemNotNull] this T[] array,
                 [NotNull] BinaryWriter writer
             )
             where T : IHandmadeSerializable
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(array, nameof(array));
+            Sure.NotNull(writer, nameof(writer));
 
-            if (ReferenceEquals(array, null))
+            writer.WritePackedInt32(array.Length);
+            foreach (T item in array)
             {
-                writer.Write(false);
-            }
-            else
-            {
-                writer.Write(true);
-                writer.WritePackedInt32(array.Length);
-                foreach (T item in array)
-                {
-                    item.SaveToStream(writer);
-                }
+                item.SaveToStream(writer);
             }
         }
 
@@ -303,8 +304,8 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (Stream stream = File.Create(fileName))
             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -324,8 +325,8 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (Stream stream = File.Create(fileName))
             using (DeflateStream deflate = new DeflateStream
@@ -350,8 +351,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable
         {
-            Sure.NotNull(array, "array");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(array, nameof(array));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (Stream stream = File.Create(fileName))
             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -369,7 +370,7 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(obj, "obj");
+            Sure.NotNull(obj, nameof(obj));
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -389,9 +390,9 @@ namespace AM.Runtime
             (
                 [NotNull][ItemNotNull] this T[] array
             )
-            where T: IHandmadeSerializable, new()
+            where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -410,8 +411,10 @@ namespace AM.Runtime
             (
                 [NotNull] this T obj
             )
-            where T: class, IHandmadeSerializable, new()
+            where T : class, IHandmadeSerializable, new()
         {
+            Sure.NotNull(obj, nameof(obj));
+
             byte[] bytes = obj.SaveToZipMemory();
             string result = Convert.ToBase64String(bytes);
 
@@ -429,8 +432,8 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(array, nameof(array));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (Stream stream = File.Create(fileName))
             using (DeflateStream deflate = new DeflateStream
@@ -453,7 +456,7 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(obj, "obj");
+            Sure.NotNull(obj, nameof(obj));
 
             using (MemoryStream stream = new MemoryStream())
             using (DeflateStream deflate = new DeflateStream
@@ -465,7 +468,9 @@ namespace AM.Runtime
                 using (BinaryWriter writer = new BinaryWriter(deflate))
                 {
                     obj.SaveToStream(writer);
+                    //writer.WriteNullable(obj);
                 }
+
                 return stream.ToArray();
             }
         }
@@ -479,7 +484,7 @@ namespace AM.Runtime
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, "array");
+            Sure.NotNull(array, nameof(array));
 
             using (MemoryStream stream = new MemoryStream())
             using (DeflateStream deflate = new DeflateStream
@@ -506,7 +511,7 @@ namespace AM.Runtime
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             if (ReferenceEquals(obj, null))
             {
