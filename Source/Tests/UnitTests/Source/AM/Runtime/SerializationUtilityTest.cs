@@ -75,10 +75,10 @@ namespace UnitTests.AM.Runtime
         [TestMethod]
         public void SerializationUtility_SaveToFile_2()
         {
-            const int ArraySize = 10;
+            const int arraySize = 10;
             string fileName = Path.GetTempFileName();
-            CanaryClass[] first = new CanaryClass[ArraySize];
-            for (int i = 0; i < ArraySize; i++)
+            CanaryClass[] first = new CanaryClass[arraySize];
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i] = _GetCanary();
                 first[i].Age = i;
@@ -87,7 +87,7 @@ namespace UnitTests.AM.Runtime
             CanaryClass[] second = SerializationUtility.RestoreArrayFromFile<CanaryClass>(fileName);
             Assert.IsNotNull(second);
             Assert.AreEqual(first.Length, second.Length);
-            for (int i = 0; i < ArraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i].EnsureSame(second[i]);
             }
@@ -114,9 +114,9 @@ namespace UnitTests.AM.Runtime
         [TestMethod]
         public void SerializationUtility_SaveToMemory_3()
         {
-            const int ArraySize = 10;
-            CanaryClass[] first = new CanaryClass[ArraySize];
-            for (int i = 0; i < ArraySize; i++)
+            const int arraySize = 10;
+            CanaryClass[] first = new CanaryClass[arraySize];
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i] = _GetCanary();
                 first[i].Age = i;
@@ -124,7 +124,7 @@ namespace UnitTests.AM.Runtime
             byte[] memory = first.SaveToMemory();
             CanaryClass[] second = memory.RestoreArrayFromMemory<CanaryClass>();
             Assert.AreEqual(first.Length, second.Length);
-            for (int i = 0; i < ArraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i].EnsureSame(second[i]);
             }
@@ -161,10 +161,10 @@ namespace UnitTests.AM.Runtime
         [TestMethod]
         public void SerializationUtility_SaveToZipFile_2()
         {
-            const int ArraySize = 10;
+            const int arraySize = 10;
             string fileName = Path.GetTempFileName();
-            CanaryClass[] first = new CanaryClass[ArraySize];
-            for (int i = 0; i < ArraySize; i++)
+            CanaryClass[] first = new CanaryClass[arraySize];
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i] = _GetCanary();
                 first[i].Age = i;
@@ -173,7 +173,7 @@ namespace UnitTests.AM.Runtime
             CanaryClass[] second = SerializationUtility.RestoreArrayFromZipFile<CanaryClass>(fileName);
             Assert.IsNotNull(second);
             Assert.AreEqual(first.Length, second.Length);
-            for (int i = 0; i < ArraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i].EnsureSame(second[i]);
             }
@@ -191,9 +191,9 @@ namespace UnitTests.AM.Runtime
         [TestMethod]
         public void SerializationUtility_SaveToZipMemory_2()
         {
-            const int ArraySize = 10;
-            CanaryClass[] first = new CanaryClass[ArraySize];
-            for (int i = 0; i < ArraySize; i++)
+            const int arraySize = 10;
+            CanaryClass[] first = new CanaryClass[arraySize];
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i] = _GetCanary();
                 first[i].Age = i;
@@ -201,7 +201,7 @@ namespace UnitTests.AM.Runtime
             byte[] memory = first.SaveToZipMemory();
             CanaryClass[] second = memory.RestoreArrayFromZipMemory<CanaryClass>();
             Assert.AreEqual(first.Length, second.Length);
-            for (int i = 0; i < ArraySize; i++)
+            for (int i = 0; i < arraySize; i++)
             {
                 first[i].EnsureSame(second[i]);
             }

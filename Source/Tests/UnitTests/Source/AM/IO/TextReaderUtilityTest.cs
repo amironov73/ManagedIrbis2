@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AM;
 using AM.IO;
 
+// ReSharper disable InconsistentNaming
+
 namespace UnitTests.AM.IO
 {
     [TestClass]
