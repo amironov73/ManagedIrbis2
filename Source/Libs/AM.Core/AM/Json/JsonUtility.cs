@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -34,6 +35,7 @@ namespace AM.Json
         /// <summary>
         /// Expand $type's.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ExpandTypes
             (
                 [NotNull] JObject obj,
@@ -41,11 +43,9 @@ namespace AM.Json
                 [NotNull] string assembly
             )
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNullNorEmpty(nameSpace, "nameSpace");
-            Sure.NotNullNorEmpty(assembly, "assembly");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNullNorEmpty(nameSpace, nameof(nameSpace));
+            Sure.NotNullNorEmpty(assembly, nameof(assembly));
 
             IEnumerable<JValue> values = obj
                 .SelectTokens("$..$type")
@@ -63,23 +63,20 @@ namespace AM.Json
                     value.Value = typeName;
                 }
             }
-
-#endif
         }
 
         /// <summary>
         /// 
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void Include
             (
                 [NotNull] JObject obj,
                 [NotNull] Action<JProperty> resolver
             )
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNull(resolver, "resolver");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNull(resolver, nameof(resolver));
 
             JValue[] values = obj
                 .SelectTokens("$..$include")
@@ -88,24 +85,21 @@ namespace AM.Json
 
             foreach (JValue value in values)
             {
-                JProperty property = (JProperty) value.Parent;
+                JProperty property = (JProperty)value.Parent;
                 resolver(property);
             }
-
-#endif
         }
 
         /// <summary>
         /// 
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void Include
             (
                 [NotNull] JObject obj
             )
         {
-            Sure.NotNull(obj, "obj");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(obj, nameof(obj));
 
             JToken[] tokens = obj
                 .SelectTokens("$..$include")
@@ -116,21 +110,20 @@ namespace AM.Json
                 JProperty property = (JProperty)token.Parent;
                 Resolve(property);
             }
-
-#endif
         }
 
         /// <summary>
         /// 
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void Include
             (
                 [NotNull] JObject obj,
                 [NotNull] string newName
             )
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNullNorEmpty(newName, "newName");
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNullNorEmpty(newName, nameof(newName));
 
             Action<JProperty> resolver = prop =>
             {
@@ -149,20 +142,12 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-
-#if WINMOBILE || PocketPC
-
-            throw new NotImplementedException();
-
-#else
+            Sure.FileExists(fileName, nameof(fileName));
 
             string text = File.ReadAllText(fileName);
             JArray result = JArray.Parse(text);
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -175,20 +160,12 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-
-#if WINMOBILE || PocketPC
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             string text = File.ReadAllText(fileName);
             JObject result = JObject.Parse(text);
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -201,20 +178,12 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-
-#if WINMOBILE || PocketPC
-
-            throw new NotImplementedException();
-
-#else
+            Sure.FileExists(fileName, nameof(fileName));
 
             string text = File.ReadAllText(fileName);
             T result = JsonConvert.DeserializeObject<T>(text);
 
             return result;
-
-#endif
         }
 
         /// <summary>
@@ -227,15 +196,11 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(array, "array");
-            Sure.NotNullNorEmpty(fileName, "fileName");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(array, nameof(array));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             string text = array.ToString(Formatting.Indented);
             File.WriteAllText(fileName, text);
-
-#endif
         }
 
         /// <summary>
@@ -247,15 +212,11 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(obj, "obj");
-            Sure.NotNullNorEmpty(fileName, "fileName");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(obj, nameof(obj));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             string text = obj.ToString(Formatting.Indented);
             File.WriteAllText(fileName, text);
-
-#endif
         }
 
         /// <summary>
@@ -267,28 +228,23 @@ namespace AM.Json
                 [NotNull] string fileName
             )
         {
-#if !WINMOBILE && !PocketPC
-
             JObject json = JObject.FromObject(obj);
 
             SaveObjectToFile(json, fileName);
-
-#endif
         }
 
         /// <summary>
         /// Resolver for <see cref="Include(JObject,Action{JProperty})"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void Resolve
             (
                 [NotNull] JProperty property,
                 [NotNull] string newName
             )
         {
-            Sure.NotNull(property, "property");
-            Sure.NotNull(newName, "newName");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(property, nameof(property));
+            Sure.NotNull(newName, nameof(newName));
 
             // TODO use path for searching
 
@@ -297,51 +253,40 @@ namespace AM.Json
             JObject value = JObject.Parse(text);
             JProperty newProperty = new JProperty(newName, value);
             property.Replace(newProperty);
-
-#endif
         }
 
         /// <summary>
         /// Resolver for <see cref="Include(JObject,Action{JProperty})"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void Resolve
             (
                 [NotNull] JProperty property
             )
         {
-            Sure.NotNull(property, "property");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(property, nameof(property));
 
             // TODO use path for searching
 
-            JObject obj = (JObject) property.Value;
+            JObject obj = (JObject)property.Value;
             string newName = obj["name"].Value<string>();
             string fileName = obj["file"].Value<string>();
             string text = File.ReadAllText(fileName);
             JObject value = JObject.Parse(text);
             JProperty newProperty = new JProperty(newName, value);
             property.Replace(newProperty);
-
-#endif
         }
 
-            /// <summary>
-            /// Serialize to short string.
-            /// </summary>
+        /// <summary>
+        /// Serialize to short string.
+        /// </summary>
         [NotNull]
         public static string SerializeShort
             (
                 [NotNull] object obj
             )
         {
-            Sure.NotNull(obj, "obj");
-
-#if WINMOBILE || PocketPC
-
-            throw new NotImplementedException();
-
-#else
+            Sure.NotNull(obj, nameof(obj));
 
             JsonSerializer serializer = new JsonSerializer
             {
@@ -356,8 +301,6 @@ namespace AM.Json
             serializer.Serialize(jsonWriter, obj);
 
             return textWriter.ToString();
-
-#endif
         }
 
         #endregion

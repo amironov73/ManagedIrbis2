@@ -56,6 +56,8 @@
   <ItemGroup>
     <Folder Include="AM\Logging\" />
     <Folder Include="AM\Collections\" />
+    <Folder Include="AM\ConsoleIO\" />
+    <Folder Include="AM\Threading\" />
     <Folder Include="AM\Reflection\" />
     <Folder Include="AM\Runtime\" />
     <Folder Include="AM\Parameters\" />

@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using AM.Collections;
+using AM.Runtime;
 
 namespace UnitTests.AM.Collections
 {
@@ -12,7 +13,7 @@ namespace UnitTests.AM.Collections
         : Common.CommonUnitTest
     {
         [TestMethod]
-        public void StringDictionary_Construction()
+        public void StringDictionary_Construction_1()
         {
             StringDictionary dictionary = new StringDictionary();
             Assert.AreEqual(0, dictionary.Count);
@@ -32,44 +33,44 @@ namespace UnitTests.AM.Collections
             Assert.AreEqual("first", dictionary["one"]);
         }
 
-        //private void _TestSerialization
-        //    (
-        //        StringDictionary first
-        //    )
-        //{
-        //    byte[] bytes = first.SaveToMemory();
+        private void _TestSerialization
+            (
+                StringDictionary first
+            )
+        {
+            byte[] bytes = first.SaveToMemory();
 
-        //    StringDictionary second = bytes
-        //        .RestoreObjectFromMemory<StringDictionary>();
+            StringDictionary second = bytes
+                .RestoreObjectFromMemory<StringDictionary>();
 
-        //    Assert.AreEqual(first.Count, second.Count);
-        //    foreach (var pair in first)
-        //    {
-        //        string key = pair.Key;
-        //        string expected = pair.Value;
-        //        string actual = second[key];
+            Assert.AreEqual(first.Count, second.Count);
+            foreach (var pair in first)
+            {
+                string key = pair.Key;
+                string expected = pair.Value;
+                string actual = second[key];
 
-        //        Assert.AreEqual(expected, actual);
-        //    }
-        //}
-
-        //[TestMethod]
-        //public void StringDictionary_Serialization()
-        //{
-        //    StringDictionary dictionary = new StringDictionary();
-        //    _TestSerialization(dictionary);
-
-        //    dictionary = new StringDictionary
-        //    {
-        //        {"one", "first"},
-        //        {"two", "second"},
-        //        {"three", "third"}
-        //    };
-        //    _TestSerialization(dictionary);
-        //}
+                Assert.AreEqual(expected, actual);
+            }
+        }
 
         [TestMethod]
-        public void StringDictionary_Load_Save1()
+        public void StringDictionary_Serialization_1()
+        {
+            StringDictionary dictionary = new StringDictionary();
+            _TestSerialization(dictionary);
+
+            dictionary = new StringDictionary
+            {
+                {"one", "first"},
+                {"two", "second"},
+                {"three", "third"}
+            };
+            _TestSerialization(dictionary);
+        }
+
+        [TestMethod]
+        public void StringDictionary_Load_Save_1()
         {
             StringDictionary first = new StringDictionary
             {
@@ -86,7 +87,7 @@ namespace UnitTests.AM.Collections
         }
 
         [TestMethod]
-        public void StringDictionary_Load_Save2()
+        public void StringDictionary_Load_Save_2()
         {
             string fileName = Path.GetTempFileName();
 
