@@ -11,11 +11,14 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
 
 namespace AM.IO
 {
@@ -57,7 +60,8 @@ namespace AM.IO
         /// </summary>
         public virtual void RealClose()
         {
-            _innerReader.Dispose();
+            //_innerReader.Dispose();
+            _innerReader.Close();
         }
 
         #endregion
@@ -71,6 +75,7 @@ namespace AM.IO
         }
 
         /// <inheritdoc cref="TextReader.Dispose(bool)"/>
+        [ExcludeFromCodeCoverage]
         protected override void Dispose
             (
                 bool disposing
@@ -135,6 +140,7 @@ namespace AM.IO
         #region IDisposable members
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
+        [ExcludeFromCodeCoverage]
         void IDisposable.Dispose()
         {
             // Nothing to do actually

@@ -31,13 +31,21 @@ namespace UnitTests.AM.Parameters
         }
 
         [TestMethod]
-        public void Parameter_Serialize()
+        public void Parameter_Serialization_1()
         {
             Parameter parameter = new Parameter();
             _TestSerialization(parameter);
 
             parameter = new Parameter("Name", "Value");
             _TestSerialization(parameter);
+        }
+
+        [TestMethod]
+        public void Parameter_Values_1()
+        {
+            Parameter parameter = new Parameter();
+            parameter.Values.Add("some");
+            Assert.AreEqual(1, parameter.Values.Count);
         }
 
         [TestMethod]
