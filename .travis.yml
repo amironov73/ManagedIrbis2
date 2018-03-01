@@ -4,4 +4,4 @@ dotnet: 2.0.0
 script:
   - dotnet restore ./Source/
   - dotnet build ./Source/
-  - dotnet test --no-build ./Source/Tests/UnitTests/
+  - dotnet test --no-build ./Source/UnitTests/
