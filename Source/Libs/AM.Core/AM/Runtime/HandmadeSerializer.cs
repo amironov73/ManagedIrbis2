@@ -12,6 +12,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+
 using AM.IO;
 using AM.Logging;
 
@@ -94,6 +95,7 @@ namespace AM.Runtime
             Type type = ReferenceEquals(Assembly, null)
                 ? Type.GetType(typeName, true)
                 : Assembly.GetType(typeName, true);
+
             IHandmadeSerializable result = (IHandmadeSerializable) Activator.CreateInstance(type);
 
             result.RestoreFromStream(reader);
