@@ -26,12 +26,12 @@ namespace AM.Text
     {
         #region Private members
 
-        private static readonly IFormatProvider _formatProvider;
+        private static readonly IFormatProvider FormatProvider;
 
         static RussianFormat()
         {
             //_formatProvider = CultureInfo.GetCultureInfo("ru-RU");
-            _formatProvider = new CultureInfo("ru-RU");
+            FormatProvider = new CultureInfo("ru-RU");
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     arg0
                 );
@@ -71,7 +71,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     arg0,
                     arg1
@@ -94,7 +94,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     arg0,
                     arg1,
@@ -116,7 +116,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     args
                 );
@@ -136,7 +136,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     arg0
                 );
@@ -156,7 +156,7 @@ namespace AM.Text
         {
             string result = string.Format
                 (
-                    _formatProvider,
+                    FormatProvider,
                     format,
                     arg0
                 );
@@ -173,7 +173,7 @@ namespace AM.Text
                 int arg0
             )
         {
-            string result = arg0.ToString(_formatProvider);
+            string result = arg0.ToString(FormatProvider);
 
             return result;
         }
@@ -187,7 +187,7 @@ namespace AM.Text
                 double arg0
             )
         {
-            string result = arg0.ToString(_formatProvider);
+            string result = arg0.ToString(FormatProvider);
 
             return result;
         }
@@ -201,7 +201,7 @@ namespace AM.Text
                 decimal arg0
             )
         {
-            string result = arg0.ToString(_formatProvider);
+            string result = arg0.ToString(FormatProvider);
 
             return result;
         }
