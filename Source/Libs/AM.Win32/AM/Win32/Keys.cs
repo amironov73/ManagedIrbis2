@@ -7,12 +7,18 @@
  * Status: poor
  */
 
+#region Using directives
+
+using JetBrains.Annotations;
+
+#endregion
 
 #pragma warning disable CS1591
 
 namespace System.Windows.Forms
 {
     [Flags]
+    [PublicAPI]
     public enum Keys
     {
         KeyCode = 0x0000FFFF,
