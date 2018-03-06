@@ -25,14 +25,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\AM.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\AM.Win32.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\netstandard2.0\AM.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\AM.Win32.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,13 +54,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AM\Logging\" />
-    <Folder Include="AM\Collections\" />
-    <Folder Include="AM\ConsoleIO\" />
-    <Folder Include="AM\Reflection\" />
-    <Folder Include="AM\Runtime\" />
-    <Folder Include="AM\Parameters\" />
+    <Folder Include="AM\Win32\Gdi32\" />
+    <Folder Include="AM\Win32\Kernel32\" />
+    <Folder Include="AM\Win32\User32\" />
     <Folder Include="Properties" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AM.Core\AM.Core.csproj" />
   </ItemGroup>
 
 </Project>

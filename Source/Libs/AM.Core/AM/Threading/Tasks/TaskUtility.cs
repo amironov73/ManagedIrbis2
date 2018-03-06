@@ -30,6 +30,12 @@ namespace AM.Threading.Tasks
         #region Public methods
 
         /// <summary>
+        /// Сбегание в ThreadPool.
+        /// </summary>
+        public static ThreadPoolRedirector RedirectToThreadPool() =>
+            new ThreadPoolRedirector();
+
+        /// <summary>
         /// Waits for the task to complete, unwrapping any exceptions.
         /// </summary>
         /// <param name="task">The task. May not be <c>null</c>.</param>
