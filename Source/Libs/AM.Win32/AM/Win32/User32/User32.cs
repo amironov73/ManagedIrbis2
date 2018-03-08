@@ -12,6 +12,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
+using JetBrains.Annotations;
+
 #endregion
 
 namespace AM.Win32
@@ -19,6 +21,7 @@ namespace AM.Win32
     /// <summary>
     /// Wrapper for USER32.DLL API.
     /// </summary>
+    [PublicAPI]
     public static class User32
     {
         #region Constants
@@ -541,10 +544,40 @@ namespace AM.Win32
         /// of bytes of private driver data following the DEVMODE structure. 
         /// In addition, you can use any or all of members 
         /// of the DEVMODE structure.</para></param>
-        /// <param name="dwflags"></param>
-        /// <returns></returns>
+        /// <param name="dwflags">Indicates how the graphics
+        /// mode should be changed.</param>
+        /// <returns>The ChangeDisplaySettings function returns
+        /// one of the following values.
+        ///
+        /// DISP_CHANGE_SUCCESSFUL
+        /// The settings change was successful.
+        ///
+        /// DISP_CHANGE_BADDUALVIEW
+        ///
+        /// The settings change was unsuccessful because the system
+        /// is DualView capable.
+        ///
+        /// DISP_CHANGE_BADFLAGS
+        /// An invalid set of flags was passed in.
+        ///
+        /// DISP_CHANGE_BADMODE
+        /// The graphics mode is not supported.
+        ///
+        /// DISP_CHANGE_BADPARAM
+        /// An invalid parameter was passed in. This can include
+        /// an invalid flag or combination of flags.
+        ///
+        /// DISP_CHANGE_FAILED
+        /// The display driver failed the specified graphics mode.
+        ///
+        /// DISP_CHANGE_NOTUPDATED
+        /// Unable to write settings to the registry.
+        ///
+        /// DISP_CHANGE_RESTART
+        /// The computer must be restarted for the graphics mode to work.
+        /// </returns>
         [DllImport(DllName, SetLastError = true,
-            EntryPoint = "ChangeDisplaySettingsW")]
+        EntryPoint = "ChangeDisplaySettingsW")]
         public static extern int ChangeDisplaySettings
             (
                 ref DEVMODEW_DISPLAY lpDevMode,
