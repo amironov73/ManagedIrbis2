@@ -25,14 +25,14 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\netstandard2.0\AM.Win32.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\AM.Drawing.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\netstandard2.0\AM.Win32.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.0\AM.Drawing.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
