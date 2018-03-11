@@ -251,7 +251,7 @@ namespace AM
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [CanBeNull]
         public static string IfEmpty
@@ -475,6 +475,61 @@ namespace AM
         }
 
         /// <summary>
+        /// Replace control characters in the text.
+        /// </summary>
+        [CanBeNull]
+        public static string ReplaceControlCharacters
+            (
+                [CanBeNull] string text
+            )
+        {
+            return ReplaceControlCharacters(text, ' ');
+        }
+
+        /// <summary>
+        /// Replace control characters in the text.
+        /// </summary>
+        [CanBeNull]
+        public static string ReplaceControlCharacters
+            (
+                [CanBeNull] string text,
+                char substitute
+            )
+        {
+            if (ReferenceEquals(text, null) || text.Length == 0)
+            {
+                return text;
+            }
+
+            bool needReplace = false;
+            foreach (char c in text)
+            {
+                if (c < ' ')
+                {
+                    needReplace = true;
+                    break;
+                }
+            }
+
+            if (!needReplace)
+            {
+                return text;
+            }
+
+            StringBuilder result = new StringBuilder(text.Length);
+
+            foreach (char c in text)
+            {
+                result.Append
+                (
+                    c < ' ' ? substitute : c
+                );
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
         /// Replicates given string.
         /// </summary>
         /// <param name="text">String to replicate.</param>
@@ -579,7 +634,7 @@ namespace AM
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [CanBeNull]
         public static string SafeSubstring
@@ -649,6 +704,28 @@ namespace AM
                        two,
                        StringComparison.Ordinal
                    ) == 0;
+        }
+
+        /// <summary>
+        /// Разбивает строку по указанному разделителю.
+        /// </summary>
+        [NotNull]
+        public static string[] SplitFirst
+            (
+                [NotNull] this string line,
+                char delimiter
+            )
+        {
+            int index = line.IndexOf(delimiter);
+            string[] result = index < 0
+                ? new[] { line }
+                : new[]
+                {
+                    line.Substring(0, index),
+                    line.Substring(index + 1)
+                };
+
+            return result;
         }
 
         /// <summary>
