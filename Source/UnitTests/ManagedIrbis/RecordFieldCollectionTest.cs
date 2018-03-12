@@ -13,7 +13,7 @@ namespace UnitTests.ManagedIrbis
     public class RecordFieldCollectionTest
     {
         [TestMethod]
-        public void TestRecordFieldCollectionConstruction()
+        public void RecordFieldCollection_Construction_1()
         {
             RecordFieldCollection collection =
                 new RecordFieldCollection
@@ -55,7 +55,7 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        public void TestRecordFieldCollectionSerialization()
+        public void RecordFieldCollection_Serialization_1()
         {
             _TestSerialization();
 
@@ -68,8 +68,8 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestRecordFieldCollectionNotNull()
+        [ExpectedException(typeof(ArgumentException))]
+        public void RecordFieldCollection_NotNull_1()
         {
             RecordFieldCollection collection =
                 new RecordFieldCollection
@@ -83,7 +83,7 @@ namespace UnitTests.ManagedIrbis
 
         [TestMethod]
         [ExpectedException(typeof(ReadOnlyException))]
-        public void TestRecordFieldCollectionReadOnly()
+        public void RecordFieldCollection_ReadOnly_1()
         {
             RecordFieldCollection collection =
                 new RecordFieldCollection

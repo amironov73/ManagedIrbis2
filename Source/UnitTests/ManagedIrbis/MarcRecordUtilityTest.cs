@@ -175,7 +175,7 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void MarcRecordUtility_AddField_6()
         {
             MarcRecord record = new MarcRecord();

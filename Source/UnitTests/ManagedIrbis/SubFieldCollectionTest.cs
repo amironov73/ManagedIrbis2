@@ -70,11 +70,10 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void SubFieldCollection_NotNull1()
+        [ExpectedException(typeof(ArgumentException))]
+        public void SubFieldCollection_NotNull_1()
         {
-            SubFieldCollection collection =
-                new SubFieldCollection
+            SubFieldCollection collection = new SubFieldCollection
                 {
                     new SubField(),
                     null,
@@ -331,7 +330,7 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void SubFieldCollection_InsertItem_Exception()
         {
             SubFieldCollection collection = _GetCollection();
@@ -348,7 +347,7 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        public void SubFieldCollection_SetItem1()
+        public void SubFieldCollection_SetItem_1()
         {
             SubFieldCollection collection = _GetCollection();
             Assert.AreEqual(3, collection.Count);
@@ -359,8 +358,8 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void SubFieldCollection_SetItem_Exception()
+        [ExpectedException(typeof(ArgumentException))]
+        public void SubFieldCollection_SetItem_2()
         {
             SubFieldCollection collection = _GetCollection();
             collection[1] = null;

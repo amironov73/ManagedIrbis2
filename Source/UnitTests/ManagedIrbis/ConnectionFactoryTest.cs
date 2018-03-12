@@ -35,7 +35,7 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void ConnectionFactory_CreateConnection_2()
         {
             string connectionString = null;
