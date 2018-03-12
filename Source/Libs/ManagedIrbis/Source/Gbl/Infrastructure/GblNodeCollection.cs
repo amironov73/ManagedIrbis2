@@ -12,14 +12,11 @@
 using System.Collections.ObjectModel;
 using System.Text;
 
+using AM;
 using AM.Collections;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -29,7 +26,6 @@ namespace ManagedIrbis.Gbl.Infrastructure
     /// 
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class GblNodeCollection
         : NonNullCollection<GblNode>
     {
@@ -78,7 +74,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                 GblNode item
             )
         {
-            Code.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             if (!ReferenceEquals(item.Parent, null))
             {
@@ -99,7 +95,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                 GblNode item
             )
         {
-            Code.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             if (!ReferenceEquals(item.Parent, null))
             {
@@ -141,10 +137,10 @@ namespace ManagedIrbis.Gbl.Infrastructure
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            StringBuilder result = StringBuilderCache.Acquire();
+            StringBuilder result = new StringBuilder();
             GblUtility.NodesToText(result, this);
 
-            return StringBuilderCache.GetStringAndRelease(result);
+            return result.ToString();
         }
 
         #endregion

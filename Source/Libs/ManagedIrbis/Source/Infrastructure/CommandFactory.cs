@@ -12,6 +12,7 @@
 using System;
 using System.Text;
 
+using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
@@ -53,7 +54,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] IIrbisConnection connection
             )
         {
-            Code.NotNull(connection, "connection");
+            Sure.NotNull(connection, "connection");
 
             Log.Trace("CommandFactory::Constructor");
 
@@ -140,7 +141,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] IrbisConnection connection
             )
         {
-            Code.NotNull(connection, "connection");
+            Sure.NotNull(connection, "connection");
 
             CommandFactory result = _superFactory(connection);
 
@@ -499,7 +500,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] Func<IrbisConnection, CommandFactory> superFactory
             )
         {
-            Code.NotNull(superFactory, "superFactory");
+            Sure.NotNull(superFactory, "superFactory");
 
             Func<IrbisConnection, CommandFactory> result = _superFactory;
             _superFactory = superFactory;

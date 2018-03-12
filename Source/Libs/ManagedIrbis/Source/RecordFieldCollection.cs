@@ -149,7 +149,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Code.NotNull(fields, "fields");
+            Sure.NotNull(fields, "fields");
 
             foreach (RecordField field in fields)
             {
@@ -256,7 +256,7 @@ namespace ManagedIrbis
                 [NotNull] Predicate<RecordField> predicate
             )
         {
-            Code.NotNull(predicate, "predicate");
+            Sure.NotNull(predicate, "predicate");
 
             return this.FirstOrDefault
                 (
@@ -275,7 +275,7 @@ namespace ManagedIrbis
                 [NotNull] Predicate<RecordField> predicate
             )
         {
-            Code.NotNull(predicate, "predicate");
+            Sure.NotNull(predicate, "predicate");
 
             return this.Where
                 (
@@ -311,7 +311,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Code.NotNull(item, "item");
+            Sure.NotNull(item, "item");
 
             item.Record = Record;
 
@@ -354,7 +354,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Code.NotNull(item, "item");
+            Sure.NotNull(item, "item");
 
             item.Record = Record;
 
@@ -376,7 +376,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             ClearItems();
             RecordField[] array = reader.ReadArray<RecordField>();
@@ -389,7 +389,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer.WriteArray(this.ToArray());
         }

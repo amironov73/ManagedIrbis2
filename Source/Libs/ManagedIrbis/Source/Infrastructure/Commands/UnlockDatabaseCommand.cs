@@ -12,11 +12,7 @@
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -26,7 +22,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Unlock the database on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class UnlockDatabaseCommand
         : AbstractCommand
     {
@@ -85,7 +80,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             result.GetReturnCode();
@@ -111,7 +106,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 );
 
             verifier
-                .NotNullNorEmpty(Database, "Database");
+                .NotNullNorEmpty(Database, nameof(Database));
 
             return verifier.Result;
         }

@@ -245,8 +245,7 @@ namespace ManagedIrbis
                 parameters.FormatSpecification = IrbisFormat.All;
             }
 
-            SearchReadCommand command
-                = connection.CommandFactory.GetSearchReadCommand();
+            SearchReadCommand command = connection.CommandFactory.GetSearchReadCommand();
             command.ApplyParameters(parameters);
 
             connection.ExecuteCommand(command);
@@ -258,37 +257,38 @@ namespace ManagedIrbis
                 return records;
             }
 
-            using (IrbisProvider provider = new ConnectedClient(connection))
-            using (PftFormatter formatter = new PftFormatter())
-            {
-                formatter.SetProvider(provider);
-                string specification
-                    = parameters.FilterSpecification.ThrowIfNull();
+            throw new NotImplementedException();
 
-                if (!specification.StartsWith("if"))
-                {
-                    specification = string.Format
-                        (
-                            "if {0} then '1' else '0'",
-                            specification
-                        );
-                }
+            //using (IrbisProvider provider = new ConnectedClient(connection))
+            //using (PftFormatter formatter = new PftFormatter())
+            //{
+            //    formatter.SetProvider(provider);
+            //    string specification = parameters.FilterSpecification.ThrowIfNull();
 
-                formatter.ParseProgram(specification);
+            //    if (!specification.StartsWith("if"))
+            //    {
+            //        specification = string.Format
+            //            (
+            //                "if {0} then '1' else '0'",
+            //                specification
+            //            );
+            //    }
 
-                List<MarcRecord> result = new List<MarcRecord>(records.Length);
+            //    formatter.ParseProgram(specification);
 
-                foreach (MarcRecord record in records)
-                {
-                    string text = formatter.FormatRecord(record);
-                    if (text.SameString("1"))
-                    {
-                        result.Add(record);
-                    }
-                }
+            //    List<MarcRecord> result = new List<MarcRecord>(records.Length);
 
-                return result.ToArray();
-            }
+            //    foreach (MarcRecord record in records)
+            //    {
+            //        string text = formatter.FormatRecord(record);
+            //        if (text.SameString("1"))
+            //        {
+            //            result.Add(record);
+            //        }
+            //    }
+
+            //    return result.ToArray();
+            //}
         }
 
         // ========================================================

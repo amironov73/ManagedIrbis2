@@ -24,11 +24,7 @@ using AM.Logging;
 using AM.Runtime;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -45,7 +41,6 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
     /// Удаляет записи, поданные на корректировку.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class GblDelr
         : GblNode
     {
@@ -84,7 +79,7 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
                 GblContext context
             )
         {
-            Code.NotNull(context, "context");
+            Sure.NotNull(context, nameof(context));
 
             OnBeforeExecution(context);
 

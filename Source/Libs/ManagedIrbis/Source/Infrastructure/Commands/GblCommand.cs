@@ -313,7 +313,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, "query");
 
             GblResult gblResult = new GblResult
             {

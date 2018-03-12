@@ -11,15 +11,13 @@
 
 using System;
 using System.IO;
+
 using AM;
 using AM.IO;
 using AM.Logging;
 using AM.Runtime;
-using CodeJam;
 
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -43,7 +41,6 @@ namespace ManagedIrbis.Gbl.Infrastructure
     /// Спецификация повторения поля.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public struct RepeatSpecification
         : IHandmadeSerializable,
         IVerifiable
@@ -75,7 +72,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
             )
             : this()
         {
-            Code.Defined(kind, "kind");
+            Sure.Defined(kind, nameof(kind));
 
             Kind = kind;
         }
@@ -89,7 +86,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
             )
             : this()
         {
-            Code.Positive(index, "index");
+            Sure.Positive(index, nameof(index));
 
             Kind = RepeatKind.Explicit;
             Index = index;
@@ -105,8 +102,8 @@ namespace ManagedIrbis.Gbl.Infrastructure
             )
             : this()
         {
-            Code.Defined(kind, "kind");
-            Code.Nonnegative(index, "index");
+            Sure.Defined(kind, nameof(kind));
+            Sure.NonNegative(index, nameof(index));
 
             Kind = kind;
             Index = index;
@@ -128,7 +125,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                 [NotNull] string text
             )
         {
-            Code.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
             RepeatSpecification result = new RepeatSpecification();
             switch (text)
@@ -146,8 +143,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                     break;
 
                 default:
-                    uint index;
-                    if (NumericUtility.TryParseUInt32(text, out index))
+                    if (NumericUtility.TryParseUInt32(text, out uint index))
                     {
                         if (index == 0)
                         {
@@ -211,7 +207,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Kind = (RepeatKind) reader.ReadPackedInt32();
             Index = reader.ReadPackedInt32();
@@ -223,7 +219,7 @@ namespace ManagedIrbis.Gbl.Infrastructure
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WritePackedInt32((int) Kind)

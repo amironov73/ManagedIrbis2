@@ -61,8 +61,8 @@ namespace ManagedIrbis.Infrastructure.Sockets
             )
             : base(connection)
         {
-            Code.NotNull(innerSocket, "innerSocket");
-            Code.NotNull(retryManager, "retryManager");
+            Sure.NotNull(innerSocket, "innerSocket");
+            Sure.NotNull(retryManager, "retryManager");
 
             InnerSocket = innerSocket;
             RetryManager = retryManager;

@@ -12,11 +12,7 @@
 using AM;
 using AM.Logging;
  
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -26,7 +22,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Reload database dictionary.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class ReloadDictionaryCommand
         : AbstractCommand
     {
@@ -85,7 +80,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             result.GetReturnCode();
@@ -94,13 +89,16 @@ namespace ManagedIrbis.Infrastructure.Commands
         }
 
         /// <inheritdoc cref="AbstractCommand.Verify" />
-        public override bool Verify(bool throwOnError)
+        public override bool Verify
+            (
+                bool throwOnError
+            )
         {
             Verifier<ReloadDictionaryCommand> verifier
                 = new Verifier<ReloadDictionaryCommand>(this, throwOnError);
 
             verifier
-                .NotNullNorEmpty(Database, "Database");
+                .NotNullNorEmpty(Database, nameof(Database));
 
             return verifier.Result;
         }

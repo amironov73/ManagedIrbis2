@@ -171,7 +171,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, "query");
 
             ServerResponse response = base.Execute(query);
             CheckResponse(response);

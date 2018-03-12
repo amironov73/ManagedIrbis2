@@ -24,11 +24,7 @@ using AM.Logging;
 using AM.Runtime;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -55,7 +51,6 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
     /// Формирование пользовательского протокола.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class GblPutLog
         : GblNode
     {
@@ -94,7 +89,7 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
                 GblContext context
             )
         {
-            Code.NotNull(context, "context");
+            Sure.NotNull(context, nameof(context));
 
             OnBeforeExecution(context);
 

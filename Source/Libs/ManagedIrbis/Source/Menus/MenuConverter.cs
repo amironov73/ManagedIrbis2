@@ -54,7 +54,7 @@ namespace ManagedIrbis.Menus
                     (
                         reader
                     );
-            menu._entries.AddRange(entries);
+            menu.Entries.AddRange(entries);
 
             return menu;
         }

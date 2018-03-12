@@ -729,6 +729,25 @@ namespace AM
         }
 
         /// <summary>
+        /// Разбивка текста на отдельные строки.
+        /// </summary>
+        /// <remarks>Пустые строки не удаляются.</remarks>
+        /// <param name="text">Текст для разбиения.</param>
+        /// <returns>Массив строк.</returns>
+        [NotNull]
+        public static string[] SplitLines
+            (
+                [NotNull] this string text
+            )
+        {
+            text = text.Replace("\r\n", "\n");
+
+            string[] result = text.Split('\n');
+
+            return result;
+        }
+
+        /// <summary>
         /// Превращает строку в видимую.
         /// Пример: "(null)".
         /// </summary>

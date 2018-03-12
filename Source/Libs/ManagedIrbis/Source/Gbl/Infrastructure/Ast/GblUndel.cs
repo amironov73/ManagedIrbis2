@@ -24,11 +24,7 @@ using AM.Logging;
 using AM.Runtime;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -48,7 +44,6 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
     /// Восстановление данных.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class GblUndel
         : GblNode
     {
@@ -87,7 +82,7 @@ namespace ManagedIrbis.Gbl.Infrastructure.Ast
                 GblContext context
             )
         {
-            Code.NotNull(context, "context");
+            Sure.NotNull(context, nameof(context));
 
             OnBeforeExecution(context);
 
