@@ -15,11 +15,7 @@ using AM;
 using AM.Collections;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -29,7 +25,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Universal command with text lines.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class UniversalTextCommand
         : AbstractCommand
     {
@@ -39,19 +34,13 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// Command code.
         /// </summary>
         [NotNull]
-        public string CommandCode
-        {
-            get { return _commandCode; }
-        }
+        public string CommandCode { get; }
 
         /// <summary>
         /// Lines.
         /// </summary>
         [NotNull]
-        public NonNullCollection<TextWithEncoding> TextLines
-        {
-            get { return _textLines; }
-        }
+        public NonNullCollection<TextWithEncoding> TextLines { get; }
 
         #endregion
 
@@ -67,11 +56,11 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : base(connection)
         {
-            Code.NotNull(connection, "connection");
-            Code.NotNullNorEmpty(commandCode, "commandCode");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            _commandCode = commandCode;
-            _textLines = new NonNullCollection<TextWithEncoding>();
+            CommandCode = commandCode;
+            TextLines = new NonNullCollection<TextWithEncoding>();
         }
 
         /// <summary>
@@ -86,8 +75,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : this (connection, commandCode)
         {
-            Code.NotNull(lines, "lines");
-            Code.NotNull(encoding, "encoding");
+            Sure.NotNull(lines, nameof(lines));
+            Sure.NotNull(encoding, nameof(encoding));
 
             foreach (string line in lines)
             {
@@ -101,14 +90,6 @@ namespace ManagedIrbis.Infrastructure.Commands
                     );
             }
         }
-
-        #endregion
-
-        #region Private members
-
-        private readonly string _commandCode;
-
-        private readonly NonNullCollection<TextWithEncoding> _textLines;
 
         #endregion
 

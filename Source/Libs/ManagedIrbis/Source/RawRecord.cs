@@ -10,22 +10,14 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using AM;
 using AM.Logging;
-using AM.Text;
-
-using CodeJam;
 
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -35,7 +27,6 @@ namespace ManagedIrbis
     /// Raw (not decoded) record.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [DebuggerDisplay("[{Database}] MFN={Mfn} ({Version})")]
     public sealed class RawRecord
     {
@@ -170,9 +161,9 @@ namespace ManagedIrbis
                 [NotNull] RawRecord record
             )
         {
-            Code.NotNullNorEmpty(line1, "line1");
-            Code.NotNullNorEmpty(line2, "line2");
-            Code.NotNull(record, "record");
+            Sure.NotNullNorEmpty(line1, nameof(line1));
+            Sure.NotNullNorEmpty(line2, nameof(line2));
+            Sure.NotNull(record, nameof(record));
 
             Regex regex = new Regex(@"^(-?\d+)\#(\d*)?");
             Match match = regex.Match(line1);
@@ -202,10 +193,9 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Code.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
-            string[] lines = IrbisText
-                .SplitIrbisToLines(text);
+            string[] lines = IrbisText.SplitIrbisToLines(text);
 
             if (lines[0] == lines[1])
             {
@@ -226,7 +216,7 @@ namespace ManagedIrbis
                 [NotNull] string[] lines
             )
         {
-            Code.NotNull(lines, "lines");
+            Sure.NotNull(lines, nameof(lines));
 
             if (lines.Length < 2)
             {

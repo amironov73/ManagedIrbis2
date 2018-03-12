@@ -21,13 +21,9 @@ using AM.IO;
 using AM.Logging;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -40,7 +36,6 @@ namespace ManagedIrbis.Search
     /// </summary>
     [PublicAPI]
     [XmlRoot("termInfo")]
-    [MoonSharpUserData]
     [DebuggerDisplay("[{Count}] {Text} {Formatted}")]
     public sealed class TermInfoEx
         : TermInfo
@@ -103,7 +98,7 @@ namespace ManagedIrbis.Search
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<TermInfoEx> result = new List<TermInfoEx>();
 
@@ -116,17 +111,7 @@ namespace ManagedIrbis.Search
                     break;
                 }
 
-#if !WINMOBILE && !PocketPC
-
                 string[] parts = line.Split(_separators, 3);
-
-#else
-                // TODO Implement properly
-
-                string[] parts = line.Split(_separators);
-
-#endif
-
                 if (parts.Length != 3)
                 {
                     Log.Error
@@ -215,7 +200,7 @@ namespace ManagedIrbis.Search
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             base.RestoreFromStream(reader);
             Mfn = reader.ReadPackedInt32();
@@ -231,7 +216,7 @@ namespace ManagedIrbis.Search
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             base.SaveToStream(writer);
 

@@ -16,8 +16,6 @@ using System.Xml.Serialization;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 using Newtonsoft.Json;
 
 #endregion
@@ -31,7 +29,6 @@ namespace ManagedIrbis
     /// </summary>
     [PublicAPI]
     [XmlRoot("table")]
-    [MoonSharpUserData]
     public sealed class TableDefinition
     {
         #region Properties

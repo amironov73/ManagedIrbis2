@@ -12,14 +12,10 @@
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Gbl;
 using ManagedIrbis.ImportExport;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -63,7 +59,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Global correction for virtual record.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class GblVirtualCommand
         : AbstractCommand
     {

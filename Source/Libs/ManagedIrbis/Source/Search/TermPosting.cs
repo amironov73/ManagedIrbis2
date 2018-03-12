@@ -12,20 +12,16 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using AM;
 using AM.IO;
 using AM.Runtime;
 using AM.Text;
-using CodeJam;
 
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -38,7 +34,6 @@ namespace ManagedIrbis.Search
     /// </summary>
     [PublicAPI]
     [XmlRoot("term-link")]
-    [MoonSharpUserData]
     [DebuggerDisplay("[{Mfn}] {Tag} {Occurrence} {Count} {Text}")]
     public sealed class TermPosting
         : IHandmadeSerializable,
@@ -115,7 +110,7 @@ namespace ManagedIrbis.Search
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             // Example return:
             // 169#1510#1#2#Пожаровзрывобезопасность : Науч.- техн. журн. - Журнал
@@ -130,12 +125,7 @@ namespace ManagedIrbis.Search
                     break;
                 }
 
-                string[] parts = StringUtility.SplitString
-                    (
-                        line,
-                        CommonSeparators.NumberSign,
-                        5
-                    );
+                string[] parts = line.Split(CommonSeparators.NumberSign, 5);
                 if (parts.Length < 4)
                 {
                     break;

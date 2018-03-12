@@ -17,8 +17,6 @@ using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
 
-using MoonSharp.Interpreter;
-
 using Newtonsoft.Json;
 
 #endregion
@@ -29,7 +27,6 @@ namespace ManagedIrbis
     /// IRBIS server stat
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("stat")]
     public sealed class ServerStat
     {

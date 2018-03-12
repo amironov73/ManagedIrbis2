@@ -14,16 +14,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -33,7 +27,6 @@ namespace AM.Net
     /// 
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public static class SocketUtility
     {
         #region Private members
@@ -52,7 +45,7 @@ namespace AM.Net
                 [NotNull] string address
             )
         {
-            Code.NotNull(address, "address");
+            Sure.NotNull(address, nameof(address));
 
             if (address.OneOf("localhost", "local", "(local)"))
             {
@@ -79,17 +72,7 @@ namespace AM.Net
             }
             catch
             {
-                IPHostEntry entry;
-
-#if NETCORE || UAP
-
-                entry = Dns.GetHostEntryAsync(address).Result;
-
-#else
-
-                entry = Dns.GetHostEntry(address);
-
-#endif
+                IPHostEntry entry = Dns.GetHostEntry(address);
 
                 if (!ReferenceEquals(entry, null)
                     && !ReferenceEquals(entry.AddressList, null)
@@ -144,7 +127,7 @@ namespace AM.Net
                 [NotNull] string address
             )
         {
-            Code.NotNull(address, "address");
+            Sure.NotNull(address, nameof(address));
 
             if (address.OneOf("localhost", "local", "(local)"))
             {
@@ -171,17 +154,7 @@ namespace AM.Net
             }
             catch
             {
-                IPHostEntry entry;
-
-#if NETCORE || UAP
-
-                entry = Dns.GetHostEntryAsync(address).Result;
-
-#else
-
-                entry = Dns.GetHostEntry(address);
-
-#endif
+                IPHostEntry entry = Dns.GetHostEntry(address);
 
                 if (!ReferenceEquals(entry, null)
                     && !ReferenceEquals(entry.AddressList, null)
@@ -480,8 +453,8 @@ namespace AM.Net
                 int dataLength
             )
         {
-            Code.NotNull(socket, "socket");
-            Code.Nonnegative(dataLength, "dataLength");
+            Sure.NotNull(socket, nameof(socket));
+            Sure.NonNegative(dataLength, nameof(dataLength));
 
             using (MemoryStream result = new MemoryStream(dataLength))
             {
@@ -523,7 +496,7 @@ namespace AM.Net
                 [NotNull] this Socket socket
             )
         {
-            Code.NotNull(socket, "socket");
+            Sure.NotNull(socket, nameof(socket));
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -541,8 +514,8 @@ namespace AM.Net
                 [NotNull] MemoryStream stream
             )
         {
-            Code.NotNull(socket, "socket");
-            Code.NotNull(stream, "stream");
+            Sure.NotNull(socket, nameof(socket));
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] buffer = new byte[32 * 1024];
 

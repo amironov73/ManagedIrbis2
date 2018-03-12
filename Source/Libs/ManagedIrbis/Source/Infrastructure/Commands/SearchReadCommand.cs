@@ -19,8 +19,6 @@ using JetBrains.Annotations;
 using ManagedIrbis.ImportExport;
 using ManagedIrbis.Search;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 // ReSharper disable ConvertClosureToMethodGroup
@@ -31,7 +29,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Search and read records from IRBIS-server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class SearchReadCommand
         : SearchCommand
     {

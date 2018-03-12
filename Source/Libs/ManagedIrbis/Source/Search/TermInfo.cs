@@ -20,13 +20,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -39,7 +35,6 @@ namespace ManagedIrbis.Search
     /// </summary>
     [PublicAPI]
     [XmlRoot("term")]
-    [MoonSharpUserData]
     [DebuggerDisplay("[{Count}] {Text}")]
     public class TermInfo
         : IHandmadeSerializable,
@@ -99,7 +94,7 @@ namespace ManagedIrbis.Search
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, "response");
 
             List<TermInfo> result = new List<TermInfo>();
 
@@ -155,8 +150,8 @@ namespace ManagedIrbis.Search
                 [NotNull] string prefix
             )
         {
-            Code.NotNull(terms, "terms");
-            Code.NotNull(prefix, "prefix");
+            Sure.NotNull(terms, nameof(terms));
+            Sure.NotNull(prefix, nameof(prefix));
 
             int prefixLength = prefix.Length;
             List<TermInfo> result = new List<TermInfo>(terms.Length);

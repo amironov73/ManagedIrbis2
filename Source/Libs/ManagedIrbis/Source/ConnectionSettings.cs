@@ -474,7 +474,7 @@ namespace ManagedIrbis
                 [NotNull] IrbisConnection connection
             )
         {
-            Code.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             ConnectionSettings result = new ConnectionSettings
             {
@@ -488,55 +488,34 @@ namespace ManagedIrbis
                 Connected = connection.Connected
             };
 
-#if !WINMOBILE && !PocketPC
-
-            LoggingClientSocket loggingSocket
-                = connection.Socket as LoggingClientSocket;
-            if (loggingSocket != null)
+            LoggingClientSocket loggingSocket = connection.Socket as LoggingClientSocket;
+            if (!ReferenceEquals(loggingSocket, null))
             {
                 result.NetworkLogging = loggingSocket.DebugPath;
             }
 
-#endif
-
-            RetryClientSocket retrySocket
-                = connection.Socket as RetryClientSocket;
+            RetryClientSocket retrySocket = connection.Socket as RetryClientSocket;
             if (retrySocket != null)
             {
                 result.RetryLimit = retrySocket.RetryManager.RetryLimit;
             }
 
-#if !WINMOBILE && !PocketPC
-
             if (connection.Socket.GetType() != typeof(SimpleClientSocket)
                 && retrySocket == null
                 && loggingSocket == null
-            )
+                )
             {
                 result.SocketTypeName = connection.Socket
                     .GetType().AssemblyQualifiedName;
             }
 
-#else
-
-            if ((connection.Socket.GetType() != typeof (SimpleClientSocket))
-                && (retrySocket == null))
-            {
-                result.SocketTypeName = connection.Socket
-                    .GetType().AssemblyQualifiedName;
-            }
-
-#endif
-
-            if (connection.CommandFactory.GetType() !=
-                typeof(CommandFactory))
+            if (connection.CommandFactory.GetType() != typeof(CommandFactory))
             {
                 result.FactoryTypeName = connection.CommandFactory
                     .GetType().AssemblyQualifiedName;
             }
 
-            if (connection.Executive.GetType() !=
-                typeof(StandardEngine))
+            if (connection.Executive.GetType() != typeof(StandardEngine))
             {
                 result.EngineTypeName = connection.Executive
                     .GetType().AssemblyQualifiedName;

@@ -19,13 +19,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -38,7 +34,6 @@ namespace ManagedIrbis.Search
     /// </summary>
     [PublicAPI]
     [XmlRoot("item")]
-    [MoonSharpUserData]
     [DebuggerDisplay("{Mfn} {Text}")]
     public sealed class FoundItem
         : IHandmadeSerializable,
@@ -124,7 +119,7 @@ namespace ManagedIrbis.Search
                 [NotNull][ItemNotNull] List<FoundItem> found
             )
         {
-            Code.NotNull(found, "found");
+            Sure.NotNull(found, "found");
 
             int[] result = new int[found.Count];
             for (int i = 0; i < found.Count; i++)
@@ -145,7 +140,7 @@ namespace ManagedIrbis.Search
                 [NotNull][ItemNotNull] List<FoundItem> found
             )
         {
-            Code.NotNull(found, "found");
+            Sure.NotNull(found, "found");
 
             string[] result = new string[found.Count];
             for (int i = 0; i < found.Count; i++)
@@ -165,9 +160,9 @@ namespace ManagedIrbis.Search
                 [NotNull] string line
             )
         {
-            Code.NotNull(line, "line");
+            Sure.NotNull(line, nameof(line));
 
-            string[] parts = StringUtility.SplitString(line, _delimiters, 2);
+            string[] parts = line.Split(_delimiters, 2);
             FoundItem result = new FoundItem
             {
                 Mfn = int.Parse(parts[0])
@@ -193,7 +188,7 @@ namespace ManagedIrbis.Search
                 int sizeHint
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, "response");
 
             List<FoundItem> result = sizeHint > 0
                 ? new List<FoundItem>(sizeHint)
@@ -235,7 +230,7 @@ namespace ManagedIrbis.Search
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             Mfn = reader.ReadPackedInt32();
             Text = reader.ReadNullableString();
@@ -249,7 +244,7 @@ namespace ManagedIrbis.Search
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer
                 .WritePackedInt32(Mfn)

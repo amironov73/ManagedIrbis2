@@ -13,11 +13,7 @@ using System;
 
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -27,7 +23,6 @@ namespace AM.Threading
     /// Обёртка для ожидания и освобождения <see cref="BusyState"/>.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public struct BusyGuard
         : IDisposable
     {
@@ -56,7 +51,7 @@ namespace AM.Threading
                 [NotNull] BusyState state
             )
         {
-            Code.NotNull(state, "state");
+            Sure.NotNull(state, "state");
 
             _state = state;
             _timeout = TimeSpan.Zero;
@@ -73,7 +68,7 @@ namespace AM.Threading
                 TimeSpan timeout
             )
         {
-            Code.NotNull(state, "state");
+            Sure.NotNull(state, nameof(state));
 
             _state = state;
             _timeout = timeout;

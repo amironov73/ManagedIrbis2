@@ -9,11 +9,9 @@
 
 #region Using directives
 
-using CodeJam;
+using AM;
 
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -23,7 +21,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Command with unfixed functionality.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class UniversalCommand
         : AbstractCommand
     {
@@ -60,7 +57,7 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : base(connection)
         {
-            Code.NotNullNorEmpty(commandCode, "commandCode");
+            Sure.NotNullNorEmpty(commandCode, "commandCode");
 
             CommandCode = commandCode;
         }

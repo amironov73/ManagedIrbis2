@@ -13,8 +13,6 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 // ReSharper disable ConvertToAutoProperty
@@ -25,7 +23,6 @@ namespace ManagedIrbis
     /// Signature for Stat command.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class StatDefinition
     {
         #region Nested classes

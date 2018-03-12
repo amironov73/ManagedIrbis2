@@ -22,11 +22,7 @@ using AM.Logging;
 using AM.Runtime;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -38,12 +34,9 @@ namespace AM.IO
     /// Simple INI-file reader/writer.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
-    [DebuggerDisplay("Name={FileName}")]
-#if !UAP
+    [DebuggerDisplay("Name={" + nameof(FileName) + "}")]
     // ReSharper disable once RedundantNameQualifier
     [System.ComponentModel.DesignerCategory("Code")]
-#endif
     public class IniFile
         : MarshalByRefObject,
         IHandmadeSerializable,
@@ -56,7 +49,6 @@ namespace AM.IO
         /// Line (element) of the INI-file.
         /// </summary>
         [PublicAPI]
-        [MoonSharpUserData]
         [DebuggerDisplay("{Key}={Value} [{Modified}]")]
         public sealed class Line
             : IHandmadeSerializable
@@ -67,10 +59,7 @@ namespace AM.IO
             /// Key (name) of the element.
             /// </summary>
             [NotNull]
-            public string Key
-            {
-                get { return _key; }
-            }
+            public string Key { get; private set; }
 
             /// <summary>
             /// Value of the element.
@@ -78,7 +67,7 @@ namespace AM.IO
             [CanBeNull]
             public string Value
             {
-                get { return _value; }
+                get => _value;
                 set
                 {
                     _value = value;
@@ -114,7 +103,7 @@ namespace AM.IO
             {
                 CheckKeyName(key);
 
-                _key = key;
+                Key = key;
                 _value = value;
             }
 
@@ -130,7 +119,7 @@ namespace AM.IO
             {
                 CheckKeyName(key);
 
-                _key = key;
+                Key = key;
                 _value = value;
                 Modified = modified;
             }
@@ -139,7 +128,6 @@ namespace AM.IO
 
             #region Private members
 
-            private string _key;
             private string _value;
 
             #endregion
@@ -154,7 +142,7 @@ namespace AM.IO
                     [NotNull] TextWriter writer
                 )
             {
-                Code.NotNull(writer, "writer");
+                Sure.NotNull(writer, "writer");
 
                 if (string.IsNullOrEmpty(Value))
                 {
@@ -180,9 +168,9 @@ namespace AM.IO
                     BinaryReader reader
                 )
             {
-                Code.NotNull(reader, "reader");
+                Sure.NotNull(reader, "reader");
 
-                _key = reader.ReadNullableString();
+                Key = reader.ReadNullableString();
                 _value = reader.ReadNullableString();
                 Modified = reader.ReadBoolean();
             }
@@ -193,7 +181,7 @@ namespace AM.IO
                     BinaryWriter writer
                 )
             {
-                Code.NotNull(writer, "writer");
+                Sure.NotNull(writer, "writer");
 
                 writer
                     .WriteNullable(Key)
@@ -227,7 +215,6 @@ namespace AM.IO
         /// INI-file section.
         /// </summary>
         [PublicAPI]
-        [MoonSharpUserData]
         public sealed class Section
             : IHandmadeSerializable,
             IEnumerable<Line>
@@ -339,7 +326,7 @@ namespace AM.IO
                     [NotNull] Line line
                 )
             {
-                Code.NotNull(line, "line");
+                Sure.NotNull(line, "line");
                 CheckKeyName(line.Key);
                 if (ContainsKey(line.Key))
                 {
@@ -364,7 +351,7 @@ namespace AM.IO
                     [NotNull] Section section
                 )
             {
-                Code.NotNull(section, "section");
+                Sure.NotNull(section, "section");
 
                 foreach (Line line in this)
                 {
@@ -392,7 +379,7 @@ namespace AM.IO
                     [NotNull] string key
                 )
             {
-                Code.NotNullNorEmpty(key, "key");
+                Sure.NotNullNorEmpty(key, "key");
 
                 foreach (Line line in _lines)
                 {
@@ -438,7 +425,7 @@ namespace AM.IO
                     [CanBeNull] T defaultValue
                 )
             {
-                Code.NotNullNorEmpty(key, "key");
+                Sure.NotNullNorEmpty(key, "key");
 
                 string value = GetValue(key, null);
                 if (string.IsNullOrEmpty(value))
@@ -484,7 +471,7 @@ namespace AM.IO
                     [NotNull] string name
                 )
             {
-                Code.NotNullNorEmpty(name, "name");
+                Sure.NotNullNorEmpty(name, "name");
                 _name = name;
                 Modified = true;
                 Owner.Modified = true;
@@ -595,7 +582,7 @@ namespace AM.IO
                 )
             {
                 writer.WriteNullable(_name);
-                writer.WriteCollection(_lines);
+                writer.Write(_lines);
             }
 
             #endregion
@@ -726,7 +713,7 @@ namespace AM.IO
             )
             : this()
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, "fileName");
 
             Log.Trace
                 (
@@ -810,7 +797,7 @@ namespace AM.IO
                 [NotNull] IniFile iniFile
             )
         {
-            Code.NotNull(iniFile, "iniFile");
+            Sure.NotNull(iniFile, "iniFile");
 
             foreach (Section thisSection in this)
             {
@@ -1030,7 +1017,7 @@ namespace AM.IO
             }
 
             Encoding encoding = Encoding 
-                ?? EncodingUtility.DefaultEncoding;
+                ?? Encoding.Default;
 
             Read(FileName, encoding);
         }
@@ -1044,8 +1031,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
-            Code.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(encoding, "encoding");
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                 (
@@ -1065,7 +1052,7 @@ namespace AM.IO
                 [NotNull] TextReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             char[] separators = {'='};
             _sections.Clear();
@@ -1105,7 +1092,7 @@ namespace AM.IO
                         _sections.Add(section);
                     }
 
-                    string[] parts = StringUtility.SplitString(line, separators, 2);
+                    string[] parts = line.Split(separators, 2);
 
                     string key = parts[0];
                     string value = parts.Length == 2
@@ -1127,7 +1114,7 @@ namespace AM.IO
                 [NotNull] TextWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             bool first = true;
             foreach (Section section in _sections)
@@ -1157,10 +1144,9 @@ namespace AM.IO
                 [NotNull] string fileName
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, "fileName");
 
-            Encoding encoding = Encoding
-                ?? EncodingUtility.DefaultEncoding;
+            Encoding encoding = Encoding ?? Encoding.Default;
 
             using (StreamWriter writer = TextWriterUtility.Create
                 (
@@ -1214,7 +1200,7 @@ namespace AM.IO
                 [NotNull] TextWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             bool first = true;
             foreach (Section section in _sections)
@@ -1268,7 +1254,7 @@ namespace AM.IO
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             FileName = reader.ReadNullableString();
             string encodingName = reader.ReadNullableString();
@@ -1292,7 +1278,7 @@ namespace AM.IO
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer.WriteNullable(FileName);
 
@@ -1335,7 +1321,7 @@ namespace AM.IO
 
         #region IDisposable members
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
+        /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose()
         {
             Log.Trace

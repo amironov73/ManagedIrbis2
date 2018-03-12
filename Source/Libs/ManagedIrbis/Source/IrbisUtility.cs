@@ -18,8 +18,6 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace ManagedIrbis
@@ -28,7 +26,6 @@ namespace ManagedIrbis
     /// 
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public static class IrbisUtility
     {
         #region Public methods

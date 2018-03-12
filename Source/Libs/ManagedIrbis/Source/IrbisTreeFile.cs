@@ -23,13 +23,9 @@ using AM.IO;
 using AM.Logging;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Menus;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -41,7 +37,6 @@ namespace ManagedIrbis
     /// TRE files handling
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class IrbisTreeFile
         : IHandmadeSerializable,
         IVerifiable
@@ -61,8 +56,7 @@ namespace ManagedIrbis
         /// Tree item
         /// </summary>
         [PublicAPI]
-        [MoonSharpUserData]
-        [DebuggerDisplay("{Value}")]
+        [DebuggerDisplay("{" + nameof(Value) + "}")]
         public sealed class Item
             : IHandmadeSerializable,
             IVerifiable
@@ -189,7 +183,7 @@ namespace ManagedIrbis
                     [CanBeNull] string value
                 )
             {
-                Code.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, "value");
 
                 _value = value;
                 _prefix = null;
@@ -261,7 +255,7 @@ namespace ManagedIrbis
                     [NotNull] Action<Item> action
                 )
             {
-                Code.NotNull(action, "action");
+                Sure.NotNull(action, nameof(action));
 
                 action(this);
                 foreach (Item child in Children)
@@ -291,7 +285,7 @@ namespace ManagedIrbis
                 )
             {
                 writer.WriteNullable(Value);
-                writer.WriteCollection(Children);
+                writer.Write(Children);
             }
 
             #endregion
@@ -507,7 +501,7 @@ namespace ManagedIrbis
                 [NotNull] TextReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             IrbisTreeFile result = new IrbisTreeFile();
 
@@ -575,8 +569,8 @@ DONE:
                 [NotNull] Encoding encoding
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
-            Code.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(encoding, "encoding");
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                     (
@@ -616,8 +610,8 @@ DONE:
                 [NotNull] Encoding encoding
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
-            Code.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(encoding, "encoding");
 
             using (StreamWriter writer = TextWriterUtility.Create
                     (
@@ -653,7 +647,7 @@ DONE:
                 [NotNull] Action<Item> action
             )
         {
-            Code.NotNull(action, "action");
+            Sure.NotNull(action, "action");
 
             foreach (Item child in Roots)
             {
@@ -682,7 +676,7 @@ DONE:
             )
         {
             writer.WriteNullable(FileName);
-            writer.WriteCollection(Roots);
+            writer.Write(Roots);
         }
 
         #endregion

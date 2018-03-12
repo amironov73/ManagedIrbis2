@@ -16,13 +16,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure.Commands;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -34,7 +30,6 @@ namespace ManagedIrbis.Search
     /// Signature for <see cref="SearchCommand"/>.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("search")]
     public sealed class SearchParameters
         : IHandmadeSerializable,
@@ -145,13 +140,13 @@ namespace ManagedIrbis.Search
 
         #region IHandmadeSerializable members
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
         public void RestoreFromStream
             (
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Database = reader.ReadNullableString();
             FirstRecord = reader.ReadPackedInt32();
@@ -165,13 +160,13 @@ namespace ManagedIrbis.Search
             UtfFormat = reader.ReadBoolean();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
         public void SaveToStream
             (
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WriteNullable(Database)

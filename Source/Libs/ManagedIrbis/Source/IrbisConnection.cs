@@ -389,8 +389,8 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.Nonnegative(mfn, "mfn");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NonNegative(mfn, nameof(mfn));
 
             ActualizeRecordCommand command
                 = CommandFactory.GetActualizeRecordCommand();

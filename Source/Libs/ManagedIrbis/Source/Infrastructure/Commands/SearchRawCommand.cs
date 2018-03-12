@@ -13,13 +13,9 @@ using AM;
 using AM.Logging;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Search;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -64,7 +60,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Search records on IRBIS-server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class SearchRawCommand
         : AbstractCommand
     {
@@ -154,7 +149,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 [NotNull] SearchParameters parameters
             )
         {
-            Code.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             Database = parameters.Database;
             FirstRecord = parameters.FirstRecord;
@@ -272,8 +267,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                         (
                             SequentialSpecification
                         );
-                if (
-                    !string.IsNullOrEmpty(preparedSequential))
+                if (!ReferenceEquals(preparedSequential, null) && preparedSequential.Length != 0)
                 {
                     if (!preparedSequential.StartsWith("!"))
                     {
@@ -295,7 +289,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery clientQuery
             )
         {
-            Code.NotNull(clientQuery, "clientQuery");
+            Sure.NotNull(clientQuery, nameof(clientQuery));
 
             ServerResponse result = base.Execute(clientQuery);
             result.GetReturnCode();

@@ -20,11 +20,7 @@ using AM.IO;
 using AM.Logging;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -57,7 +53,6 @@ namespace ManagedIrbis.Search
     /// Search scenario
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("search")]
     [DebuggerDisplay("{Prefix} {Name}")]
     public sealed class SearchScenario
@@ -330,7 +325,7 @@ namespace ManagedIrbis.Search
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Name = reader.ReadNullableString();
             Prefix = reader.ReadNullableString();
@@ -352,7 +347,7 @@ namespace ManagedIrbis.Search
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WriteNullable(Name)

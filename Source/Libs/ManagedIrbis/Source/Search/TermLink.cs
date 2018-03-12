@@ -18,11 +18,7 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -35,7 +31,6 @@ namespace ManagedIrbis.Search
     /// </summary>
     [PublicAPI]
     [XmlRoot("term-link")]
-    [MoonSharpUserData]
     [DebuggerDisplay("[{Mfn}] {Tag}/{Occurrence} {Index}")]
     public sealed class TermLink
         : IHandmadeSerializable,
@@ -98,8 +93,8 @@ namespace ManagedIrbis.Search
                 [NotNull] TextWriter writer
             )
         {
-            Code.NotNull(links, "links");
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(links, "links");
+            Sure.NotNull(writer, "writer");
 
             foreach (TermLink link in links)
             {
@@ -117,7 +112,7 @@ namespace ManagedIrbis.Search
                 [NotNull] TermPosting posting
             )
         {
-            Code.NotNull(posting, "posting");
+            Sure.NotNull(posting, "posting");
 
             TermLink result = new TermLink
             {
@@ -141,7 +136,7 @@ namespace ManagedIrbis.Search
                 [NotNull][ItemNotNull] TermPosting[] postings
             )
         {
-            Code.NotNull(postings, "postings");
+            Sure.NotNull(postings, "postings");
 
             TermLink[] result = new TermLink[postings.Length];
             for (int i = 0; i < postings.Length; i++)
@@ -161,7 +156,7 @@ namespace ManagedIrbis.Search
                 [NotNull] Stream stream
             )
         {
-            Code.NotNull(stream, "stream");
+            Sure.NotNull(stream, "stream");
 
             TermLink result = new TermLink
             {
@@ -182,7 +177,7 @@ namespace ManagedIrbis.Search
                 [NotNull] TermLink[] links
             )
         {
-            Code.NotNull(links, "links");
+            Sure.NotNull(links, nameof(links));
 
             int[] result = new int[links.Length];
             for (int i = 0; i < links.Length; i++)
@@ -202,7 +197,7 @@ namespace ManagedIrbis.Search
                 [NotNull] int[] array
             )
         {
-            Code.NotNull(array, "array");
+            Sure.NotNull(array, "array");
 
             TermLink[] result = new TermLink[array.Length];
             for (int i = 0; i < array.Length; i++)
@@ -226,7 +221,7 @@ namespace ManagedIrbis.Search
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             Mfn = reader.ReadPackedInt32();
             Tag = reader.ReadPackedInt32();
@@ -240,7 +235,7 @@ namespace ManagedIrbis.Search
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer
                 .WritePackedInt32(Mfn)
@@ -296,7 +291,7 @@ namespace ManagedIrbis.Search
                 [NotNull] TermLink other
             )
         {
-            Code.NotNull(other, "other");
+            Sure.NotNull(other, "other");
 
             return Mfn == other.Mfn
                 && Tag == other.Tag

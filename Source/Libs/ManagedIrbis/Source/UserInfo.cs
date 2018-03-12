@@ -20,13 +20,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -40,8 +36,7 @@ namespace ManagedIrbis
     /// </summary>
     [PublicAPI]
     [XmlRoot("user")]
-    [MoonSharpUserData]
-    [DebuggerDisplay("{Name}")]
+    [DebuggerDisplay("{" + nameof(Name) + "}")]
     public sealed class UserInfo
         : IHandmadeSerializable,
         IVerifiable
@@ -187,7 +182,7 @@ namespace ManagedIrbis
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<UserInfo> result = new List<UserInfo>();
 
@@ -289,7 +284,7 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             Number = reader.ReadNullableString();
             Name = reader.ReadNullableString();
@@ -307,7 +302,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer
                 .WriteNullable(Number)

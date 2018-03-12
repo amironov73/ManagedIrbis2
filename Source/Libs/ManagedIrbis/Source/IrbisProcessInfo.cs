@@ -18,13 +18,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -36,7 +32,6 @@ namespace ManagedIrbis
     /// Информация о запущенном на сервере процессе.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("process")]
     [DebuggerDisplay("[{Number}] {Name} ({Workstation})")]
     public sealed class IrbisProcessInfo
@@ -137,7 +132,7 @@ namespace ManagedIrbis
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<IrbisProcessInfo> result = new List<IrbisProcessInfo>();
             while (true)
@@ -177,7 +172,7 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Number = reader.ReadNullableString();
             IPAddress = reader.ReadNullableString();
@@ -197,7 +192,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.WriteNullable(Number)
                 .WriteNullable(IPAddress)

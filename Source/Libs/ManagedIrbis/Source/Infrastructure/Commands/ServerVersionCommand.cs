@@ -11,8 +11,6 @@
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -21,7 +19,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// 
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class ServerVersionCommand
         : AbstractCommand
     {

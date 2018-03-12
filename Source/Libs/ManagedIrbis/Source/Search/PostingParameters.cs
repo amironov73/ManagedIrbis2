@@ -18,13 +18,9 @@ using System.Xml.Serialization;
 
 using AM;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure.Commands;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -36,7 +32,6 @@ namespace ManagedIrbis.Search
     /// Signature for <see cref="ReadPostingsCommand"/>.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("postings")]
     public sealed class PostingParameters
         : IVerifiable
@@ -119,9 +114,7 @@ namespace ManagedIrbis.Search
 
         #region IVerifiable members
 
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify
             (
                 bool throwOnError
