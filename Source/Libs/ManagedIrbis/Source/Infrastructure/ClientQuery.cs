@@ -17,11 +17,7 @@ using System.IO;
 using AM;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -31,7 +27,6 @@ namespace ManagedIrbis.Infrastructure
     /// Client network packet with query to the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [DebuggerDisplay("{CommandCode} {Workstation}"
         + " {ClientID} {CommandNumber}")]
     public sealed class ClientQuery
@@ -108,15 +103,11 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] IIrbisConnection connection
             )
         {
-            Code.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             Connection = connection;
             Arguments = new List<object>();
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -295,9 +286,7 @@ namespace ManagedIrbis.Infrastructure
 
         #region IVerifiable members
 
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify
             (
                 bool throwOnError
@@ -334,28 +323,13 @@ namespace ManagedIrbis.Infrastructure
 
         #region Object members
 
-        /// <summary>
-        /// Returns a <see cref="System.String" />
-        /// that represents this instance.
-        /// </summary>
-        /// <returns>A <see cref="System.String" />
-        /// that represents this instance.</returns>
+        /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "CommandCode: {0}, Workstation: {1}, "
-                    + "ClientID: {2}, CommandNumber: {3}, "
-                    + "UserLogin: {4}, UserPassword: {5}, "
-                    + "Arguments: {6}",
-                    CommandCode,
-                    Workstation,
-                    ClientID,
-                    CommandNumber,
-                    UserLogin,
-                    UserPassword,
-                    Arguments.Count
-                );
+            return $"CommandCode: {CommandCode}, Workstation: {Workstation}, "
+                 + $"ClientID: {ClientID}, CommandNumber: {CommandNumber}, "
+                 + $"UserLogin: {UserLogin}, UserPassword: {UserPassword}, "
+                 + $"Arguments: {Arguments.Count}";
         }
 
         #endregion

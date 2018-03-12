@@ -10,20 +10,12 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 
 using AM;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Infrastructure.Commands;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -33,7 +25,6 @@ namespace ManagedIrbis.Infrastructure
     /// Command execution context.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class ExecutionContext
         : IVerifiable
     {
@@ -49,7 +40,7 @@ namespace ManagedIrbis.Infrastructure
         /// Connection.
         /// </summary>
         [CanBeNull]
-        public IrbisConnection Connection { get; set; }
+        public IIrbisConnection Connection { get; set; }
 
         /// <summary>
         /// Exception.
@@ -90,12 +81,12 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public ExecutionContext
             (
-                [NotNull] IrbisConnection connection,
+                [NotNull] IIrbisConnection connection,
                 [NotNull] AbstractCommand command
             )
         {
-            Code.NotNull(connection, "connection");
-            Code.NotNull(command, "command");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(command, nameof(command));
 
             Command = command;
             Connection = connection;
@@ -105,20 +96,14 @@ namespace ManagedIrbis.Infrastructure
 
         #region IVerifiable members
 
-        /// <summary>
-        /// Verify the object state.
-        /// </summary>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify
             (
                 bool throwOnError
             )
         {
             Verifier<ExecutionContext> verifier
-                = new Verifier<ExecutionContext>
-                    (
-                        this,
-                        throwOnError
-                    );
+                = new Verifier<ExecutionContext>(this, throwOnError);
 
             verifier
                 .NotNull(Command, "Command")

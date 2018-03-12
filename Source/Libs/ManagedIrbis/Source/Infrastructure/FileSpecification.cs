@@ -18,11 +18,7 @@ using AM.IO;
 using AM.Runtime;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -45,7 +41,6 @@ namespace ManagedIrbis.Infrastructure
     /// File name specification in IRBIS64.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [DebuggerDisplay("Path={Path} Database={Database} FileName={FileName}")]
     public sealed class FileSpecification
         : IHandmadeSerializable,
@@ -102,7 +97,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] string fileName
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             Path = path;
             FileName = fileName;
@@ -118,7 +113,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] string fileName
             )
         {
-            Code.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             Path = path;
             Database = database;
@@ -135,13 +130,12 @@ namespace ManagedIrbis.Infrastructure
                 [CanBeNull] string second
             )
         {
-            if (string.IsNullOrEmpty(first)
-                && string.IsNullOrEmpty(second))
+            if (string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
             {
                 return true;
             }
 
-            return StringUtility.CompareNoCase(first, second); 
+            return StringUtility.CompareNoCase(first, second) == 0;
         }
 
         #endregion
@@ -157,7 +151,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] string text
             )
         {
-            Code.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, "text");
 
             TextNavigator navigator = new TextNavigator(text);
             int path = NumericUtility.ParseInt32(navigator.ReadTo("."));
@@ -199,7 +193,7 @@ namespace ManagedIrbis.Infrastructure
                 BinaryReader reader
             )
         {
-            Code.NotNull(reader, "reader");
+            Sure.NotNull(reader, "reader");
 
             BinaryFile = reader.ReadBoolean();
             Path = (IrbisPath)reader.ReadPackedInt32();
@@ -214,7 +208,7 @@ namespace ManagedIrbis.Infrastructure
                 BinaryWriter writer
             )
         {
-            Code.NotNull(writer, "writer");
+            Sure.NotNull(writer, "writer");
 
             writer.Write(BinaryFile);
             writer

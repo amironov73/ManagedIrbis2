@@ -9,11 +9,9 @@
 
 #region Using directives
 
-using CodeJam;
+using AM;
 
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -23,7 +21,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Unlock the database on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class UpdateIniFileCommand
         : AbstractCommand
     {
@@ -54,7 +51,7 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
         public override ClientQuery CreateQuery()
         {
             ClientQuery result = base.CreateQuery();
@@ -71,13 +68,13 @@ namespace ManagedIrbis.Infrastructure.Commands
             return result;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="AbstractCommand.Execute" />
         public override ServerResponse Execute
             (
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             result.GetReturnCode();

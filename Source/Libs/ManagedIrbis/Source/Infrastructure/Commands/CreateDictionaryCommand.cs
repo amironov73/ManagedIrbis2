@@ -14,8 +14,6 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -24,7 +22,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Create database index on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class CreateDictionaryCommand
         : AbstractCommand
     {

@@ -12,11 +12,7 @@
 using AM;
 using AM.Collections;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -26,7 +22,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Read text file(s) from the server
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class ReadFileCommand
         : AbstractCommand
     {
@@ -83,7 +78,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             int count = Files.Count;
             string[] result = new string[count];
@@ -110,7 +105,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             // Don't check: there's no return code
             response.RefuseAnReturnCode();
@@ -141,7 +136,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             Result = GetFileText(result);

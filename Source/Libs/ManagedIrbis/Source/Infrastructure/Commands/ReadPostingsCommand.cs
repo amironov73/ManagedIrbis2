@@ -15,13 +15,9 @@ using System.Diagnostics;
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Search;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -112,9 +108,7 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Read postings for given term.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
-    [DebuggerDisplay("{Database} {NumberOfPostings} "
-        + "{FirstPosting}")]
+    [DebuggerDisplay("{Database} {NumberOfPostings} {FirstPosting}")]
     public sealed class ReadPostingsCommand
         : AbstractCommand
     {
@@ -197,7 +191,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 [NotNull] PostingParameters parameters
             )
         {
-            Code.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             Database = parameters.Database;
             FirstPosting = parameters.FirstPosting;
@@ -296,7 +290,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             CheckResponse(result);

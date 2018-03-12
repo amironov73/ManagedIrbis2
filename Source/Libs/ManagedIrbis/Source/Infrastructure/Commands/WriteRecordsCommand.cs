@@ -15,13 +15,9 @@ using AM;
 using AM.Collections;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -31,7 +27,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Create or update many records simultaneously.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class WriteRecordsCommand
         : AbstractCommand
     {
@@ -51,10 +46,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// Records to write.
         /// </summary>
         [NotNull]
-        public NonNullCollection<RecordReference> References
-        {
-            get { return _references; }
-        }
+        public NonNullCollection<RecordReference> References { get; }
 
         #endregion
 
@@ -69,18 +61,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : base(connection)
         {
-            _references = new NonNullCollection<RecordReference>();
+            References = new NonNullCollection<RecordReference>();
         }
-
-        #endregion
-
-        #region Private members
-
-        private readonly NonNullCollection<RecordReference> _references;
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 
@@ -164,7 +146,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

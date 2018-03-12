@@ -12,11 +12,7 @@
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -42,7 +38,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Connect to the IRBIS64 server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class ConnectCommand
         : AbstractCommand
     {
@@ -172,7 +167,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             Log.Trace("ConnectCommand::Execute");
 

@@ -11,11 +11,9 @@
 
 using System.Linq;
 
-using CodeJam;
+using AM;
 
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -25,7 +23,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Database stat.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class DatabaseStatCommand
         : AbstractCommand
     {
@@ -74,7 +71,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             // Ignore the result
             response.RefuseAnReturnCode();
@@ -122,7 +119,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

@@ -15,11 +15,7 @@ using AM;
 using AM.Logging;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -58,7 +54,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Format records on IRBIS-server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class FormatCommand
         : AbstractCommand
     {
@@ -129,7 +124,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 int itemCount
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<string> result = new List<string>();
 
@@ -240,7 +235,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             if (!string.IsNullOrEmpty(FormatSpecification))

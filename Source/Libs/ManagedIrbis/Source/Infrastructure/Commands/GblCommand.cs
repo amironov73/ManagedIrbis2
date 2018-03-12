@@ -14,13 +14,9 @@ using System;
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Gbl;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -86,7 +82,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Global correction.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class GblCommand
         : AbstractCommand
     {
@@ -191,7 +186,7 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : base(connection)
         {
-            Code.NotNull(settings, "settings");
+            Sure.NotNull(settings, nameof(settings));
 
             Actualize = settings.Actualize;
             AutoIn = settings.Autoin;

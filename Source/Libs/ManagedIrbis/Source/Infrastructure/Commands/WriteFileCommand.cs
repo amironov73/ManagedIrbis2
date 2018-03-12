@@ -13,11 +13,7 @@ using AM;
 using AM.Collections;
 using AM.Text;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -27,7 +23,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Write text file(s) to the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class WriteFileCommand
         : AbstractCommand
     {
@@ -98,7 +93,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

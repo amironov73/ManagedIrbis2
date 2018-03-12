@@ -24,7 +24,7 @@ using AM.Runtime;
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
-using ManagedIrbis.Pft;
+//using ManagedIrbis.Pft;
 
 using Newtonsoft.Json;
 
@@ -348,31 +348,31 @@ namespace ManagedIrbis
             return Fields.GetSubFieldValue(tag, code);
         }
 
-        /// <summary>
-        /// Internal formatting the record/field/subfield.
-        /// </summary>
-        /// <remarks>
-        /// Do not use external resources!
-        /// </remarks>
-        [CanBeNull]
-        public string FR
-            (
-                [NotNull] string format
-            )
-        {
-            Sure.NotNull(format, "format");
+        ///// <summary>
+        ///// Internal formatting the record/field/subfield.
+        ///// </summary>
+        ///// <remarks>
+        ///// Do not use external resources!
+        ///// </remarks>
+        //[CanBeNull]
+        //public string FR
+        //    (
+        //        [NotNull] string format
+        //    )
+        //{
+        //    Sure.NotNull(format, "format");
 
-            // TODO Some caching?
+        //    // TODO Some caching?
 
-            using (PftFormatter formatter = new PftFormatter())
-            {
-                formatter.ParseProgram(format);
+        //    using (PftFormatter formatter = new PftFormatter())
+        //    {
+        //        formatter.ParseProgram(format);
 
-                string result = formatter.FormatRecord(this);
+        //        string result = formatter.FormatRecord(this);
 
-                return result;
-            }
-        }
+        //        return result;
+        //    }
+        //}
 
         /// <summary>
         /// Assign database name to the record.

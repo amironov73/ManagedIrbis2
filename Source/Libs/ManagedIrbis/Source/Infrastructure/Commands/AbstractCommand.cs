@@ -81,16 +81,12 @@ namespace ManagedIrbis.Infrastructure.Commands
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
-            Log.Trace("AbstractCommand::Constructor");
+            Log.Trace(nameof(AbstractCommand) + "::Constructor");
 
             Connection = connection;
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -115,7 +111,8 @@ namespace ManagedIrbis.Infrastructure.Commands
                 {
                     Log.Error
                         (
-                            "AbstractCommand::CheckResponse: code="
+                            nameof(AbstractCommand) + "::" + nameof(CheckResponse)
+                            + ": code="
                             + returnCode
                         );
 
@@ -199,7 +196,7 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region IVerifiable members
 
-        /// <inheritdoc cref="IVerifiable.Verify"/>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public virtual bool Verify
             (
                 bool throwOnError

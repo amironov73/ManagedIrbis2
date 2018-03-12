@@ -15,11 +15,7 @@ using System.Linq;
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -29,7 +25,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Truncate the database on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public class UnlockRecordsCommand
         : AbstractCommand
     {
@@ -107,7 +102,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             result.GetReturnCode();

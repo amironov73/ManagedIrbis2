@@ -13,13 +13,9 @@
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -29,7 +25,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Create of update existing record in the database.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class WriteRecordCommand
         : AbstractCommand
     {
@@ -132,7 +127,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             string database = Record.ThrowIfNull("Record").Database
                 ?? Connection.Database;

@@ -181,16 +181,16 @@ namespace ManagedIrbis
         [NotNull]
         IniFile Connect();
 
-        /// <summary>
-        /// GBL for virtual record.
-        /// </summary>
-        [NotNull]
-        MarcRecord CorrectVirtualRecord
-            (
-                [NotNull] string database,
-                [NotNull] MarcRecord record,
-                [NotNull] GblStatement[] statements
-            );
+        ///// <summary>
+        ///// GBL for virtual record.
+        ///// </summary>
+        //[NotNull]
+        //MarcRecord CorrectVirtualRecord
+        //    (
+        //        [NotNull] string database,
+        //        [NotNull] MarcRecord record,
+        //        [NotNull] GblStatement[] statements
+        //    );
 
         /// <summary>
         /// GBL for virtual record.

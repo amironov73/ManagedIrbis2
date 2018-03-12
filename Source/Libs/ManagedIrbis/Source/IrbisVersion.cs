@@ -20,13 +20,9 @@ using AM;
 using AM.IO;
 using AM.Runtime;
 
-using CodeJam;
-
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-
-using MoonSharp.Interpreter;
 
 using Newtonsoft.Json;
 
@@ -38,9 +34,8 @@ namespace ManagedIrbis
     /// Информация о версии ИРБИС-сервера.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     [XmlRoot("version")]
-    [DebuggerDisplay("Version={Version}")]
+    [DebuggerDisplay("Version={" + nameof(Version) + "}")]
     public sealed class IrbisVersion
         : IHandmadeSerializable
     {
@@ -90,7 +85,7 @@ namespace ManagedIrbis
                 [NotNull] ServerResponse response
             )
         {
-            Code.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<string> lines = response.RemainingAnsiStrings();
             IrbisVersion result = ParseServerResponse(lines);
@@ -107,7 +102,7 @@ namespace ManagedIrbis
                 [NotNull] List<string> lines
             )
         {
-            Code.NotNull(lines, "lines");
+            Sure.NotNull(lines, nameof(lines));
 
             IrbisVersion result = lines.Count == 4
                 ? new IrbisVersion

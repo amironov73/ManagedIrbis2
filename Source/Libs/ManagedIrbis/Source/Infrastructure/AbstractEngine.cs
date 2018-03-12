@@ -12,7 +12,7 @@
 using System;
 using System.IO;
 using AM;
-using AM.IOC;
+//using AM.IOC;
 using AM.Logging;
 using AM.Threading;
 
@@ -63,11 +63,11 @@ namespace ManagedIrbis.Infrastructure
         [CanBeNull]
         public AbstractEngine NestedEngine { get; private set; }
 
-        /// <summary>
-        /// Additional services.
-        /// </summary>
-        [NotNull]
-        public ServiceRepository Services { get; private set; }
+        ///// <summary>
+        ///// Additional services.
+        ///// </summary>
+        //[NotNull]
+        //public ServiceRepository Services { get; private set; }
 
         /// <summary>
         /// Throw on <see cref="IVerifiable.Verify"/> calling.
@@ -87,13 +87,13 @@ namespace ManagedIrbis.Infrastructure
                 [CanBeNull] AbstractEngine nestedEngine
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             Log.Trace("AbstractEngine::Constructor");
 
             Connection = connection;
             NestedEngine = nestedEngine;
-            Services = new ServiceRepository();
+            //Services = new ServiceRepository();
         }
 
         static AbstractEngine()
@@ -115,7 +115,7 @@ namespace ManagedIrbis.Infrastructure
         {
             AbstractCommand command = context.Command
                 .ThrowIfNull("Command");
-            IrbisConnection connection = context.Connection
+            IrbisConnection connection = (context.Connection as IrbisConnection)
                 .ThrowIfNull("Connection");
 
             if (command.RequireConnection && connection.Socket.RequireConnection)
@@ -241,7 +241,7 @@ namespace ManagedIrbis.Infrastructure
 
             AbstractCommand command = context.Command
                 .ThrowIfNull("Command");
-            IrbisConnection connection = context.Connection
+            IrbisConnection connection = (context.Connection as IrbisConnection)
                 .ThrowIfNull("Connection");
 
             if (!command.Verify(ThrowOnVerify))
@@ -255,8 +255,7 @@ namespace ManagedIrbis.Infrastructure
 
             using (new BusyGuard(connection.Busy))
             {
-                ServerResponse result
-                    = ServerResponse.GetEmptyResponse(connection);
+                ServerResponse result = ServerResponse.GetEmptyResponse(connection);
                 connection.Interrupted = false;
 
                 try
@@ -333,7 +332,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            Sure.NotNull(context, "context");
+            Sure.NotNull(context, nameof(context));
 
             Log.Trace("AbstractEngine::ExecuteCommand");
 

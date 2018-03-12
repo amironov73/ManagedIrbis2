@@ -16,8 +16,6 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -26,8 +24,7 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Actualize given record or whole database on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
-    [DebuggerDisplay("MFN={Mfn}")]
+    [DebuggerDisplay("MFN={" + nameof(Mfn) + "}")]
     public class ActualizeRecordCommand
         : AbstractCommand
     {

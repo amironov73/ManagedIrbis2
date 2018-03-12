@@ -12,11 +12,7 @@
 using AM;
 using AM.Logging;
 
-using CodeJam;
-
 using JetBrains.Annotations;
-
-using MoonSharp.Interpreter;
 
 #endregion
 
@@ -26,7 +22,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// Update user list on the server.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class UpdateUserListCommand
         : AbstractCommand
     {
@@ -96,7 +91,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ClientQuery query
             )
         {
-            Code.NotNull(query, "query");
+            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

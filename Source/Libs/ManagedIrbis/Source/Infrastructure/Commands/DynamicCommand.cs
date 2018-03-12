@@ -15,8 +15,6 @@ using AM;
 
 using JetBrains.Annotations;
 
-using MoonSharp.Interpreter;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -26,7 +24,6 @@ namespace ManagedIrbis.Infrastructure.Commands
     /// during runtime.
     /// </summary>
     [PublicAPI]
-    [MoonSharpUserData]
     public sealed class DynamicCommand
         : AbstractCommand
     {
