@@ -99,7 +99,7 @@ namespace AM.Text.Hyphenation
         {
             if (ReferenceEquals(word, null) || word.Length < 4)
             {
-                return EmptyArray<int>.Value;
+                return Array.Empty<int>();
             }
 
             // Нельзя переносить слова, содержащие прописные буквы
@@ -108,7 +108,7 @@ namespace AM.Text.Hyphenation
             {
                 if (char.IsUpper(word, i))
                 {
-                    return EmptyArray<int>.Value;
+                    return Array.Empty<int>();
                 }
             }
 

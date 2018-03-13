@@ -10,9 +10,10 @@
 #region Using directives
 
 using System;
+using System.ComponentModel.Design;
 using System.IO;
+
 using AM;
-//using AM.IOC;
 using AM.Logging;
 using AM.Threading;
 
@@ -21,6 +22,8 @@ using JetBrains.Annotations;
 using ManagedIrbis.Infrastructure.Commands;
 
 #endregion
+
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace ManagedIrbis.Infrastructure
 {
@@ -63,11 +66,10 @@ namespace ManagedIrbis.Infrastructure
         [CanBeNull]
         public AbstractEngine NestedEngine { get; private set; }
 
-        ///// <summary>
-        ///// Additional services.
-        ///// </summary>
-        //[NotNull]
-        //public ServiceRepository Services { get; private set; }
+        /// <summary>
+        /// Additional services.
+        /// </summary>
+        public NonNullValue<IServiceProvider> Services { get; set; }
 
         /// <summary>
         /// Throw on <see cref="IVerifiable.Verify"/> calling.
@@ -89,11 +91,11 @@ namespace ManagedIrbis.Infrastructure
         {
             Sure.NotNull(connection, nameof(connection));
 
-            Log.Trace("AbstractEngine::Constructor");
+            Log.Trace(nameof(AbstractEngine) + "::Constructor");
 
             Connection = connection;
             NestedEngine = nestedEngine;
-            //Services = new ServiceRepository();
+            Services = new ServiceContainer();
         }
 
         static AbstractEngine()
@@ -113,10 +115,9 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            AbstractCommand command = context.Command
-                .ThrowIfNull("Command");
+            AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IrbisConnection connection = (context.Connection as IrbisConnection)
-                .ThrowIfNull("Connection");
+                .ThrowIfNull(nameof(context.Connection));
 
             if (command.RequireConnection && connection.Socket.RequireConnection)
             {
@@ -124,8 +125,8 @@ namespace ManagedIrbis.Infrastructure
                 {
                     Log.Error
                         (
-                            "AbstractEngine::CheckConnection: "
-                            + "not connected"
+                            nameof(AbstractEngine) + "::" + nameof(CheckConnection)
+                            + ": not connected"
                         );
 
                     throw new IrbisException("Not connected");
@@ -141,18 +142,10 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            Log.Trace("AbstractEngine::OnAfterExecute");
+            Sure.NotNull(context, nameof(context));
+            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnAfterExecute));
 
-            EventHandler<ExecutionEventArgs> handler
-                = AfterExecution;
-
-            if (!ReferenceEquals(handler, null))
-            {
-                ExecutionEventArgs args
-                    = new ExecutionEventArgs(context);
-
-                handler(this, args);
-            }
+            AfterExecution?.Invoke(this, new ExecutionEventArgs(context));
         }
 
         /// <summary>
@@ -163,18 +156,10 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            Log.Trace("AbstractEngine::OnBeforeExecute");
+            Sure.NotNull(context, nameof(context));
+            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnBeforeExecute));
 
-            EventHandler<ExecutionEventArgs> handler
-                = BeforeExecution;
-
-            if (!ReferenceEquals(handler, null))
-            {
-                ExecutionEventArgs args
-                    = new ExecutionEventArgs(context);
-
-                handler(this, args);
-            }
+            BeforeExecution?.Invoke(this, new ExecutionEventArgs(context));
         }
 
         /// <summary>
@@ -185,15 +170,13 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            Log.Trace("AbstractEngine::OnException");
+            Sure.NotNull(context, nameof(context));
+            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnException));
 
             // TODO Implement properly!
 
-            ArsMagnaException exception
-                = context.Exception as ArsMagnaException;
-            IrbisConnection connection = Connection as IrbisConnection;
-            if (!ReferenceEquals(exception, null)
-                && !ReferenceEquals(connection, null))
+            if (context.Exception is ArsMagnaException exception
+                && context.Connection is IrbisConnection connection)
             {
                 if (!ReferenceEquals(connection.RawClientRequest, null))
                 {
@@ -216,40 +199,30 @@ namespace ManagedIrbis.Infrastructure
                 }
             }
 
-            EventHandler<ExecutionEventArgs> handler = ExceptionOccurs;
-
-            if (!ReferenceEquals(handler, null))
-            {
-                ExecutionEventArgs args
-                    = new ExecutionEventArgs(context);
-
-                handler(this, args);
-            }
+            ExceptionOccurs?.Invoke(this, new ExecutionEventArgs(context));
         }
 
         /// <summary>
         /// Standard command execution.
         /// </summary>
-        /// <param name="context"></param>
-        /// <returns></returns>
         protected ServerResponse StandardExecution
             (
                 [NotNull] ExecutionContext context
             )
         {
-            Log.Trace("AbstractEngine::StandardExecution");
+            Sure.NotNull(context, nameof(context));
+            Log.Trace(nameof(AbstractEngine) + "::" + nameof(StandardExecution));
 
-            AbstractCommand command = context.Command
-                .ThrowIfNull("Command");
+            AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IrbisConnection connection = (context.Connection as IrbisConnection)
-                .ThrowIfNull("Connection");
+                .ThrowIfNull(nameof(context.Connection));
 
             if (!command.Verify(ThrowOnVerify))
             {
                 Log.Error
                     (
-                        "AbstractEngine::StandardExecution: "
-                        + "command.Verify() failed"
+                        nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                        + ": " + nameof(command) + "." + nameof(command.Verify) + " failed"
                     );
             }
 
@@ -260,14 +233,13 @@ namespace ManagedIrbis.Infrastructure
 
                 try
                 {
-
                     ClientQuery query = command.CreateQuery();
                     if (!query.Verify(ThrowOnVerify))
                     {
                         Log.Error
                             (
-                                "AbstractEngine::StandardExecution: "
-                                + "query.Verify() failed"
+                                nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                                + ": " + nameof(query) + "." + nameof(query.Verify) + " failed"
                             );
                     }
 
@@ -276,8 +248,8 @@ namespace ManagedIrbis.Infrastructure
                     {
                         Log.Error
                             (
-                                "AbstractEngine::StandardExecution: "
-                                + "result.Verify() failed"
+                                nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                                + ": " + nameof(result) + "." + nameof(result.Verify) + " failed"
                             );
                     }
 
@@ -287,7 +259,7 @@ namespace ManagedIrbis.Infrastructure
                 {
                     Log.TraceException
                         (
-                            "AbstractEngine::StandardExecution",
+                            nameof(AbstractEngine) + "::" + nameof(StandardExecution),
                             exception
                         );
 
@@ -320,6 +292,8 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] Type consumer
             )
         {
+            // TODO use ObjectPool?
+
             return new MemoryStream();
         }
 
@@ -333,19 +307,14 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
-
-            Log.Trace("AbstractEngine::ExecuteCommand");
+            Log.Trace(nameof(AbstractEngine) + "::" + nameof(ExecuteCommand));
 
             context.Verify(true);
 
             OnBeforeExecute(context);
-
-            var result = ReferenceEquals(NestedEngine, null)
-                ? StandardExecution(context)
-                : NestedEngine.ExecuteCommand(context);
-
+            ServerResponse result = NestedEngine?.ExecuteCommand(context)
+                                    ?? StandardExecution(context);
             context.Response = result;
-
             OnAfterExecute(context);
 
             return result;

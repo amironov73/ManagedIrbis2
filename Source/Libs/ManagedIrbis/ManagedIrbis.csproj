@@ -61,10 +61,4 @@
     <PackageReference Include="YamlDotNet.Signed" Version="4.3.2-pre0473" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Castle.Core">
-      <HintPath>C:\Users\AMironov\.nuget\packages\castle.core\4.2.1\lib\netstandard1.3\Castle.Core.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

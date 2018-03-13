@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,6 @@ using System.Threading.Tasks;
 using AM;
 using AM.Collections;
 using AM.IO;
-//using AM.IOC;
 using AM.Logging;
 using AM.PlatformAbstraction;
 using AM.Runtime;
@@ -35,6 +35,8 @@ using ManagedIrbis.Pft;
 using ManagedIrbis.Search;
 
 #endregion
+
+// ReSharper disable VirtualMemberNeverOverridden.Global
 
 namespace ManagedIrbis.Client
 {
@@ -52,15 +54,12 @@ namespace ManagedIrbis.Client
         /// Get busy state for the provider.
         /// </summary>
         [CanBeNull]
-        public virtual BusyState BusyState
-        {
-            get { return null; }
-        }
+        public virtual BusyState BusyState => null;
 
         /// <summary>
         /// Connected?
         /// </summary>
-        public virtual bool Connected { get { return true; } }
+        public virtual bool Connected => true;
 
         /// <summary>
         /// Current database.
@@ -71,14 +70,12 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Platform abstraction.
         /// </summary>
-        [NotNull]
-        public PlatformAbstractionLayer PlatformAbstraction { get; set; }
+        public NonNullValue<PlatformAbstractionLayer> PlatformAbstraction { get; set; }
 
-        ///// <summary>
-        ///// Additional services.
-        ///// </summary>
-        //[NotNull]
-        //public ServiceRepository Services { get; private set; }
+        /// <summary>
+        /// Additional services.
+        /// </summary>
+        public NonNullValue<IServiceProvider> Services { get; set; }
 
         /// <summary>
         /// Resolves the credentials.
@@ -95,15 +92,11 @@ namespace ManagedIrbis.Client
         /// </summary>
         protected IrbisProvider()
         {
-            Log.Trace("IrbisProvider::Constructor");
+            Log.Trace(nameof(IrbisProvider) + "::Constructor");
 
-            //Services = new ServiceRepository();
+            Services = new ServiceContainer();
             PlatformAbstraction = new PlatformAbstractionLayer();
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -214,12 +207,12 @@ namespace ManagedIrbis.Client
                 [NotNull] string database
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             CatalogState result = new CatalogState
             {
                 Database = database,
-                Date = PlatformAbstraction.Today(),
+                Date = PlatformAbstraction.Value.Today(),
                 Records = new RecordState[0]
             };
 
@@ -308,7 +301,7 @@ namespace ManagedIrbis.Client
                 [NotNull] FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             return null;
         }
@@ -322,7 +315,7 @@ namespace ManagedIrbis.Client
                 [NotNull] FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             IniFile result = null;
 
@@ -349,7 +342,7 @@ namespace ManagedIrbis.Client
                 [NotNull] FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             MenuFile result = null;
 
@@ -394,7 +387,7 @@ namespace ManagedIrbis.Client
         [CanBeNull]
         public virtual SearchScenario[] ReadSearchScenarios()
         {
-            return new SearchScenario[0];
+            return Array.Empty<SearchScenario>();
         }
 
         /// <summary>
@@ -406,7 +399,7 @@ namespace ManagedIrbis.Client
                 [NotNull] TermParameters parameters
             )
         {
-            return new TermInfo[0];
+            return Array.Empty<TermInfo>();
         }
 
         /// <summary>
@@ -458,9 +451,9 @@ namespace ManagedIrbis.Client
         /// <inheritdoc cref="IDisposable.Dispose" />
         public virtual void Dispose()
         {
-            Log.Trace("IrbisProvider::Dispose");
+            Log.Trace(nameof(IrbisProvider) + "::" + nameof(Dispose));
 
-            PlatformAbstraction.Dispose();
+            PlatformAbstraction.Value.Dispose();
         }
 
         #endregion

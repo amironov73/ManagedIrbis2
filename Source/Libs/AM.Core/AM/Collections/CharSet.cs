@@ -33,7 +33,7 @@ namespace AM.Collections
     /// Character set.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{ToString()}")]
+    [DebuggerDisplay("{" + nameof(ToString) + "()}")]
     public sealed class CharSet
         : IHandmadeSerializable,
         IEnumerable<char>,
@@ -60,7 +60,7 @@ namespace AM.Collections
             /// </summary>
             public CharSetEnumerator
                 (
-                    CharSet charSet
+                    [NotNull] CharSet charSet
                 )
             {
                 _data = charSet.ToArray();
@@ -79,41 +79,19 @@ namespace AM.Collections
 
             #region IEnumerator members
 
-            /// <inheritdoc cref="IDisposable.Dispose"/>
+            /// <inheritdoc cref="IDisposable.Dispose" />
             public void Dispose()
             {
                 // Nothing to do here
             }
 
-            /// <summary>
-            /// Gets the element in the collection
-            /// at the current position of the enumerator.
-            /// </summary>
-            char IEnumerator<char>.Current
-            {
-                get { return _data[_index]; }
-            }
+            /// <inheritdoc cref="IEnumerator{T}.Current" />
+            char IEnumerator<char>.Current => _data[_index];
 
-            /// <summary>
-            /// Gets the element in the collection
-            /// at the current position of the enumerator.
-            /// </summary>
-            public object Current
-            {
-                get
-                {
-                    return _data[_index];
-                }
-            }
+            /// <inheritdoc cref="IEnumerator.Current" />
+            public object Current => _data[_index];
 
-            /// <summary>
-            /// Advances the enumerator to the next element
-            /// of the collection.
-            /// </summary>
-            /// <returns>true if the enumerator was successfully
-            /// advanced to the next element; false
-            /// if the enumerator has passed the end
-            /// of the collection.</returns>
+            /// <inheritdoc cref="IEnumerator.MoveNext" />
             public bool MoveNext()
             {
                 _index++;
@@ -125,10 +103,7 @@ namespace AM.Collections
                 return true;
             }
 
-            /// <summary>
-            /// Sets the enumerator to its initial position,
-            /// which is before the first element in the collection.
-            /// </summary>
+            /// <inheritdoc cref="IEnumerator.Reset" />
             public void Reset()
             {
                 _index = -1;
@@ -136,8 +111,6 @@ namespace AM.Collections
 
             #endregion
         }
-
-#if !WINMOBILE && !PocketPC
 
         /// <summary>
         /// Converter for JSON serialization.
@@ -165,9 +138,7 @@ namespace AM.Collections
 
             #region JsonConverter members
 
-            /// <summary>
-            /// Writes the JSON representation of the object.
-            /// </summary>
+            /// <inheritdoc cref="JsonConverter.WriteJson" />
             public override void WriteJson
                 (
                     JsonWriter writer,
@@ -175,7 +146,7 @@ namespace AM.Collections
                     JsonSerializer serializer
                 )
             {
-                CharSet charSet = (CharSet) value;
+                CharSet charSet = (CharSet)value;
 
                 JObject o = new JObject();
                 o.AddFirst(new JProperty
@@ -187,9 +158,7 @@ namespace AM.Collections
                 o.WriteTo(writer);
             }
 
-            /// <summary>
-            /// Reads the JSON representation of the object.
-            /// </summary>
+            /// <inheritdoc cref="JsonConverter.ReadJson" />
             [ExcludeFromCodeCoverage]
             public override object ReadJson
                 (
@@ -208,10 +177,7 @@ namespace AM.Collections
                 throw new NotImplementedException();
             }
 
-            /// <summary>
-            /// Determines whether this instance can convert
-            /// the specified object type.
-            /// </summary>
+            /// <inheritdoc cref="JsonConverter.CanConvert" />
             public override bool CanConvert
                 (
                     Type objectType
@@ -222,8 +188,6 @@ namespace AM.Collections
 
             #endregion
         }
-
-#endif
 
         #endregion
 
@@ -273,7 +237,7 @@ namespace AM.Collections
         /// Constructor.
         /// </summary>
         public CharSet()
-            : this (DefaultCapacity)
+            : this(DefaultCapacity)
         {
         }
 
@@ -285,7 +249,7 @@ namespace AM.Collections
                 int capacity
             )
         {
-            Sure.Positive(capacity, "capacity");
+            Sure.Positive(capacity, nameof(capacity));
 
             _data = new BitArray(capacity);
         }
@@ -309,7 +273,7 @@ namespace AM.Collections
                 [NotNull] CharSet other
             )
         {
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             _data = new BitArray(other._data);
         }
@@ -323,7 +287,7 @@ namespace AM.Collections
             )
             : this()
         {
-            Sure.NotNull(characters, "characters");
+            Sure.NotNull(characters, nameof(characters));
 
             foreach (char c in characters)
             {
@@ -352,7 +316,7 @@ namespace AM.Collections
             )
             : this()
         {
-            Sure.NotNull(characters, "characters");
+            Sure.NotNull(characters, nameof(characters));
 
             Add(characters);
         }
@@ -463,7 +427,7 @@ namespace AM.Collections
                 [NotNull] string range
             )
         {
-            Sure.NotNull(range, "range");
+            Sure.NotNull(range, nameof(range));
 
             _Add(range, true);
 
@@ -497,7 +461,7 @@ namespace AM.Collections
                 [NotNull] CharSet other
             )
         {
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             CharSet result = Clone();
             result._data.And(other._data);
@@ -513,7 +477,7 @@ namespace AM.Collections
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return true;
             }
@@ -580,7 +544,7 @@ namespace AM.Collections
                 [NotNull] CharSet other
             )
         {
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             CharSet result = Clone();
             result._data.Or(other._data);
@@ -625,7 +589,7 @@ namespace AM.Collections
                 [NotNull] string range
             )
         {
-            Sure.NotNull(range, "range");
+            Sure.NotNull(range, nameof(range));
 
             _Add(range, false);
 
@@ -669,7 +633,7 @@ namespace AM.Collections
         [NotNull]
         public char[] ToArray()
         {
-            int length = _data.Length/8 + 1;
+            int length = _data.Length / 8 + 1;
             List<char> result = new List<char>(length);
 
             for (int i = 0; i < _data.Length; i++)
@@ -692,7 +656,7 @@ namespace AM.Collections
                 [NotNull] CharSet other
             )
         {
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             CharSet result = new CharSet(_data.Xor(other._data));
 
@@ -713,8 +677,8 @@ namespace AM.Collections
                 [NotNull] CharSet right
             )
         {
-            Sure.NotNull(left, "left");
-            Sure.NotNull(right, "right");
+            Sure.NotNull(left, nameof(left));
+            Sure.NotNull(right, nameof(right));
 
             return left.Or(right);
         }

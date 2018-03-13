@@ -40,20 +40,16 @@ namespace ManagedIrbis.Client
         #region Properties
 
         /// <inheritdoc cref="IrbisProvider.BusyState" />
-        public override BusyState BusyState
-        { get { return Connection.Busy; } }
+        public override BusyState BusyState => Connection.Busy;
 
         /// <inheritdoc cref="IrbisProvider.Connected" />
-        public override bool Connected
-        {
-            get { return Connection.Connected; }
-        }
+        public override bool Connected => Connection.Connected;
 
         /// <inheritdoc cref="IrbisProvider.Database" />
         public override string Database
         {
-            get { return Connection.Database; }
-            set { Connection.Database = value; }
+            get => Connection.Database;
+            set => Connection.Database = value;
         }
 
         /// <summary>
@@ -83,7 +79,7 @@ namespace ManagedIrbis.Client
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             _ownConnection = false;
             Connection = connection;
@@ -123,7 +119,7 @@ namespace ManagedIrbis.Client
                 [NotNull] string connectionString
             )
         {
-            Sure.NotNullNorEmpty(connectionString, "connectionString");
+            Sure.NotNullNorEmpty(connectionString, nameof(connectionString));
 
             Connection.ParseConnectionString(connectionString);
         }
@@ -144,7 +140,7 @@ namespace ManagedIrbis.Client
                 string configurationString
             )
         {
-            Sure.NotNullNorEmpty(configurationString, "configurationString");
+            Sure.NotNullNorEmpty(configurationString, nameof(configurationString));
 
             Connection.ParseConnectionString(configurationString);
             Connection.Connect();
@@ -156,7 +152,7 @@ namespace ManagedIrbis.Client
                 string term
             )
         {
-            Sure.NotNullNorEmpty(term, "term");
+            Sure.NotNullNorEmpty(term, nameof(term));
 
             PostingParameters parameters = new PostingParameters
             {
@@ -176,8 +172,8 @@ namespace ManagedIrbis.Client
                 string format
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.NotNull(format, "format");
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(format, nameof(format));
 
             string result = Connection.FormatRecord
                 (
@@ -218,7 +214,7 @@ namespace ManagedIrbis.Client
                 string database
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             var lines = BatchRecordFormatter.WholeDatabase
                 (
@@ -231,7 +227,7 @@ namespace ManagedIrbis.Client
             CatalogState result = new CatalogState
             {
                 Database = database,
-                Date = PlatformAbstraction.Today(),
+                Date = PlatformAbstraction.Value.Today(),
                 MaxMfn = Connection.GetMaxMfn(database)
             };
 
@@ -324,7 +320,7 @@ namespace ManagedIrbis.Client
                 FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             return Connection.ReadMenu(fileSpecification);
         }
@@ -335,7 +331,7 @@ namespace ManagedIrbis.Client
                 TermParameters parameters
             )
         {
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             TermInfo[] result = Connection
                 .ReadTerms(parameters)
@@ -366,9 +362,9 @@ namespace ManagedIrbis.Client
                 string expression
             )
         {
-            if (string.IsNullOrEmpty(expression))
+            if (ReferenceEquals(expression, null) || expression.Length == 0)
             {
-                return new int[0];
+                return Array.Empty<int>();
             }
 
             int[] result = Connection.Search(expression);
@@ -376,13 +372,13 @@ namespace ManagedIrbis.Client
             return result;
         }
 
-        /// <inheritdoc cref="IrbisProvider.WriteRecord"/>
+        /// <inheritdoc cref="IrbisProvider.WriteRecord" />
         public override void WriteRecord
             (
                 MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             Connection.WriteRecord(record, false, true);
         }
@@ -391,7 +387,7 @@ namespace ManagedIrbis.Client
 
         #region IDisposable members
 
-        /// <inheritdoc cref="IrbisProvider.Dispose"/>
+        /// <inheritdoc cref="IrbisProvider.Dispose" />
         public override void Dispose()
         {
             base.Dispose();
@@ -401,10 +397,6 @@ namespace ManagedIrbis.Client
                 Connection.Dispose();
             }
         }
-
-        #endregion
-
-        #region Object members
 
         #endregion
     }

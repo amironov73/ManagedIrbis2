@@ -9,14 +9,10 @@
 
 #region Using directives
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 using T = System.Int32;
 
@@ -41,35 +37,15 @@ namespace AM.Collections
     {
         #region Properties
 
-        private T _length;
-
         /// <summary>
         /// Gets the length.
         /// </summary>
-        /// <value>The length.</value>
-        public T Length
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _length;
-            }
-        }
-
-        private T _start;
+        public T Length { get; }
 
         /// <summary>
         /// Gets the start.
         /// </summary>
-        /// <value>The start.</value>
-        public T Start
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _start;
-            }
-        }
+        public T Start { get; }
 
         #endregion
 
@@ -82,8 +58,9 @@ namespace AM.Collections
             (
                 T length
             )
-            : this(0, length)
         {
+            Start = 0;
+            Length = length;
         }
 
         /// <summary>
@@ -95,8 +72,8 @@ namespace AM.Collections
                 T length
             )
         {
-            _start = start;
-            _length = length;
+            Start = start;
+            Length = length;
         }
 
         #endregion
