@@ -1,7 +1,10 @@
 ﻿using System;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using AM;
+
+#pragma warning disable 219
 
 namespace UnitTests.AM
 {
@@ -9,7 +12,7 @@ namespace UnitTests.AM
     public class NonNullValueTest
     {
         [TestMethod]
-        public void NonNullValue_Construction()
+        public void NonNullValue_Construction_1()
         {
             const string expected = "abc";
 
@@ -19,16 +22,16 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void NonNullValue_Construction_Exception()
+        [ExpectedException(typeof(ArgumentException))]
+        public void NonNullValue_Construction_2()
         {
             NonNullValue<string> value = new NonNullValue<string>("a");
             value.SetValue(null);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void NonNullValue_Assignment()
+        [ExpectedException(typeof(ArgumentException))]
+        public void NonNullValue_Assignment_1()
         {
             NonNullValue<string> value = new NonNullValue<string>("a");
             string text = null;
@@ -36,22 +39,22 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void NonNullValue_Assignment_Exception()
+        [ExpectedException(typeof(ArgumentException))]
+        public void NonNullValue_Assignment_2()
         {
             NonNullValue<string> value = null;
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void NonNullValue_Default_Exception()
+        public void NonNullValue_Default_1()
         {
             NonNullValue<string> value = new NonNullValue<string>();
             Assert.IsNotNull(value.Value);
         }
 
         [TestMethod]
-        public void NonNullValue_SetValue()
+        public void NonNullValue_SetValue_1()
         {
             const string expected = "World";
             NonNullValue<string> value = "Hello";
@@ -60,7 +63,7 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        public void NonNullValue_ToString()
+        public void NonNullValue_ToString_1()
         {
             string expected = "Hello";
             NonNullValue<string> value = expected;
@@ -68,7 +71,7 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
-        public void NonNullValue_Value()
+        public void NonNullValue_Value_1()
         {
             const string expected = "World";
             NonNullValue<string> value = "Hello";

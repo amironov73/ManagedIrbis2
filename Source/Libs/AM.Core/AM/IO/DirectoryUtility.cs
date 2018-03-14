@@ -72,15 +72,14 @@ namespace AM.IO
         /// and subdirectories
         /// from the directory.
         /// </summary>
-        /// <param name="path">Path to the directory.</param>
         public static void ClearDirectory
             (
                 [NotNull] string path
             )
         {
-            Sure.NotNull(path, "path");
+            Sure.NotNull(path, nameof(path));
 
-            foreach (string subdirectory 
+            foreach (string subdirectory
                 in Directory.GetDirectories(path))
             {
                 Directory.Delete
@@ -95,7 +94,7 @@ namespace AM.IO
                     (
                         Path.Combine
                         (
-                            path, 
+                            path,
                             fileName
                         )
                     );
@@ -105,10 +104,6 @@ namespace AM.IO
         /// <summary>
         /// Gets list of files in specified path.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="mask"></param>
-        /// <param name="recursive"></param>
-        /// <returns></returns>
         [NotNull]
         public static string[] GetFiles
             (
@@ -117,8 +112,8 @@ namespace AM.IO
                 bool recursive
             )
         {
-            Sure.NotNullNorEmpty(path, "path");
-            Sure.NotNullNorEmpty(mask, "mask");
+            Sure.NotNullNorEmpty(path, nameof(path));
+            Sure.NotNullNorEmpty(mask, nameof(mask));
 
             List<string> found = new List<string>();
 
@@ -149,7 +144,7 @@ namespace AM.IO
                 [NotNull] string wildcard
             )
         {
-            Sure.NotNullNorEmpty(wildcard, "wildcard");
+            Sure.NotNullNorEmpty(wildcard, nameof(wildcard));
 
             string dir = Path.GetDirectoryName(wildcard);
             string name = Path.GetFileName(wildcard);
@@ -165,8 +160,10 @@ namespace AM.IO
                 {
                     result.Add(file.Name);
                 }
+
                 return result.ToArray();
             }
+
             return Directory.GetFiles(dir, name);
         }
 

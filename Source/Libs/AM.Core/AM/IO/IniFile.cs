@@ -13,6 +13,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,6 @@ using System.Text;
 using AM.Collections;
 using AM.Logging;
 using AM.Runtime;
-using AM.Text;
 
 using JetBrains.Annotations;
 
@@ -89,7 +89,7 @@ namespace AM.IO
             /// </summary>
             public Line()
             {
-                // Leave Name=null for a while.
+                Key = string.Empty;
             }
 
             /// <summary>
@@ -142,7 +142,7 @@ namespace AM.IO
                     [NotNull] TextWriter writer
                 )
             {
-                Sure.NotNull(writer, "writer");
+                Sure.NotNull(writer, nameof(writer));
 
                 if (string.IsNullOrEmpty(Value))
                 {
@@ -168,9 +168,9 @@ namespace AM.IO
                     BinaryReader reader
                 )
             {
-                Sure.NotNull(reader, "reader");
+                Sure.NotNull(reader, nameof(reader));
 
-                Key = reader.ReadNullableString();
+                Key = reader.ReadString();
                 _value = reader.ReadNullableString();
                 Modified = reader.ReadBoolean();
             }
@@ -181,10 +181,11 @@ namespace AM.IO
                     BinaryWriter writer
                 )
             {
-                Sure.NotNull(writer, "writer");
+                Sure.NotNull(writer, nameof(writer));
 
                 writer
-                    .WriteNullable(Key)
+                    .Write(Key);
+                writer
                     .WriteNullable(Value)
                     .Write(Modified);
             }
@@ -224,10 +225,7 @@ namespace AM.IO
             /// <summary>
             /// Count of lines.
             /// </summary>
-            public int Count
-            {
-                get { return _lines.Count; }
-            }
+            public int Count => _lines.Count;
 
             /// <summary>
             /// All the keys of the section.
@@ -255,12 +253,8 @@ namespace AM.IO
             [CanBeNull]
             public string Name
             {
-                [DebuggerStepThrough]
-                get { return _name; }
-                set
-                {
-                    SetName(value.ThrowIfNull("value"));
-                }
+                get => _name;
+                set => SetName(value.ThrowIfNull("value"));
             }
 
             /// <summary>
@@ -274,8 +268,8 @@ namespace AM.IO
             /// </summary>
             public string this[[NotNull] string key]
             {
-                get { return GetValue(key, null); }
-                set { SetValue(key, value); }
+                get => GetValue(key, null);
+                set => SetValue(key, value);
             }
 
             #endregion
@@ -326,14 +320,14 @@ namespace AM.IO
                     [NotNull] Line line
                 )
             {
-                Sure.NotNull(line, "line");
+                Sure.NotNull(line, nameof(line));
                 CheckKeyName(line.Key);
                 if (ContainsKey(line.Key))
                 {
                     Log.Error
                         (
-                            "IniFile::Add: "
-                            + "duplicate key="
+                            nameof(IniFile) + "::" + nameof(Add)
+                            + ": duplicate key="
                             + line.Key
                         );
 
@@ -351,7 +345,7 @@ namespace AM.IO
                     [NotNull] Section section
                 )
             {
-                Sure.NotNull(section, "section");
+                Sure.NotNull(section, nameof(section));
 
                 foreach (Line line in this)
                 {
@@ -372,14 +366,12 @@ namespace AM.IO
             /// <summary>
             /// Whether the section have line with given key?
             /// </summary>
-            /// <param name="key"></param>
-            /// <returns></returns>
             public bool ContainsKey
                 (
                     [NotNull] string key
                 )
             {
-                Sure.NotNullNorEmpty(key, "key");
+                Sure.NotNullNorEmpty(key, nameof(key));
 
                 foreach (Line line in _lines)
                 {
@@ -425,7 +417,7 @@ namespace AM.IO
                     [CanBeNull] T defaultValue
                 )
             {
-                Sure.NotNullNorEmpty(key, "key");
+                Sure.NotNullNorEmpty(key, nameof(key));
 
                 string value = GetValue(key, null);
                 if (string.IsNullOrEmpty(value))
@@ -471,7 +463,7 @@ namespace AM.IO
                     [NotNull] string name
                 )
             {
-                Sure.NotNullNorEmpty(name, "name");
+                Sure.NotNullNorEmpty(name, nameof(name));
                 _name = name;
                 Modified = true;
                 Owner.Modified = true;
@@ -528,8 +520,7 @@ namespace AM.IO
                 }
                 else
                 {
-                    string text
-                        = ConversionUtility.ConvertTo<string>(value);
+                    string text = ConversionUtility.ConvertTo<string>(value);
                     SetValue(key, text);
                 }
 
@@ -589,6 +580,7 @@ namespace AM.IO
 
             #region IEnumerable<Line> members
 
+            [ExcludeFromCodeCoverage]
             IEnumerator IEnumerable.GetEnumerator()
             {
                 return GetEnumerator();
@@ -650,10 +642,7 @@ namespace AM.IO
         /// Section indexer.
         /// </summary>
         [CanBeNull]
-        public Section this[[NotNull] string sectionName]
-        {
-            get { return GetSection(sectionName); }
-        }
+        public Section this[[NotNull] string sectionName] => GetSection(sectionName);
 
         /// <summary>
         /// Value indexer.
@@ -665,8 +654,8 @@ namespace AM.IO
                 [NotNull] string keyName
             ]
         {
-            get { return GetValue(sectionName, keyName, null); }
-            set { SetValue(sectionName, keyName, value); }
+            get => GetValue(sectionName, keyName, null);
+            set => SetValue(sectionName, keyName, value);
         }
 
         /// <summary>
@@ -684,22 +673,7 @@ namespace AM.IO
         public IniFile()
         {
             _sections = new NonNullCollection<Section>();
-
-            Log.Trace
-                (
-                    "IniFile::Constructor"
-                );
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public IniFile
-            (
-                [NotNull] string fileName
-            )
-            : this (fileName, null, false)
-        {
+            Log.Trace(nameof(IniFile) + "::Constructor");
         }
 
         /// <summary>
@@ -708,16 +682,16 @@ namespace AM.IO
         public IniFile
             (
                 [NotNull] string fileName,
-                [CanBeNull] Encoding encoding,
-                bool writable
+                [CanBeNull] Encoding encoding = null,
+                bool writable = false
             )
             : this()
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             Log.Trace
                 (
-                    "IniFile::Constructor: "
+                    nameof(IniFile) + "::Constructor: "
                     + "fileName="
                     + fileName
                 );
@@ -797,12 +771,12 @@ namespace AM.IO
                 [NotNull] IniFile iniFile
             )
         {
-            Sure.NotNull(iniFile, "iniFile");
+            Sure.NotNull(iniFile, nameof(iniFile));
 
             foreach (Section thisSection in this)
             {
                 string name = thisSection.Name;
-                if (!string.IsNullOrEmpty(name))
+                if (!ReferenceEquals(name, null) && name.Length != 0)
                 {
                     Section otherSection = iniFile.GetOrCreateSection(name);
                     thisSection.ApplyTo(otherSection);
@@ -873,8 +847,8 @@ namespace AM.IO
             {
                 Log.Error
                     (
-                        "IniFile::CreateSection: "
-                        + "duplicate name="
+                        nameof(IniFile) + "::" + nameof(CreateSection)
+                        + ": duplicate name="
                         + name
                     );
 
@@ -998,10 +972,7 @@ namespace AM.IO
             )
         {
             Section section = GetSection(sectionName);
-            if (section != null)
-            {
-                section.Remove(keyName);
-            }
+            section?.Remove(keyName);
 
             return this;
         }
@@ -1016,10 +987,9 @@ namespace AM.IO
                 return;
             }
 
-            Encoding encoding = Encoding 
-                ?? Encoding.Default;
+            Encoding encoding = Encoding ?? Encoding.Default;
 
-            Read(FileName, encoding);
+            Read(FileName.ThrowIfNull(nameof(FileName)), encoding);
         }
 
         /// <summary>
@@ -1031,8 +1001,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                 (
@@ -1052,7 +1022,7 @@ namespace AM.IO
                 [NotNull] TextReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             char[] separators = {'='};
             _sections.Clear();
@@ -1073,8 +1043,8 @@ namespace AM.IO
                     {
                         Log.Error
                             (
-                                "IniFile::Read: "
-                                + "unclosed section name="
+                                nameof(IniFile) + "::" + nameof(Read)
+                                + ": unclosed section name="
                                 + line
                             );
 
@@ -1108,13 +1078,12 @@ namespace AM.IO
         /// <summary>
         /// Write INI-file into the stream.
         /// </summary>
-        /// <param name="writer"></param>
         public void Save
             (
                 [NotNull] TextWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             bool first = true;
             foreach (Section section in _sections)
@@ -1144,7 +1113,7 @@ namespace AM.IO
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             Encoding encoding = Encoding ?? Encoding.Default;
 
@@ -1200,7 +1169,7 @@ namespace AM.IO
                 [NotNull] TextWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             bool first = true;
             foreach (Section section in _sections)
@@ -1254,7 +1223,7 @@ namespace AM.IO
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             FileName = reader.ReadNullableString();
             string encodingName = reader.ReadNullableString();
@@ -1278,21 +1247,11 @@ namespace AM.IO
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.WriteNullable(FileName);
 
-#if WINMOBILE || PocketPC
-
-            string encodingName = null;
-#else
-
-            string encodingName = Encoding == null
-                ? null
-                : Encoding.EncodingName;
-
-#endif
-
+            string encodingName = Encoding?.EncodingName;
             writer.WriteNullable(encodingName);
             writer.Write(Modified);
             writer.WritePackedInt32(_sections.Count);
@@ -1306,6 +1265,7 @@ namespace AM.IO
 
         #region IEnumerable<Section> members
 
+        [ExcludeFromCodeCoverage]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -1324,16 +1284,13 @@ namespace AM.IO
         /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose()
         {
-            Log.Trace
-                (
-                    "IniFile::Dispose"
-                );
+            Log.Trace(nameof(IniFile) + "::" + nameof(Dispose));
 
             if (Writable
                 && Modified
                 && !string.IsNullOrEmpty(FileName))
             {
-                Save(FileName);
+                Save(FileName.ThrowIfNull(nameof(FileName)));
             }
         }
 
