@@ -10,7 +10,6 @@
 #region Using directives
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 
 using JetBrains.Annotations;
@@ -25,10 +24,6 @@ namespace AM.Drawing
     [PublicAPI]
     public static class FontUtility
     {
-        #region Private members
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -54,6 +49,7 @@ namespace AM.Drawing
                     font.Underline,
                     font.Strikeout
                 );
+
             return result;
         }
 
@@ -72,7 +68,7 @@ namespace AM.Drawing
             string[] parts = fontSpecification.Split('|');
             if (parts.Length != 7)
             {
-                throw new ArgumentException("fontSpecification");
+                throw new ArgumentException(nameof(fontSpecification));
             }
 
             string fontName = parts[0];

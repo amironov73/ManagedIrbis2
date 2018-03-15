@@ -26,18 +26,6 @@ namespace AM.Drawing.Printing
     public class PlainTextPrinter
         : TextPrinter
     {
-        #region Events
-
-        #endregion
-
-        #region Properties
-
-        #endregion
-
-        #region Construction
-
-        #endregion
-
         #region Private members
 
         private string _text;
@@ -46,8 +34,6 @@ namespace AM.Drawing.Printing
         /// <summary>
         /// Called when [print page].
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:System.Drawing.Printing.PrintPageEventArgs"/> instance containing the event data.</param>
         protected override void OnPrintPage
             (
                 object sender,
@@ -68,14 +54,21 @@ namespace AM.Drawing.Printing
                 format.FormatFlags = StringFormatFlags.LineLimit;
                 RectangleF rect = e.PageBounds;
                 rect.X += Borders.Left;
-                rect.Width -= (Borders.Left + Borders.Right);
+                rect.Width -= Borders.Left + Borders.Right;
                 rect.Y += Borders.Top;
-                rect.Height -= (Borders.Top + Borders.Bottom);
-                rect.Height = (rect.Height / TextFont.Size) * TextFont.Size;
+                rect.Height -= Borders.Top + Borders.Bottom;
+                rect.Height = rect.Height / TextFont.Size * TextFont.Size;
                 g.DrawString(s, TextFont, brush, rect, format);
-                int charFitted, linesFilled;
-                g.MeasureString(s, TextFont, rect.Size, format, out charFitted, out linesFilled);
-                e.HasMorePages = (charFitted < s.Length);
+                g.MeasureString
+                    (
+                        s,
+                        TextFont,
+                        rect.Size,
+                        format,
+                        out int charFitted,
+                        out int _
+                    );
+                e.HasMorePages = charFitted < s.Length;
                 _offset += charFitted;
             }
         }

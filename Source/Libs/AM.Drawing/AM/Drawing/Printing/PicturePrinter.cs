@@ -10,7 +10,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 
@@ -24,6 +23,7 @@ namespace AM.Drawing.Printing
     ///
     /// </summary>
     [PublicAPI]
+    // ReSharper disable once RedundantNameQualifier
     [System.ComponentModel.DesignerCategory("Code")]
     public class PicturePrinter
         : Component
@@ -33,51 +33,28 @@ namespace AM.Drawing.Printing
         /// <summary>
         /// Gets or sets the document.
         /// </summary>
-        /// <value>The document.</value>
         public PrintDocument Document { get; set; }
 
         /// <summary>
         /// Gets or sets the picture.
         /// </summary>
-        /// <value>The picture.</value>
         public Image Image { get; set; }
-
-        private float _imageScale = 1f;
 
         /// <summary>
         /// Gets or sets the image scale.
         /// </summary>
-        /// <value>The image scale.</value>
         [DefaultValue(1f)]
-        public float ImageScale
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _imageScale;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _imageScale = value;
-            }
-        }
+        public float ImageScale { get; set; } = 1f;
 
         /// <summary>
         /// Gets or sets the image position.
         /// </summary>
-        /// <value>The image position.</value>
         public ImagePosition ImagePosition { get; set; }
 
         /// <summary>
         /// Gets or sets the title.
         /// </summary>
-        /// <value>The title.</value>
         public string Title { get; set; }
-
-        #endregion
-
-        #region Construction
 
         #endregion
 
@@ -85,7 +62,7 @@ namespace AM.Drawing.Printing
 
         private void _Print(bool preview)
         {
-            if (Document == null)
+            if (ReferenceEquals(Document, null))
             {
                 Document = new PrintDocument();
             }
@@ -115,15 +92,15 @@ namespace AM.Drawing.Printing
             {
                 scale = Math.Min
                     (
-                    boundWidth / imageWidth,
-                    boundHeight / imageHeight
+                        boundWidth / imageWidth,
+                        boundHeight / imageHeight
                     );
             }
             PointF location = new PointF(boundLeft, boundTop);
             SizeF size = new SizeF
                 (
-                imageWidth * scale,
-                imageHeight * scale
+                    imageWidth * scale,
+                    imageHeight * scale
                 );
             switch (ImagePosition)
             {
@@ -131,17 +108,19 @@ namespace AM.Drawing.Printing
                     location.X += (boundWidth - size.Width) / 2;
                     location.Y += (boundHeight - size.Height) / 2;
                     break;
+
                 case ImagePosition.TopLeftCorner:
                     break;
+
                 default:
-                    throw new ApplicationException();
+                    throw new ArgumentOutOfRangeException(nameof(ImagePosition));
             }
             Graphics g = args.Graphics;
             g.PageUnit = GraphicsUnit.Inch;
             g.DrawImage
                 (
-                Image,
-                new RectangleF(location, size)
+                    Image,
+                    new RectangleF(location, size)
                 );
             args.HasMorePages = false;
         }

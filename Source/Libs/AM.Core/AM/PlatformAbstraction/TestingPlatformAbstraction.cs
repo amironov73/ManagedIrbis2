@@ -10,16 +10,14 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AM.Collections;
 
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable InconsistentNaming
 
 namespace AM.PlatformAbstraction
 {
@@ -75,8 +73,7 @@ namespace AM.PlatformAbstraction
                 string variableName
             )
         {
-            string result;
-            Variables.TryGetValue(variableName, out result);
+            Variables.TryGetValue(variableName, out string result);
 
             return result;
         }

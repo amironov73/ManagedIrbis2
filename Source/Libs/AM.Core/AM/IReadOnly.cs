@@ -9,8 +9,6 @@
 
 #region Using directives
 
-using System.Data;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -20,7 +18,8 @@ namespace AM
     /// <summary>
     /// Common interface for object that can be read-only.
     /// </summary>
-    public interface IReadOnly<T>
+    [PublicAPI]
+    public interface IReadOnly<out T>
     {
         /// <summary>
         /// Creates the read-only clone of the object.

@@ -11,7 +11,6 @@
 
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 using AM.Logging;
 
@@ -51,7 +50,7 @@ namespace AM
         /// <summary>
         /// Retry count.
         /// </summary>
-        public int RetryLimit { get; private set; }
+        public int RetryLimit { get; }
 
         #endregion
 
@@ -65,7 +64,7 @@ namespace AM
                 int retryLimit
             )
         {
-            Sure.Positive(retryLimit, "retryLimit");
+            Sure.Positive(retryLimit, nameof(retryLimit));
 
             RetryLimit = retryLimit;
         }
@@ -79,7 +78,7 @@ namespace AM
                 [CanBeNull] Func<Exception, bool> resolver
             )
         {
-            Sure.Positive(retryLimit, "retryLimit");
+            Sure.Positive(retryLimit, nameof(retryLimit));
 
             RetryLimit = retryLimit;
             _resolver = resolver;
@@ -107,8 +106,8 @@ namespace AM
         {
             Log.Error
                 (
-                    "RetryManager::_Resolve: "
-                    + "catch exception: "
+                    nameof(RetryManager) + "::" + nameof(_Resolve)
+                    + ": exception: "
                     + ex.GetType().Name
                     + ": "
                     + ex.Message
@@ -120,16 +119,15 @@ namespace AM
             {
                 Log.Error
                     (
-                        "RetryManager::_Resolve: "
-                        + "count exceeded limit="
+                        nameof(RetryManager) + "::" + nameof(_Resolve)
+                        + ": count exceeded limit="
                         + RetryLimit
                     );
 
                 throw ex;
             }
 
-            ExceptionEventArgs eventArgs
-                = new ExceptionEventArgs (ex);
+            ExceptionEventArgs eventArgs = new ExceptionEventArgs (ex);
             ExceptionOccurs.Raise(this, eventArgs);
 
             if (ReferenceEquals(_resolver, null))
@@ -142,8 +140,8 @@ namespace AM
             {
                 Log.Error
                     (
-                        "RetryManager::_Resolve: "
-                        + "couldn't resolve: "
+                        nameof(RetryManager) + "::" + nameof(_Resolve)
+                        + ": couldn't resolve: "
                         + ex.GetType().Name
                     );
 
@@ -171,7 +169,7 @@ namespace AM
                 [NotNull] Action action
             )
         {
-            Sure.NotNull(action, "action");
+            Sure.NotNull(action, nameof(action));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -196,7 +194,7 @@ namespace AM
                 T argument
             )
         {
-            Sure.NotNull(action, "action");
+            Sure.NotNull(action, nameof(action));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -213,8 +211,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -247,8 +245,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -265,7 +263,7 @@ namespace AM
                 T3 argument3
             )
         {
-            Sure.NotNull(action, "action");
+            Sure.NotNull(action, nameof(action));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -282,8 +280,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -297,7 +295,7 @@ namespace AM
                 [NotNull] Func<T> function
             )
         {
-            Sure.NotNull(function, "function");
+            Sure.NotNull(function, nameof(function));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -313,8 +311,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -329,7 +327,7 @@ namespace AM
                 T1 argument
             )
         {
-            Sure.NotNull(function, "function");
+            Sure.NotNull(function, nameof(function));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -345,8 +343,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -362,7 +360,7 @@ namespace AM
                 T2 argument2
             )
         {
-            Sure.NotNull(function, "function");
+            Sure.NotNull(function, nameof(function));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -378,8 +376,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");
@@ -396,7 +394,7 @@ namespace AM
                 T3 argument3
             )
         {
-            Sure.NotNull(function, "function");
+            Sure.NotNull(function, nameof(function));
 
             for (int i = 0; i <= RetryLimit; i++)
             {
@@ -412,8 +410,8 @@ namespace AM
 
             Log.Error
                 (
-                    "RetryManager::Try: "
-                    + "giving up"
+                    nameof(RetryManager) + "::" + nameof(Try)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException("RetryManager failed");

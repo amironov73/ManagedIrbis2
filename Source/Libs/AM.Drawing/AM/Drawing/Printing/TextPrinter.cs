@@ -9,7 +9,6 @@
 #region Using directives
 
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
 
@@ -54,125 +53,57 @@ namespace AM.Drawing.Printing
 
         #region Properties
 
-        private RectangleF _borders;
-
         /// <summary>
         /// Gets or sets the borders.
         /// </summary>
-        /// <value>The borders.</value>
-        public virtual RectangleF Borders
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _borders;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _borders = value;
-            }
-        }
+        public RectangleF Borders { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the document.
         /// </summary>
-        public virtual string DocumentName { get; set; }
-
-        private int _pageNumber;
+        public string DocumentName { get; set; }
 
         /// <summary>
         /// Gets the page number.
         /// </summary>
-        public virtual int PageNumber
-        {
-            get
-            {
-                return _pageNumber;
-            }
-        }
-
-        private PageSettings _pageSettings;
+        public int PageNumber { get; protected set; }
 
         /// <summary>
         /// Gets or sets the page settings.
         /// </summary>
-        /// <value>The page settings.</value>
-        public virtual PageSettings PageSettings
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _pageSettings;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _pageSettings = value;
-            }
-        }
-
-        private PrintController _printController;
+        public PageSettings PageSettings { get; set; }
 
         /// <summary>
         /// Gets or sets the print controller.
         /// </summary>
-        /// <value>The print controller.</value>
-        public virtual PrintController PrintController
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _printController;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _printController = value;
-            }
-        }
-
-        private PrinterSettings _printerSettings;
+        public PrintController PrintController { get; set; }
 
         /// <summary>
         /// Gets or sets the printer settings.
         /// </summary>
-        /// <value>The printer settings.</value>
-        public virtual PrinterSettings PrinterSettings
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _printerSettings;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _printerSettings = value;
-            }
-        }
+        public PrinterSettings PrinterSettings { get; set; }
 
         /// <summary>
         /// Gets or sets the color of the text.
         /// </summary>
-        public virtual Color TextColor { get; set; }
+        public Color TextColor { get; set; }
 
         /// <summary>
         /// Gets or sets the font.
         /// </summary>
-        public virtual Font TextFont { get; set; }
+        [NotNull]
+        public Font TextFont { get; set; }
 
         #endregion
 
         #region Construction
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="TextPrinter"/> class.
+        /// Constructor.
         /// </summary>
         protected TextPrinter()
         {
-            _borders = new RectangleF(10f, 10f, 10f, 10f);
+            Borders = new RectangleF(10f, 10f, 10f, 10f);
             DocumentName = "Text document";
             TextColor = Color.Black;
             TextFont = new Font(FontFamily.GenericSerif, 12f);
@@ -185,82 +116,50 @@ namespace AM.Drawing.Printing
         /// <summary>
         /// Called when [begin print].
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The
-        /// <see cref="T:System.Drawing.Printing.PrintEventArgs"/>
-        /// instance containing the event data.</param>
         protected virtual void OnBeginPrint
             (
                 object sender,
                 PrintEventArgs e
             )
         {
-            PrintEventHandler handler = BeginPrint;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            BeginPrint?.Invoke(this, e);
         }
 
         /// <summary>
         /// Called when [end print].
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The
-        /// <see cref="T:System.Drawing.Printing.PrintEventArgs"/>
-        /// instance containing the event data.</param>
         protected virtual void OnEndPrint
             (
                 object sender,
                 PrintEventArgs e
             )
         {
-            PrintEventHandler handler = EndPrint;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            EndPrint?.Invoke(this, e);
         }
 
         /// <summary>
         /// Called when [print page].
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="ea">The
-        /// <see cref="T:System.Drawing.Printing.PrintPageEventArgs"/>
-        /// instance containing the event data.</param>
         protected virtual void OnPrintPage
             (
                 object sender,
                 PrintPageEventArgs ea
             )
         {
-            PrintPageEventHandler handler = PrintPage;
-            if (handler != null)
-            {
-                handler(this, ea);
-            }
+            PrintPage?.Invoke(this, ea);
         }
 
         /// <summary>
         /// Called when [query page settings].
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The
-        /// <see cref="T:System.Drawing.Printing.QueryPageSettingsEventArgs"/>
-        /// instance containing the event data.</param>
         protected virtual void OnQueryPageSettings
             (
                 object sender,
                 QueryPageSettingsEventArgs e
             )
         {
-            ++_pageNumber;
-            QueryPageSettingsEventHandler handler = QueryPageSettings;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            ++PageNumber;
+            QueryPageSettings?.Invoke(this, e);
         }
 
         #endregion
@@ -299,7 +198,7 @@ namespace AM.Drawing.Printing
                 document.EndPrint += OnEndPrint;
                 document.PrintPage += OnPrintPage;
                 document.QueryPageSettings += OnQueryPageSettings;
-                _pageNumber = 1;
+                PageNumber = 1;
                 document.Print();
 
                 return true;

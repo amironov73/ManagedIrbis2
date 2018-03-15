@@ -153,7 +153,7 @@ namespace AM.Drawing
                 params byte[] pattern
             )
         {
-            if ((offset + pattern.Length) > stream.Length)
+            if (offset + pattern.Length > stream.Length)
             {
                 return false;
             }
@@ -179,7 +179,7 @@ namespace AM.Drawing
                 ImageInfo result = new ImageInfo(fileName);
                 while (true)
                 {
-                    if ((file.Read(buffer, 0, 32) != 32)
+                    if (file.Read(buffer, 0, 32) != 32
                        || !_Compare(buffer, 0, 0x42, 0x4D)
                        )
                     {
@@ -188,8 +188,10 @@ namespace AM.Drawing
                     result.Width = BitConverter.ToInt32(buffer, 18);
                     result.Height = BitConverter.ToInt32(buffer, 22);
                     result.Colors = 1 << buffer[28];
+
                     return result;
                 }
+
                 throw new ApplicationException();
             }
         }
@@ -205,14 +207,14 @@ namespace AM.Drawing
                 ImageInfo result = new ImageInfo(fileName);
                 while (true)
                 {
-                    if ((file.Read(buffer, 0, 13) != 13)
+                    if (file.Read(buffer, 0, 13) != 13
                        || !_Compare(buffer, 0, 0x47, 0x49, 0x46)
                        )
                     {
                         break;
                     }
                     string version = Encoding.ASCII.GetString(buffer, 3, 3);
-                    if ((version != "87a") && (version != "89a"))
+                    if (version != "87a" && version != "89a")
                     {
                         break;
                     }
@@ -221,40 +223,49 @@ namespace AM.Drawing
                     result.Height = buffer[8] + buffer[9] * 256;
                     byte packed = buffer[10];
                     result.Colors = 1 << ((packed & 7) + 1);
+
                     return result;
                 }
+
                 throw new ApplicationException();
             }
         }
 
-        private static ImageInfo _GetJpegImageInfo(string fileName)
+        private static ImageInfo _GetJpegImageInfo
+            (
+                string fileName
+            )
         {
             using (FileStream file = File.OpenRead(fileName))
             {
                 byte[] buffer = new byte[256];
-                if ((file.Read(buffer, 0, 2) != 2)
+                if (file.Read(buffer, 0, 2) != 2
                    || !_Compare(buffer, 0, 0xFF, 0xD8)
                    )
                 {
                     throw new ApplicationException();
                 }
-                ImageInfo result = new ImageInfo(fileName);
-                result.Colors = 1 << 24;
+
+                ImageInfo result = new ImageInfo(fileName)
+                {
+                    Colors = 1 << 24
+                };
                 while (true)
                 {
-                    if ((file.Read(buffer, 0, 2) != 2)
-                       || (buffer[0] != 0xFF)
+                    if (file.Read(buffer, 0, 2) != 2
+                       || buffer[0] != 0xFF
                        )
                     {
                         break;
                     }
+
                     long position = file.Position;
                     byte blockCode = buffer[1];
                     int blockLength = _ReadUInt16(file);
                     if (Utility.IsOneOf<byte>(blockCode, 0xE0))
                     {
                         int toRead = Math.Min(blockLength, buffer.Length);
-                        if ((file.Read(buffer, 0, toRead) != toRead)
+                        if (file.Read(buffer, 0, toRead) != toRead
                            || !_Compare(buffer, 0, 0x4A, 0x46, 0x49, 0x46, 0x00)
                            )
                         {
@@ -267,6 +278,7 @@ namespace AM.Drawing
                         result.VerticalResolution
                             = (short)(buffer[10] * 256 + buffer[11]);
                     }
+
                     if (Utility.IsOneOf<byte>(blockCode, 0xC0, 0xC1,
                         0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB,
                         0xCD, 0xCE, 0xCF))
@@ -275,30 +287,32 @@ namespace AM.Drawing
                         {
                             throw new IOException();
                         }
+
                         result.Height = _ReadUInt16(file);
                         result.Width = _ReadUInt16(file);
+
                         return result;
                     }
                     file.Position = position + blockLength;
-                    continue;
                 }
             }
+
             throw new ApplicationException();
         }
 
         private static ImageInfo _GetPcxImageInfo(string fileName)
         {
-            throw new Exception("The method or operation is not implemented.");
+            throw new NotImplementedException(nameof(_GetPcxImageInfo));
         }
 
         private static ImageInfo _GetTgaImageInfo(string fileName)
         {
-            throw new Exception("The method or operation is not implemented.");
+            throw new NotImplementedException(nameof(_GetTgaImageInfo));
         }
 
         private static ImageInfo _GetTiffImageInfo(string fileName)
         {
-            throw new Exception("The method or operation is not implemented.");
+            throw new NotImplementedException(nameof(_GetTiffImageInfo));
         }
 
         private static ushort _ReadUInt16(Stream stream)
@@ -309,6 +323,7 @@ namespace AM.Drawing
             {
                 throw new IOException();
             }
+
             return (ushort)(buffer[0] * 256 + buffer[1]);
         }
 
@@ -319,11 +334,9 @@ namespace AM.Drawing
         /// <summary>
         /// Gets the image info.
         /// </summary>
-        /// <param name="fileName">Name of the file.</param>
-        /// <returns></returns>
         public static ImageInfo FromFile
             (
-                string fileName
+                [NotNull] string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -366,13 +379,7 @@ namespace AM.Drawing
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "Width={0} Height={1} Colors={2}",
-                    Width,
-                    Height,
-                    Colors
-                );
+            return $"Width={Width} Height={Height} Colors={Colors}";
         }
 
         #endregion
