@@ -39,7 +39,6 @@ namespace AM.Drawing
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
-        /// <value>The name.</value>
         [XmlAttribute("name")]
         public string Name { get; set; }
 
