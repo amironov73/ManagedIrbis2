@@ -51,7 +51,7 @@ namespace AM.IO
                 string[] directories = Directory.GetDirectories(path);
                 foreach (string dir in directories)
                 {
-                    _GetFiles(found, dir, masks, recursive);
+                    _GetFiles(found, dir, masks, true);
                 }
             }
         }
@@ -68,7 +68,7 @@ namespace AM.IO
         #region Public methods
 
         /// <summary>
-        /// Clears the specified directory. Deletes all files 
+        /// Clears the specified directory. Deletes all files
         /// and subdirectories
         /// from the directory.
         /// </summary>
@@ -134,7 +134,7 @@ namespace AM.IO
         /// в себя символы * и ?, например *.exe или c:\*.bat.</param>
         /// <returns>Массив имен файлов, соответствующих регулярному
         /// выражению. Если параметр <paramref name="wildcard"/>
-        /// включал имя директории, то каждое имя в массив также 
+        /// включал имя директории, то каждое имя в массив также
         /// будет содержать имя директории.</returns>
         /// <remarks>В поиске участвуют только файлы, но не директории.
         /// </remarks>

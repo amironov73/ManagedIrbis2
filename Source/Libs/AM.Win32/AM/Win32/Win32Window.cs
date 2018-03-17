@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* Win32Window.cs -- better than NativeWindow.
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -73,7 +73,7 @@ namespace AM.Win32
             get => Bounds.Location;
             set
             {
-                Size size = this.Size;
+                Size size = Size;
                 User32.MoveWindow
                     (
                         Handle,
@@ -123,7 +123,7 @@ namespace AM.Win32
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this 
+        /// Gets or sets a value indicating whether this
         /// <see cref="T:Win32Window"/> is visible.
         /// </summary>
         public bool Visible
