@@ -44,23 +44,23 @@ namespace ManagedIrbis
         #region Constants
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public const string DefaultHost = "127.0.0.1";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public const string DefaultDatabase = "IBIS";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public const IrbisWorkstation DefaultWorkstation
             = IrbisWorkstation.Cataloger;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public const int DefaultPort = 6666;
 
@@ -297,12 +297,12 @@ namespace ManagedIrbis
                     (int)connection.Workstation
                 );
 
-            if (!string.IsNullOrEmpty(EngineTypeName))
+            if (!ReferenceEquals(EngineTypeName, null) && EngineTypeName.Length != 0)
             {
                 connection.SetEngine(EngineTypeName);
             }
 
-            if (!string.IsNullOrEmpty(SocketTypeName))
+            if (!ReferenceEquals(SocketTypeName, null) && SocketTypeName.Length != 0)
             {
                 ClientSocketUtility.CreateSocket
                     (
@@ -311,20 +311,19 @@ namespace ManagedIrbis
                     );
             }
 
-            if (!string.IsNullOrEmpty(NetworkLogging))
+            if (!ReferenceEquals(NetworkLogging, null) && NetworkLogging.Length != 0)
             {
                 connection.SetNetworkLogging(NetworkLogging);
             }
 
-            if (!string.IsNullOrEmpty(FactoryTypeName))
+            if (!ReferenceEquals(FactoryTypeName, null) && FactoryTypeName.Length != 0)
             {
                 connection.SetCommandFactory(FactoryTypeName);
             }
 
             if (!string.IsNullOrEmpty(Smart))
             {
-                SmartClientSocket smartSocket
-                    = new SmartClientSocket(connection);
+                SmartClientSocket smartSocket = new SmartClientSocket(connection);
                 connection.SetSocket(smartSocket);
             }
 
@@ -335,9 +334,7 @@ namespace ManagedIrbis
                         connection,
                         connection.Socket
                     );
-                int delay;
-                if (NumericUtility.TryParseInt32(Slow, out delay)
-                    && delay > 0)
+                if (NumericUtility.TryParseInt32(Slow, out int delay) && delay > 0)
                 {
                     slowSocket.Delay = delay;
                 }

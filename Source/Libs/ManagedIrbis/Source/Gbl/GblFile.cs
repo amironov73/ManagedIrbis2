@@ -9,13 +9,9 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using AM;
@@ -57,10 +53,7 @@ namespace ManagedIrbis.Gbl
         [NotNull]
         [XmlElement("item")]
         [JsonProperty("items")]
-        public NonNullCollection<GblStatement> Statements
-        {
-            get { return _statements; }
-        }
+        public NonNullCollection<GblStatement> Statements { get; }
 
         /// <summary>
         /// Signature.
@@ -68,10 +61,7 @@ namespace ManagedIrbis.Gbl
         [NotNull]
         [XmlElement("parameter")]
         [JsonProperty("parameters")]
-        public NonNullCollection<GblParameter> Parameters
-        {
-            get { return _parameters; }
-        }
+        public NonNullCollection<GblParameter> Parameters { get; }
 
         #endregion
 
@@ -82,17 +72,9 @@ namespace ManagedIrbis.Gbl
         /// </summary>
         public GblFile()
         {
-            _parameters = new NonNullCollection<GblParameter>();
-            _statements = new NonNullCollection<GblStatement>();
+            Parameters = new NonNullCollection<GblParameter>();
+            Statements = new NonNullCollection<GblStatement>();
         }
-
-        #endregion
-
-        #region Private members
-
-        private readonly NonNullCollection<GblParameter> _parameters;
-
-        private readonly NonNullCollection<GblStatement> _statements;
 
         #endregion
 
@@ -108,8 +90,8 @@ namespace ManagedIrbis.Gbl
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                 (

@@ -14,15 +14,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 #endregion
 
@@ -103,20 +99,20 @@ namespace ManagedIrbis.Batch
                 [NotNull] IEnumerable<int> range
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(format, "format");
-            Sure.NotNull(range, "range");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(format, nameof(format));
+            Sure.NotNull(range, nameof(range));
             if (batchSize < 1)
             {
                 Log.Error
                     (
-                        "BatchRecordFormatter::Constructor: "
+                        nameof(BatchRecordFormatter) + "::Constructor: "
                         + "batchSize="
                         + batchSize
                     );
 
-                throw new ArgumentOutOfRangeException("batchSize");
+                throw new ArgumentOutOfRangeException(nameof(batchSize));
             }
 
             Connection = connection;
@@ -140,20 +136,20 @@ namespace ManagedIrbis.Batch
                 [NotNull] IEnumerable<int> range
             )
         {
-            Sure.NotNullNorEmpty(connectionString, "connectionString");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(format, "format");
-            Sure.NotNull(range, "range");
+            Sure.NotNullNorEmpty(connectionString, nameof(connectionString));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(format, nameof(format));
+            Sure.NotNull(range, nameof(range));
             if (batchSize < 1)
             {
                 Log.Error
                     (
-                        "BatchRecordFormatter::Constructor: "
+                        nameof(BatchRecordFormatter) + "::Constructor: "
                         + "batchSize="
                         + batchSize
                     );
 
-                throw new ArgumentOutOfRangeException("batchSize");
+                throw new ArgumentOutOfRangeException(nameof(batchSize));
             }
 
             Connection = ConnectionFactory.CreateConnection(connectionString);
@@ -179,8 +175,7 @@ namespace ManagedIrbis.Batch
                 Exception exception
             )
         {
-            EventHandler<ExceptionEventArgs<Exception>> handler
-                = Exception;
+            EventHandler<ExceptionEventArgs<Exception>> handler = Exception;
 
             if (ReferenceEquals(handler, null))
             {
@@ -212,11 +207,11 @@ namespace ManagedIrbis.Batch
                 int batchSize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(format, "format");
-            Sure.Positive(firstMfn, "firstMfn");
-            Sure.Positive(lastMfn, "lastMfn");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(format, nameof(format));
+            Sure.Positive(firstMfn, nameof(firstMfn));
+            Sure.Positive(lastMfn, nameof(lastMfn));
             if (batchSize < 1)
             {
                 Log.Error
@@ -282,10 +277,10 @@ namespace ManagedIrbis.Batch
                 int batchSize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(format, "format");
-            Sure.NotNullNorEmpty(searchExpression, "searchExpression");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(format, nameof(format));
+            Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
             if (batchSize < 1)
             {
                 Log.Error
@@ -328,9 +323,9 @@ namespace ManagedIrbis.Batch
                 int batchSize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(format, "format");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(format, nameof(format));
             if (batchSize < 1)
             {
                 Log.Error

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ConnectedFormatter.cs -- 
+/* ConnectedFormatter.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -22,7 +22,7 @@ using ManagedIrbis.Pft;
 namespace ManagedIrbis.Client
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ConnectedFormatter
@@ -57,7 +57,7 @@ namespace ManagedIrbis.Client
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             Connection = connection;
         }
@@ -73,7 +73,7 @@ namespace ManagedIrbis.Client
             )
         {
             if (ReferenceEquals(record, null)
-                || string.IsNullOrEmpty(Source))
+                || ReferenceEquals(Source, null) || Source.Length == 0)
             {
                 return string.Empty;
             }
@@ -90,9 +90,9 @@ namespace ManagedIrbis.Client
                 int mfn
             )
         {
-            Sure.Positive(mfn, "mfn");
+            Sure.Positive(mfn, nameof(mfn));
 
-            if (string.IsNullOrEmpty(Source))
+            if (ReferenceEquals(Source, null) || Source.Length == 0)
             {
                 return string.Empty;
             }
@@ -109,9 +109,9 @@ namespace ManagedIrbis.Client
                 int[] mfns
             )
         {
-            Sure.NotNull(mfns, "mfns");
+            Sure.NotNull(mfns, nameof(mfns));
 
-            string source = Source.ThrowIfNull("Source");
+            string source = Source.ThrowIfNull(nameof(Source));
             string[] result = Connection.FormatRecords
                 (
                     Connection.Database,

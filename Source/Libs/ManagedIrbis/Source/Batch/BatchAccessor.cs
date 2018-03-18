@@ -33,7 +33,7 @@ using ManagedIrbis.Infrastructure.Commands;
 namespace ManagedIrbis.Batch
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class BatchAccessor
@@ -72,7 +72,7 @@ namespace ManagedIrbis.Batch
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             Connection = connection;
         }
@@ -91,17 +91,15 @@ namespace ManagedIrbis.Batch
                 [NotNull] string line
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.NotNull(line, "line");
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(line, nameof(line));
 
-            if (ThrowOnEmptyRecord
-                && record.Fields.Count == 0
-               )
+            if (ThrowOnEmptyRecord && record.Fields.Count == 0)
             {
                 Log.Error
                     (
-                        "BatchAccessor::ThrowIfEmptyRecord: "
-                        + "empty record detected"
+                        nameof(BatchAccessor) + "::" + nameof(_ThrowIfEmptyRecord)
+                        + ": empty record detected"
                     );
 
                 byte[] bytes = Encoding.UTF8.GetBytes(line);
@@ -123,9 +121,6 @@ namespace ManagedIrbis.Batch
                 throw exception;
             }
         }
-
-
-#if FW4
 
         private BlockingCollection<MarcRecord> _records;
 
@@ -196,8 +191,6 @@ namespace ManagedIrbis.Batch
             }
         }
 
-#endif
-
         #endregion
 
         #region Public methods
@@ -212,20 +205,16 @@ namespace ManagedIrbis.Batch
                 [NotNull] IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(mfnList, nameof(mfnList));
 
-            if (string.IsNullOrEmpty(database))
-            {
-                database = Connection.Database;
-            }
-
-            database.ThrowIfNull("database");
+            database = database.IfEmpty(Connection.Database)
+                .ThrowIfNull(nameof(database));
 
             int[] array = mfnList.ToArray();
 
             if (array.Length == 0)
             {
-                return new MarcRecord[0];
+                return Array.Empty<MarcRecord>();
             }
 
             if (array.Length == 1)
@@ -242,8 +231,6 @@ namespace ManagedIrbis.Batch
 
                 return new[] { record };
             }
-
-#if FW4
 
             using (_records = new BlockingCollection<MarcRecord>(array.Length))
             {
@@ -297,38 +284,6 @@ namespace ManagedIrbis.Batch
 
                 return _records.ToArray();
             }
-
-#else
-
-            FormatCommand command 
-                = Connection.CommandFactory.GetFormatCommand();
-            command.Database = database;
-            command.FormatSpecification = IrbisFormat.All;
-            command.MfnList.AddRange(array);
-
-            if (array.Length > IrbisConstants.MaxPostings)
-            {
-                throw new ArgumentException();
-            }
-
-            Connection.ExecuteCommand(command);
-
-            MarcRecord[] result = MarcRecordUtility.ParseAllFormat
-                (
-                    database,
-                    Connection,
-                    command.FormatResult
-                        .ThrowIfNullOrEmpty("command.FormatResult")
-                );
-            Debug.Assert
-                (
-                    command.MfnList.Count == result.Length,
-                    "some records not retrieved"
-                );
-
-            return result;
-
-#endif
         }
 
         /// <summary>
@@ -342,20 +297,16 @@ namespace ManagedIrbis.Batch
                 [NotNull] Func<MarcRecord, T> func
             )
         {
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(mfnList, nameof(mfnList));
 
-            if (string.IsNullOrEmpty(database))
-            {
-                database = Connection.Database;
-            }
-
-            database.ThrowIfNull("database");
+            database = database.IfEmpty(Connection.Database)
+                .ThrowIfNull(nameof(database));
 
             int[] array = mfnList.ToArray();
 
             if (array.Length == 0)
             {
-                return new T[0];
+                return Array.Empty<T>();
             }
 
             if (array.Length == 1)
@@ -374,8 +325,6 @@ namespace ManagedIrbis.Batch
 
                 return new[] { result1 };
             }
-
-#if FW4
 
             using (BlockingCollection<T> collection
                 = new BlockingCollection<T>(array.Length))
@@ -408,10 +357,7 @@ namespace ManagedIrbis.Batch
                         Connection.ExecuteCommand(command);
 
                         string[] lines = command.FormatResult
-                            .ThrowIfNullOrEmpty
-                            (
-                                "command.FormatResult"
-                            );
+                            .ThrowIfNullOrEmpty(nameof(command.FormatResult));
 
                         Debug.Assert
                             (
@@ -427,6 +373,8 @@ namespace ManagedIrbis.Batch
                                         line,
                                         database,
                                         func,
+
+                                        // ReSharper disable once AccessToDisposedClosure
                                         collection
                                     )
                             );
@@ -437,48 +385,7 @@ namespace ManagedIrbis.Batch
 
                 return collection.ToArray();
             }
-
-#else
-
-            FormatCommand command 
-                = Connection.CommandFactory.GetFormatCommand();
-            command.Database = database;
-            command.FormatSpecification = IrbisFormat.All;
-            command.MfnList.AddRange(array);
-
-            if (array.Length > IrbisConstants.MaxPostings)
-            {
-                throw new ArgumentException();
-            }
-
-            Connection.ExecuteCommand(command);
-
-            MarcRecord[] records = MarcRecordUtility.ParseAllFormat
-                (
-                    database,
-                    Connection,
-                    command.FormatResult
-                        .ThrowIfNullOrEmpty("command.FormatResult")
-                );
-            Debug.Assert
-                (
-                    command.MfnList.Count == records.Length,
-                    "some records not retrieved"
-                );
-
-            T[] result = records.Select
-                (
-                    // ReSharper disable ConvertClosureToMethodGroup
-                    record => func(record)
-                    // ReSharper restore ConvertClosureToMethodGroup
-                )
-                .ToArray();
-
-            return result;
-
-#endif
         }
-
 
         #endregion
     }

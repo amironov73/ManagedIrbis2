@@ -55,12 +55,11 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            if (!string.IsNullOrEmpty(value))
+            if (!ReferenceEquals(value, null) && value.Length != 0)
             {
                 foreach (char c in value)
                 {
-                    if (c == SubField.Delimiter
-                        || c < ' ')
+                    if (c == SubField.Delimiter || c < ' ')
                     {
                         return false;
                     }
@@ -79,12 +78,13 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            if (string.IsNullOrEmpty(value))
+            if (ReferenceEquals(value, null) || value.Length != 0)
             {
                 return value;
             }
 
             string result = value.Trim();
+
             return result;
         }
 

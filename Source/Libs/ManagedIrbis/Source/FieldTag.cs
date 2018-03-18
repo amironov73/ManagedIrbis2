@@ -42,14 +42,14 @@ namespace ManagedIrbis
 
         static FieldTag()
         {
-            _goodCharacters = new CharSet().AddRange('0', '9');
+            GoodCharacters = new CharSet().AddRange('0', '9');
         }
 
         #endregion
 
         #region Private members
 
-        private static readonly CharSet _goodCharacters;
+        private static readonly CharSet GoodCharacters;
 
         #endregion
 
@@ -63,12 +63,12 @@ namespace ManagedIrbis
                 [CanBeNull] string tag
             )
         {
-            if (string.IsNullOrEmpty(tag))
+            if (ReferenceEquals(tag, null) || tag.Length == 0)
             {
                 return false;
             }
 
-            bool result = _goodCharacters.CheckText(tag)
+            bool result = GoodCharacters.CheckText(tag)
                 && Normalize(tag) != "0"
                 && tag.Length < 6; // ???
 
@@ -83,14 +83,13 @@ namespace ManagedIrbis
                 [CanBeNull] string tag
             )
         {
-            if (string.IsNullOrEmpty(tag))
+            if (ReferenceEquals(tag, null) || tag.Length == 0)
             {
                 return tag;
             }
 
             string result = tag;
-            while (result.Length > 1
-                && result.StartsWith("0"))
+            while (result.Length > 1 && result.StartsWith("0"))
             {
                 result = result.Substring(1);
             }

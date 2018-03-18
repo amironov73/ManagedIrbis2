@@ -79,8 +79,7 @@ namespace AM.IO
         {
             Sure.NotNull(path, nameof(path));
 
-            foreach (string subdirectory
-                in Directory.GetDirectories(path))
+            foreach (string subdirectory in Directory.GetDirectories(path))
             {
                 Directory.Delete
                     (
@@ -90,14 +89,7 @@ namespace AM.IO
             }
             foreach (string fileName in Directory.GetFiles(path))
             {
-                File.Delete
-                    (
-                        Path.Combine
-                        (
-                            path,
-                            fileName
-                        )
-                    );
+                File.Delete(Path.Combine(path, fileName));
             }
         }
 
@@ -150,10 +142,7 @@ namespace AM.IO
             string name = Path.GetFileName(wildcard);
             if (string.IsNullOrEmpty(dir))
             {
-                FileInfo[] files = new DirectoryInfo
-                    (
-                    Directory.GetCurrentDirectory()
-                    )
+                FileInfo[] files = new DirectoryInfo(Directory.GetCurrentDirectory())
                     .GetFiles(wildcard);
                 List<string> result = new List<string>(files.Length);
                 foreach (FileInfo file in files)

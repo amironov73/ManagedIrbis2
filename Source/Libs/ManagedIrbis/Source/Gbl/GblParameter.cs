@@ -9,17 +9,10 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using AM;
-using AM.Collections;
 using AM.IO;
 using AM.Runtime;
 
@@ -36,11 +29,11 @@ namespace ManagedIrbis.Gbl
     //
     // Первая строка файла задания – это число, задающее
     // количество параметров, используемых в операторах корректировки.
-    // 
+    //
     // Последующие пары строк, число пар должно быть равно
     // количеству параметров, используются программой
     // глобальной корректировки.
-    // 
+    //
     // Первая строка пары - значение параметра или пусто,
     // если пользователю предлагается задать его значение
     // перед выполнением корректировки. В этой строке можно
@@ -56,7 +49,6 @@ namespace ManagedIrbis.Gbl
     /// </summary>
     [PublicAPI]
     [XmlRoot("gbl-parameter")]
-    [DebuggerDisplay("[{Name}] {Value}")]
     public sealed class GblParameter
         : IHandmadeSerializable,
         IVerifiable
@@ -113,9 +105,7 @@ namespace ManagedIrbis.Gbl
 
         #region IHandmadeSerializable members
 
-        /// <summary>
-        /// Restore object state from given stream.
-        /// </summary>
+        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
         public void RestoreFromStream
             (
                 BinaryReader reader
@@ -127,9 +117,7 @@ namespace ManagedIrbis.Gbl
             Value = reader.ReadNullableString();
         }
 
-        /// <summary>
-        /// Save object state to given stream.
-        /// </summary>
+        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
         public void SaveToStream
             (
                 BinaryWriter writer
@@ -145,10 +133,7 @@ namespace ManagedIrbis.Gbl
 
         #region IVerifiable members
 
-
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify
             (
                 bool throwOnError
@@ -171,20 +156,10 @@ namespace ManagedIrbis.Gbl
 
         #region Object members
 
-        /// <summary>
-        /// Returns a <see cref="System.String" />
-        /// that represents this instance.
-        /// </summary>
-        /// <returns>A <see cref="System.String" />
-        /// that represents this instance.</returns>
+        /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "Name: {0}, Value: {1}",
-                    Name,
-                    Value
-                );
+            return $"Name: {Name}, Value: {Value}";
         }
 
         #endregion
