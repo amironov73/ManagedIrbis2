@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* GblNodeCollection.cs -- 
+/* GblNodeCollection.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -14,7 +14,6 @@ using System.Text;
 
 using AM;
 using AM.Collections;
-using AM.Text;
 
 using JetBrains.Annotations;
 
@@ -23,7 +22,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Gbl.Infrastructure
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class GblNodeCollection

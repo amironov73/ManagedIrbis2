@@ -275,7 +275,7 @@ namespace UnitTests.ManagedIrbis.Batch
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(AggregateException))]
         public void BatchAccessor_ReadRecords_7()
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();

@@ -158,7 +158,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                     }
 
                     line = IrbisText.IrbisToWindows(line);
-                    if (!string.IsNullOrEmpty(line))
+                    if (!ReferenceEquals(line, null) && line.Length != 0)
                     {
                         line = line.Trim();
                     }

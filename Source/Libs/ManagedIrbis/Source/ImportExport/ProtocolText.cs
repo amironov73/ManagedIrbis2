@@ -31,10 +31,6 @@ namespace ManagedIrbis.ImportExport
     [PublicAPI]
     public static class ProtocolText
     {
-        #region Construction
-
-        #endregion
-
         #region Private members
 
         private static void _AppendIrbisLine
@@ -175,7 +171,7 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] string line
             )
         {
-            Sure.NotNullNorEmpty(line, "line");
+            Sure.NotNullNorEmpty(line, nameof(line));
 
             StringReader reader = new StringReader(line);
 
@@ -216,9 +212,9 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNullNorEmpty(line1, "line1");
-            Sure.NotNullNorEmpty(line2, "line2");
-            Sure.NotNull(record, "record");
+            Sure.NotNullNorEmpty(line1, nameof(line1));
+            Sure.NotNullNorEmpty(line2, nameof(line2));
+            Sure.NotNull(record, nameof(record));
 
             Regex regex = new Regex(@"^(-?\d+)\#(\d*)?");
             Match match = regex.Match(line1);
@@ -249,8 +245,8 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(response, "response");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(response, nameof(response));
+            Sure.NotNull(record, nameof(record));
 
             try
             {
@@ -267,7 +263,7 @@ namespace ManagedIrbis.ImportExport
                 while (true)
                 {
                     line = response.GetUtfString();
-                    if (string.IsNullOrEmpty(line))
+                    if (ReferenceEquals(line, null) || line.Length == 0)
                     {
                         break;
                     }
@@ -312,19 +308,20 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(response, "response");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(response, nameof(response));
+            Sure.NotNull(record, nameof(record));
 
             // Если в БД нет autoin.gbl, сервер не присылает
             // обработанную запись.
 
             string first = response.GetUtfString();
-            if (string.IsNullOrEmpty(first))
+            if (ReferenceEquals(first, null) || first.Length == 0)
             {
                 return record;
             }
+
             string second = response.GetUtfString();
-            if (string.IsNullOrEmpty(second))
+            if (ReferenceEquals(second, null) || second.Length == 0)
             {
                 return record;
             }
@@ -372,8 +369,8 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(response, "response");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(response, nameof(response));
+            Sure.NotNull(record, nameof(record));
 
             try
             {
@@ -419,8 +416,8 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(response, "response");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(response, nameof(response));
+            Sure.NotNull(record, nameof(record));
 
             try
             {
@@ -428,7 +425,7 @@ namespace ManagedIrbis.ImportExport
                 record.Fields.Clear();
 
                 string line = response.GetUtfString();
-                if (string.IsNullOrEmpty(line))
+                if (ReferenceEquals(line, null) || line.Length == 0)
                 {
                     return null;
                 }
@@ -470,7 +467,7 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             if (string.IsNullOrEmpty(line))
             {
@@ -523,7 +520,7 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             if (string.IsNullOrEmpty(line))
             {

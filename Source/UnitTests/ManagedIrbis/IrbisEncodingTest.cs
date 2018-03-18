@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using ManagedIrbis;
+﻿using ManagedIrbis;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

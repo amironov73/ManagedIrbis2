@@ -10,19 +10,12 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 #endregion
 
@@ -46,13 +39,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <summary>
         /// Good return codes.
         /// </summary>
-        public virtual int[] GoodReturnCodes
-        {
-            get
-            {
-                return new int[0];
-            }
-        }
+        public virtual int[] GoodReturnCodes => Array.Empty<int>();
 
         /// <summary>
         /// Relax (may be malformed) server response.
@@ -62,12 +49,12 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <summary>
         /// Does the command require established connection?
         /// </summary>
-        public virtual bool RequireConnection { get { return true; } }
+        public virtual bool RequireConnection => true;
 
         /// <summary>
         /// Kind of the command.
         /// </summary>
-        public virtual CommandKind Kind { get { return CommandKind.None; } }
+        public virtual CommandKind Kind => CommandKind.None;
 
         #endregion
 
@@ -126,7 +113,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// </summary>
         public virtual ClientQuery CreateQuery()
         {
-            Log.Trace("AbstractCommand::CreateQuery");
+            Log.Trace(nameof(AbstractCommand) + "::" + nameof(CreateQuery));
 
             // TODO fix it!
 
@@ -138,8 +125,8 @@ namespace ManagedIrbis.Infrastructure.Commands
                 UserLogin = Connection.Username,
                 UserPassword = Connection.Password
             };
-            IrbisConnection connection = Connection as IrbisConnection;
-            if (!ReferenceEquals(connection, null))
+
+            if (Connection is IrbisConnection connection)
             {
                 result.CommandNumber = connection.IncrementCommandNumber();
             }
@@ -158,15 +145,15 @@ namespace ManagedIrbis.Infrastructure.Commands
         {
             Sure.NotNull(query, nameof(query));
 
-            Log.Trace("AbstractCommand::Execute");
+            Log.Trace(nameof(AbstractCommand) + "::" + nameof(Execute));
 
             byte[] request = query.EncodePacket();
-            byte[] answer = Connection.Socket
-                .ExecuteRequest(request);
+            byte[] answer = Connection.Socket.ExecuteRequest(request);
 
             Log.Trace
                 (
-                    "AbstractCommand::Execute: answer.Length="
+                    nameof(AbstractCommand) + "::" + nameof(Execute)
+                    + ": answer.Length="
                     + answer.Length
                 );
 
@@ -197,13 +184,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         #region IVerifiable members
 
         /// <inheritdoc cref="IVerifiable.Verify" />
-        public virtual bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            return true;
-        }
+        public virtual bool Verify(bool throwOnError) => true;
 
         #endregion
     }

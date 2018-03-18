@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ResponseBuilder.cs -- 
+/* ResponseBuilder.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -10,32 +10,18 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 using AM;
-using AM.Collections;
-using AM.IO;
-using AM.Logging;
-using AM.Runtime;
-using AM.Text;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 #endregion
 
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ResponseBuilder
@@ -70,7 +56,7 @@ namespace ManagedIrbis.Infrastructure
 
         #region Private members
 
-        private static readonly byte[] _CRLF = { 0x0D, 0x0A };
+        private static readonly byte[] CrLf = { 0x0D, 0x0A };
 
         #endregion
 
@@ -170,7 +156,7 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public ResponseBuilder NewLine()
         {
-            Memory.Write(_CRLF, 0, 2);
+            Memory.Write(CrLf, 0, 2);
 
             return this;
         }
@@ -186,7 +172,7 @@ namespace ManagedIrbis.Infrastructure
                 int commandNumber
             )
         {
-            Sure.NotNull(command, "command");
+            Sure.NotNull(command, nameof(command));
 
             byte[] bytes = Memory.ToArray();
             Memory = new MemoryStream(Memory.Capacity + 100);
@@ -223,10 +209,6 @@ namespace ManagedIrbis.Infrastructure
         {
             Memory.Dispose();
         }
-
-        #endregion
-
-        #region Object members
 
         #endregion
     }

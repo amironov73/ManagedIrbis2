@@ -78,7 +78,7 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            if (ReferenceEquals(value, null) || value.Length != 0)
+            if (ReferenceEquals(value, null) || value.Length == 0)
             {
                 return value;
             }

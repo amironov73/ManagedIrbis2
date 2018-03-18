@@ -86,11 +86,13 @@ namespace ManagedIrbis
         /// <summary>
         /// Идентификатор клиента.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         int ClientID { get; }
 
         /// <summary>
         /// Номер команды.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         int QueryID { get; }
 
         /// <summary>
@@ -286,7 +288,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Получение информации о базе данных.
         /// </summary>
-        /// <returns>Cписок логически удаленных, физически удаленных, 
+        /// <returns>Cписок логически удаленных, физически удаленных,
         /// неактуализированных и заблокированных записей.</returns>
         [NotNull]
         DatabaseInfo GetDatabaseInfo
@@ -566,7 +568,7 @@ namespace ManagedIrbis
             );
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         void SetRetry
             (

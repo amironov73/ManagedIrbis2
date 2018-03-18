@@ -11,8 +11,6 @@
 
 using System;
 
-using AM;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -32,32 +30,27 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <summary>
         /// Handle return codes.
         /// </summary>
-        public Func<DynamicCommand, int[]> GoodReturnCodesHandler
-        { get; set; }
+        public Func<DynamicCommand, int[]> GoodReturnCodesHandler { get; set; }
 
         /// <summary>
         /// Create query.
         /// </summary>
-        public Func<DynamicCommand, ClientQuery> CreateQueryHandler
-        { get; set; }
+        public Func<DynamicCommand, ClientQuery> CreateQueryHandler { get; set; }
 
         /// <summary>
         /// Check server response.
         /// </summary>
-        public Action<DynamicCommand, ServerResponse> CheckResponseHandler
-        { get; set; }
+        public Action<DynamicCommand, ServerResponse> CheckResponseHandler { get; set; }
 
         /// <summary>
         /// Execute command.
         /// </summary>
-        public Func<DynamicCommand, ClientQuery, ServerResponse> ExecuteHandler
-        { get; set; }
+        public Func<DynamicCommand, ClientQuery, ServerResponse> ExecuteHandler { get; set; }
 
         /// <summary>
         /// Verify command settings.
         /// </summary>
-        public Func<DynamicCommand, bool, bool> VerifyHandler
-        { get; set; }
+        public Func<DynamicCommand, bool, bool> VerifyHandler { get; set; }
 
         #endregion
 
@@ -73,10 +66,6 @@ namespace ManagedIrbis.Infrastructure.Commands
             : base(connection)
         {
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -148,8 +137,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         {
             get
             {
-                Func<DynamicCommand, int[]> handler
-                    = GoodReturnCodesHandler;
+                Func<DynamicCommand, int[]> handler = GoodReturnCodesHandler;
 
                 int[] result = !ReferenceEquals(handler, null)
                       ? handler(this)
@@ -165,8 +153,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 ServerResponse response
             )
         {
-            Action<DynamicCommand, ServerResponse> handler
-                = CheckResponseHandler;
+            Action<DynamicCommand, ServerResponse> handler = CheckResponseHandler;
 
             if (!ReferenceEquals(handler, null))
             {
@@ -181,8 +168,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <inheritdoc cref="AbstractCommand.CreateQuery" />
         public override ClientQuery CreateQuery()
         {
-            Func<DynamicCommand, ClientQuery> handler
-                = CreateQueryHandler;
+            Func<DynamicCommand, ClientQuery> handler = CreateQueryHandler;
 
             ClientQuery result = !ReferenceEquals(handler, null)
                 ? handler(this)
@@ -227,10 +213,6 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         //    return result;
         //}
-
-        #endregion
-
-        #region Object members
 
         #endregion
     }
