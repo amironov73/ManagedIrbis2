@@ -13,8 +13,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+
 using AM.Logging;
-using AM.Threading;
 
 using JetBrains.Annotations;
 
@@ -96,7 +96,7 @@ namespace AM.IO
 
                     Log.TraceException
                         (
-                            "InistentFile::_Evaluate",
+                            nameof(InsistentFile) + "::" + nameof(_Evaluate),
                             exception
                         );
                 }
@@ -106,13 +106,13 @@ namespace AM.IO
                 {
                     Log.Error
                         (
-                            "InsistentFile::_Evaluate: "
-                            + "timeout is exhausted"
+                        nameof(InsistentFile) + "::" + nameof(_Evaluate)
+                            + ": timeout is exhausted"
                         );
 
                     throw new ArsMagnaException
                         (
-                            "InsistentFile: timeout is exhausted",
+                            nameof(InsistentFile) + ": timeout is exhausted",
                             lastException
                         );
                 }

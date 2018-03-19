@@ -11,8 +11,6 @@
 
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 using AM.Logging;
 
@@ -28,31 +26,11 @@ namespace AM.IO
     [PublicAPI]
     public static class FileUtility
     {
-        #region Private members
-
-#if FW45
-
-        private const MethodImplOptions Aggressive
-            = MethodImplOptions.AggressiveInlining;
-
-#else
-
-        private const MethodImplOptions Aggressive
-            = (MethodImplOptions)0;
-
-#endif
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
         /// Побайтовое сравнение двух файлов.
         /// </summary>
-        /// <param name="first"></param>
-        /// <param name="second"></param>
-        /// <returns>0, если файлы побайтово совпадают.
-        /// </returns>
         public static int Compare
             (
                 [NotNull] string first,
@@ -63,16 +41,16 @@ namespace AM.IO
             Sure.FileExists(second, nameof(second));
 
             using
-            (
-                FileStream firstStream = File.OpenRead(first),
-                    secondStream = File.OpenRead(second)
-            )
+                (
+                    FileStream firstStream = File.OpenRead(first),
+                        secondStream = File.OpenRead(second)
+                )
             {
                 return StreamUtility.CompareTo
-                (
-                    firstStream,
-                    secondStream
-                );
+                    (
+                        firstStream,
+                        secondStream
+                    );
             }
         }
 
@@ -80,13 +58,6 @@ namespace AM.IO
         /// Copies the specified source file to the specified
         /// destination.
         /// </summary>
-        /// <param name="sourceName">Name of the source file.
-        /// </param>
-        /// <param name="targetName">Name of the target file.
-        /// </param>
-        /// <param name="overwrite"><c>true</c> if the
-        /// destination file can be overwritten; otherwise,
-        /// <c>false</c>.</param>
         public static void Copy
             (
                 [NotNull] string sourceName,
@@ -98,9 +69,6 @@ namespace AM.IO
             Sure.NotNull(targetName, nameof(targetName));
 
             File.Copy(sourceName, targetName, overwrite);
-
-#if !WINMOBILE && !PocketPC && !SILVERLIGHT
-
             DateTime creationTime = File.GetCreationTime(sourceName);
             File.SetCreationTime(targetName, creationTime);
             DateTime lastAccessTime = File.GetLastAccessTime(sourceName);
@@ -109,9 +77,6 @@ namespace AM.IO
             File.SetLastWriteTime(targetName, lastWriteTime);
             FileAttributes attributes = File.GetAttributes(sourceName);
             File.SetAttributes(targetName, attributes);
-
-#endif
-
         }
 
         /// <summary>
@@ -137,8 +102,7 @@ namespace AM.IO
             {
                 FileInfo sourceInfo = new FileInfo(sourcePath);
                 FileInfo targetInfo = new FileInfo(targetPath);
-                if (sourceInfo.LastWriteTime
-                     < targetInfo.LastWriteTime)
+                if (sourceInfo.LastWriteTime < targetInfo.LastWriteTime)
                 {
                     return false;
                 }
@@ -242,7 +206,8 @@ namespace AM.IO
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            if (string.IsNullOrEmpty(path))
+
+            if (ReferenceEquals(path, null) || path.Length == 0)
             {
                 return null;
             }
@@ -280,8 +245,7 @@ namespace AM.IO
             Sure.NotNullNorEmpty(original, nameof(original));
             Sure.NotNullNorEmpty(suffix, nameof(suffix));
 
-            string path = Path.GetDirectoryName(original)
-                ?? string.Empty;
+            string path = Path.GetDirectoryName(original) ?? string.Empty;
             string name = Path.GetFileNameWithoutExtension(original);
             string ext = Path.GetExtension(original);
 
@@ -292,8 +256,7 @@ namespace AM.IO
                         path,
                         name + suffix + i + ext
                     );
-                if (!File.Exists(result)
-                     && !Directory.Exists(result))
+                if (!File.Exists(result) && !Directory.Exists(result))
                 {
                     return result;
                 }
@@ -303,100 +266,11 @@ namespace AM.IO
 
             Log.Error
                 (
-                    "FileUtility::GetNotExistentFileName: "
-                    + "giving up"
+                    nameof(FileUtility) + "::" + nameof(GetNotExistentFileName)
+                    + ": giving up"
                 );
 
             throw new ArsMagnaException();
-        }
-
-        /// <summary>
-        /// Read all bytes from the file.
-        /// </summary>
-        /// <remarks>For WinMobile compatibility.</remarks>
-        [MethodImpl(Aggressive)]
-        public static byte[] ReadAllBytes
-            (
-                [NotNull] string fileName
-            )
-        {
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-
-#if PocketPC || WINMOBILE
-
-            using (Stream stream = new FileStream(fileName, FileMode.Open))
-            {
-                int length = (int)stream.Length;
-                byte[] result = new byte[length];
-                stream.Read(result, 0, length);
-
-                return result;
-            }
-
-#else
-            return File.ReadAllBytes(fileName);
-#endif
-        }
-
-        /// <summary>
-        /// Read all lines from the file.
-        /// </summary>
-        /// <remarks>For WinMobile compatibility.</remarks>
-        [MethodImpl(Aggressive)]
-        public static string[] ReadAllLines
-            (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
-            )
-        {
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
-
-#if WINMOBILE || PocketPC
-
-            return FileHelper.ReadAllLines(fileName, encoding);
-
-#else
-
-            return File.ReadAllLines(fileName, encoding);
-
-#endif
-        }
-
-        /// <summary>
-        /// Read all text from the text
-        /// </summary>
-        /// <remarks> For WinMobile compatibility.</remarks>
-        [NotNull]
-        [MethodImpl(Aggressive)]
-        public static string ReadAllText
-            (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
-            )
-        {
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-
-#if PocketPC || WINMOBILE
-
-            using (StreamReader reader = new StreamReader
-                (
-                    fileName,
-                    encoding
-                ))
-            {
-                return reader.ReadToEnd();
-            }
-
-#else
-
-            return File.ReadAllText
-                (
-                    fileName,
-                    encoding
-                );
-
-#endif
         }
 
         /// <summary>
@@ -411,8 +285,6 @@ namespace AM.IO
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-#if !WINMOBILE && !PocketPC
-
             if (File.Exists(fileName))
             {
                 File.SetLastWriteTime(fileName, DateTime.Now);
@@ -421,36 +293,6 @@ namespace AM.IO
             {
                 File.WriteAllBytes(fileName, new byte[0]);
             }
-
-#endif
-
-        }
-
-        /// <summary>
-        /// Write all the bytes to the file.
-        /// </summary>
-        public static void WriteAllBytes
-            (
-                [NotNull] string fileName,
-                [NotNull] byte[] bytes
-            )
-        {
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(bytes, nameof(bytes));
-
-#if WINMOBILE
-
-            using (FileStream stream
-                = new FileStream(fileName, FileMode.Create))
-            {
-                stream.Write(bytes, 0, bytes.Length);
-            }
-
-#else
-
-            File.WriteAllBytes(fileName, bytes);
-
-#endif
         }
 
         #endregion
