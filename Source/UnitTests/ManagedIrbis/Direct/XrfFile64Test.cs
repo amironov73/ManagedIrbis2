@@ -25,7 +25,7 @@ namespace UnitTests.ManagedIrbis.Direct
             return Path.Combine
                 (
                     Irbis64RootPath,
-                    "Datai\\IBIS\\ibis.xrf"
+                    "Datai/IBIS/ibis.xrf"
                 );
         }
 
