@@ -214,6 +214,7 @@ namespace ManagedIrbis.Direct
                 entry.Bytes = encoding.GetBytes(entry.Text);
                 int length = entry.Bytes.Length;
                 entry.Length = length;
+                Dictionary[i] = entry;
                 recordSize += length;
                 position += length;
             }

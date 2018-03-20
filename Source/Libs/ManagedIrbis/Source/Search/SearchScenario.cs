@@ -176,14 +176,6 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region Construction
-
-        #endregion
-
-        #region Private members
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -208,17 +200,16 @@ namespace ManagedIrbis.Search
             IniFile.Section section = iniFile["SEARCH"];
             if (ReferenceEquals(section, null))
             {
-                return new SearchScenario[0];
+                return Array.Empty<SearchScenario>();
             }
 
             int count = section.GetValue("ItemNumb", 0);
             if (count == 0)
             {
-                return new SearchScenario[0];
+                return Array.Empty<SearchScenario>();
             }
 
-            List<SearchScenario> result
-                = new List<SearchScenario>(count);
+            List<SearchScenario> result = new List<SearchScenario>(count);
 
             for (int i = 0; i < count; i++)
             {
@@ -232,8 +223,8 @@ namespace ManagedIrbis.Search
                 {
                     Log.Error
                         (
-                            "SearchScenario::ParseIniFile: "
-                            + "item name not set: "
+                            nameof(SearchScenario) + "::" + nameof(ParseIniFile)
+                            + ": item name not set: "
                             + i
                         );
 
@@ -253,8 +244,7 @@ namespace ManagedIrbis.Search
                             string.Empty
                         ),
 
-                    DictionaryType = (DictionaryType)section
-                        .GetValue
+                    DictionaryType = (DictionaryType)section.GetValue
                         (
                             "ItemDictionType" + i,
                             0
@@ -262,13 +252,13 @@ namespace ManagedIrbis.Search
 
                     Advance = section.GetValue
                         (
-                            "ItemAdv" + i, 
+                            "ItemAdv" + i,
                             null
                         ),
 
                     Format = section.GetValue
                         (
-                            "ItemPft" + i, 
+                            "ItemPft" + i,
                             null
                         ),
 
@@ -278,10 +268,9 @@ namespace ManagedIrbis.Search
                             null
                         ),
 
-                    Logic = (SearchLogicType)section
-                        .GetValue
+                    Logic = (SearchLogicType)section.GetValue
                         (
-                            "ItemLogic" + i, 
+                            "ItemLogic" + i,
                             0
                         ),
 
@@ -374,8 +363,7 @@ namespace ManagedIrbis.Search
                 bool throwOnError
             )
         {
-            Verifier<SearchScenario> verifier
-                = new Verifier<SearchScenario>
+            Verifier<SearchScenario> verifier = new Verifier<SearchScenario>
                 (
                     this,
                     throwOnError
@@ -391,12 +379,7 @@ namespace ManagedIrbis.Search
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "{0} {1}",
-                    Prefix.ToVisibleString(),
-                    Name.ToVisibleString()
-                );
+            return $"{Prefix.ToVisibleString()} {Name.ToVisibleString()}";
         }
 
         #endregion
