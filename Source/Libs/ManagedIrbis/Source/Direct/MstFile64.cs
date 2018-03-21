@@ -313,7 +313,7 @@ namespace ManagedIrbis.Direct
         }
 
         /// <summary>
-        /// Update therecord leader.
+        /// Update the record leader.
         /// </summary>
         public void UpdateLeader
             (

@@ -8,6 +8,7 @@ using AM.Runtime;
 using JetBrains.Annotations;
 
 using ManagedIrbis;
+using ManagedIrbis.Direct;
 
 namespace UnitTests.ManagedIrbis
 {
