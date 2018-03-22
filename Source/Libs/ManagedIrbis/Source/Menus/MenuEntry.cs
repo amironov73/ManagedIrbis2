@@ -30,7 +30,7 @@ namespace ManagedIrbis.Menus
     /// </summary>
     [PublicAPI]
     [XmlRoot("entry")]
-    [DebuggerDisplay("{Code} = {Comment}")]
+    [DebuggerDisplay("{" + nameof(Code) + "} = {" + nameof(Comment) + "}")]
     public sealed class MenuEntry
         : IHandmadeSerializable
     {

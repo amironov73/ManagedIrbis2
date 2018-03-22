@@ -10,7 +10,7 @@
 #region Using directives
 
 using System;
-
+using System.Diagnostics.CodeAnalysis;
 using AM.Collections;
 
 using Newtonsoft.Json;
@@ -22,6 +22,7 @@ namespace ManagedIrbis.Menus
     /// <summary>
     /// Converts the <see cref="MenuFile"/> to JSON.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class MenuConverter
         : JsonConverter
     {

@@ -97,7 +97,7 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Separators for the menu entries.
         /// </summary>
-        public static char[] MenuSeparators = {' ', '-', '=', ':'};
+        public static char[] MenuSeparators = { ' ', '-', '=', ':' };
 
         #endregion
 
@@ -250,7 +250,7 @@ namespace ManagedIrbis.Menus
 
             MenuEntry found = FindEntry(code);
 
-            return found == null
+            return ReferenceEquals(found, null)
                 ? defaultValue
                 : found.Comment;
         }
@@ -269,7 +269,7 @@ namespace ManagedIrbis.Menus
 
             MenuEntry found = FindEntrySensitive(code);
 
-            return found == null
+            return ReferenceEquals(found, null)
                 ? defaultValue
                 : found.Comment;
         }
@@ -444,10 +444,7 @@ namespace ManagedIrbis.Menus
                             + ": unexpected sortBy="
                             + sortBy
                         );
-                    throw new IrbisException
-                        (
-                            "Unexpected sortBy=" + sortBy
-                        );
+                    throw new IrbisException("Unexpected sortBy=" + sortBy);
             }
 
             return copy.ToArray();
