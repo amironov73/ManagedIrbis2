@@ -35,8 +35,8 @@ namespace ManagedIrbis.ImportExport
 
         private static void _AppendIrbisLine
             (
-                StringBuilder builder,
-                string format,
+                [NotNull] StringBuilder builder,
+                [NotNull] string format,
                 params object[] args
             )
         {
@@ -121,7 +121,6 @@ namespace ManagedIrbis.ImportExport
             builder.Append(IrbisText.IrbisDelimiter);
         }
 
-
         /// <summary>
         /// Кодирование записи в клиентское представление.
         /// </summary>
@@ -178,7 +177,7 @@ namespace ManagedIrbis.ImportExport
             RecordField result = new RecordField
             {
                 Tag = NumericUtility.ParseInt32(_ReadTo(reader, '#')),
-                Value = _ReadTo(reader, '^')
+                Value = _ReadTo(reader, '^').EmptyToNull()
             };
 
             while (true)
@@ -441,10 +440,13 @@ namespace ManagedIrbis.ImportExport
                 for (int i = 3; i < split.Length; i++)
                 {
                     line = split[i];
-                    RecordField field = ParseLine(line);
-                    if (field.Tag > 0)
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        record.Fields.Add(field);
+                        RecordField field = ParseLine(line);
+                        if (field.Tag > 0)
+                        {
+                            record.Fields.Add(field);
+                        }
                     }
                 }
             }
@@ -463,13 +465,13 @@ namespace ManagedIrbis.ImportExport
         [CanBeNull]
         public static MarcRecord ParseResponseForAllFormat
             (
-                [NotNull] string line,
+                [CanBeNull] string line,
                 [NotNull] MarcRecord record
             )
         {
             Sure.NotNull(record, nameof(record));
 
-            if (string.IsNullOrEmpty(line))
+            if (ReferenceEquals(line, null) || line.Length == 0)
             {
                 return null;
             }
@@ -516,13 +518,13 @@ namespace ManagedIrbis.ImportExport
         [CanBeNull]
         public static MarcRecord ParseResponseForGblFormat
             (
-                [NotNull] string line,
+                [CanBeNull] string line,
                 [NotNull] MarcRecord record
             )
         {
             Sure.NotNull(record, nameof(record));
 
-            if (string.IsNullOrEmpty(line))
+            if (ReferenceEquals(line, null) || line.Length == 0)
             {
                 return null;
             }
@@ -536,10 +538,13 @@ namespace ManagedIrbis.ImportExport
                 for (int i = 1; i < split.Length; i++)
                 {
                     line = split[i];
-                    RecordField field = ParseLine(line);
-                    if (field.Tag > 0)
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        record.Fields.Add(field);
+                        RecordField field = ParseLine(line);
+                        if (field.Tag > 0)
+                        {
+                            record.Fields.Add(field);
+                        }
                     }
                 }
             }
