@@ -36,7 +36,6 @@ namespace ManagedIrbis.Menus
     /// </summary>
     [PublicAPI]
     [XmlRoot("menu")]
-    [JsonConverter(typeof(MenuConverter))]
     public sealed class MenuFile
         : IHandmadeSerializable
     {
