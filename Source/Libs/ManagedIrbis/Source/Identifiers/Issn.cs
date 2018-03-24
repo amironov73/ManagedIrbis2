@@ -70,7 +70,7 @@ namespace ManagedIrbis.Identifiers
         /// <summary>
         /// Coefficients for control digit calculation.
         /// </summary>
-        private static int[] Coefficients = { 8, 7, 6, 5, 4, 3, 2, 1 };
+        private static int[] _coefficients = { 8, 7, 6, 5, 4, 3, 2, 1 };
 
         #endregion
 
@@ -99,7 +99,7 @@ namespace ManagedIrbis.Identifiers
             int sum = 0;
             for (int i = 0; i < 7; i++)
             {
-                sum = sum + ConvertDigit(digits[i]) * Coefficients[i];
+                sum = sum + ConvertDigit(digits[i]) * _coefficients[i];
             }
             char result = ConvertDigit(11 - sum % 11);
 
@@ -126,7 +126,7 @@ namespace ManagedIrbis.Identifiers
             for (int i = 0; i < 8; i++)
             {
                 int n = ConvertDigit(digits[i]);
-                sum = sum + n * Coefficients[i];
+                sum = sum + n * _coefficients[i];
             }
 
             bool result = sum % 11 == 0;

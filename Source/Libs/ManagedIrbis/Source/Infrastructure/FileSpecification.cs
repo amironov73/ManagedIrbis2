@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* FileSpecification.cs -- 
+/* FileSpecification.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: good
@@ -22,6 +22,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable NonReadonlyMemberInGetHashCode
+
 namespace ManagedIrbis.Infrastructure
 {
     //
@@ -36,12 +38,13 @@ namespace ManagedIrbis.Infrastructure
     // Afilename – имя требуемого файла с расширением
     // В случае чтения ресурса по пути 0 и 1 имя базы данных не задается.
     //
- 
+
     /// <summary>
     /// File name specification in IRBIS64.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("Path={Path} Database={Database} FileName={FileName}")]
+    [DebuggerDisplay("{" + nameof(Path) + "} {" + nameof(Database)
+                     + "} FileName={" + nameof(FileName) + "}")]
     public sealed class FileSpecification
         : IHandmadeSerializable,
         IVerifiable,
@@ -72,7 +75,7 @@ namespace ManagedIrbis.Infrastructure
         public string FileName { get; set; }
 
         /// <summary>
-        /// File contents (when we want write the file).
+        /// File content (when we want write the file).
         /// </summary>
         [CanBeNull]
         public string Content { get; set; }
@@ -151,12 +154,15 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] string text
             )
         {
-            Sure.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
             TextNavigator navigator = new TextNavigator(text);
-            int path = NumericUtility.ParseInt32(navigator.ReadTo("."));
+            int path = NumericUtility.ParseInt32
+                (
+                    navigator.ReadTo(".").ThrowIfNull(nameof(navigator.ReadTo))
+                );
             string database = navigator.ReadTo(".").EmptyToNull();
-            string fileName = navigator.GetRemainingText();
+            string fileName = navigator.GetRemainingText().ThrowIfNull(nameof(fileName));
             bool binaryFile = fileName.StartsWith("@");
             if (binaryFile)
             {
@@ -164,7 +170,7 @@ namespace ManagedIrbis.Infrastructure
             }
 
             string content = null;
-            int position = fileName.IndexOf("&");
+            int position = fileName.IndexOf("&", StringComparison.InvariantCulture);
             if (position >= 0)
             {
                 content = fileName.Substring(position + 1);
@@ -173,7 +179,7 @@ namespace ManagedIrbis.Infrastructure
             FileSpecification result = new FileSpecification
             {
                 BinaryFile = binaryFile,
-                Path = (IrbisPath) path,
+                Path = (IrbisPath)path,
                 Database = database,
                 FileName = fileName,
                 Content = content
@@ -193,7 +199,7 @@ namespace ManagedIrbis.Infrastructure
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             BinaryFile = reader.ReadBoolean();
             Path = (IrbisPath)reader.ReadPackedInt32();
@@ -208,7 +214,7 @@ namespace ManagedIrbis.Infrastructure
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.Write(BinaryFile);
             writer
@@ -235,12 +241,12 @@ namespace ManagedIrbis.Infrastructure
                     );
 
             verifier
-                .NotNullNorEmpty(FileName, "FileName");
+                .NotNullNorEmpty(FileName, nameof(FileName));
 
             if (Path != IrbisPath.System
                 && Path != IrbisPath.Data)
             {
-                verifier.NotNullNorEmpty(Database, "Database");
+                verifier.NotNullNorEmpty(Database, nameof(Database));
             }
 
             return verifier.Result;
@@ -278,10 +284,7 @@ namespace ManagedIrbis.Infrastructure
                 return true;
             }
 
-            FileSpecification other = obj as FileSpecification;
-
-            return !ReferenceEquals(other, null)
-                && Equals(other);
+            return obj is FileSpecification other && Equals(other);
         }
 
         /// <inheritdoc cref="object.GetHashCode" />
@@ -328,6 +331,7 @@ namespace ManagedIrbis.Infrastructure
                             fileName
                         );
                     break;
+
                 default:
                     result = string.Format
                         (
@@ -341,9 +345,7 @@ namespace ManagedIrbis.Infrastructure
 
             if (!ReferenceEquals(Content, null))
             {
-                result = result
-                    + "&"
-                    + IrbisText.WindowsToIrbis(Content);
+                result = result + "&" + IrbisText.WindowsToIrbis(Content);
             }
 
             return result;

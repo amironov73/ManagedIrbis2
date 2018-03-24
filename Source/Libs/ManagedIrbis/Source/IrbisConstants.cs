@@ -9,24 +9,7 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-using AM;
-using AM.IO;
-using AM.Runtime;
-using AM.Threading;
-
 using JetBrains.Annotations;
-
-using ManagedIrbis.ImportExport;
-using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
-using ManagedIrbis.Search;
 
 #endregion
 

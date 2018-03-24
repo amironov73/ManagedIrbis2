@@ -51,7 +51,7 @@ namespace ManagedIrbis.Identifiers
         /// <summary>
         /// Coefficients for control digit calculation.
         /// </summary>
-        private static int[] Coefficients = { 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1 };
+        private static int[] _coefficients = { 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1 };
 
         #endregion
 
@@ -70,7 +70,7 @@ namespace ManagedIrbis.Identifiers
             int sum = 0;
             for (int i = 0; i < 11; i++)
             {
-                sum = sum + (digits[i] - '0') * Coefficients[i];
+                sum = sum + (digits[i] - '0') * _coefficients[i];
             }
             char result = (char)(10 - sum % 10 + '0');
 
@@ -90,7 +90,7 @@ namespace ManagedIrbis.Identifiers
             int sum = 0;
             for (int i = 0; i < 12; i++)
             {
-                sum = sum + (digits[i] - '0') * Coefficients[i];
+                sum = sum + (digits[i] - '0') * _coefficients[i];
             }
             bool result = sum % 10 == 0;
 

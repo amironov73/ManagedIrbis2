@@ -28,7 +28,7 @@ namespace ManagedIrbis
     /// Строка с ИРБИС-датой yyyyMMdd.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{Text}")]
+    [DebuggerDisplay("{" + nameof(Text) + "}")]
     public sealed class IrbisDate
         : IHandmadeSerializable
     {
@@ -52,13 +52,7 @@ namespace ManagedIrbis
         /// Text representation of today date.
         /// </summary>
         [NotNull]
-        public static string TodayText
-        {
-            get
-            {
-                return new IrbisDate().Text;
-            }
-        }
+        public static string TodayText => new IrbisDate().Text;
 
         /// <summary>
         /// В виде текста.
@@ -95,14 +89,14 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
             Text = text;
             Date = ConvertStringToDate(text);
         }
 
         /// <summary>
-        /// Конструктор
+        /// Конструктор.
         /// </summary>
         public IrbisDate
             (
@@ -121,13 +115,8 @@ namespace ManagedIrbis
         /// Преобразование даты в строку.
         /// </summary>
         [NotNull]
-        public static string ConvertDateToString
-            (
-                DateTime date
-            )
-        {
-            return date.ToString(ConversionFormat);
-        }
+        public static string ConvertDateToString(DateTime date)
+            => date.ToString(ConversionFormat);
 
         /// <summary>
         /// Преобразование строки в дату.
@@ -137,14 +126,10 @@ namespace ManagedIrbis
                 [CanBeNull] string date
             )
         {
-            if (string.IsNullOrEmpty(date))
+            if (ReferenceEquals(date, null) || date.Length < 4)
             {
                 return DateTime.MinValue;
             }
-
-            DateTime result;
-
-#if !WINMOBILE && !PocketPC
 
             if (date.Length > 8)
             {
@@ -161,20 +146,8 @@ namespace ManagedIrbis
                     ConversionFormat,
                     CultureInfo.CurrentCulture,
                     DateTimeStyles.None,
-                    out result
+                    out DateTime result
                 );
-
-#else
-
-            result = DateTime.ParseExact
-                (
-                    date,
-                    ConversionFormat,
-                    CultureInfo.CurrentCulture,
-                    DateTimeStyles.None
-                );
-
-#endif
 
             return result;
         }
@@ -187,8 +160,7 @@ namespace ManagedIrbis
                 [CanBeNull] string time
             )
         {
-            if (string.IsNullOrEmpty(time)
-                || time.Length < 4)
+            if (ReferenceEquals(time, null) || time.Length < 4)
             {
                 return new TimeSpan();
             }
@@ -255,7 +227,7 @@ namespace ManagedIrbis
                 [NotNull] IrbisDate date
             )
         {
-            Sure.NotNull(date, "date");
+            Sure.NotNull(date, nameof(date));
 
             return date.Text;
         }
@@ -268,7 +240,7 @@ namespace ManagedIrbis
                 [NotNull] IrbisDate date
             )
         {
-            Sure.NotNull(date, "date");
+            Sure.NotNull(date, nameof(date));
 
             return date.Date;
         }

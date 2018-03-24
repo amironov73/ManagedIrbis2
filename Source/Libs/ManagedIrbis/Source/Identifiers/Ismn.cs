@@ -148,9 +148,9 @@ namespace ManagedIrbis.Identifiers
 
         #region Private members
 
-        private static int[] _IsoWeight = {3, 1, 3, 1, 3, 1, 3, 1, 3, 1};
+        private static int[] _isoWeight = { 3, 1, 3, 1, 3, 1, 3, 1, 3, 1 };
 
-        private static int[] _EanWeight = {1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1};
+        private static int[] _eanWeight = { 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1 };
 
         #endregion
 
@@ -181,12 +181,14 @@ namespace ManagedIrbis.Identifiers
                 {
                     return false;
                 }
+
                 char firstDigit = char.ToUpper(digits[0].Digit);
                 if (firstDigit != 'M')
                 {
                     return false;
                 }
-                weight = _IsoWeight;
+
+                weight = _isoWeight;
             }
             else if (ismn.Length == 17)
             {
@@ -200,7 +202,8 @@ namespace ManagedIrbis.Identifiers
                 {
                     return false;
                 }
-                weight = _EanWeight;
+
+                weight = _eanWeight;
             }
             else
             {
@@ -249,6 +252,7 @@ namespace ManagedIrbis.Identifiers
                     {
                         return false;
                     }
+
                     count++;
                 }
             }

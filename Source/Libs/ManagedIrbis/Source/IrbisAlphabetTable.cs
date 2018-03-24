@@ -68,7 +68,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Собственно таблица.
         /// </summary>
-        public char[] Characters { get { return _characters; } }
+        public char[] Characters { get; private set; }
 
         #endregion
 
@@ -114,8 +114,8 @@ namespace ManagedIrbis
                 [NotNull] byte[] table
             )
         {
-            Sure.NotNull(encoding, "encoding");
-            Sure.NotNull(table, "table");
+            Sure.NotNull(encoding, nameof(encoding));
+            Sure.NotNull(table, nameof(table));
 
             _encoding = encoding;
             _table = table;
@@ -128,11 +128,11 @@ namespace ManagedIrbis
         public IrbisAlphabetTable
             (
                 [NotNull] IIrbisConnection client,
-                [NotNull] string fileName
+                [NotNull] string fileName = FileName
             )
         {
-            Sure.NotNull(client, "client");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(client, nameof(client));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             string text = client.ReadTextFile
                 (
@@ -145,19 +145,8 @@ namespace ManagedIrbis
             {
                 _encoding = IrbisEncoding.Ansi;
                 _table = _ParseText(reader);
-                _characters = _encoding.GetChars(_table);
+                Characters = _encoding.GetChars(_table);
             }
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public IrbisAlphabetTable
-            (
-                IIrbisConnection client
-            )
-            : this(client, FileName)
-        {
         }
 
         #endregion
@@ -172,12 +161,12 @@ namespace ManagedIrbis
 
         private byte[] _table;
 
-        private char[] _characters;
+        //private char[] _characters;
 
         private void _BuildCharacters()
         {
-            _characters = _encoding.GetChars(_table);
-            Array.Sort(_characters);
+            Characters = _encoding.GetChars(_table);
+            Array.Sort(Characters);
         }
 
         private void _CharToSourceCode
@@ -206,7 +195,7 @@ namespace ManagedIrbis
 
         private static byte[] _ParseText
             (
-                TextReader reader
+                [NotNull] TextReader reader
             )
         {
             List<byte> table = new List<byte>(182);
@@ -253,7 +242,7 @@ namespace ManagedIrbis
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             lock (_lock)
             {
@@ -281,9 +270,7 @@ namespace ManagedIrbis
                 char c
             )
         {
-            // return Array.IndexOf(_characters, c) >= 0;
-
-            return Array.BinarySearch(_characters, c) >= 0;
+            return Array.BinarySearch(Characters, c) >= 0;
         }
 
         /// <summary>
@@ -295,7 +282,7 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                     (
@@ -316,7 +303,7 @@ namespace ManagedIrbis
                 [NotNull] TextReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             byte[] table = _ParseText(reader);
 
@@ -351,7 +338,7 @@ namespace ManagedIrbis
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return StringUtility.EmptyArray;
             }
@@ -425,7 +412,7 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNull(text, "text");
+            Sure.NotNull(text, nameof(text));
 
             if (
                 text.Length == 0
@@ -439,15 +426,13 @@ namespace ManagedIrbis
             StringBuilder builder = new StringBuilder(text);
 
             // Trim beginning of the text
-            while (builder.Length != 0
-                && !IsAlpha(builder[0]))
+            while (builder.Length != 0 && !IsAlpha(builder[0]))
             {
                 builder.Remove(0, 1);
             }
 
             // Trim tail of the text
-            while (builder.Length != 0
-                && !IsAlpha(builder[builder.Length - 1]))
+            while (builder.Length != 0 && !IsAlpha(builder[builder.Length - 1]))
             {
                 builder.Remove(builder.Length - 1, 1);
             }
@@ -463,7 +448,7 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (StreamWriter writer = TextWriterUtility.Create
                     (
@@ -483,7 +468,7 @@ namespace ManagedIrbis
                 [NotNull] TextWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             int count = 0;
 
@@ -517,7 +502,7 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             _encoding = Encoding.GetEncoding(reader.ReadInt32());
             _table = reader.ReadByteArray();
@@ -530,7 +515,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.Write(_encoding.CodePage);
             writer.WriteArray(_table);
@@ -540,7 +525,7 @@ namespace ManagedIrbis
 
         #region IVerifiable members
 
-        /// <inheritdoc cref="IVerifiable.Verify"/>
+        /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify
             (
                 bool throwOnError
@@ -550,7 +535,7 @@ namespace ManagedIrbis
                 = new Verifier<IrbisAlphabetTable>(this, throwOnError);
 
             verifier
-                .Assert(_table.Length != 0, "table.Length");
+                .Assert(_table.Length != 0, nameof(_table.Length));
 
             for (int i = 0; i < _table.Length; i++)
             {

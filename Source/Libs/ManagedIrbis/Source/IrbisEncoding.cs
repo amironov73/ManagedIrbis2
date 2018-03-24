@@ -161,7 +161,7 @@ namespace ManagedIrbis
                         + ": not single-byte encoding"
                     );
 
-                throw new ArgumentOutOfRangeException("encoding");
+                throw new ArgumentOutOfRangeException(nameof(encoding));
             }
 
             _ansi = encoding;
@@ -185,7 +185,7 @@ namespace ManagedIrbis
                         + ": not single-byte encoding"
                     );
 
-                throw new ArgumentOutOfRangeException("encoding");
+                throw new ArgumentOutOfRangeException(nameof(encoding));
             }
 
             _oem = encoding;

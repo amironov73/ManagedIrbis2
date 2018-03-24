@@ -277,7 +277,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
+        [ExpectedException(typeof(ArgumentException))]
         public void FileSpecification_Parse_5()
         {
             FileSpecification.Parse("Hello");
