@@ -15,7 +15,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
 
 using AM;
 using AM.Collections;
@@ -69,31 +68,28 @@ namespace ManagedIrbis
             [NotNull]
             [ItemNotNull]
             [JsonProperty("children")]
-            public NonNullCollection<Item> Children
-            {
-                get { return _children; }
-            }
+            public NonNullCollection<Item> Children { get; }
 
             /// <summary>
             /// Delimiter.
             /// </summary>
             public static string Delimiter
             {
-                get { return _delimiter; }
-                set { SetDelimiter(value); }
+                get => _delimiter;
+                set => SetDelimiter(value);
             }
 
             /// <summary>
             /// Prefix.
             /// </summary>
             [JsonIgnore]
-            public string Prefix { get { return _prefix; }}
+            public string Prefix => _prefix;
 
             /// <summary>
             /// Suffix.
             /// </summary>
             [JsonIgnore]
-            public string Suffix { get { return _suffix; } }
+            public string Suffix => _suffix;
 
             /// <summary>
             /// Value.
@@ -102,11 +98,8 @@ namespace ManagedIrbis
             [JsonProperty("value")]
             public string Value
             {
-                get { return _value; }
-                set
-                {
-                    SetValue(value);
-                }
+                get => _value;
+                set => SetValue(value);
             }
 
             #endregion
@@ -118,7 +111,7 @@ namespace ManagedIrbis
             /// </summary>
             public Item()
             {
-                _children = new NonNullCollection<Item>();
+                Children = new NonNullCollection<Item>();
             }
 
             /// <summary>
@@ -137,13 +130,11 @@ namespace ManagedIrbis
 
             #region Private members
 
-            private readonly NonNullCollection<Item> _children;
-
             private static string _delimiter = " - ";
 
             private string _prefix, _suffix, _value;
 
-            internal int _level;
+            internal int Level;
 
             #endregion
 
@@ -183,18 +174,16 @@ namespace ManagedIrbis
                     [CanBeNull] string value
                 )
             {
-                Sure.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, nameof(value));
 
                 _value = value;
                 _prefix = null;
                 _suffix = null;
 
                 if (!string.IsNullOrEmpty(Delimiter)
-                    && !string.IsNullOrEmpty(value))
+                    && !ReferenceEquals(value, null)
+                    && value.Length != 0)
                 {
-
-#if !WINMOBILE && !PocketPC
-
                     string[] parts = value.Split
                         (
                             new [] {Delimiter},
@@ -207,20 +196,6 @@ namespace ManagedIrbis
                     {
                         _suffix = parts[1];
                     }
-
-#else
-
-                    // TODO Implement
-
-                    Log.Error
-                        (
-                            "IrbisTreeFile.Item::SetValue: "
-                            + "not implemented"
-                        );
-
-                    throw new NotImplementedException();
-
-#endif
                 }
             }
 
@@ -300,8 +275,7 @@ namespace ManagedIrbis
             {
                 bool result = !string.IsNullOrEmpty(Value);
 
-                if (result &&
-                    Children.Count != 0)
+                if (result && Children.Count != 0)
                 {
                     result = Children.All
                         (
@@ -313,8 +287,8 @@ namespace ManagedIrbis
                 {
                     Log.Error
                         (
-                            "IrbisTreeFile::Verify: "
-                            + "verification error"
+                            nameof(IrbisTreeFile) + "::" + nameof(Verify)
+                            + ": verification error"
                         );
 
                     if (throwException)
@@ -326,10 +300,6 @@ namespace ManagedIrbis
                 return result;
             }
 
-
-            #endregion
-
-            #region Object members
 
             #endregion
         }
@@ -349,10 +319,7 @@ namespace ManagedIrbis
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public NonNullCollection<Item> Roots
-        {
-            get { return _roots; }
-        }
+        public NonNullCollection<Item> Roots { get; }
 
         #endregion
 
@@ -363,14 +330,12 @@ namespace ManagedIrbis
         /// </summary>
         public IrbisTreeFile()
         {
-            _roots = new NonNullCollection<Item>();
+            Roots = new NonNullCollection<Item>();
         }
 
         #endregion
 
         #region Private members
-
-        private readonly NonNullCollection<Item> _roots;
 
         /// <summary>
         /// Determines indent level of the string.
@@ -410,12 +375,12 @@ namespace ManagedIrbis
 
             while (next < count)
             {
-                if (items[next]._level <= level)
+                if (items[next].Level <= level)
                 {
                     break;
                 }
 
-                if (items[next]._level == level2)
+                if (items[next].Level == level2)
                 {
                     items[index].Children.Add(items[next]);
                 }
@@ -496,12 +461,13 @@ namespace ManagedIrbis
         /// Parse specified stream.
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static IrbisTreeFile ParseStream
             (
                 [NotNull] TextReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             IrbisTreeFile result = new IrbisTreeFile();
 
@@ -511,12 +477,13 @@ namespace ManagedIrbis
             {
                 goto DONE;
             }
+
             if (CountIndent(line) != 0)
             {
                 Log.Error
                     (
-                        "IrbisTreeFile::ParseStream: "
-                        + "indent != 0"
+                        nameof(IrbisTreeFile) + "::" + nameof(ParseStream)
+                        + ": indent != 0"
                     );
 
                 throw new FormatException();
@@ -531,8 +498,8 @@ namespace ManagedIrbis
                 {
                     Log.Error
                         (
-                            "IrbisTreeFile::ParseStream: "
-                            + "level > currentLevel + 1"
+                            nameof(IrbisTreeFile) + "::" + nameof(ParseStream)
+                            + ": level > currentLevel + 1"
                         );
 
                     throw new FormatException();
@@ -541,18 +508,18 @@ namespace ManagedIrbis
                 line = line.TrimStart(Indent);
                 Item item = new Item(line)
                 {
-                    _level = currentLevel
+                    Level = currentLevel
                 };
                 list.Add(item);
             }
 
-            int maxLevel = list.Max(item => item._level);
+            int maxLevel = list.Max(item => item.Level);
             for (int level = 0; level < maxLevel; level++)
             {
                 _ArrangeLevel(list, level);
             }
 
-            var roots = list.Where(item => item._level == 0);
+            var roots = list.Where(item => item.Level == 0);
             result.Roots.AddRange(roots);
 
 DONE:
@@ -563,14 +530,15 @@ DONE:
         /// Read local file.
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static IrbisTreeFile ReadLocalFile
             (
                 [NotNull] string fileName,
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             using (StreamReader reader = TextReaderUtility.OpenRead
                     (
@@ -580,7 +548,7 @@ DONE:
             {
                 IrbisTreeFile result = ParseStream(reader);
                 result.FileName = Path.GetFileName(fileName);
-                
+
                 return result;
             }
         }
@@ -610,8 +578,8 @@ DONE:
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+            Sure.NotNull(encoding, nameof(encoding));
 
             using (StreamWriter writer = TextWriterUtility.Create
                     (
@@ -647,7 +615,7 @@ DONE:
                 [NotNull] Action<Item> action
             )
         {
-            Sure.NotNull(action, "action");
+            Sure.NotNull(action, nameof(action));
 
             foreach (Item child in Roots)
             {
@@ -694,20 +662,6 @@ DONE:
                     (
                         root => root.Verify(throwException)
                     );
-
-            if (!result)
-            {
-                Log.Error
-                    (
-                        "IrbisTreeFile::Verify: "
-                        + "verification error"
-                    );
-
-                if (throwException)
-                {
-                    throw new VerificationException();
-                }
-            }
 
             return result;
         }

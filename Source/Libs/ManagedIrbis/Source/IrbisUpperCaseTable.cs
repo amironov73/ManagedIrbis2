@@ -10,6 +10,7 @@
 #region Using directives
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -71,10 +72,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Собственно таблица.
         /// </summary>
-        public Dictionary<char, char> Mapping
-        {
-            get { return _mapping; }
-        }
+        public Dictionary<char, char> Mapping => _mapping;
 
         #endregion
 
@@ -133,39 +131,29 @@ namespace ManagedIrbis
                 [NotNull] byte[] table
             )
         {
-            Sure.NotNull(encoding, "encoding");
-            Sure.NotNull(table, "table");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(encoding, nameof(encoding));
+            Sure.NotNull(table, nameof(table));
 
             if (!encoding.IsSingleByte)
             {
                 Log.Error
                     (
-                        "IrbisUpperCaseTable::Constructor: "
-                        + "must be single-byte encoding"
+                        nameof(IrbisUpperCaseTable) + "::Constructor"
+                        + ": must be single-byte encoding"
                     );
 
-                throw new IrbisException
-                    (
-                        "Must be single-byte encoding"
-                    );
+                throw new IrbisException("Must be single-byte encoding");
             }
-
-#endif
 
             if (table.Length != 256)
             {
                 Log.Error
                     (
-                        "IrbisUpperCaseTable::Constructor: "
-                        + "must be 256 bytes in table"
+                        nameof(IrbisUpperCaseTable) + "::Constructor"
+                        + ": must be 256 bytes in table"
                     );
 
-                throw new IrbisException
-                    (
-                        "Must be 256 bytes in table"
-                    );
+                throw new IrbisException("Must be 256 bytes in table");
             }
 
             _encoding = encoding;
@@ -212,76 +200,54 @@ namespace ManagedIrbis
         /// <see cref="IrbisUpperCaseTable"/>.
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static IrbisUpperCaseTable GetInstance
             (
-                [NotNull] IrbisConnection connection
+                [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
-            if (ReferenceEquals(_instance, null))
+            lock (_lock)
             {
-                lock (_lock)
-                {
-                    if (ReferenceEquals(_instance, null))
-                    {
-                        _instance = FromServer
-                            (
-                                connection,
-                                FileName
-                            );
-                    }
-                }
+                return _instance ?? (_instance = FromServer(connection, FileName));
             }
-
-            return _instance;
         }
 
         /// <summary>
         /// Load the table from specified server file.
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static IrbisUpperCaseTable FromServer
             (
-                [NotNull] IrbisConnection connection,
+                [NotNull] IIrbisConnection connection,
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            FileSpecification specification
-                = new FileSpecification
+            FileSpecification specification = new FileSpecification
                     (
                         IrbisPath.System,
                         fileName
                     );
 
-            string text = connection.ReadTextFile
-                (
-                    specification
-                );
-
-            if (string.IsNullOrEmpty(text))
+            string text = connection.ReadTextFile(specification);
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 Log.Error
                     (
-                        "IrbisUpperCaseTable::FromServer: "
-                        + "no file "
+                        nameof(IrbisUpperCaseTable) + "::" + nameof(FromServer)
+                        + ": no file "
                         + fileName.ToVisibleString()
                     );
 
-                throw new IrbisNetworkException
-                    (
-                        "No file " + fileName
-                    );
+                throw new IrbisNetworkException("No file " + fileName);
             }
 
-            IrbisUpperCaseTable result = ParseText
-                (
-                    IrbisEncoding.Ansi,
-                    text
-                );
+            IrbisUpperCaseTable result = ParseText(IrbisEncoding.Ansi, text);
 
             return result;
         }
@@ -295,22 +261,11 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
-                    (
-                        fileName,
-                        IrbisEncoding.Ansi
-                    ))
-            {
-                string text = reader.ReadToEnd();
+            string text = File.ReadAllText(fileName, IrbisEncoding.Ansi);
 
-                return ParseText
-                    (
-                        IrbisEncoding.Ansi,
-                        text
-                    );
-            }
+            return ParseText(IrbisEncoding.Ansi, text);
         }
 
         /// <summary>
@@ -323,8 +278,8 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNull(encoding, "encoding");
-            Sure.NotNullNorEmpty(text, "text");
+            Sure.NotNull(encoding, nameof(encoding));
+            Sure.NotNullNorEmpty(text, nameof(text));
 
             List<byte> table = new List<byte>(256);
 
@@ -397,8 +352,7 @@ namespace ManagedIrbis
                 char c
             )
         {
-            char result;
-            if (!Mapping.TryGetValue(c, out result))
+            if (!Mapping.TryGetValue(c, out char result))
             {
                 result = c;
             }
@@ -415,13 +369,12 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNull(text, "text");
+            Sure.NotNull(text, nameof(text));
 
             StringBuilder result = new StringBuilder(text.Length);
             foreach (char c1 in text)
             {
-                char c2;
-                if (!Mapping.TryGetValue(c1, out c2))
+                if (!Mapping.TryGetValue(c1, out char c2))
                 {
                     c2 = c1;
                 }
@@ -439,7 +392,7 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (StreamWriter writer = TextWriterUtility.Create
                     (
@@ -459,7 +412,7 @@ namespace ManagedIrbis
                 [NotNull] TextWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             int count = 0;
 
@@ -493,7 +446,7 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             _encoding = Encoding.GetEncoding(reader.ReadInt32());
             _table = reader.ReadByteArray();
@@ -506,12 +459,11 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.Write(_encoding.CodePage);
             writer.WriteArray(_table);
         }
-
 
         #endregion
 
@@ -527,7 +479,7 @@ namespace ManagedIrbis
                 = new Verifier<IrbisUpperCaseTable>(this, throwOnError);
 
             verifier
-                .Assert(_table.Length != 0, "table.Length");
+                .Assert(_table.Length != 0, nameof(_table.Length));
 
             return verifier.Result;
         }

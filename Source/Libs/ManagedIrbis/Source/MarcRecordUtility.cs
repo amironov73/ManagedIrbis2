@@ -9,13 +9,10 @@
 
 #region Using directives
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-
+using System.Diagnostics.CodeAnalysis;
 using AM;
-
 
 using JetBrains.Annotations;
 
@@ -25,7 +22,6 @@ using ManagedIrbis.Infrastructure;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using YamlDotNet;
 using YamlDotNet.Serialization;
 
 #endregion
@@ -50,8 +46,8 @@ namespace ManagedIrbis
                 [NotNull] RecordField field
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.NotNull(field, "field");
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(field, nameof(field));
 
             record.Fields.Add(field);
 
@@ -69,25 +65,19 @@ namespace ManagedIrbis
                 [NotNull] object value
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.NotNull(value, "value");
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(value, nameof(value));
 
-            RecordField field = value as RecordField;
-            if (!ReferenceEquals(field, null))
+            if (value is RecordField field)
             {
                 Debug.Assert(tag == field.Tag, "tag == field.Tag");
             }
             else
             {
                 string text = value.ToString();
-                if (!string.IsNullOrEmpty(text))
-                {
-                    field = RecordField.Parse(tag, value.ToString());
-                }
-                else
-                {
-                    field = new RecordField(tag);
-                }
+                field = string.IsNullOrEmpty(text)
+                    ? new RecordField(tag)
+                    : RecordField.Parse(tag, text);
             }
             record.Fields.Add(field);
 
@@ -105,12 +95,11 @@ namespace ManagedIrbis
                 [CanBeNull] object value
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             if (!ReferenceEquals(value, null))
             {
-                RecordField field = value as RecordField;
-                if (!ReferenceEquals(field, null))
+                if (value is RecordField field)
                 {
                     Debug.Assert(tag == field.Tag, "tag == field.Tag");
                     record.Fields.Add(field);
@@ -183,10 +172,9 @@ namespace ManagedIrbis
                 params int[] tags
             )
         {
-            RecordFieldCollection fields = record.Fields;
-            for (int i = 0; i < fields.Count; i++)
+            foreach (RecordField field in record.Fields)
             {
-                if (fields[i].Tag.OneOf(tags))
+                if (field.Tag.OneOf(tags))
                 {
                     return true;
                 }
@@ -204,10 +192,9 @@ namespace ManagedIrbis
                 int tag
             )
         {
-            RecordFieldCollection fields = record.Fields;
-            for (int i = 0; i < fields.Count; i++)
+            foreach (RecordField field in record.Fields)
             {
-                if (fields[i].Tag == tag)
+                if (field.Tag == tag)
                 {
                     return true;
                 }
@@ -216,20 +203,18 @@ namespace ManagedIrbis
             return false;
         }
 
-
         /// <summary>
         /// Нет ни одного поля с указанными тегами?
         /// </summary>
         public static bool HaveNotField
-        (
-            this MarcRecord record,
-            params int[] tags
-        )
+            (
+                [NotNull] this MarcRecord record,
+                params int[] tags
+            )
         {
-            RecordFieldCollection fields = record.Fields;
-            for (int i = 0; i < fields.Count; i++)
+            foreach (RecordField field in record.Fields)
             {
-                if (fields[i].Tag.OneOf(tags))
+                if (field.Tag.OneOf(tags))
                 {
                     return false;
                 }
@@ -243,14 +228,13 @@ namespace ManagedIrbis
         /// </summary>
         public static bool HaveNotField
             (
-                this MarcRecord record,
+                [NotNull] this MarcRecord record,
                 int tag
             )
         {
-            RecordFieldCollection fields = record.Fields;
-            for (int i = 0; i < fields.Count; i++)
+            foreach (RecordField field in record.Fields)
             {
-                if (fields[i].Tag == tag)
+                if (field.Tag == tag)
                 {
                     return false;
                 }
@@ -269,8 +253,8 @@ namespace ManagedIrbis
                 [NotNull] ServerResponse response
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(response, "response");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(response, nameof(response));
 
             List<MarcRecord> result = new List<MarcRecord>();
 
@@ -307,9 +291,9 @@ namespace ManagedIrbis
                 [NotNull] string[] lines
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(lines, "lines");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(lines, nameof(lines));
 
             List<MarcRecord> result = new List<MarcRecord>();
 
@@ -326,8 +310,7 @@ namespace ManagedIrbis
                         record
                     );
 
-                // coverity[NULL_RETURNS]
-                result.Add(record.ThrowIfNull("record"));
+                result.Add(record.ThrowIfNull(nameof(record)));
             }
 
             return result.ToArray();
@@ -343,7 +326,7 @@ namespace ManagedIrbis
                 int tag
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             RecordField[] found = record.Fields.GetField(tag);
             foreach (RecordField field in found)
@@ -365,8 +348,8 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<RecordField> newFields
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.NotNull(newFields, "newFields");
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(newFields, nameof(newFields));
 
             record.RemoveField(tag);
             record.Fields.AddRange(newFields);
@@ -389,8 +372,8 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.Positive(tag, "tag");
+            Sure.NotNull(record, nameof(record));
+            Sure.Positive(tag, nameof(tag));
 
             RecordField field = record.Fields.GetFirstField(tag);
 
@@ -418,8 +401,8 @@ namespace ManagedIrbis
                 string newText
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.Positive(tag, "tag");
+            Sure.NotNull(record, nameof(record));
+            Sure.Positive(tag, nameof(tag));
 
             RecordField field = record.Fields.GetField(tag, occurrence);
 
@@ -444,8 +427,8 @@ namespace ManagedIrbis
                 [CanBeNull] string newValue
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.Positive(tag, "tag");
+            Sure.NotNull(record, nameof(record));
+            Sure.Positive(tag, nameof(tag));
 
             RecordField field = record.Fields.GetFirstField(tag);
 
@@ -474,8 +457,8 @@ namespace ManagedIrbis
                 [CanBeNull] string newValue
             )
         {
-            Sure.NotNull(record, "record");
-            Sure.Positive(tag, "tag");
+            Sure.NotNull(record, nameof(record));
+            Sure.Positive(tag, nameof(tag));
 
             RecordField field = record.Fields.GetField(tag, fieldOccurrence);
 
@@ -500,45 +483,30 @@ namespace ManagedIrbis
                 [NotNull] this MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
-
-#if WINMOBILE || PocketPC
-
-            throw new System.NotImplementedException();
-
-#else
+            Sure.NotNull(record, nameof(record));
 
             string result = JObject.FromObject(record)
                 .ToString(Formatting.None);
 
             return result;
-
-#endif
         }
 
         /// <summary>
         /// Convert the <see cref="MarcRecord"/> to YAML.
         /// </summary>
         [NotNull]
+        [ExcludeFromCodeCoverage]
         public static string ToYaml
             (
                 [NotNull] this MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
-
-#if !CLASSIC && !NETCORE
-
-            throw new System.NotImplementedException();
-
-#else
+            Sure.NotNull(record, nameof(record));
 
             Serializer serializer = new Serializer();
             string result = serializer.Serialize(record);
 
             return result;
-
-#endif
         }
 
         #endregion

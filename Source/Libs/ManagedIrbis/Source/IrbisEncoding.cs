@@ -10,11 +10,13 @@
 #region Using directives
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 using AM;
 using AM.Logging;
 using AM.Text;
+
 using JetBrains.Annotations;
 
 using CM=System.Configuration.ConfigurationManager;
@@ -117,6 +119,7 @@ namespace ManagedIrbis
         /// Get encoding from config file.
         /// </summary>
         [NotNull]
+        [ExcludeFromCodeCoverage]
         public static Encoding FromConfig
             (
                 [NotNull] string key
@@ -140,6 +143,19 @@ namespace ManagedIrbis
                 (
                     false, // don't emit UTF-8 prefix,
                     false  // don't throw on invalid bytes
+                );
+        }
+
+        /// <summary>
+        /// Strong UTF-8 decoder, throw exceptions
+        /// on invalid bytes.
+        /// </summary>
+        public static void StrongUtf8()
+        {
+            _utf8 = new UTF8Encoding
+                (
+                    false, // don't emit UTF-8 prefix,
+                    true   // throw on invalid bytes
                 );
         }
 
