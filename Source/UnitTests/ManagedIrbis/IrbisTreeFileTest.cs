@@ -2,6 +2,7 @@
 using System.IO;
 using AM;
 using AM.Runtime;
+using AM.Text;
 
 using JetBrains.Annotations;
 
@@ -10,6 +11,7 @@ using ManagedIrbis.Menus;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+// ReSharper disable PossibleNullReferenceException
 // ReSharper disable MustUseReturnValue
 
 namespace UnitTests.ManagedIrbis
@@ -226,8 +228,8 @@ namespace UnitTests.ManagedIrbis
             IrbisTreeFile tree = _CreateTree();
             string fileName = Path.GetTempFileName();
             tree.SaveToLocalFile(fileName, IrbisEncoding.Ansi);
-            FileInfo fileInfo = new FileInfo(fileName);
-            Assert.AreEqual(190L, fileInfo.Length);
+            int length = File.ReadAllText(fileName, IrbisEncoding.Ansi).DosToUnix().Length;
+            Assert.AreEqual(180, length);
         }
 
         [TestMethod]

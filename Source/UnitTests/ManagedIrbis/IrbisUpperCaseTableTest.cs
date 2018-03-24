@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 
 using AM.Runtime;
+using AM.Text;
 
 using JetBrains.Annotations;
 
@@ -16,6 +17,7 @@ using Moq;
 
 // ReSharper disable MustUseReturnValue
 // ReSharper disable ObjectCreationAsStatement
+// ReSharper disable PossibleNullReferenceException
 
 namespace UnitTests.ManagedIrbis
 {
@@ -192,8 +194,8 @@ namespace UnitTests.ManagedIrbis
             IrbisUpperCaseTable table = _GetTable();
             string fileName = Path.GetTempFileName();
             table.WriteLocalFile(fileName);
-            FileInfo fileInfo = new FileInfo(fileName);
-            Assert.AreEqual(1032L, fileInfo.Length);
+            int length = File.ReadAllText(fileName, IrbisEncoding.Ansi).DosToUnix().Length;
+            Assert.AreEqual(1024, length);
         }
 
         [TestMethod]
@@ -202,7 +204,7 @@ namespace UnitTests.ManagedIrbis
             IrbisUpperCaseTable table = _GetTable();
             StringWriter writer = new StringWriter();
             table.WriteTable(writer);
-            Assert.AreEqual(1032, writer.ToString().Length);
+            Assert.AreEqual(1024, writer.ToString().DosToUnix().Length);
         }
 
         [TestMethod]
