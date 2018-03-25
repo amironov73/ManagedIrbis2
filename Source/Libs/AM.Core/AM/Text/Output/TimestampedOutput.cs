@@ -62,6 +62,7 @@ namespace AM.Text.Output
             Sure.NotNull(innerOutput, nameof(innerOutput));
 
             InnerOutput = innerOutput;
+            Format = DefaultFormat;
         }
 
         #endregion

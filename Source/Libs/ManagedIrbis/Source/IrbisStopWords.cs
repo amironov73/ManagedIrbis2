@@ -72,7 +72,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// Initializes a new instance of the 
+        /// Initializes a new instance of the
         /// <see cref="IrbisStopWords"/> class.
         /// </summary>
         /// <param name="fileName">The name.</param>
@@ -104,7 +104,7 @@ namespace ManagedIrbis
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             string database = connection.Database
                 .ThrowIfNull("database not set");
@@ -129,9 +129,9 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             FileSpecification specification
                 = new FileSpecification
@@ -168,7 +168,7 @@ namespace ManagedIrbis
                 [CanBeNull] string word
             )
         {
-            if (string.IsNullOrEmpty(word))
+            if (ReferenceEquals(word, null) || word.Length == 0)
             {
                 return true;
             }
@@ -192,7 +192,7 @@ namespace ManagedIrbis
                 [NotNull][ItemNotNull] string[] lines
             )
         {
-            Sure.NotNull(lines, "lines");
+            Sure.NotNull(lines, nameof(lines));
 
             IrbisStopWords result = new IrbisStopWords(name);
 
@@ -218,7 +218,7 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNull(text, "text");
+            Sure.NotNull(text, nameof(text));
 
             string[] lines = text.SplitLines();
 
@@ -240,7 +240,7 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             string name = Path.GetFileNameWithoutExtension(fileName);
             string[] lines = File.ReadAllLines

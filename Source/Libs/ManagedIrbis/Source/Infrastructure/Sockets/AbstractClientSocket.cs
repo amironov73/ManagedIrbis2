@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* AbstractClientSocket.cs -- 
+/* AbstractClientSocket.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -9,27 +9,17 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using AM;
 using AM.Threading;
 
 using JetBrains.Annotations;
-
-using Newtonsoft.Json;
 
 #endregion
 
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public abstract class AbstractClientSocket
@@ -57,7 +47,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Requires connection?
         /// </summary>
-        public virtual bool RequireConnection { get { return true; } }
+        public virtual bool RequireConnection => true;
 
         #endregion
 

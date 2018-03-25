@@ -5,7 +5,6 @@
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
- * TODO make stream non-closeable
  */
 
 #region Using directives
@@ -16,6 +15,7 @@ using System.IO;
 using System.Text;
 
 using AM;
+using AM.IO;
 using AM.Logging;
 
 using JetBrains.Annotations;
@@ -30,7 +30,7 @@ namespace ManagedIrbis.Infrastructure
     /// Server response network packet.
     /// </summary>
     [PublicAPI]
-    public sealed class ServerResponse //-V3072
+    public sealed class ServerResponse
         : IVerifiable
     {
         #region Constants
@@ -84,11 +84,11 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public int ReturnCode
         {
-            get { return GetReturnCode(); }
+            get => GetReturnCode();
             set
             {
                 _returnCode = value;
-                _returnCodeRetrieved = true;
+                ReturnCodeRetrieved = true;
             }
         }
 
@@ -124,15 +124,15 @@ namespace ManagedIrbis.Infrastructure
                 bool relax
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(rawAnswer, "rawAnswer");
-            Sure.NotNull(rawRequest, "rawRequest");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(rawAnswer, nameof(rawAnswer));
+            Sure.NotNull(rawRequest, nameof(rawRequest));
 
             Connection = connection;
 
             RawAnswer = rawAnswer;
             RawRequest = rawRequest;
-            _stream = new MemoryStream(rawAnswer);
+            _stream = new NonCloseableMemoryStream(rawAnswer);
             Relaxed = relax;
 
             if (relax)
@@ -164,7 +164,7 @@ namespace ManagedIrbis.Infrastructure
 
         private long _savedPosition;
 
-        internal bool _returnCodeRetrieved;
+        internal bool ReturnCodeRetrieved;
 
         #endregion
 
@@ -228,7 +228,7 @@ namespace ManagedIrbis.Infrastructure
                 int count
             )
         {
-            Sure.Positive(count, "count");
+            Sure.Positive(count, nameof(count));
 
             List<string> result = new List<string>(count);
             for (int i = 0; i < count; i++)
@@ -256,7 +256,7 @@ namespace ManagedIrbis.Infrastructure
                 int count
             )
         {
-            Sure.Positive(count, "count");
+            Sure.Positive(count, nameof(count));
 
             List<string> result = new List<string>(count);
             int index = 0;
@@ -273,12 +273,7 @@ namespace ManagedIrbis.Infrastructure
             for (; index < count; index++)
             {
                 line = GetAnsiString();
-                result.Add
-                    (
-                        ReferenceEquals(line, null)
-                        ? string.Empty
-                        : line
-                    );
+                result.Add(line ?? string.Empty);
             }
 
             return result.ToArray();
@@ -440,7 +435,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             string line = GetUtfString();
             if (string.IsNullOrEmpty(line))
@@ -467,10 +462,10 @@ namespace ManagedIrbis.Infrastructure
                 return _returnCode;
             }
 
-            if (!_returnCodeRetrieved)
+            if (!ReturnCodeRetrieved)
             {
                 _returnCode = RequireInt32();
-                _returnCodeRetrieved = true;
+                ReturnCodeRetrieved = true;
             }
 
             return _returnCode;
@@ -486,8 +481,8 @@ namespace ManagedIrbis.Infrastructure
                 int length
             )
         {
-            Sure.NonNegative(offset, "offset");
-            Sure.NonNegative(length, "length");
+            Sure.NonNegative(offset, nameof(offset));
+            Sure.NonNegative(length, nameof(length));
 
             if (ReferenceEquals(RawAnswer, null))
             {
@@ -617,15 +612,11 @@ namespace ManagedIrbis.Infrastructure
                 }
                 catch (Exception inner)
                 {
-                    Log.TraceException
-                        (
-                            "ServerResponse::GetUtfString",
-                            inner
-                        );
+                    Log.TraceException(nameof(ServerResponse) + "::" + nameof(GetUtfString), inner);
 
                     IrbisException outer = new IrbisException
                         (
-                            "ServerResponse::GetUtfString failed",
+                            nameof(ServerResponse) + "::" + nameof(GetUtfString) + " failed",
                             inner
                         );
                     BinaryAttachment attachment = new BinaryAttachment
@@ -652,7 +643,7 @@ namespace ManagedIrbis.Infrastructure
                 int count
             )
         {
-            Sure.Positive(count, "count");
+            Sure.Positive(count, nameof(count));
 
             List<string> result = new List<string>(count);
             for (int i = 0; i < count; i++)
@@ -674,7 +665,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public void RefuseAnReturnCode()
         {
-            _returnCodeRetrieved = true;
+            ReturnCodeRetrieved = true;
         }
 
         /// <summary>
@@ -771,15 +762,12 @@ namespace ManagedIrbis.Infrastructure
         public int RequireInt32()
         {
             string line = GetAnsiString();
-
-            int result;
-
-            if (!NumericUtility.TryParseInt32(line, out result))
+            if (!NumericUtility.TryParseInt32(line, out int result))
             {
                 Log.Error
                     (
-                        "ServerResponse::RequireInt32: "
-                        + "bad format="
+                        nameof(ServerResponse) + "::" + nameof(RequireInt32)
+                        + ": bad format="
                         + line.ToVisibleString()
                     );
 
@@ -794,7 +782,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public int GetRemainingLength()
         {
-            return (int) (RawAnswer.Length - _stream.Position);
+            return (int)(RawAnswer.Length - _stream.Position);
         }
 
         /// <summary>
@@ -806,8 +794,8 @@ namespace ManagedIrbis.Infrastructure
             string result = IrbisEncoding.Utf8.GetString
                 (
                     RawAnswer,
-                    (int) _stream.Position,
-                    (int) (RawAnswer.Length - _stream.Position)
+                    (int)_stream.Position,
+                    (int)(RawAnswer.Length - _stream.Position)
                 );
 
             return result;
@@ -839,10 +827,6 @@ namespace ManagedIrbis.Infrastructure
 
             return verifier.Result;
         }
-
-        #endregion
-
-        #region Object members
 
         #endregion
     }

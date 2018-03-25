@@ -35,10 +35,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// File specification (can contain wildcards).
         /// </summary>
         [NotNull]
-        public NonNullCollection<FileSpecification> Specifications
-        {
-            get { return _specifications; }
-        }
+        public NonNullCollection<FileSpecification> Specifications { get; }
 
         /// <summary>
         /// List of found files.
@@ -59,18 +56,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             )
             : base(connection)
         {
-            _specifications = new NonNullCollection<FileSpecification>();
+            Specifications = new NonNullCollection<FileSpecification>();
         }
-
-        #endregion
-
-        #region Private members
-
-        private readonly NonNullCollection<FileSpecification> _specifications;
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 
@@ -127,7 +114,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             List<string> files = result.RemainingAnsiStrings();
             Files = files.SelectMany
                 (
-                    line => IrbisText.IrbisToWindows(line).SplitLines()
+                    line => IrbisText.IrbisToWindows(line)
+                        .ThrowIfNull(nameof(line)).SplitLines()
                 )
                 .ToArray();
 

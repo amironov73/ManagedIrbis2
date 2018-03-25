@@ -11,18 +11,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AM;
-using AM.Collections;
 using AM.IO;
 using AM.Parameters;
-using AM.Runtime;
-using AM.Text;
 using AM.Threading;
 
 using JetBrains.Annotations;
@@ -60,20 +53,13 @@ namespace IrbisInterop
         /// <inheritdoc cref="IrbisProvider.Database" />
         public override string Database
         {
-            get { return base.Database; }
+            get => base.Database;
             set
             {
                 Sure.NotNullNorEmpty(value, nameof(value));
 
-                // ReSharper disable ConditionIsAlwaysTrueOrFalse
-
-                if (!ReferenceEquals(Irbis64, null))
-                {
-                    Irbis64.UseDatabase(value);
-                }
+                Irbis64.UseDatabase(value);
                 base.Database = value;
-
-                // ReSharper restore ConditionIsAlwaysTrueOrFalse
             }
         }
 
@@ -84,10 +70,7 @@ namespace IrbisInterop
         public Irbis64Dll Irbis64 { get; private set; }
 
         /// <inheritdoc cref="IrbisProvider.BusyState" />
-        public override BusyState BusyState
-        {
-            get { return Irbis64.Busy; }
-        }
+        public override BusyState BusyState => Irbis64.Busy;
 
         #endregion
 
@@ -380,9 +363,9 @@ namespace IrbisInterop
             Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             string path = Irbis64.ExpandSpecification(fileSpecification);
-            IniFile result = string.IsNullOrEmpty(path)
+            IniFile result = ReferenceEquals(path, null) || path.Length == 0
                 ? null
-                : new IniFile(path, IrbisEncoding.Ansi, false);
+                : new IniFile(path, IrbisEncoding.Ansi);
 
             return result;
         }
@@ -396,7 +379,7 @@ namespace IrbisInterop
             Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             string path = Irbis64.ExpandSpecification(fileSpecification);
-            MenuFile result = string.IsNullOrEmpty(path)
+            MenuFile result = ReferenceEquals(path, null) || path.Length == 0
                 ? null
                 : MenuFile.ParseLocalFile(path, IrbisEncoding.Ansi);
 
@@ -451,9 +434,9 @@ namespace IrbisInterop
                 string expression
             )
         {
-            if (string.IsNullOrEmpty(expression))
+            if (ReferenceEquals(expression, null) || expression.Length == 0)
             {
-                return new int[0];
+                return Array.Empty<int>();
             }
 
             return Irbis64.Search(expression);

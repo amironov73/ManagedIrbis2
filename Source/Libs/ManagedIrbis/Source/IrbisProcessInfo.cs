@@ -26,6 +26,8 @@ using Newtonsoft.Json;
 
 #endregion
 
+// ReSharper disable InconsistentNaming
+
 namespace ManagedIrbis
 {
     /// <summary>

@@ -17,11 +17,13 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+
 namespace AM.IO
 {
     /// <summary>
     /// Stream that likes to be non-closed.
-    /// To close the stream call 
+    /// To close the stream call
     /// <see cref="M:AM.IO.NonCloseable.NonCloseableStream.ReallyClose"/>.
     /// </summary>
     [PublicAPI]
@@ -98,7 +100,7 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// NOT closes the current stream and releases any resources 
+        /// NOT closes the current stream and releases any resources
         /// (such as sockets and file handles) associated with the current stream.
         /// </summary>
         /// <seealso cref="M:AM.IO.NonCloseable.NonCloseableStream.ReallyClose"/>
@@ -107,7 +109,6 @@ namespace AM.IO
         {
             // Nothing to do actually
         }
-
 
         /// <inheritdoc cref="Stream.Flush" />
         [DebuggerStepThrough]

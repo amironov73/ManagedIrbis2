@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* IrbisFormat.cs -- common format related stuff
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: moderate
  */
@@ -19,6 +19,8 @@ using AM.Text;
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable InconsistentNaming
 
 namespace ManagedIrbis
 {
@@ -79,7 +81,7 @@ namespace ManagedIrbis
         {
             const char ZERO = '\0';
 
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }
@@ -169,19 +171,19 @@ namespace ManagedIrbis
         {
             const char ZERO = '\0';
 
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }
 
             text = RemoveComments(text);
-            if (!string.IsNullOrEmpty(text))
+            if (!ReferenceEquals(text, null) && text.Length != 0)
             {
                 text = text.Replace("\r", string.Empty)
                     .Replace("\n", string.Empty);
             }
 
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return text;
             }
@@ -254,8 +256,8 @@ namespace ManagedIrbis
             {
                 Log.Error
                     (
-                        "IrbisForma::VerifyFormat: "
-                        + "text is absent"
+                        nameof(IrbisFormat) + "::" + nameof(VerifyFormat)
+                        + ": text is absent"
                     );
 
                 if (throwOnError)

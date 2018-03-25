@@ -10,13 +10,10 @@
 #region Using directives
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
 
 using AM;
 using AM.Collections;
@@ -28,12 +25,10 @@ using AM.Text;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Batch;
-using ManagedIrbis.Client;
 using ManagedIrbis.Menus;
 using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Infrastructure.Commands;
 using ManagedIrbis.Infrastructure.Sockets;
-using ManagedIrbis.Pft;
 using ManagedIrbis.Search;
 
 #endregion
@@ -41,7 +36,7 @@ using ManagedIrbis.Search;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class IrbisConnectionUtility
@@ -76,8 +71,8 @@ namespace ManagedIrbis
                 [NotNull] string database
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             connection.ActualizeRecord
                 (
@@ -101,8 +96,8 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(fileName, nameof(fileName));
 
             connection.RequireServerVersion("2010.1", true);
 
@@ -124,7 +119,7 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             MarcRecord record = connection.ReadRecord(mfn);
             if (!record.Deleted)
@@ -144,7 +139,7 @@ namespace ManagedIrbis
                 bool dontParseResponse
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             MarcRecord record = connection.ReadRecord(mfn);
             if (!record.Deleted)
@@ -170,9 +165,9 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(mfnList, nameof(mfnList));
 
             MarcRecord[] records = connection.ReadRecords
                 (
@@ -209,8 +204,8 @@ namespace ManagedIrbis
                 params object[] arguments
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(commandCode, "commandCode");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
             UniversalCommand command = connection.CommandFactory
                 .GetUniversalCommand
@@ -237,8 +232,8 @@ namespace ManagedIrbis
                 [NotNull] SearchParameters parameters
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(parameters, nameof(parameters));
 
             if (string.IsNullOrEmpty(parameters.FormatSpecification))
             {
@@ -304,10 +299,10 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(format, "format");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(format, nameof(format));
+            Sure.Positive(mfn, nameof(mfn));
 
             FormatCommand command = connection.CommandFactory
                 .GetFormatCommand();
@@ -337,9 +332,9 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(format, "format");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(format, nameof(format));
+            Sure.Positive(mfn, nameof(mfn));
 
             FormatCommand command = connection.CommandFactory
                 .GetFormatCommand();
@@ -366,9 +361,9 @@ namespace ManagedIrbis
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(format, "format");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(format, nameof(format));
+            Sure.NotNull(record, nameof(record));
 
             FormatCommand command = connection.CommandFactory
                 .GetFormatCommand();
@@ -398,10 +393,10 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(mfnList, "mfnList");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(format, "format");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(mfnList, nameof(mfnList));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(format, nameof(format));
 
             FormatCommand command = connection.CommandFactory
                 .GetFormatCommand();
@@ -481,15 +476,15 @@ namespace ManagedIrbis
                 [NotNull] string listFile
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(listFile, "listFile");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(listFile, nameof(listFile));
 
             string menuFile = connection.ReadTextFile
                 (
                     IrbisPath.Data,
                     listFile
                 );
-            string[] lines = menuFile.SplitLines();
+            string[] lines = menuFile.ThrowIfNull(nameof(menuFile)).SplitLines();
             DatabaseInfo[] result = DatabaseInfo.ParseMenu(lines);
 
             return result;
@@ -542,8 +537,8 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             ReadRawRecord
                 (
@@ -567,9 +562,9 @@ namespace ManagedIrbis
                 [NotNull] int[] mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(mfnList, nameof(mfnList));
 
             foreach (int mfn in mfnList)
             {
@@ -599,8 +594,8 @@ namespace ManagedIrbis
                 [NotNull] string serverPath
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(serverPath, "serverPath");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(serverPath, nameof(serverPath));
 
             connection.RequireServerVersion("2010.1", true);
 
@@ -610,7 +605,7 @@ namespace ManagedIrbis
                     1
                 );
 
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
                 return null;
             }
@@ -638,9 +633,9 @@ namespace ManagedIrbis
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(serverPath, "serverPath");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(serverPath, nameof(serverPath));
+            Sure.NotNull(encoding, nameof(encoding));
 
             connection.RequireServerVersion("2010.1", true);
 
@@ -650,7 +645,7 @@ namespace ManagedIrbis
                     1
                 );
 
-            if (!string.IsNullOrEmpty(result))
+            if (!ReferenceEquals(result, null) && result.Length != 0)
             {
                 RecordField field = RecordField.Parse(1, result);
                 result = field.GetFirstSubFieldValue('b');
@@ -674,8 +669,8 @@ namespace ManagedIrbis
                 [NotNull] string serverPath
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(serverPath, "serverPath");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(serverPath, nameof(serverPath));
 
             connection.RequireServerVersion("2010.1", true);
 
@@ -685,7 +680,7 @@ namespace ManagedIrbis
                     1
                 );
 
-            if (!string.IsNullOrEmpty(result))
+            if (!ReferenceEquals(result, null) && result.Length != 0)
             {
                 RecordField field = RecordField.Parse(1, result);
                 result = field.GetFirstSubFieldValue('b');
@@ -757,8 +752,8 @@ namespace ManagedIrbis
                 [NotNull] FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             string text = connection.ReadTextFile(fileSpecification);
             MenuFile result = MenuFile.ParseServerResponse
@@ -781,8 +776,8 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             FileSpecification fileSpecification = new FileSpecification
                 (
@@ -812,8 +807,8 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             ReadRawRecordCommand command
                 = connection.CommandFactory.GetReadRawRecordCommand();
@@ -840,8 +835,8 @@ namespace ManagedIrbis
                 [CanBeNull] string format
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             ReadRawRecordCommand command
                 = connection.CommandFactory.GetReadRawRecordCommand();
@@ -870,8 +865,8 @@ namespace ManagedIrbis
                 [CanBeNull] string format
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             ReadRawRecordCommand command
                 = connection.CommandFactory.GetReadRawRecordCommand();
@@ -898,9 +893,9 @@ namespace ManagedIrbis
                 [NotNull] int[] mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(mfnList, nameof(mfnList));
 
             if (mfnList.Length == 0)
             {
@@ -993,8 +988,8 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(mfnList, nameof(mfnList));
 
             BatchAccessor batch = new BatchAccessor(connection);
             MarcRecord[] result = batch.ReadRecords
@@ -1018,8 +1013,8 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             using (IniFile iniFile = ReadIniFile
                 (
@@ -1048,19 +1043,14 @@ namespace ManagedIrbis
                 [NotNull] this IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
-#if !WINMOBILE && !PocketPC
-
-            LoggingClientSocket oldSocket = connection.Socket
-                as LoggingClientSocket;
-            if (!ReferenceEquals(oldSocket, null))
+            if (connection.Socket is LoggingClientSocket oldSocket)
             {
-                AbstractClientSocket newSocket = oldSocket.InnerSocket;
+                AbstractClientSocket newSocket = oldSocket.InnerSocket
+                    .ThrowIfNull(nameof(oldSocket.InnerSocket));
                 connection.SetSocket(newSocket);
             }
-
-#endif
         }
 
         // ========================================================
@@ -1078,9 +1068,9 @@ namespace ManagedIrbis
                 [CanBeNull] string format
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.Positive(mfn, nameof(mfn));
 
             List<MarcRecord> result = new List<MarcRecord>();
             MarcRecord record = connection.ReadRecord
@@ -1125,7 +1115,7 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             MarcRecord result = connection.ReadRecord
                 (
@@ -1151,8 +1141,8 @@ namespace ManagedIrbis
                 [NotNull] string fileName
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(fileName, "fileName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             FileSpecification fileSpecification = new FileSpecification
                 (
@@ -1168,7 +1158,7 @@ namespace ManagedIrbis
 
         // ========================================================
 
-#if !UAP 
+#if !UAP
 
         /// <summary>
         /// Require minimal client version.
@@ -1180,7 +1170,7 @@ namespace ManagedIrbis
                 bool throwException
             )
         {
-            Sure.NotNullNorEmpty(minimalVersion, "minimalVersion");
+            Sure.NotNullNorEmpty(minimalVersion, nameof(minimalVersion));
 
             Version requiredVersion = new Version(minimalVersion);
             Version actualVersion = IrbisConnection.ClientVersion;
@@ -1217,8 +1207,8 @@ namespace ManagedIrbis
                 bool throwException
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(minimalVersion, "minimalVersion");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(minimalVersion, nameof(minimalVersion));
 
             IrbisVersion actualVersion = connection.ServerVersion
                 ?? connection.GetServerVersion();
@@ -1259,8 +1249,8 @@ namespace ManagedIrbis
                 params object[] args
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(format, "format");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(format, nameof(format));
 
             string expression = string.Format
                 (
@@ -1283,8 +1273,8 @@ namespace ManagedIrbis
                 [NotNull] string searchExpression
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(searchExpression, "searchExpression");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
 
             SearchCommand command
                 = connection.CommandFactory.GetSearchCommand();
@@ -1314,9 +1304,9 @@ namespace ManagedIrbis
                 [NotNull] string formatSpecification
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(searchExpression, "searchExpression");
-            Sure.NotNullNorEmpty(formatSpecification, "formatSpecification");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
+            Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
             SearchCommand command
                 = connection.CommandFactory.GetSearchCommand();
@@ -1346,9 +1336,9 @@ namespace ManagedIrbis
                 [NotNull] string formatSpecification
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(searchExpression, "searchExpression");
-            Sure.NotNullNorEmpty(formatSpecification, "formatSpecification");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
+            Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
             SearchCommand command
                 = connection.CommandFactory.GetSearchCommand();
@@ -1378,8 +1368,8 @@ namespace ManagedIrbis
                 [NotNull] SearchParameters parameters
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(parameters, nameof(parameters));
 
             SearchRawCommand command = connection.CommandFactory
                 .GetSearchRawCommand();
@@ -1407,8 +1397,8 @@ namespace ManagedIrbis
                 params object[] args
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(format, "format");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(format, nameof(format));
 
             string expression = string.Format
                 (
@@ -1443,8 +1433,8 @@ namespace ManagedIrbis
                 params object[] args
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(format, "format");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(format, nameof(format));
 
             string expression = string.Format
                 (
@@ -1485,10 +1475,10 @@ namespace ManagedIrbis
                 [CanBeNull] string format
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(expression, "expression");
-            Sure.NotNullNorEmpty(sequential, "sequential");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(expression, nameof(expression));
+            Sure.NotNullNorEmpty(sequential, nameof(sequential));
 
             UniversalCommand command
                 = connection.CommandFactory.GetUniversalCommand
@@ -1522,7 +1512,7 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             MarcRecord record = connection.ReadRecord(mfn);
             if (record.Deleted)
@@ -1544,9 +1534,9 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(mfnList, "mfnList");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(mfnList, nameof(mfnList));
 
             MarcRecord[] records = connection.ReadRecords
                 (
@@ -1582,8 +1572,8 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             ServerResponse response = connection.ExecuteArbitraryCommand
                 (
@@ -1611,9 +1601,9 @@ namespace ManagedIrbis
                 bool actualize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNullNorEmpty(record, "record");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNullNorEmpty(record, nameof(record));
 
             UniversalCommand command
                 = connection.CommandFactory.GetUniversalCommand
@@ -1650,9 +1640,9 @@ namespace ManagedIrbis
                 bool actualize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(records, "records");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(records, nameof(records));
 
             if (records.Length == 0)
             {
@@ -1708,8 +1698,8 @@ namespace ManagedIrbis
                 [NotNull] MarcRecord record
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(record, nameof(record));
 
             return connection.WriteRecord
                 (
@@ -1731,8 +1721,8 @@ namespace ManagedIrbis
                 bool actualize
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(record, nameof(record));
 
             return connection.WriteRecord
                 (
@@ -1754,8 +1744,8 @@ namespace ManagedIrbis
                 bool dontParseResponse
             )
         {
-            Sure.NotNull(connection, "connection");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNull(record, nameof(record));
 
             return connection.WriteRecord
                 (

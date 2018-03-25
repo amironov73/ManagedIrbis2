@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ClientSocketUtility.cs -- 
+/* ClientSocketUtility.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -10,17 +10,8 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AM;
-using AM.Collections;
-using AM.IO;
-using AM.Runtime;
 
 using JetBrains.Annotations;
 
@@ -29,7 +20,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class ClientSocketUtility
@@ -106,8 +97,7 @@ namespace ManagedIrbis.Infrastructure
                     socket = socket.InnerSocket
                 )
             {
-                T temp = socket as T;
-                if (!ReferenceEquals(temp, null))
+                if (socket is T temp)
                 {
                     result = temp;
                     break;
@@ -130,7 +120,7 @@ namespace ManagedIrbis.Infrastructure
         {
             Sure.NotNull(connection, nameof(connection));
 
-            T result = FindSocket<T>(connection) 
+            T result = FindSocket<T>(connection)
                 ?? CreateSocket<T>(connection);
 
             return result;

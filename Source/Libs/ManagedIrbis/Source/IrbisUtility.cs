@@ -23,7 +23,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class IrbisUtility
@@ -31,7 +31,7 @@ namespace ManagedIrbis
         #region Public methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [NotNull]
         public static string EncodePercentString
@@ -70,7 +70,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [NotNull]
         public static byte[] DecodePercentString
@@ -78,9 +78,9 @@ namespace ManagedIrbis
                 [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
             int predictedLength = text.Length / 2;

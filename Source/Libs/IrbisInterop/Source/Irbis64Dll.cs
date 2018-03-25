@@ -12,11 +12,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 using AM;
 using AM.Runtime;
@@ -39,6 +37,7 @@ namespace IrbisInterop
     /// <summary>
     ///
     /// </summary>
+    [PublicAPI]
     public sealed class Irbis64Dll
         : IDisposable
     {
