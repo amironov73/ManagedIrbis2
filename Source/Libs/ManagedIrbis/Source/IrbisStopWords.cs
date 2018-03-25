@@ -133,29 +133,20 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            FileSpecification specification
-                = new FileSpecification
-                    (
-                        IrbisPath.MasterFile,
-                        database,
-                        fileName
-                    );
-
-            string text = connection.ReadTextFile
+            FileSpecification specification = new FileSpecification
                 (
-                    specification
+                    IrbisPath.MasterFile,
+                    database,
+                    fileName
                 );
 
+            string text = connection.ReadTextFile(specification);
             if (string.IsNullOrEmpty(text))
             {
                 text = string.Empty;
             }
 
-            IrbisStopWords result = ParseText
-                (
-                    fileName,
-                    text
-                );
+            IrbisStopWords result = ParseText(fileName, text);
 
             return result;
         }
@@ -229,8 +220,6 @@ namespace ManagedIrbis
                 );
         }
 
-#if !WINMOBILE && !PocketPC
-
         /// <summary>
         /// Parse the text file.
         /// </summary>
@@ -255,8 +244,6 @@ namespace ManagedIrbis
                     lines
                 );
         }
-
-#endif
 
         /// <summary>
         /// Convert <see cref="IrbisStopWords"/> to array

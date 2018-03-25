@@ -45,17 +45,13 @@ namespace ManagedIrbis
 
         #endregion
 
-        #region Properties
-
-        #endregion
-
         #region Private members
 
         private static char[] _delimiters = { '\x1F' };
 
         private static string _CleanupEvaluator
             (
-                Match match
+                [NotNull] Match match
             )
         {
             int length = match.Value.Length;

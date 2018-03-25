@@ -34,6 +34,7 @@ namespace ManagedIrbis
         ///
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static string EncodePercentString
             (
                 [CanBeNull] byte[] array
@@ -45,8 +46,7 @@ namespace ManagedIrbis
                 return string.Empty;
             }
 
-            StringBuilder result = new StringBuilder();
-
+            StringBuilder result = new StringBuilder(array.Length * 3);
             foreach (byte b in array)
             {
                 if (b >= 'A' && b <= 'Z'
@@ -58,11 +58,7 @@ namespace ManagedIrbis
                 }
                 else
                 {
-                    result.AppendFormat
-                        (
-                            "%{0:X2}",
-                            b
-                        );
+                    result.AppendFormat("%{0:X2}", b);
                 }
             }
 
@@ -73,6 +69,7 @@ namespace ManagedIrbis
         ///
         /// </summary>
         [NotNull]
+        [MustUseReturnValue]
         public static byte[] DecodePercentString
             (
                 [CanBeNull] string text
@@ -99,11 +96,11 @@ namespace ManagedIrbis
                         {
                             Log.Error
                                 (
-                                    "IrbisUtility::DecodePercentString: "
-                                    + "unexpected end of stream"
+                                    nameof(IrbisUtility) + "::" + nameof(DecodePercentString)
+                                    + ": unexpected end of stream"
                                 );
 
-                            throw new FormatException("text");
+                            throw new FormatException(nameof(text));
                         }
 
                         byte b = byte.Parse

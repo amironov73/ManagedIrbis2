@@ -18,8 +18,15 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        public void IrbisQuery_PrepareQuery()
+        public void IrbisSearchQuery_ForbiddenCharacters_1()
         {
+            Assert.IsNotNull(IrbisSearchQuery.ForbiddenCharacters);
+        }
+
+        [TestMethod]
+        public void IrbisSearchQuery_PrepareQuery_1()
+        {
+            _TestQuery(null, null);
             _TestQuery("", "");
             _TestQuery(" ", " ");
             _TestQuery("v100:v200", "v100:v200");
