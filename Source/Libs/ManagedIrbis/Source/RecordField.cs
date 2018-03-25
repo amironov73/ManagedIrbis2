@@ -38,7 +38,7 @@ namespace ManagedIrbis
     [PublicAPI]
     [Serializable]
     [XmlRoot("field")]
-    [DebuggerDisplay("{DebugText}")]
+    [DebuggerDisplay("{" + nameof(DebugText) + "}")]
     public sealed class RecordField
         : IHandmadeSerializable,
         IReadOnly<RecordField>,
@@ -112,8 +112,8 @@ namespace ManagedIrbis
         [JsonProperty("value")]
         public string Value
         {
-            get { return _value; }
-            set { SetValue(value); }
+            get => _value;
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -122,10 +122,7 @@ namespace ManagedIrbis
         [NotNull]
         [XmlElement("subfield")]
         [JsonProperty("subfields")]
-        public SubFieldCollection SubFields
-        {
-            get { return _subFields; }
-        }
+        public SubFieldCollection SubFields => _subFields;
 
         /// <summary>
         /// Whether the field is modified?
@@ -134,8 +131,8 @@ namespace ManagedIrbis
         [JsonIgnore]
         public bool Modified
         {
-            get { return _modified; }
-            internal set { _modified = value; }
+            get => _modified;
+            internal set => _modified = value;
         }
 
         /// <summary>
@@ -146,8 +143,8 @@ namespace ManagedIrbis
         [JsonIgnore]
         public object UserData
         {
-            get { return _userData; }
-            set { _userData = value; }
+            get => _userData;
+            set => _userData = value;
         }
 
         /// <summary>
@@ -167,34 +164,14 @@ namespace ManagedIrbis
         [XmlIgnore]
         [JsonIgnore]
         [NotNull]
-        public string Path
-        {
-            get
-            {
-                string result = string.Format
-                    (
-                        "{0}/{1}",
-                        Tag.ToInvariantString(),
-                        Repeat
-                    );
-
-                return result;
-            }
-        }
+        public string Path => $"{Tag.ToInvariantString()}/{Repeat}";
 
         /// <summary>
         /// Является ли поле фиксированным.
         /// </summary>
         [XmlIgnore]
         [JsonIgnore]
-        public bool IsFixed
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return Tag > 0 && Tag < 10;
-            }
-        }
+        public bool IsFixed => Tag > 0 && Tag < 10;
 
         #endregion
 
@@ -205,21 +182,7 @@ namespace ManagedIrbis
         /// </summary>
         public RecordField()
         {
-            _subFields = new SubFieldCollection()
-                ._SetField(this);
-
-#if WITH_INDICATORS
-
-            _indicator1 = new FieldIndicator
-            {
-                _field = this
-            };
-            _indicator2 = new FieldIndicator
-            {
-                _field = this
-            };
-
-#endif
+            _subFields = new SubFieldCollection()._SetField(this);
         }
 
         /// <summary>
@@ -334,14 +297,10 @@ namespace ManagedIrbis
 
         #region Private members
 
-#if !WINMOBILE && !PocketPC
         [NonSerialized]
-#endif
         private bool _modified;
 
-#if !WINMOBILE && !PocketPC
         [NonSerialized]
-#endif
         private object _userData;
 
         [ExcludeFromCodeCoverage]
@@ -367,12 +326,6 @@ namespace ManagedIrbis
                 return result.ToString();
             }
         }
-
-#if WITH_INDICATORS
-
-        private readonly FieldIndicator _indicator1, _indicator2;
-
-#endif
 
         private int _tag;
 
@@ -417,8 +370,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Sets the sub fields.
         /// </summary>
-        /// <param name="encodedText">The encoded text.</param>
-        /// <returns>RecordField.</returns>
         internal RecordField SetSubFields
             (
                 [NotNull] string encodedText
@@ -755,9 +706,7 @@ namespace ManagedIrbis
         {
             SubField result = GetSubField(code, occurrence);
 
-            return ReferenceEquals(result, null)
-                       ? null
-                       : result.Value;
+            return result?.Value;
         }
 
         /// <summary>
@@ -771,9 +720,7 @@ namespace ManagedIrbis
         {
             SubField result = GetFirstSubField(code);
 
-            return ReferenceEquals(result, null)
-                ? null
-                : result.Value;
+            return result?.Value;
         }
 
         /// <summary>
@@ -805,10 +752,7 @@ namespace ManagedIrbis
         {
             return ReferenceEquals
                 (
-                    SubFields.FirstOrDefault
-                        (
-                            sub => sub.Code.SameChar(code)
-                        ),
+                    SubFields.FirstOrDefault(sub => sub.Code.SameChar(code)),
                     null
                 );
         }
@@ -824,10 +768,7 @@ namespace ManagedIrbis
         {
             return ReferenceEquals
                 (
-                    SubFields.FirstOrDefault
-                        (
-                            sub => sub.Code.OneOf(codes)
-                        ),
+                    SubFields.FirstOrDefault(sub => sub.Code.OneOf(codes)),
                     null
                 );
         }
@@ -956,7 +897,7 @@ namespace ManagedIrbis
                 [CanBeNull] string line
             )
         {
-            if (string.IsNullOrEmpty(line))
+            if (ReferenceEquals(line, null) || line.Length == 0)
             {
                 return null;
             }
@@ -965,11 +906,7 @@ namespace ManagedIrbis
             int tag = NumericUtility.ParseInt32(parts[0]);
             string body = parts[1];
 
-            return Parse
-                (
-                    tag,
-                    body
-                );
+            return Parse(tag, body);
         }
 
         /// <summary>
@@ -1101,10 +1038,7 @@ namespace ManagedIrbis
             ThrowIfReadOnly();
 
             _tag = tag;
-            if (!ReferenceEquals(Record, null))
-            {
-                Record.Fields._RenumberFields();
-            }
+            Record?.Fields._RenumberFields();
 
             return this;
         }
@@ -1118,6 +1052,8 @@ namespace ManagedIrbis
                 [CanBeNull] string tag
             )
         {
+            Sure.NotNull(tag, nameof(tag));
+
             return SetTag
                 (
                     string.IsNullOrEmpty(tag)
@@ -1137,7 +1073,7 @@ namespace ManagedIrbis
         {
             ThrowIfReadOnly();
 
-            if (string.IsNullOrEmpty(value))
+            if (ReferenceEquals(value, null) || value.Length == 0)
             {
                 _value = value;
             }
@@ -1149,26 +1085,21 @@ namespace ManagedIrbis
                     {
                         Log.Error
                             (
-                                "RecordField::SetValue: "
-                                + "contains delimiter: "
+                                nameof(RecordField) + "::" + nameof(SetValue)
+                                + ": contains delimiter: "
                                 + value.ToVisibleString()
                             );
 
-                        throw new ArgumentException
-                            (
-                                "Contains delimiter",
-                                "value"
-                            );
+                        throw new ArgumentException("Contains delimiter", nameof(value));
                     }
 
                     SetSubFields(value);
                 }
                 else
                 {
-                    value = StringUtility
-                        .ReplaceControlCharacters(value);
+                    value = StringUtility.ReplaceControlCharacters(value);
 
-                    if (!string.IsNullOrEmpty(value)
+                    if (!ReferenceEquals(value, null)
                         && TrimValue)
                     {
                         value = value.Trim();
@@ -1218,7 +1149,7 @@ namespace ManagedIrbis
             // TODO Is it necessarry?
             ThrowIfReadOnly();
 
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Tag = reader.ReadPackedInt32();
             Value = reader.ReadNullableString();
@@ -1231,7 +1162,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.WritePackedInt32(Tag);
             writer.WriteNullable(Value);
@@ -1246,7 +1177,7 @@ namespace ManagedIrbis
 
         /// <inheritdoc cref="IReadOnly{T}.ReadOnly" />
         [JsonIgnore]
-        public bool ReadOnly { get { return _readOnly; } }
+        public bool ReadOnly => _readOnly;
 
         /// <inheritdoc cref="IReadOnly{T}.AsReadOnly" />
         public RecordField AsReadOnly()
@@ -1262,12 +1193,6 @@ namespace ManagedIrbis
         {
             _readOnly = true;
 
-#if WITH_INDICATORS
-
-            Indicator1.SetReadOnly();
-            Indicator2.SetReadOnly();
-
-#endif
             SubFields.SetReadOnly();
         }
 
@@ -1276,10 +1201,7 @@ namespace ManagedIrbis
         {
             if (ReadOnly)
             {
-                Log.Error
-                    (
-                        "RecordField::ThrowIfReadOnly"
-                    );
+                Log.Error(nameof(RecordField) + "::" + nameof(ThrowIfReadOnly));
 
                 throw new ReadOnlyException();
             }

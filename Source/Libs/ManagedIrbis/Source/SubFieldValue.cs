@@ -25,20 +25,12 @@ namespace ManagedIrbis
     [PublicAPI]
     public static class SubFieldValue
     {
-        #region Constants
-
-        #endregion
-
         #region Properties
 
         /// <summary>
         /// Throw exception on verification error.
         /// </summary>
         public static bool ThrowOnVerify { get; set; }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -52,7 +44,7 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            if (!string.IsNullOrEmpty(value))
+            if (!ReferenceEquals(value, null))
             {
                 foreach (char c in value)
                 {
@@ -88,7 +80,6 @@ namespace ManagedIrbis
             return value;
         }
 
-
         /// <summary>
         /// Verify subfield value.
         /// </summary>
@@ -115,13 +106,13 @@ namespace ManagedIrbis
             {
                 Log.Error
                     (
-                        "SubFieldValue::Verify: "
-                        + value.ToVisibleString()
+                        nameof(SubFieldValue) + "::" + nameof(Verify)
+                        + ": " + value.ToVisibleString()
                     );
 
                 if (throwOnError)
                 {
-                    throw new VerificationException("SubField.Value");
+                    throw new VerificationException(nameof(SubField.Value));
                 }
             }
 

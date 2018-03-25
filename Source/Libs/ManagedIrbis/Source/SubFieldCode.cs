@@ -53,10 +53,7 @@ namespace ManagedIrbis
         /// <see cref="CharSet"/> of valid codes.
         /// </summary>
         [NotNull]
-        public static CharSet ValidCodes
-        {
-            get { return _validCodes; }
-        }
+        public static CharSet ValidCodes => _validCodes;
 
         #endregion
 
@@ -119,11 +116,7 @@ namespace ManagedIrbis
 
             if (!result)
             {
-                Log.Error
-                    (
-                        "SubFieldCode::Verify: "
-                        + code
-                    );
+                Log.Error(nameof(SubFieldCode) + "::" + nameof(Verify) + ": " + code);
 
                 if (throwOnError)
                 {
@@ -142,11 +135,7 @@ namespace ManagedIrbis
                 char code
             )
         {
-            return Verify
-                (
-                    code,
-                    ThrowOnVerification
-                );
+            return Verify(code, ThrowOnVerification);
         }
 
         #endregion

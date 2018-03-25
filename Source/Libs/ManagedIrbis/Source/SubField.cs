@@ -33,7 +33,7 @@ namespace ManagedIrbis
     [PublicAPI]
     [Serializable]
     [XmlRoot("subfield")]
-    [DebuggerDisplay("Code={Code}, Value={Value}")]
+    [DebuggerDisplay("Code={" + nameof(Code) + "}, Value={" + nameof(Value) + "}")]
     public sealed class SubField
         : IHandmadeSerializable,
         IReadOnly<SubField>,
@@ -72,8 +72,8 @@ namespace ManagedIrbis
         [JsonIgnore]
         public char Code
         {
-            get { return _code; }
-            set { SetCode(value); }
+            get => _code;
+            set => SetCode(value);
         }
 
         /// <summary>
@@ -86,10 +86,7 @@ namespace ManagedIrbis
         [JsonProperty("code")]
         public string CodeString
         {
-            get
-            {
-                return Code.ToString();
-            }
+            get => Code.ToString();
             set
             {
                 if (!string.IsNullOrEmpty(value))
@@ -107,11 +104,8 @@ namespace ManagedIrbis
         [JsonProperty("value")]
         public string Value
         {
-            get { return _value; }
-            set
-            {
-                SetValue(value);
-            }
+            get => _value;
+            set => SetValue(value);
         }
 
         /// <summary>
@@ -121,8 +115,8 @@ namespace ManagedIrbis
         [JsonIgnore]
         public bool Modified
         {
-            get { return _modified; }
-            internal set { _modified = value; }
+            get => _modified; // Non serialized
+            internal set => _modified = value;
         }
 
         /// <summary>
@@ -133,8 +127,8 @@ namespace ManagedIrbis
         [JsonIgnore]
         public object UserData
         {
-            get { return _userData; }
-            set { _userData = value; }
+            get => _userData; // Non serialized
+            set => _userData = value;
         }
 
         /// <summary>
@@ -251,10 +245,7 @@ namespace ManagedIrbis
         internal void SetModified()
         {
             Modified = true;
-            if (!ReferenceEquals(Field, null))
-            {
-                Field.SetModified();
-            }
+            Field?.SetModified();
         }
 
         #endregion
@@ -344,7 +335,7 @@ namespace ManagedIrbis
             if (SubFieldValue.Verify(value))
             {
                 value = StringUtility.ReplaceControlCharacters(value);
-                if (!string.IsNullOrEmpty(value)
+                if (!ReferenceEquals(value, null)
                     && TrimValue)
                 {
                     value = value.Trim();
@@ -394,7 +385,7 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IReadOnly{T}.ReadOnly" />
         [XmlIgnore]
         [JsonIgnore]
-        public bool ReadOnly { get { return _readOnly; } }
+        public bool ReadOnly => _readOnly;
 
         /// <inheritdoc cref="IReadOnly{T}.AsReadOnly" />
         public SubField AsReadOnly()

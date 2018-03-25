@@ -418,8 +418,6 @@ namespace ManagedIrbis
             return result;
         }
 
-#if CLASSIC || NETCORE
-
         // ========================================================
 
         /// <summary>
@@ -451,18 +449,13 @@ namespace ManagedIrbis
             string connectionString = GetStandardConnectionString();
             if (string.IsNullOrEmpty(connectionString))
             {
-                throw new IrbisException
-                    (
-                        "Connection string not specified!"
-                    );
+                throw new IrbisException("Connection string not specified!");
             }
 
             IrbisConnection result = new IrbisConnection(connectionString);
 
             return result;
         }
-
-#endif
 
         // =========================================================
 
@@ -479,11 +472,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(listFile, nameof(listFile));
 
-            string menuFile = connection.ReadTextFile
-                (
-                    IrbisPath.Data,
-                    listFile
-                );
+            string menuFile = connection.ReadTextFile(IrbisPath.Data, listFile);
             string[] lines = menuFile.ThrowIfNull(nameof(menuFile)).SplitLines();
             DatabaseInfo[] result = DatabaseInfo.ParseMenu(lines);
 
@@ -499,13 +488,8 @@ namespace ManagedIrbis
                 [NotNull] this IIrbisConnection connection
             )
         {
-            return ListDatabases
-                (
-                    connection,
-                    IrbisConstants.AdministratorDatabaseList
-                );
+            return ListDatabases(connection, IrbisConstants.AdministratorDatabaseList);
         }
-
 
         // ========================================================
 

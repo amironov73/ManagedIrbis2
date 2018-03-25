@@ -54,7 +54,7 @@ namespace ManagedIrbis
                 char code
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             foreach (SubField subField in subFields.NonNullItems())
             {
@@ -77,7 +77,7 @@ namespace ManagedIrbis
                 char code
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             int count = subFields.Count;
             for (int i = 0; i < count; i++)
@@ -101,7 +101,7 @@ namespace ManagedIrbis
                 params char[] codes
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             foreach (SubField subField in subFields.NonNullItems())
             {
@@ -124,7 +124,7 @@ namespace ManagedIrbis
                 params char[] codes
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             int count = subFields.Count;
             for (int i = 0; i < count; i++)
@@ -150,7 +150,7 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             foreach (SubField subField in subFields.NonNullItems())
             {
@@ -176,7 +176,7 @@ namespace ManagedIrbis
                 [CanBeNull] string value
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             int count = subFields.Count;
             for (int i = 0; i < count; i++)
@@ -205,7 +205,7 @@ namespace ManagedIrbis
                 char code
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             List<SubField> result = null;
             foreach (SubField subField in subFields.NonNullItems())
@@ -236,7 +236,7 @@ namespace ManagedIrbis
                 char code
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             List<SubField> result = null;
             int count = subFields.Count;
@@ -268,7 +268,7 @@ namespace ManagedIrbis
                 params char[] codes
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             List<SubField> result = null;
             foreach (SubField subField in subFields.NonNullItems())
@@ -299,7 +299,7 @@ namespace ManagedIrbis
                 params char[] codes
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             List<SubField> result = null;
             int count = subFields.Count;
@@ -331,7 +331,7 @@ namespace ManagedIrbis
                 [CanBeNull] Action<SubField> action
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             SubField[] result = subFields.NonNullItems().ToArray();
 
@@ -358,9 +358,9 @@ namespace ManagedIrbis
                 [NotNull] Func<SubField, bool> subPredicate
             )
         {
-            Sure.NotNull(fields, "fields");
-            Sure.NotNull(fieldPredicate, "fieldPredicate");
-            Sure.NotNull(subPredicate, "subPredicate");
+            Sure.NotNull(fields, nameof(fields));
+            Sure.NotNull(fieldPredicate, nameof(fieldPredicate));
+            Sure.NotNull(subPredicate, nameof(subPredicate));
 
             List<SubField> result = null;
             foreach (RecordField field in fields)
@@ -398,9 +398,9 @@ namespace ManagedIrbis
                 [NotNull] char[] codes
             )
         {
-            Sure.NotNull(fields, "fields");
-            Sure.NotNull(tags, "tags");
-            Sure.NotNull(codes, "codes");
+            Sure.NotNull(fields, nameof(fields));
+            Sure.NotNull(tags, nameof(tags));
+            Sure.NotNull(codes, nameof(codes));
 
             return fields
                 .GetField(tags)
@@ -421,8 +421,8 @@ namespace ManagedIrbis
                 [NotNull] string codeRegex
             )
         {
-            Sure.NotNull(subFields, "subFields");
-            Sure.NotNull(codeRegex, "codeRegex");
+            Sure.NotNull(subFields, nameof(subFields));
+            Sure.NotNull(codeRegex, nameof(codeRegex));
 
             return subFields.Where
                 (
@@ -449,9 +449,9 @@ namespace ManagedIrbis
                 [NotNull] string textRegex
             )
         {
-            Sure.NotNull(subFields, "subFields");
-            Sure.NotNull(codes, "codes");
-            Sure.NotNull(textRegex, "textRegex");
+            Sure.NotNull(subFields, nameof(subFields));
+            Sure.NotNull(codes, nameof(codes));
+            Sure.NotNull(textRegex, nameof(textRegex));
 
             return subFields
                 .GetSubField(codes)
@@ -481,10 +481,10 @@ namespace ManagedIrbis
                 [NotNull] string valueRegex
             )
         {
-            Sure.NotNull(fields, "fields");
-            Sure.NotNull(tags, "tags");
-            Sure.NotNull(codes, "codes");
-            Sure.NotNull(valueRegex, "valueRegex");
+            Sure.NotNull(fields, nameof(fields));
+            Sure.NotNull(tags, nameof(tags));
+            Sure.NotNull(codes, nameof(codes));
+            Sure.NotNull(valueRegex, nameof(valueRegex));
 
             List<SubField> result = null;
             foreach (RecordField field in fields)
@@ -543,7 +543,7 @@ namespace ManagedIrbis
                 [NotNull] this IEnumerable<SubField> subFields
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
 
             List<string> result = null;
             foreach (SubField subField in subFields.NonNullItems())
@@ -566,8 +566,6 @@ namespace ManagedIrbis
 
         // ==========================================================
 
-#if !WINMOBILE && !PocketPC
-
         /// <summary>
         /// Convert the subfield to <see cref="JObject"/>.
         /// </summary>
@@ -577,7 +575,7 @@ namespace ManagedIrbis
                 [NotNull] this SubField subField
             )
         {
-            Sure.NotNull(subField, "subField");
+            Sure.NotNull(subField, nameof(subField));
 
             JObject result = JObject.FromObject(subField);
 
@@ -593,7 +591,7 @@ namespace ManagedIrbis
                 [NotNull] this SubField subField
             )
         {
-            Sure.NotNull(subField, "subField");
+            Sure.NotNull(subField, nameof(subField));
 
             string result = JsonUtility.SerializeShort(subField);
             //JObject.FromObject(subField).ToString();
@@ -610,7 +608,7 @@ namespace ManagedIrbis
                 [NotNull] JObject jObject
             )
         {
-            Sure.NotNull(jObject, "jObject");
+            Sure.NotNull(jObject, nameof(jObject));
 
             SubField result = new SubField
                 (
@@ -633,14 +631,12 @@ namespace ManagedIrbis
                 [NotNull] string text
             )
         {
-            Sure.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
             SubField result = JsonConvert.DeserializeObject<SubField>(text);
 
             return result;
         }
-
-#endif
 
         #endregion
     }

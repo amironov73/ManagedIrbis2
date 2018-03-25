@@ -40,7 +40,7 @@ namespace ManagedIrbis
     [PublicAPI]
     [Serializable]
     [XmlRoot("subfields")]
-    [DebuggerDisplay("Count={Count}")]
+    [DebuggerDisplay("Count={" + nameof(Count) + "}")]
     public sealed class SubFieldCollection
         : Collection<SubField>,
         IHandmadeSerializable,
@@ -108,7 +108,7 @@ namespace ManagedIrbis
                 [NotNull] IEnumerable<SubField> subFields
             )
         {
-            Sure.NotNull(subFields, "subFields");
+            Sure.NotNull(subFields, nameof(subFields));
             ThrowIfReadOnly();
 
             foreach (SubField subField in subFields)
@@ -129,7 +129,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             Clear();
             _field = other.Field;
@@ -148,7 +148,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Sure.NotNull(other, "other");
+            Sure.NotNull(other, nameof(other));
 
             Clear();
             _field = other.Field;
@@ -191,7 +191,7 @@ namespace ManagedIrbis
                 [NotNull] Predicate<SubField> predicate
             )
         {
-            Sure.NotNull(predicate, "predicate");
+            Sure.NotNull(predicate, nameof(predicate));
 
             return this
                 .FirstOrDefault
@@ -209,28 +209,25 @@ namespace ManagedIrbis
                 [NotNull] Predicate<SubField> predicate
             )
         {
-            Sure.NotNull(predicate, "predicate");
+            Sure.NotNull(predicate, nameof(predicate));
 
             return this
                 .Where(subField => predicate(subField))
                 .ToArray();
         }
 
-#if !WINMOBILE && !PocketPC
-
         /// <summary>
         /// Restore the collection from JSON.
         /// </summary>
         [NotNull]
         public static SubFieldCollection FromJson
-        (
-            [NotNull] string text
-        )
+            (
+                [NotNull] string text
+            )
         {
-            Sure.NotNullNorEmpty(text, "text");
+            Sure.NotNullNorEmpty(text, nameof(text));
 
-            SubFieldCollection result
-                = JsonConvert.DeserializeObject<SubFieldCollection>
+            SubFieldCollection result = JsonConvert.DeserializeObject<SubFieldCollection>
                 (
                     text
                 );
@@ -248,8 +245,6 @@ namespace ManagedIrbis
 
             return result;
         }
-
-#endif
 
         #endregion
 
@@ -278,7 +273,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Sure.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             item.Field = Field;
 
@@ -317,7 +312,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Sure.NotNull(item, "item");
+            Sure.NotNull(item, nameof(item));
 
             item.Field = Field;
 
@@ -337,7 +332,7 @@ namespace ManagedIrbis
             )
         {
             ThrowIfReadOnly();
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             ClearItems();
             SubField[] array = reader.ReadArray<SubField>();
@@ -350,7 +345,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer.WriteArray(this.ToArray());
         }

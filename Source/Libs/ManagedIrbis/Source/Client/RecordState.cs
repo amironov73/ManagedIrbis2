@@ -88,7 +88,7 @@ namespace ManagedIrbis.Client
                 [NotNull] string line
             )
         {
-            Sure.NotNullNorEmpty(line, "line");
+            Sure.NotNullNorEmpty(line, nameof(line));
 
             //
             // &uf('G0$',&uf('+0'))
@@ -99,28 +99,18 @@ namespace ManagedIrbis.Client
 
             RecordState result = new RecordState();
 
-            string[] parts;
-
-#if WINMOBILE
-
-            parts = line.Split(_delimiters);
-
-#else
-
-            parts = line.Split
+            var parts = line.Split
                 (
                     _delimiters,
                     StringSplitOptions.RemoveEmptyEntries
                 );
 
-#endif
-
             if (parts.Length < 5)
             {
                 Log.Error
                     (
-                        "RecordState::ParseServerAnswer: "
-                        + "bad line format: "
+                        nameof(RecordState) + "::" + nameof(ParseServerAnswer)
+                        + ": bad line format: "
                         + line
                     );
 
@@ -128,8 +118,7 @@ namespace ManagedIrbis.Client
             }
 
             result.Mfn = NumericUtility.ParseInt32(parts[1]);
-            result.Status
-                = (RecordStatus) NumericUtility.ParseInt32(parts[2]);
+            result.Status = (RecordStatus) NumericUtility.ParseInt32(parts[2]);
             result.Version = NumericUtility.ParseInt32(parts[4]);
 
             return result;
@@ -172,7 +161,7 @@ namespace ManagedIrbis.Client
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Id = reader.ReadPackedInt32();
             Mfn = reader.ReadPackedInt32();
@@ -186,7 +175,7 @@ namespace ManagedIrbis.Client
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WritePackedInt32(Id)
@@ -202,13 +191,7 @@ namespace ManagedIrbis.Client
         /// <inheritdoc cref="ValueType.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "{0}:{1}:{2}",
-                    Mfn,
-                    (int)Status,
-                    Version
-                );
+            return $"{Mfn}:{(int) Status}:{Version}";
         }
 
         #endregion

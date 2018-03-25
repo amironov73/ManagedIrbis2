@@ -256,37 +256,26 @@ namespace ManagedIrbis
                     continue;
                 }
 
-#if !WINMOBILE && !PocketPC && !SILVERLIGHT
-
                 string[] parts = line.Split(separator, 2);
-
-#else
-
-                // TODO Implement properly
-
-                string[] parts = line.Split(separator);
-
-#endif
 
                 if (parts.Length != 2)
                 {
                     Log.Error
                         (
-                            "ParFile::ReadDictionary: "
-                            + "format error"
+                            nameof(ParseFile) + "::" + nameof(ReadDictionary)
+                            + ": format error"
                         );
 
                     throw new FormatException();
                 }
                 string key = parts[0].Trim();
                 string value = parts[1].Trim();
-                if (string.IsNullOrEmpty(key)
-                    || string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
                 {
                     Log.Error
                         (
-                            "ParFile::ReadDictionary: "
-                            + "format error"
+                            nameof(ParseFile) + "::" + nameof(ReadDictionary)
+                            + ": format error"
                         );
 
                     throw new FormatException();
@@ -295,25 +284,14 @@ namespace ManagedIrbis
             }
 
             foreach (string key in Enumerable.Range(1, 10)
-
-#if !WINMOBILE && !PocketPC && !UAP
-
-                .Select(NumericUtility.ToInvariantString)
-
-#else
-
-                .Select(n => n.ToInvariantString())
-
-#endif
-
-                )
+                .Select(NumericUtility.ToInvariantString))
             {
                 if (!result.ContainsKey(key))
                 {
                     Log.Error
                         (
-                            "ParFile::ReadDictionary: "
-                            + "key not found: "
+                            nameof(ParseFile) + "::" + nameof(ReadDictionary)
+                            + ": key not found: "
                             + key.ToVisibleString()
                         );
 

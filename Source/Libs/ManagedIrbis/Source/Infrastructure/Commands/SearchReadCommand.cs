@@ -54,12 +54,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// </summary>
         public override string FormatSpecification
         {
-            get
-            {
-                return UseReadInsteadOfFormat
-                    ? null
-                    : IrbisFormat.All;
-            }
+            get => UseReadInsteadOfFormat ? null : IrbisFormat.All;
             set
             {
                 // Do nothing
@@ -135,7 +130,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 {
                     int[] mfns = FoundItem.ConvertToMfn
                         (
-                            Found.ThrowIfNull("Found")
+                            Found.ThrowIfNull(nameof(Found))
                         );
                     Records = Connection.ReadRecords
                         (
@@ -146,19 +141,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                 else
                 {
                     Records = Found
-                        .ThrowIfNull("Found")
-
-#if !WINMOBILE && !PocketPC
-
+                        .ThrowIfNull(nameof(Found))
                         .AsParallel()
                         .AsOrdered()
-
-#endif
-
-                        .Select
-                            (
-                                item => _ConvertRecord(item)
-                            )
+                        .Select(item => _ConvertRecord(item))
                         .ToArray();
                 }
             }

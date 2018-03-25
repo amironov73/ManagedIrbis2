@@ -94,7 +94,7 @@ namespace ManagedIrbis.Search
                 [NotNull] ServerResponse response
             )
         {
-            Sure.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
             List<TermInfo> result = new List<TermInfo>();
 
@@ -167,8 +167,7 @@ namespace ManagedIrbis.Search
                 foreach (TermInfo term in terms)
                 {
                     string item = term.Text;
-                    if (!string.IsNullOrEmpty(item)
-                        && item.StartsWith(prefix))
+                    if (!ReferenceEquals(item, null) && item.StartsWith(prefix))
                     {
                         item = item.Substring(prefixLength);
                     }

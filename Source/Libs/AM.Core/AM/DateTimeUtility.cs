@@ -144,7 +144,7 @@ namespace AM
         #region Public methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static bool Between
             (
@@ -203,8 +203,6 @@ namespace AM
             return result;
         }
 
-#if CLASSIC || NETCORE || ANDROID || UAP
-
         // Borrowed from: https://mikearnett.wordpress.com/2011/09/13/c-convert-julian-date/
 
         ///// <summary>
@@ -246,7 +244,7 @@ namespace AM
         }
 
         ///// <summary>
-        ///// 
+        /////
         ///// </summary>
         //public static string FromJulian
         //    (
@@ -270,7 +268,7 @@ namespace AM
         //}
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static string FromJulianDate
             (
@@ -291,8 +289,6 @@ namespace AM
 
             return dateInJulian.ToString("yyyyMMdd");
         }
-
-#endif
 
         /// <summary>
         /// Универсальное длинное представление.

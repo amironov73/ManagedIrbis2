@@ -67,49 +67,6 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Combine strings as path.
-        /// </summary>
-        [NotNull]
-        public static string Combine
-            (
-                [NotNull] params string[] elements
-            )
-        {
-#if FW35 || WINMOBILE || PocketPC
-
-            if (elements.Length == 0)
-            {
-                return string.Empty;
-            }
-            if (elements.Length == 1)
-            {
-                return elements[0];
-            }
-            if (elements.Length == 2)
-            {
-                return Path.Combine (elements[0], elements[1]);
-            }
-
-            string result = Path.Combine (elements[0], elements[1]);
-            for (int i = 2; i < elements.Length; i++)
-            {
-                result = Path.Combine
-                    (
-                        result,
-                        elements[i]
-                    );
-            }
-
-            return result;
-
-#else
-
-            return Path.Combine(elements);
-
-#endif
-        }
-
-        /// <summary>
         /// Converts ordinary slashes to backslashes.
         /// </summary>
         /// <param name="path">Path to convert.</param>
@@ -123,23 +80,11 @@ namespace AM.IO
         {
             Sure.NotNull(path, nameof(path));
 
-#if PORTABLE
-
-            string result = path.Replace
-                (
-                    '/',
-                    '\\'
-                );
-
-#else
-
             string result = path.Replace
                 (
                     Path.AltDirectorySeparatorChar,
                     Path.DirectorySeparatorChar
                 );
-
-#endif
 
             return result;
         }

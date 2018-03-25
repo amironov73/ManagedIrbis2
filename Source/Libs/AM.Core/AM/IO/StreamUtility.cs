@@ -48,8 +48,8 @@ namespace AM.IO
                 int chunkSize
             )
         {
-            Sure.NotNull(sourceStream, "sourceStream");
-            Sure.NotNull(destinationStream, "destinationStream");
+            Sure.NotNull(sourceStream, nameof(sourceStream));
+            Sure.NotNull(destinationStream, nameof(destinationStream));
 
             if (chunkSize <= 0)
             {
@@ -78,8 +78,8 @@ namespace AM.IO
                 [NotNull] Stream secondStream
             )
         {
-            Sure.NotNull(firstStream, "firstStream");
-            Sure.NotNull(secondStream, "secondStream");
+            Sure.NotNull(firstStream, nameof(firstStream));
+            Sure.NotNull(secondStream, nameof(secondStream));
 
             const int bufferSize = 1024;
             while (true)
@@ -111,7 +111,7 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Read as up to <paramref name="maximum"/> bytes 
+        /// Read as up to <paramref name="maximum"/> bytes
         /// from the given stream.
         /// </summary>
         public static byte[] ReadAsMuchAsPossible
@@ -120,7 +120,7 @@ namespace AM.IO
                 int maximum
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             if (maximum < 0)
             {
@@ -153,7 +153,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int value = stream.ReadByte();
             switch (value)
@@ -179,8 +179,8 @@ namespace AM.IO
                 int count
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.Positive(count, "count");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.Positive(count, nameof(count));
 
             byte[] result = new byte[count];
             int read = stream.Read(result, 0, count);
@@ -204,7 +204,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToInt16(ReadExact(stream, sizeof(short)), 0);
         }
@@ -229,7 +229,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToInt32(ReadExact(stream, sizeof(int)), 0);
         }
@@ -243,7 +243,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToUInt32(ReadExact(stream, sizeof(uint)), 0);
         }
@@ -256,7 +256,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToInt64(ReadExact(stream, sizeof(long)), 0);
         }
@@ -270,7 +270,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToUInt64(ReadExact(stream, sizeof(ulong)), 0);
         }
@@ -283,7 +283,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToSingle(ReadExact(stream, sizeof(float)), 0);
         }
@@ -296,7 +296,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return BitConverter.ToDouble(ReadExact(stream, sizeof(double)), 0);
         }
@@ -312,8 +312,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(encoding, nameof(encoding));
 
             int count = ReadInt32(stream);
             byte[] bytes = ReadExact(stream, count);
@@ -331,13 +331,13 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return ReadString(stream, Encoding.UTF8);
         }
 
         /// <summary>
-        /// Reads array of <see cref="Int16"/> values from the 
+        /// Reads array of <see cref="Int16"/> values from the
         /// <see cref="Stream"/>.
         /// </summary>
         public static short[] ReadInt16Array
@@ -345,7 +345,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int length = ReadInt32(stream);
             short[] result = new short[length];
@@ -358,7 +358,7 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Reads array of <see cref="UInt16"/> values from the 
+        /// Reads array of <see cref="UInt16"/> values from the
         /// <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
@@ -367,7 +367,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int length = ReadInt32(stream);
             ushort[] result = new ushort[length];
@@ -380,7 +380,7 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Reads array of <see cref="Int32"/> values from the 
+        /// Reads array of <see cref="Int32"/> values from the
         /// <see cref="Stream"/>.
         /// </summary>
         public static int[] ReadInt32Array
@@ -388,7 +388,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int length = ReadInt32(stream);
             int[] result = new int[length];
@@ -401,7 +401,7 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Reads array of <see cref="UInt32"/> values from the 
+        /// Reads array of <see cref="UInt32"/> values from the
         /// <see cref="Stream"/>.
         /// </summary>
         [NotNull]
@@ -411,7 +411,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int length = ReadInt32(stream);
             uint[] result = new uint[length];
@@ -434,8 +434,8 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(encoding, nameof(encoding));
 
             int length = ReadInt32(stream);
             string[] result = new string[length];
@@ -457,13 +457,13 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             return ReadStringArray(stream, Encoding.UTF8);
         }
 
         /// <summary>
-        /// Reads the <see cref="Decimal"/> from the specified 
+        /// Reads the <see cref="Decimal"/> from the specified
         /// <see cref="Stream"/>.
         /// </summary>
         public static decimal ReadDecimal
@@ -471,7 +471,7 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             int[] bits = ReadInt32Array(stream);
             return new decimal(bits);
@@ -487,18 +487,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
-
-#if WINMOBILE || PocketPC
-
-            throw new System.NotImplementedException();
-
-#else
+            Sure.NotNull(stream, nameof(stream));
 
             long binary = ReadInt64(stream);
 
             return DateTime.FromBinary(binary);
-#endif
         }
 
         /// <summary>
@@ -535,7 +528,7 @@ namespace AM.IO
                 bool value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             stream.WriteByte
                 (
@@ -554,7 +547,7 @@ namespace AM.IO
                 short value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -570,7 +563,7 @@ namespace AM.IO
                 ushort value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -585,7 +578,7 @@ namespace AM.IO
                 int value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -601,7 +594,7 @@ namespace AM.IO
                 uint value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -616,7 +609,7 @@ namespace AM.IO
                 long value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -632,7 +625,7 @@ namespace AM.IO
                 ulong value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -647,7 +640,7 @@ namespace AM.IO
                 float value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -662,7 +655,7 @@ namespace AM.IO
                 double value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             byte[] bytes = BitConverter.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
@@ -679,9 +672,9 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(value, "value");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(value, nameof(value));
+            Sure.NotNull(encoding, nameof(encoding));
 
             byte[] bytes = encoding.GetBytes(value);
             Write(stream, bytes.Length);
@@ -698,8 +691,8 @@ namespace AM.IO
                 [NotNull] string value
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(value, "value");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(value, nameof(value));
 
             Write(stream, value, Encoding.UTF8);
         }
@@ -713,8 +706,8 @@ namespace AM.IO
                 [NotNull] short[] values
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
 
             Write(stream, values.Length);
 
@@ -735,8 +728,8 @@ namespace AM.IO
                 [NotNull] ushort[] values
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
 
             Write(stream, values.Length);
 
@@ -752,10 +745,10 @@ namespace AM.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="values">Array of signed integer numbers.</param>
-        /// <remarks>Value can be readed with 
+        /// <remarks>Value can be readed with
         /// <see cref="ReadInt32Array"/> or compatible method.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">Either 
+        /// <exception cref="ArgumentNullException">Either
         /// <paramref name="stream"/> or <paramref name="values"/>
         /// is <c>null</c>.</exception>
         /// <exception cref="IOException">An error during stream
@@ -768,8 +761,8 @@ namespace AM.IO
                 [NotNull] int[] values
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
 
             Write(stream, values.Length);
 
@@ -785,10 +778,10 @@ namespace AM.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="values">Array of unsigned integer numbers.</param>
-        /// <remarks>Value can be readed with 
+        /// <remarks>Value can be readed with
         /// <see cref="ReadUInt32Array"/> or compatible method.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">Either 
+        /// <exception cref="ArgumentNullException">Either
         /// <paramref name="stream"/> or <paramref name="values"/>
         /// is <c>null</c>.</exception>
         /// <exception cref="IOException">An error during stream
@@ -802,8 +795,8 @@ namespace AM.IO
                 [NotNull] uint[] values
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
 
             Write(stream, values.Length);
 
@@ -821,10 +814,10 @@ namespace AM.IO
         /// <param name="stream">Stream to write to.</param>
         /// <param name="values">Array of strings to write.</param>
         /// <param name="encoding">Encoding to use.</param>
-        /// <remarks>Value can be readed with 
+        /// <remarks>Value can be readed with
         /// <see cref="ReadStringArray(Stream,Encoding)"/> or compatible method.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">Either 
+        /// <exception cref="ArgumentNullException">Either
         /// <paramref name="stream"/> or <paramref name="values"/>
         /// is <c>null</c>.</exception>
         /// <exception cref="IOException">An error during stream
@@ -838,9 +831,9 @@ namespace AM.IO
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
-            Sure.NotNull(encoding, "encoding");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
+            Sure.NotNull(encoding, nameof(encoding));
 
             Write(stream, values.Length);
 
@@ -856,10 +849,10 @@ namespace AM.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="values">Array of strings to write.</param>
-        /// <remarks>Value can be readed with 
+        /// <remarks>Value can be readed with
         /// <see cref="ReadStringArray(Stream)"/> or compatible method.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">Either 
+        /// <exception cref="ArgumentNullException">Either
         /// <paramref name="stream"/> or <paramref name="values"/>
         /// is <c>null</c>.</exception>
         /// <exception cref="IOException">An error during stream
@@ -872,8 +865,8 @@ namespace AM.IO
                 [NotNull] string[] values
             )
         {
-            Sure.NotNull(stream, "stream");
-            Sure.NotNull(values, "values");
+            Sure.NotNull(stream, nameof(stream));
+            Sure.NotNull(values, nameof(values));
 
             Write(stream, values, Encoding.UTF8);
         }
@@ -896,13 +889,13 @@ namespace AM.IO
                 decimal value
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             Write(stream, decimal.GetBits(value));
         }
 
         /// <summary>
-        /// Writes the <see cref="DateTime"/> to the specified 
+        /// Writes the <see cref="DateTime"/> to the specified
         /// <see cref="Stream"/>.
         /// </summary>
         public static void Write
@@ -911,17 +904,9 @@ namespace AM.IO
                 DateTime value
             )
         {
-            Sure.NotNull(stream, "stream");
-
-#if WINMOBILE || PocketPC || SILVERLIGHT
-
-            throw new System.NotImplementedException();
-
-#else
+            Sure.NotNull(stream, nameof(stream));
 
             Write(stream, value.ToBinary());
-
-#endif
         }
 
         /// <summary>
@@ -1114,7 +1099,7 @@ namespace AM.IO
                 [NotNull] this Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
+            Sure.NotNull(stream, nameof(stream));
 
             MemoryStream result = new MemoryStream(); //-V3114
 
@@ -1145,11 +1130,7 @@ namespace AM.IO
                 long length
             )
         {
-#if CLASSIC || NETCORE || DROID
-
             stream.Lock(position, length);
-
-#endif
         }
 
         /// <summary>
@@ -1165,11 +1146,7 @@ namespace AM.IO
                 long length
             )
         {
-#if CLASSIC || NETCORE || DROID
-
             stream.Unlock(position, length);
-
-#endif
         }
 
         /// <summary>

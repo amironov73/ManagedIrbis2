@@ -32,6 +32,9 @@ using ManagedIrbis.Search;
 
 #endregion
 
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+// ReSharper disable VirtualMemberCallInConstructor
+
 namespace ManagedIrbis
 {
     /// <summary>
@@ -88,10 +91,10 @@ namespace ManagedIrbis
         [NotNull]
         public string Host
         {
-            get { return _host; }
+            get => _host;
             set
             {
-                Sure.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, nameof(value));
 
                 ThrowIfConnected();
                 _host = value;
@@ -104,10 +107,10 @@ namespace ManagedIrbis
         /// <value>Порт сервера (по умолчанию 6666).</value>
         public int Port
         {
-            get { return _port; }
+            get => _port;
             set
             {
-                Sure.Positive(value, "value");
+                Sure.Positive(value, nameof(value));
 
                 ThrowIfConnected();
                 _port = value;
@@ -121,10 +124,10 @@ namespace ManagedIrbis
         [NotNull]
         public string Username
         {
-            get { return _username; }
+            get => _username;
             set
             {
-                Sure.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, nameof(value));
 
                 ThrowIfConnected();
                 _username = value;
@@ -138,10 +141,10 @@ namespace ManagedIrbis
         [NotNull]
         public string Password
         {
-            get { return _password; }
+            get => _password;
             set
             {
-                Sure.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, nameof(value));
 
                 ThrowIfConnected();
                 _password = value;
@@ -156,10 +159,10 @@ namespace ManagedIrbis
         [NotNull]
         public string Database
         {
-            get { return _database; }
+            get => _database;
             set
             {
-                Sure.NotNullNorEmpty(value, "value");
+                Sure.NotNullNorEmpty(value, nameof(value));
 
                 _database = value;
             }
@@ -173,7 +176,7 @@ namespace ManagedIrbis
         /// </value>
         public IrbisWorkstation Workstation
         {
-            get { return _workstation; }
+            get => _workstation;
             set
             {
                 ThrowIfConnected();
@@ -184,12 +187,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Идентификатор клиента.
         /// </summary>
-        public int ClientID { get { return _clientID; } }
+        public int ClientID => _clientID;
 
         /// <summary>
         /// Номер команды.
         /// </summary>
-        public int QueryID { get { return _queryID; } }
+        public int QueryID => _queryID;
 
         /// <summary>
         /// Executive engine.
@@ -207,10 +210,7 @@ namespace ManagedIrbis
         /// Remote INI-file for the client.
         /// </summary>
         [CanBeNull]
-        public IniFile IniFile
-        {
-            get { return _iniFile; }
-        }
+        public IniFile IniFile => _iniFile;
 
         /// <summary>
         /// Server version.
@@ -225,18 +225,12 @@ namespace ManagedIrbis
         /// <see cref="Connect"/>, сбрасывается при выполнении
         /// <see cref="Dispose"/>.
         /// </value>
-        public bool Connected
-        {
-            get { return _connected; }
-        }
+        public bool Connected => _connected;
 
         /// <summary>
         /// Флаг отключения.
         /// </summary>
-        public bool Disposed
-        {
-            get { return _disposed; }
-        }
+        public bool Disposed => _disposed;
 
         /// <summary>
         /// Таймаут получения ответа от сервера в миллисекундах
@@ -280,7 +274,7 @@ namespace ManagedIrbis
         /// </remarks>
         public IrbisConnection()
         {
-            Log.Trace("IrbisConnection::Constructor");
+            Log.Trace(nameof(IrbisConnection) + "::Constructor");
 
             Busy = new BusyState();
 
@@ -490,9 +484,9 @@ namespace ManagedIrbis
                 GblStatement[] statements
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(record, "record");
-            Sure.NotNull(statements, "statements");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNull(statements, nameof(statements));
 
             GblVirtualCommand command = CommandFactory.GetGblVirtualCommand();
             command.Database = database;
@@ -513,9 +507,9 @@ namespace ManagedIrbis
                 string filename
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(record, "record");
-            Sure.NotNullNorEmpty(filename, "filename");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(record, nameof(record));
+            Sure.NotNullNorEmpty(filename, nameof(filename));
 
             GblVirtualCommand command = CommandFactory.GetGblVirtualCommand();
             command.Database = database;
@@ -539,8 +533,8 @@ namespace ManagedIrbis
                 string template
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
-            Sure.NotNullNorEmpty(description, "description");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
+            Sure.NotNullNorEmpty(description, nameof(description));
 
             CreateDatabaseCommand command
                 = CommandFactory.GetCreateDatabaseCommand();
@@ -560,7 +554,7 @@ namespace ManagedIrbis
                 string database
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             CreateDictionaryCommand command
                 = CommandFactory.GetCreateDictionaryCommand();
@@ -578,7 +572,7 @@ namespace ManagedIrbis
                 string database
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             DeleteDatabaseCommand command
                 = CommandFactory.GetDeleteDatabaseCommand();
@@ -597,7 +591,7 @@ namespace ManagedIrbis
                 AbstractCommand command
             )
         {
-            Sure.NotNull(command, "command");
+            Sure.NotNull(command, nameof(command));
 
             Log.Trace("IrbisConnection::ExecuteCommand");
 
@@ -624,7 +618,7 @@ namespace ManagedIrbis
                 params object[] arguments
             )
         {
-            Sure.NotNullNorEmpty(commandCode, "commandCode");
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
             UniversalCommand command
                 = CommandFactory.GetUniversalCommand
@@ -649,8 +643,8 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            Sure.NotNull(format, "format");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNull(format, nameof(format));
+            Sure.Positive(mfn, nameof(mfn));
 
             FormatCommand command = CommandFactory.GetFormatCommand();
             command.FormatSpecification = format;
@@ -672,8 +666,8 @@ namespace ManagedIrbis
                 MarcRecord record
             )
         {
-            Sure.NotNull(format, "format");
-            Sure.NotNull(record, "record");
+            Sure.NotNull(format, nameof(format));
+            Sure.NotNull(record, nameof(record));
 
             FormatCommand command = CommandFactory.GetFormatCommand();
             command.FormatSpecification = format;
@@ -696,9 +690,9 @@ namespace ManagedIrbis
                 IEnumerable<int> mfnList
             )
         {
-            Sure.NotNull(mfnList, "mfnList");
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.NotNull(format, "format");
+            Sure.NotNull(mfnList, nameof(mfnList));
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(format, nameof(format));
 
             FormatCommand command = CommandFactory.GetFormatCommand();
             command.Database = database;
@@ -728,7 +722,7 @@ namespace ManagedIrbis
                 string databaseName
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             DatabaseInfoCommand command
                 = CommandFactory.GetDatabaseInfoCommand();
@@ -749,7 +743,7 @@ namespace ManagedIrbis
                 StatDefinition definition
             )
         {
-            Sure.NotNull(definition, "definition");
+            Sure.NotNull(definition, nameof(definition));
 
             DatabaseStatCommand command
                 = CommandFactory.GetDatabaseStatCommand();
@@ -831,7 +825,7 @@ namespace ManagedIrbis
                 GblSettings settings
             )
         {
-            Sure.NotNull(settings, "settings");
+            Sure.NotNull(settings, nameof(settings));
 
             if (string.IsNullOrEmpty(settings.Database))
             {
@@ -855,7 +849,7 @@ namespace ManagedIrbis
                 FileSpecification specification
             )
         {
-            Sure.NotNull(specification, "specification");
+            Sure.NotNull(specification, nameof(specification));
 
             specification.Verify(true);
 
@@ -876,7 +870,7 @@ namespace ManagedIrbis
                 FileSpecification[] specifications
             )
         {
-            Sure.NotNull(specifications, "specifications");
+            Sure.NotNull(specifications, nameof(specifications));
 
             ListFilesCommand command = new ListFilesCommand(this);
             foreach (FileSpecification specification in specifications)
@@ -939,7 +933,7 @@ namespace ManagedIrbis
                 string connectionString
             )
         {
-            Sure.NotNull(connectionString, "connectionString");
+            Sure.NotNull(connectionString, nameof(connectionString));
 
             ConnectionSettings settings = new ConnectionSettings();
             settings.ParseConnectionString(connectionString);
@@ -969,15 +963,14 @@ namespace ManagedIrbis
                 TableDefinition tableDefinition
             )
         {
-            Sure.NotNull(tableDefinition, "tableDefinition");
+            Sure.NotNull(tableDefinition, nameof(tableDefinition));
 
-            PrintTableCommand command
-                = CommandFactory.GetPrintTableCommand();
+            PrintTableCommand command = CommandFactory.GetPrintTableCommand();
             command.Definition = tableDefinition;
 
             ExecuteCommand(command);
 
-            return command.Result;
+            return command.Result ?? string.Empty;
         }
 
         // ========================================================
@@ -988,7 +981,7 @@ namespace ManagedIrbis
                 string newDatabase
             )
         {
-            Sure.NotNullNorEmpty(newDatabase, "newDatabase");
+            Sure.NotNullNorEmpty(newDatabase, nameof(newDatabase));
 
             string result = Database;
             _databaseStack.Push(Database);
@@ -1008,7 +1001,7 @@ namespace ManagedIrbis
                 FileSpecification file
             )
         {
-            Sure.NotNull(file, "file");
+            Sure.NotNull(file, nameof(file));
 
             ReadBinaryFileCommand command
                 = CommandFactory.GetReadBinaryFileCommand();
@@ -1057,8 +1050,8 @@ namespace ManagedIrbis
                 string format
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.Positive(mfn, nameof(mfn));
 
             ReadRecordCommand command = CommandFactory.GetReadRecordCommand();
             command.Mfn = mfn;
@@ -1086,8 +1079,8 @@ namespace ManagedIrbis
                 string format
             )
         {
-            Sure.NotNullNorEmpty(database, "database");
-            Sure.Positive(mfn, "mfn");
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.Positive(mfn, nameof(mfn));
 
             ReadRecordCommand command = CommandFactory.GetReadRecordCommand();
             command.Mfn = mfn;
@@ -1113,7 +1106,7 @@ namespace ManagedIrbis
                 TermParameters parameters
             )
         {
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             ReadTermsCommand command = CommandFactory.GetReadTermsCommand();
             command.ApplyParameters(parameters);
@@ -1134,7 +1127,7 @@ namespace ManagedIrbis
                 FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, "fileSpecification");
+            Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             ReadFileCommand command = new ReadFileCommand(this);
             command.Files.Add(fileSpecification);
@@ -1155,7 +1148,7 @@ namespace ManagedIrbis
                 FileSpecification[] files
             )
         {
-            Sure.NotNull(files, "files");
+            Sure.NotNull(files, nameof(files));
 
             if (files.Length == 0)
             {
@@ -1213,7 +1206,7 @@ namespace ManagedIrbis
                 string databaseName
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             ReloadDictionaryCommand command
                 = CommandFactory.GetReloadDictionaryCommand();
@@ -1233,7 +1226,7 @@ namespace ManagedIrbis
                 string databaseName
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             ReloadMasterFileCommand command
                 = CommandFactory.GetReloadMasterFileCommand();
@@ -1267,7 +1260,7 @@ namespace ManagedIrbis
                 [NotNull] string state
             )
         {
-            Sure.NotNullNorEmpty(state, "state");
+            Sure.NotNullNorEmpty(state, nameof(state));
 
             ConnectionSettings settings
                 = ConnectionSettings.Decrypt(state);
@@ -1297,7 +1290,7 @@ namespace ManagedIrbis
                 string expression
             )
         {
-            Sure.NotNull(expression, "expression");
+            Sure.NotNull(expression, nameof(expression));
 
             SearchCommand command = CommandFactory.GetSearchCommand();
             command.SearchExpression = expression;
@@ -1323,7 +1316,7 @@ namespace ManagedIrbis
                 SearchParameters parameters
             )
         {
-            Sure.NotNull(parameters, "parameters");
+            Sure.NotNull(parameters, nameof(parameters));
 
             SearchCommand command = CommandFactory.GetSearchCommand();
             command.ApplyParameters(parameters);
@@ -1351,7 +1344,7 @@ namespace ManagedIrbis
                 CommandFactory newFactory
             )
         {
-            Sure.NotNull(newFactory, "newFactory");
+            Sure.NotNull(newFactory, nameof(newFactory));
 
             CommandFactory previous = CommandFactory;
             newFactory.Connection = this;
@@ -1371,13 +1364,10 @@ namespace ManagedIrbis
                 string typeName
             )
         {
-            Sure.NotNull(typeName, "typeName");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(typeName, nameof(typeName));
 
             Type type = Type.GetType(typeName, true);
-            CommandFactory newFactory
-                = (CommandFactory)Activator.CreateInstance
+            CommandFactory newFactory = (CommandFactory)Activator.CreateInstance
                 (
                     type,
                     this
@@ -1385,11 +1375,6 @@ namespace ManagedIrbis
             CommandFactory previous = SetCommandFactory(newFactory);
 
             return previous;
-
-#else
-            return CommandFactory;
-
-#endif
         }
 
         // =========================================================
@@ -1403,7 +1388,7 @@ namespace ManagedIrbis
                 AbstractEngine engine
             )
         {
-            Sure.NotNull(engine, "engine");
+            Sure.NotNull(engine, nameof(engine));
 
             AbstractEngine previous = Executive;
             Executive = engine;
@@ -1422,9 +1407,7 @@ namespace ManagedIrbis
                 string typeName
             )
         {
-            Sure.NotNull(typeName, "typeName");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNull(typeName, nameof(typeName));
 
             Type type = Type.GetType(typeName, true);
             AbstractEngine newEngine
@@ -1437,12 +1420,6 @@ namespace ManagedIrbis
             AbstractEngine previous = SetEngine(newEngine);
 
             return previous;
-
-#else
-
-            return Executive;
-
-#endif
         }
 
         // =========================================================
@@ -1455,9 +1432,7 @@ namespace ManagedIrbis
                 string loggingPath
             )
         {
-            Sure.NotNullNorEmpty(loggingPath, "loggingPath");
-
-#if !WINMOBILE && !PocketPC
+            Sure.NotNullNorEmpty(loggingPath, nameof(loggingPath));
 
             AbstractClientSocket oldSocket = Socket;
             if (oldSocket is LoggingClientSocket)
@@ -1473,15 +1448,12 @@ namespace ManagedIrbis
                 );
 
             SetSocket(newSocket);
-
-#endif
-
         }
 
         // =========================================================
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public virtual void SetRetry
             (
@@ -1530,7 +1502,7 @@ namespace ManagedIrbis
                 AbstractClientSocket socket
             )
         {
-            Sure.NotNull(socket, "socket");
+            Sure.NotNull(socket, nameof(socket));
 
             if (Connected)
             {
@@ -1572,7 +1544,7 @@ namespace ManagedIrbis
                 string databaseName
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             TruncateDatabaseCommand command
                 = CommandFactory.GetTruncateDatabaseCommand();
@@ -1592,7 +1564,7 @@ namespace ManagedIrbis
                 string databaseName
             )
         {
-            Sure.NotNullNorEmpty(databaseName, "databaseName");
+            Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
             UnlockDatabaseCommand command
                 = CommandFactory.GetUnlockDatabaseCommand();
@@ -1614,7 +1586,7 @@ namespace ManagedIrbis
         {
             // TODO: write UnlockRecordsTest
 
-            Sure.NotNullNorEmpty(database, "database");
+            Sure.NotNullNorEmpty(database, nameof(database));
 
             if (mfnList.Length == 0)
             {
@@ -1659,7 +1631,7 @@ namespace ManagedIrbis
                 UserInfo[] userList
             )
         {
-            Sure.NotNull(userList, "userList");
+            Sure.NotNull(userList, nameof(userList));
 
             UpdateUserListCommand command
                 = CommandFactory.GetUpdateUserListCommand();
@@ -1681,7 +1653,7 @@ namespace ManagedIrbis
                 bool dontParseResponse
             )
         {
-            Sure.NotNull(record, "record");
+            Sure.NotNull(record, nameof(record));
 
             WriteRecordCommand command = new WriteRecordCommand(this)
             {
@@ -1713,7 +1685,7 @@ namespace ManagedIrbis
                 bool actualize
             )
         {
-            Sure.NotNull(records, "records");
+            Sure.NotNull(records, nameof(records));
 
             if (records.Length == 0)
             {
@@ -1750,7 +1722,7 @@ namespace ManagedIrbis
                 FileSpecification file
             )
         {
-            Sure.NotNull(file, "file");
+            Sure.NotNull(file, nameof(file));
 
             WriteFileCommand command
                 = CommandFactory.GetWriteFileCommand();
@@ -1812,7 +1784,7 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Host = reader.ReadNullableString()
                 .ThrowIfNull("Host");
