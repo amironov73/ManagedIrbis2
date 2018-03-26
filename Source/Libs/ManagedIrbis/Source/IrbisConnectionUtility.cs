@@ -10,10 +10,12 @@
 #region Using directives
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using AM;
 using AM.Collections;
@@ -41,10 +43,6 @@ namespace ManagedIrbis
     [PublicAPI]
     public static class IrbisConnectionUtility
     {
-        #region Constants
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -52,10 +50,6 @@ namespace ManagedIrbis
         /// </summary>
         [CanBeNull]
         public static string DefaultConnectionString { get; set; }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -207,8 +201,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            UniversalCommand command = connection.CommandFactory
-                .GetUniversalCommand
+            UniversalCommand command = connection.CommandFactory.GetUniversalCommand
                 (
                     commandCode,
                     arguments
@@ -304,8 +297,7 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.Positive(mfn, nameof(mfn));
 
-            FormatCommand command = connection.CommandFactory
-                .GetFormatCommand();
+            FormatCommand command = connection.CommandFactory.GetFormatCommand();
             command.Database = database;
             command.FormatSpecification = format;
             command.UtfFormat = true;
@@ -314,7 +306,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             string result = command.FormatResult
-                .ThrowIfNullOrEmpty("command.FormatResult")
+                .ThrowIfNullOrEmpty(nameof(command.FormatResult))
                 [0];
 
             return result;
@@ -345,7 +337,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             string result = command.FormatResult
-                .ThrowIfNullOrEmpty("command.FormatResult")
+                .ThrowIfNullOrEmpty(nameof(command.FormatResult))
                 [0];
 
             return result;
@@ -688,15 +680,13 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            FileSpecification fileSpecification
-                = new FileSpecification
+            FileSpecification fileSpecification = new FileSpecification
                 (
                     IrbisPath.MasterFile,
                     connection.Database,
                     fileName
                 );
-            string text = connection
-                .ReadTextFile(fileSpecification)
+            string text = connection.ReadTextFile(fileSpecification)
                 .ThrowIfNull("text");
             IniFile result = new IniFile
             {
@@ -713,7 +703,7 @@ namespace ManagedIrbis
             {
                 Log.TraceException
                     (
-                        "IrbisConnectionUtility::ReadIniFile",
+                        nameof(IrbisConnectionUtility) + "::" + nameof(ReadIniFile),
                         exception
                     );
 
@@ -740,10 +730,7 @@ namespace ManagedIrbis
             Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
             string text = connection.ReadTextFile(fileSpecification);
-            MenuFile result = MenuFile.ParseServerResponse
-                (
-                    text.ThrowIfNull("text")
-                );
+            MenuFile result = MenuFile.ParseServerResponse(text.ThrowIfNull("text"));
 
             return result;
         }
@@ -794,8 +781,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            ReadRawRecordCommand command
-                = connection.CommandFactory.GetReadRawRecordCommand();
+            ReadRawRecordCommand command = connection.CommandFactory.GetReadRawRecordCommand();
             command.Database = database;
             command.Mfn = mfn;
 
@@ -822,8 +808,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            ReadRawRecordCommand command
-                = connection.CommandFactory.GetReadRawRecordCommand();
+            ReadRawRecordCommand command = connection.CommandFactory.GetReadRawRecordCommand();
             command.Database = database;
             command.Mfn = mfn;
             command.Lock = lockFlag;
@@ -912,8 +897,7 @@ namespace ManagedIrbis
                 arguments.Add(mfn);
             }
 
-            UniversalCommand command
-                = connection.CommandFactory.GetUniversalCommand
+            UniversalCommand command = connection.CommandFactory.GetUniversalCommand
                     (
                         CommandCode.FormatRecord,
                         arguments.ToArray()
@@ -924,8 +908,6 @@ namespace ManagedIrbis
 
             List<string> lines = response.RemainingUtfStrings();
             lines = lines.GetRange(1, lines.Count - 1);
-
-#if FW4
 
             BlockingCollection<RawRecord> records
                 = new BlockingCollection<RawRecord>(lines.Count);
@@ -942,21 +924,6 @@ namespace ManagedIrbis
                 );
 
             return records.ToArray();
-
-#else
-
-            List<RawRecord> records = new List<RawRecord>();
-
-            foreach (string line in lines)
-            {
-                RawRecord record = RawRecord.Parse(line);
-                record.Database = database;
-                records.Add(record);
-            }
-
-            return records.ToArray();
-
-#endif
         }
 
         // ========================================================
@@ -1000,18 +967,9 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (IniFile iniFile = ReadIniFile
-                (
-                    connection,
-                    fileName
-                ))
+            using (IniFile iniFile = ReadIniFile(connection, fileName))
             {
-
-                SearchScenario[] result
-                    = SearchScenario.ParseIniFile
-                    (
-                        iniFile
-                    );
+                SearchScenario[] result = SearchScenario.ParseIniFile(iniFile);
 
                 return result;
             }
@@ -1087,8 +1045,6 @@ namespace ManagedIrbis
 
         // ========================================================
 
-        // ========================================================
-
         /// <summary>
         /// Чтение записи.
         /// </summary>
@@ -1142,8 +1098,6 @@ namespace ManagedIrbis
 
         // ========================================================
 
-#if !UAP
-
         /// <summary>
         /// Require minimal client version.
         /// </summary>
@@ -1161,9 +1115,7 @@ namespace ManagedIrbis
             bool result = actualVersion
                 .CompareTo(requiredVersion) >= 0;
 
-            if (!result
-                 && throwException
-                )
+            if (!result && throwException)
             {
                 string message = string.Format
                     (
@@ -1176,8 +1128,6 @@ namespace ManagedIrbis
 
             return result;
         }
-
-#endif
 
         // ========================================================
 
@@ -1202,10 +1152,7 @@ namespace ManagedIrbis
                     "64." + minimalVersion
                 ) >= 0;
 
-            if (
-                 !result
-                 && throwException
-                )
+            if (!result && throwException)
             {
                 string message = string.Format
                     (
@@ -1390,15 +1337,13 @@ namespace ManagedIrbis
                     args
                 );
 
-            SearchReadCommand command
-                = connection.CommandFactory.GetSearchReadCommand();
+            SearchReadCommand command = connection.CommandFactory.GetSearchReadCommand();
             command.Database = connection.Database;
             command.SearchExpression = expression;
 
             connection.ExecuteCommand(command);
 
-            MarcRecord[] result = command.Records
-                .ThrowIfNull("command.Records");
+            MarcRecord[] result = command.Records.ThrowIfNull("command.Records");
 
             return result;
         }
@@ -1589,8 +1534,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNullNorEmpty(record, nameof(record));
 
-            UniversalCommand command
-                = connection.CommandFactory.GetUniversalCommand
+            UniversalCommand command = connection.CommandFactory.GetUniversalCommand
                 (
                     CommandCode.UpdateRecord,
                     database,
@@ -1656,8 +1600,7 @@ namespace ManagedIrbis
                     );
             }
 
-            UniversalCommand command
-                = connection.CommandFactory.GetUniversalCommand
+            UniversalCommand command = connection.CommandFactory.GetUniversalCommand
                 (
                     CommandCode.SaveRecordGroup,
                     arguments.ToArray()

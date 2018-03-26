@@ -54,25 +54,23 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
-            Log.Trace("CommandFactory::Constructor");
+            Log.Trace(nameof(CommandFactory) + "::Constructor");
 
             Connection = connection;
         }
 
         static CommandFactory()
         {
-            _superFactory = connection
-                => new CommandFactory(connection);
+            _superFactory = connection => new CommandFactory(connection);
         }
 
         #endregion
 
         #region Private members
 
-        private static Func<IrbisConnection, CommandFactory>
-            _superFactory;
+        private static Func<IIrbisConnection, CommandFactory> _superFactory;
 
         #endregion
 
@@ -138,10 +136,10 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public static CommandFactory GetDefaultFactory
             (
-                [NotNull] IrbisConnection connection
+                [NotNull] IIrbisConnection connection
             )
         {
-            Sure.NotNull(connection, "connection");
+            Sure.NotNull(connection, nameof(connection));
 
             CommandFactory result = _superFactory(connection);
 
@@ -495,14 +493,14 @@ namespace ManagedIrbis.Infrastructure
         /// Set Super Factory.
         /// </summary>
         [NotNull]
-        public static Func<IrbisConnection, CommandFactory> SetSuperFactory
+        public static Func<IIrbisConnection, CommandFactory> SetSuperFactory
             (
-                [NotNull] Func<IrbisConnection, CommandFactory> superFactory
+                [NotNull] Func<IIrbisConnection, CommandFactory> superFactory
             )
         {
-            Sure.NotNull(superFactory, "superFactory");
+            Sure.NotNull(superFactory, nameof(superFactory));
 
-            Func<IrbisConnection, CommandFactory> result = _superFactory;
+            Func<IIrbisConnection, CommandFactory> result = _superFactory;
             _superFactory = superFactory;
 
             return result;

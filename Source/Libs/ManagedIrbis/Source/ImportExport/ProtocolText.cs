@@ -430,6 +430,11 @@ namespace ManagedIrbis.ImportExport
                 }
 
                 string[] split = line.Split('\x1F');
+                if (split.Length < 3)
+                {
+                    return null;
+                }
+
                 ParseMfnStatusVersion
                     (
                         split[1],
@@ -482,6 +487,11 @@ namespace ManagedIrbis.ImportExport
                 record.Fields.Clear();
 
                 string[] split = line.Split('\x1F');
+                if (split.Length < 3)
+                {
+                    return null;
+                }
+
                 ParseMfnStatusVersion
                     (
                         split[1],
