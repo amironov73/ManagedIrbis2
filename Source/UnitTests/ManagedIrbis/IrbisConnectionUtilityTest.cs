@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using AM.IO;
@@ -8,7 +9,7 @@ using ManagedIrbis;
 using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Infrastructure.Commands;
 using ManagedIrbis.Menus;
-
+using ManagedIrbis.Search;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -19,6 +20,7 @@ namespace UnitTests.ManagedIrbis
 {
     [TestClass]
     public class IrbisConnectionUtilityTest
+        : Common.CommonUnitTest
     {
         [TestMethod]
         public void IrbisConnectionUtility_DefaultConnectionString_1()
@@ -386,7 +388,7 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Status, actual.Status);
 
             mock.VerifyGet(c => c.CommandFactory, Times.Once);
-            mock.Verify(c=> c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
         [TestMethod]
@@ -411,7 +413,7 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Status, actual.Status);
 
             mock.VerifyGet(c => c.CommandFactory, Times.Once);
-            mock.Verify(c=> c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
         [TestMethod]
@@ -436,7 +438,7 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Status, actual.Status);
 
             mock.VerifyGet(c => c.CommandFactory, Times.Once);
-            mock.Verify(c=> c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
         [TestMethod]
@@ -454,7 +456,19 @@ namespace UnitTests.ManagedIrbis
         [TestMethod]
         public void IrbisConnectionUtility_ReadSearchScenario_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            string fileName = Path.Combine(TestDataPath, @"Irbis64\Datai\IBIS\ibis.ini");
+            string content = File.ReadAllText(fileName, IrbisEncoding.Ansi);
+            mock.SetupGet(c => c.Database).Returns("IBIS");
+            mock.Setup(c => c.ReadTextFile(It.IsAny<FileSpecification>()))
+                .Returns(content);
+            IIrbisConnection connection = mock.Object;
 
+            SearchScenario[] scenarios = IrbisConnectionUtility.ReadSearchScenario(connection, "ibis.ini");
+            Assert.AreEqual(73, scenarios.Length);
+
+            mock.VerifyGet(c => c.Database, Times.Once);
+            mock.Verify(c => c.ReadTextFile(It.IsAny<FileSpecification>()), Times.Once);
         }
 
         [TestMethod]
@@ -510,25 +524,89 @@ namespace UnitTests.ManagedIrbis
         [TestMethod]
         public void IrbisConnectionUtility_RequireClientVersion_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
 
+            Assert.IsTrue(IrbisConnectionUtility.RequireClientVersion(connection, "1.0.0", false));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(IrbisException))]
+        public void IrbisConnectionUtility_RequireClientVersion_2()
+        {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+
+            IrbisConnectionUtility.RequireClientVersion(connection, "100500.0.0", true);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_RequireServerVersion_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            mock.SetupGet(c => c.ServerVersion).Returns(new IrbisVersion { Version = "64.2017.1" });
+            IIrbisConnection connection = mock.Object;
 
+            Assert.IsTrue(IrbisConnectionUtility.RequireServerVersion(connection, "2010.1", false));
+
+            mock.VerifyGet(c => c.ServerVersion);
+        }
+
+        [TestMethod]
+        public void IrbisConnectionUtility_RequireServerVersion_2()
+        {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            mock.SetupGet(c => c.ServerVersion).Returns((IrbisVersion)null);
+            mock.Setup(c => c.GetServerVersion()).Returns(new IrbisVersion { Version = "64.2017.1" });
+            IIrbisConnection connection = mock.Object;
+
+            Assert.IsTrue(IrbisConnectionUtility.RequireServerVersion(connection, "2010.1", false));
+
+            mock.VerifyGet(c => c.ServerVersion);
+            mock.Verify(c => c.GetServerVersion());
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(IrbisException))]
+        public void IrbisConnectionUtility_RequireServerVersion_3()
+        {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            mock.SetupGet(c => c.ServerVersion).Returns(new IrbisVersion { Version = "64.2007.1" });
+            IIrbisConnection connection = mock.Object;
+
+            IrbisConnectionUtility.RequireServerVersion(connection, "2010.1", true);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_Search_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            int[] expected = { 1, 2, 3 };
+            mock.Setup(c => c.Search(It.IsAny<string>())).Returns(expected);
+            IIrbisConnection connection = mock.Object;
 
+            int[] actual = IrbisConnectionUtility.Search(connection, "K=ANY");
+            CollectionAssert.AreEqual(expected, actual);
+
+            mock.Verify(c => c.Search(It.IsAny<string>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SearchCount_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
+                .Returns((SearchCommand command) =>
+                {
+                    command.FoundCount = 123;
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            Assert.AreEqual(123, IrbisConnectionUtility.SearchCount(connection, "K=ANY"));
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchCommand>()), Times.Once);
         }
 
         [TestMethod]

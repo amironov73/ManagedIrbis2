@@ -1112,8 +1112,7 @@ namespace ManagedIrbis
 
             Version requiredVersion = new Version(minimalVersion);
             Version actualVersion = IrbisConnection.ClientVersion;
-            bool result = actualVersion
-                .CompareTo(requiredVersion) >= 0;
+            bool result = actualVersion.CompareTo(requiredVersion) >= 0;
 
             if (!result && throwException)
             {
@@ -1207,8 +1206,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
 
-            SearchCommand command
-                = connection.CommandFactory.GetSearchCommand();
+            SearchCommand command = connection.CommandFactory.GetSearchCommand();
             command.Database = connection.Database;
             command.SearchExpression = searchExpression;
             command.FirstRecord = 0;
