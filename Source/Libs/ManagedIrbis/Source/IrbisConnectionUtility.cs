@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -238,7 +239,7 @@ namespace ManagedIrbis
 
             connection.ExecuteCommand(command);
 
-            MarcRecord[] records = command.Records.ThrowIfNull("Records");
+            MarcRecord[] records = command.Records.ThrowIfNull(nameof(command.Records));
 
             if (!string.IsNullOrEmpty(parameters.FilterSpecification))
             {
@@ -366,7 +367,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             string result = command.FormatResult
-                .ThrowIfNullOrEmpty("command.FormatResult")
+                .ThrowIfNullOrEmpty(nameof(command.FormatResult))
                 [0];
 
             return result;
@@ -405,7 +406,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             string[] result = command.FormatResult
-                .ThrowIfNull("command.FormatResult");
+                .ThrowIfNull(nameof(command.FormatResult));
 
             return result;
         }
@@ -436,6 +437,7 @@ namespace ManagedIrbis
         /// <exception cref="IrbisException">
         /// Если строка подключения в app.settings не найдена.
         /// </exception>
+        [ExcludeFromCodeCoverage]
         public static IrbisConnection GetClientFromConfig()
         {
             string connectionString = GetStandardConnectionString();
@@ -1237,8 +1239,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
             Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
-            SearchCommand command
-                = connection.CommandFactory.GetSearchCommand();
+            SearchCommand command = connection.CommandFactory.GetSearchCommand();
             command.Database = connection.Database;
             command.SearchExpression = searchExpression;
             command.FormatSpecification = formatSpecification;
@@ -1246,7 +1247,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             FoundItem[] result = command.Found
-                .ThrowIfNull("command.Found")
+                .ThrowIfNull(nameof(command.Found))
                 .ToArray();
 
             return result;
@@ -1269,8 +1270,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
             Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
-            SearchCommand command
-                = connection.CommandFactory.GetSearchCommand();
+            SearchCommand command = connection.CommandFactory.GetSearchCommand();
             command.Database = connection.Database;
             command.SearchExpression = searchExpression;
             command.FormatSpecification = formatSpecification;
@@ -1279,7 +1279,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             FoundItem[] result = command.Found
-                .ThrowIfNull("command.Found")
+                .ThrowIfNull(nameof(command.Found))
                 .ToArray();
 
             return result;
@@ -1300,13 +1300,13 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNull(parameters, nameof(parameters));
 
-            SearchRawCommand command = connection.CommandFactory
-                .GetSearchRawCommand();
+            SearchRawCommand command = connection.CommandFactory.GetSearchRawCommand();
             command.ApplyParameters(parameters);
 
             connection.ExecuteCommand(command);
+
             string[] result = command.Found
-                .ThrowIfNull("command.Found");
+                .ThrowIfNull(nameof(command.Found));
 
             return result;
         }
@@ -1329,19 +1329,14 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(format, nameof(format));
 
-            string expression = string.Format
-                (
-                    format,
-                    args
-                );
-
+            string expression = string.Format(format, args);
             SearchReadCommand command = connection.CommandFactory.GetSearchReadCommand();
             command.Database = connection.Database;
             command.SearchExpression = expression;
 
             connection.ExecuteCommand(command);
 
-            MarcRecord[] result = command.Records.ThrowIfNull("command.Records");
+            MarcRecord[] result = command.Records.ThrowIfNull(nameof(command.Records));
 
             return result;
         }
@@ -1363,13 +1358,8 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(format, nameof(format));
 
-            string expression = string.Format
-                (
-                    format,
-                    args
-                );
-            SearchReadCommand command
-                = connection.CommandFactory.GetSearchReadCommand();
+            string expression = string.Format(format, args);
+            SearchReadCommand command = connection.CommandFactory.GetSearchReadCommand();
             command.Database = connection.Database;
             command.SearchExpression = expression;
             command.NumberOfRecords = 1;
@@ -1377,7 +1367,7 @@ namespace ManagedIrbis
             connection.ExecuteCommand(command);
 
             MarcRecord result = command.Records
-                .ThrowIfNull("command.Records")
+                .ThrowIfNull(nameof(command.Records))
                 .GetItem(0);
 
             return result;
@@ -1407,8 +1397,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(expression, nameof(expression));
             Sure.NotNullNorEmpty(sequential, nameof(sequential));
 
-            UniversalCommand command
-                = connection.CommandFactory.GetUniversalCommand
+            UniversalCommand command = connection.CommandFactory.GetUniversalCommand
                 (
                     CommandCode.Search,
                     database,

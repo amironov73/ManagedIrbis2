@@ -10,6 +10,7 @@ using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Infrastructure.Commands;
 using ManagedIrbis.Menus;
 using ManagedIrbis.Search;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Moq;
@@ -128,45 +129,155 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
+        [ExpectedException(typeof(NotImplementedException))]
         public void IrbisConnectionUtility_ExtendedSearch_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
+                .Returns((SearchReadCommand command) =>
+                {
+                    command.Records = new MarcRecord[0];
+
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
+
+            SearchParameters parameters = new SearchParameters();
+            IrbisConnectionUtility.ExtendedSearch(connection, parameters);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_FormatRecord_1()
         {
-            //Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
-            //IIrbisConnection connection = mock.Object;
-            //Mock<FormatCommand> formatMock = new Mock<FormatCommand>(connection);
-            //formatMock.Setup()
-            //FormatCommand command = formatMock.Object;
-            //Mock<CommandFactory> factoryMock = new Mock<CommandFactory>(connection);
-            //factoryMock.Setup(c => c.GetFormatCommand()).Returns(command);
-            //CommandFactory factory = factoryMock.Object;
-            //mock.SetupGet(c => c.CommandFactory).Returns(factory);
-            //ServerResponse response = ServerResponse.GetEmptyResponse(connection);
-            //mock.Setup(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()))
-            //    .Returns(response);
+            string expected = "Результат расформатирования";
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            AbstractEngine engine = new StandardEngine(connection, null);
+            mock.SetupGet(c => c.Executive).Returns(engine);
+            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
+            mock.SetupGet(c => c.CommandFactory).Returns(factory);
+            ResponseBuilder builder = new ResponseBuilder()
+                .StandardHeader(CommandCode.FormatRecord, 123456, 123)
+                .Append(0).NewLine()
+                .AppendUtf(expected).NewLine();
+            byte[] request = Array.Empty<byte>();
+            byte[] answer = builder.Encode();
+            ServerResponse response = new ServerResponse(connection, answer, request, false);
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
+                .Returns((FormatCommand command) =>
+                {
+                    command.FormatResult = new[] {expected};
+                    return response;
+                });
 
-            //IrbisConnectionUtility.FormatRecord()
+            string actual = IrbisConnectionUtility.FormatRecord(connection, "IBIS", "Some format", 1);
+            Assert.AreEqual(expected, actual);
+
+            mock.VerifyGet(c => c.Executive);
+            mock.VerifyGet(c => c.CommandFactory);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_FormatUtf8_1()
         {
+            string expected = "Результат расформатирования";
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            AbstractEngine engine = new StandardEngine(connection, null);
+            mock.SetupGet(c => c.Executive).Returns(engine);
+            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
+            mock.SetupGet(c => c.CommandFactory).Returns(factory);
+            ResponseBuilder builder = new ResponseBuilder()
+                .StandardHeader(CommandCode.FormatRecord, 123456, 123)
+                .Append(0).NewLine()
+                .AppendUtf(expected).NewLine();
+            byte[] request = Array.Empty<byte>();
+            byte[] answer = builder.Encode();
+            ServerResponse response = new ServerResponse(connection, answer, request, false);
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
+                .Returns((FormatCommand command) =>
+                {
+                    command.FormatResult = new[] {expected};
+                    return response;
+                });
 
+            string actual = IrbisConnectionUtility.FormatUtf8(connection, "Some format", 1);
+            Assert.AreEqual(expected, actual);
+
+            mock.VerifyGet(c => c.Executive);
+            mock.VerifyGet(c => c.CommandFactory);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_FormatUtf8_2()
         {
+            string expected = "Результат расформатирования";
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            AbstractEngine engine = new StandardEngine(connection, null);
+            mock.SetupGet(c => c.Executive).Returns(engine);
+            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
+            mock.SetupGet(c => c.CommandFactory).Returns(factory);
+            ResponseBuilder builder = new ResponseBuilder()
+                .StandardHeader(CommandCode.FormatRecord, 123456, 123)
+                .Append(0).NewLine()
+                .AppendUtf(expected).NewLine();
+            byte[] request = Array.Empty<byte>();
+            byte[] answer = builder.Encode();
+            ServerResponse response = new ServerResponse(connection, answer, request, false);
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
+                .Returns((FormatCommand command) =>
+                {
+                    command.FormatResult = new[] {expected};
+                    return response;
+                });
 
+            MarcRecord record = new MarcRecord();
+            string actual = IrbisConnectionUtility.FormatUtf8(connection, "Some format", record);
+            Assert.AreEqual(expected, actual);
+
+            mock.VerifyGet(c => c.Executive);
+            mock.VerifyGet(c => c.CommandFactory);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_FormatUtf8_3()
         {
+            string[] expected = {"Результат 1", "Результат 2", "Результат 3"};
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            AbstractEngine engine = new StandardEngine(connection, null);
+            mock.SetupGet(c => c.Executive).Returns(engine);
+            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
+            mock.SetupGet(c => c.CommandFactory).Returns(factory);
+            ResponseBuilder builder = new ResponseBuilder()
+                .StandardHeader(CommandCode.FormatRecord, 123456, 123)
+                .Append(0).NewLine();
+            foreach (string s in expected)
+            {
+                builder.AppendUtf(s).NewLine();
+            }
+            byte[] request = Array.Empty<byte>();
+            byte[] answer = builder.Encode();
+            ServerResponse response = new ServerResponse(connection, answer, request, false);
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
+                .Returns((FormatCommand command) =>
+                {
+                    command.FormatResult = expected;
+                    return response;
+                });
 
+            int[] mfn = {1, 2, 3};
+            string[] actual = IrbisConnectionUtility.FormatUtf8(connection, "BIS", "Some format", mfn);
+            CollectionAssert.AreEqual(expected, actual);
+
+            mock.VerifyGet(c => c.Executive);
+            mock.VerifyGet(c => c.CommandFactory);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
         [TestMethod]
@@ -612,37 +723,182 @@ namespace UnitTests.ManagedIrbis
         [TestMethod]
         public void IrbisConnectionUtility_SearchFormat_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
+                .Returns((SearchCommand command) =>
+                {
+                    command.Found = new List<FoundItem>
+                    {
+                        new FoundItem
+                        {
+                            Mfn = 1,
+                            Record = new MarcRecord {Mfn = 1},
+                            Text = "Some text"
+                        }
+                    };
+                    command.FoundCount = 1;
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            FoundItem[] found = IrbisConnectionUtility.SearchFormat(connection, "K=ANY", "Some format");
+            Assert.AreEqual(1, found.Length);
+            Assert.AreEqual(1, found[0].Mfn);
+            Assert.AreEqual("Some text", found[0].Text);
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchCommand>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SearchFormatUtf8_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
+                .Returns((SearchCommand command) =>
+                {
+                    command.Found = new List<FoundItem>
+                    {
+                        new FoundItem
+                        {
+                            Mfn = 1,
+                            Record = new MarcRecord {Mfn = 1},
+                            Text = "Some text"
+                        }
+                    };
+                    command.FoundCount = 1;
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            FoundItem[] found = IrbisConnectionUtility.SearchFormatUtf8(connection, "K=ANY", "Some format");
+            Assert.AreEqual(1, found.Length);
+            Assert.AreEqual(1, found[0].Mfn);
+            Assert.AreEqual("Some text", found[0].Text);
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchCommand>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SearchRaw_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchRawCommand>()))
+                .Returns((SearchRawCommand command) =>
+                {
+                    command.Found = new[] {"first", "second"};
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            SearchParameters parameters = new SearchParameters
+            {
+                Database = "IBIS",
+                SearchExpression = "K=ANY"
+            };
+            string[] found = IrbisConnectionUtility.SearchRaw(connection, parameters);
+            Assert.AreEqual(2, found.Length);
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchRawCommand>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SearchRead_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
+                .Returns((SearchReadCommand command) =>
+                {
+                    command.Records = new[]
+                    {
+                        new MarcRecord {Mfn = 1},
+                        new MarcRecord {Mfn = 2},
+                        new MarcRecord {Mfn = 3}
+                    };
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            MarcRecord[] found = IrbisConnectionUtility.SearchRead(connection, "K=ANY");
+            Assert.AreEqual(3, found.Length);
+            Assert.AreEqual(1, found[0].Mfn);
+            Assert.AreEqual(2, found[1].Mfn);
+            Assert.AreEqual(3, found[2].Mfn);
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SearchReadOneRecord_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
+                .Returns((SearchReadCommand command) =>
+                {
+                    command.Records = new[]
+                    {
+                        new MarcRecord {Mfn = 1},
+                        new MarcRecord {Mfn = 2},
+                        new MarcRecord {Mfn = 3}
+                    };
+                    return ServerResponse.GetEmptyResponse(connection);
+                });
 
+            MarcRecord found = IrbisConnectionUtility.SearchReadOneRecord(connection, "K=ANY");
+            Assert.IsNotNull(found);
+            Assert.AreEqual(1, found.Mfn);
+
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()), Times.Once);
         }
 
         [TestMethod]
         public void IrbisConnectionUtility_SequentialSearchRaw_1()
         {
+            Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
+            IIrbisConnection connection = mock.Object;
+            mock.SetupGet(c => c.Executive).Returns(new StandardEngine(connection, null));
+            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()))
+                .Returns((UniversalCommand command) =>
+                {
+                    ResponseBuilder builder = new ResponseBuilder();
+                    builder.StandardHeader(CommandCode.Search, 12345, 123)
+                        .Append(3).NewLine()
+                        .AppendUtf("Первая").NewLine()
+                        .AppendUtf("Вторая").NewLine()
+                        .AppendUtf("Третья").NewLine();
+                    byte[] request = Array.Empty<byte>();
+                    byte[] answer = builder.Encode();
+                    ServerResponse result = new ServerResponse(connection, answer, request, false);
 
+                    return result;
+                });
+
+            string[] found = IrbisConnectionUtility.SequentialSearchRaw
+                (
+                    connection,
+                    "IBIS",
+                    "K=ANY",
+                    0,
+                    0,
+                    0,
+                    0,
+                    "p(v200)",
+                    null
+                );
+            Assert.AreEqual(3, found.Length);
+            Assert.AreEqual("Первая", found[0]);
+            Assert.AreEqual("Вторая", found[1]);
+            Assert.AreEqual("Третья", found[2]);
+
+            mock.VerifyGet(c => c.Executive, Times.AtLeastOnce);
+            mock.VerifyGet(c => c.CommandFactory, Times.Once);
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()), Times.Once);
         }
 
         [TestMethod]

@@ -204,8 +204,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             {
                 Log.Error
                     (
-                        "FormatCommand::CreateQuery: "
-                        + "too many MFNs: "
+                        nameof(FormatCommand) + "::" + nameof(CreateQuery)
+                        + ": too many MFNs: "
                         + MfnList.Count
                     );
 
@@ -248,11 +248,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             {
                 count = MfnList.Count;
             }
-            FormatResult = GetFormatResult
-                (
-                    result,
-                    count
-                );
+
+            FormatResult = GetFormatResult(result, count);
 
             return result;
         }

@@ -176,8 +176,7 @@ namespace ManagedIrbis.Infrastructure
         [CanBeNull]
         public string GetAnsiString()
         {
-            using (MemoryStream memory = Connection.Executive
-                .GetMemoryStream(GetType()))
+            using (MemoryStream memory = Connection.Executive.GetMemoryStream(GetType()))
             {
                 _savedPosition = _stream.Position;
                 while (true)
