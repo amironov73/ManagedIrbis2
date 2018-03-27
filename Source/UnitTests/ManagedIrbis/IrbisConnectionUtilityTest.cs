@@ -457,7 +457,7 @@ namespace UnitTests.ManagedIrbis
         public void IrbisConnectionUtility_ReadSearchScenario_1()
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
-            string fileName = Path.Combine(TestDataPath, @"Irbis64\Datai\IBIS\ibis.ini");
+            string fileName = Path.Combine(TestDataPath, @"Irbis64/Datai/IBIS/ibis.ini");
             string content = File.ReadAllText(fileName, IrbisEncoding.Ansi);
             mock.SetupGet(c => c.Database).Returns("IBIS");
             mock.Setup(c => c.ReadTextFile(It.IsAny<FileSpecification>()))
