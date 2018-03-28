@@ -5,5 +5,5 @@ script:
   - dotnet restore ./Source/
   - dotnet build ./Source/
   - dotnet test --no-build ./Source/UnitTests/
-  - dotnet build -c Release --verbosity=minimal Source\Benchmarks
-  - dotnet run -c Release -p Source\Benchmarks
+  - dotnet build -c Release --verbosity=minimal Source/Benchmarks
+  - dotnet run -c Release -p Source/Benchmarks
