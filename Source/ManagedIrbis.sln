@@ -18,6 +18,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AM.Drawing", "Libs\AM.Drawi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IrbisInterop", "Libs\IrbisInterop\IrbisInterop.csproj", "{E5E0CDDB-54AB-4EAA-B790-E879A49FD949}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{DA1169DB-5547-4449-A847-458A2027D9A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +102,18 @@ Global
 		{E5E0CDDB-54AB-4EAA-B790-E879A49FD949}.Release|x64.Build.0 = Release|Any CPU
 		{E5E0CDDB-54AB-4EAA-B790-E879A49FD949}.Release|x86.ActiveCfg = Release|Any CPU
 		{E5E0CDDB-54AB-4EAA-B790-E879A49FD949}.Release|x86.Build.0 = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|x64.Build.0 = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Debug|x86.Build.0 = Debug|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|x64.ActiveCfg = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|x64.Build.0 = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|x86.ActiveCfg = Release|Any CPU
+		{DA1169DB-5547-4449-A847-458A2027D9A0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
