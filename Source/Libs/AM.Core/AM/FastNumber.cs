@@ -171,26 +171,6 @@ namespace AM
             return result;
         }
 
-        ///// <summary>
-        ///// Fast number parsing.
-        ///// </summary>
-        //public static int ParseInt32
-        //    (
-        //        ReadOnlySpan<char> text
-        //    )
-        //{
-        //    int result = 0;
-        //    unchecked
-        //    {
-        //        foreach (var c in text)
-        //        {
-        //            result = result * 10 + c - '0';
-        //        }
-        //    }
-
-        //    return result;
-        //}
-
         /// <summary>
         /// Fast number parsing.
         /// </summary>
@@ -203,9 +183,9 @@ namespace AM
             var span = text.Span;
             unchecked
             {
-                foreach (var c in span)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    result = result * 10 + c - '0';
+                    result = result * 10 + span[i] - '0';
                 }
             }
 
@@ -300,26 +280,6 @@ namespace AM
             return result;
         }
 
-        ///// <summary>
-        ///// Fast number parsing.
-        ///// </summary>
-        //public static long ParseInt64
-        //    (
-        //        ReadOnlySpan<char> text
-        //    )
-        //{
-        //    long result = 0;
-        //    unchecked
-        //    {
-        //        foreach (var c in text)
-        //        {
-        //            result = result * 10 + c - '0';
-        //        }
-        //    }
-
-        //    return result;
-        //}
-
         /// <summary>
         /// Fast number parsing.
         /// </summary>
@@ -332,9 +292,9 @@ namespace AM
             var span = text.Span;
             unchecked
             {
-                foreach (var c in span)
+                for (int i = 0; i < text.Length; i++)
                 {
-                    result = result * 10 + c - '0';
+                    result = result * 10 + span[i] - '0';
                 }
             }
 
