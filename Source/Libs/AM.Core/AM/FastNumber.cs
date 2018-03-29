@@ -171,25 +171,25 @@ namespace AM
             return result;
         }
 
-        /// <summary>
-        /// Fast number parsing.
-        /// </summary>
-        public static int ParseInt32
-            (
-                ReadOnlySpan<char> text
-            )
-        {
-            int result = 0;
-            unchecked
-            {
-                foreach (var c in text)
-                {
-                    result = result * 10 + c - '0';
-                }
-            }
+        ///// <summary>
+        ///// Fast number parsing.
+        ///// </summary>
+        //public static int ParseInt32
+        //    (
+        //        ReadOnlySpan<char> text
+        //    )
+        //{
+        //    int result = 0;
+        //    unchecked
+        //    {
+        //        foreach (var c in text)
+        //        {
+        //            result = result * 10 + c - '0';
+        //        }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Fast number parsing.
@@ -300,25 +300,25 @@ namespace AM
             return result;
         }
 
-        /// <summary>
-        /// Fast number parsing.
-        /// </summary>
-        public static long ParseInt64
-            (
-                ReadOnlySpan<char> text
-            )
-        {
-            long result = 0;
-            unchecked
-            {
-                foreach (var c in text)
-                {
-                    result = result * 10 + c - '0';
-                }
-            }
+        ///// <summary>
+        ///// Fast number parsing.
+        ///// </summary>
+        //public static long ParseInt64
+        //    (
+        //        ReadOnlySpan<char> text
+        //    )
+        //{
+        //    long result = 0;
+        //    unchecked
+        //    {
+        //        foreach (var c in text)
+        //        {
+        //            result = result * 10 + c - '0';
+        //        }
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Fast number parsing.

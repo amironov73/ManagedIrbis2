@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+
 using AM;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -64,20 +65,6 @@ namespace UnitTests.AM
             Assert.AreEqual(123456789, FastNumber.ParseInt32("123456789"));
         }
 
-        private void _TestSpan
-            (
-                int expected,
-                string text,
-                int offset,
-                int length
-            )
-        {
-            char[] chars = text.ToCharArray();
-            ReadOnlySpan<char> span = new ReadOnlySpan<char>(chars, offset, length);
-            int actual = FastNumber.ParseInt32(span);
-            Assert.AreEqual(expected, actual);
-        }
-
         private void _TestMemory
             (
                 int expected,
@@ -96,16 +83,16 @@ namespace UnitTests.AM
         public void FastNumber_ParseInt32_2()
         {
             string text = "123456789";
-            _TestSpan(0, "0", 0, 1);
-            _TestSpan(1, text, 0, 1);
-            _TestSpan(12, text, 0, 2);
-            _TestSpan(123, text, 0, 3);
-            _TestSpan(1234, text, 0, 4);
-            _TestSpan(12345, text, 0, 5);
-            _TestSpan(123456, text, 0, 6);
-            _TestSpan(1234567, text, 0, 7);
-            _TestSpan(12345678, text, 0, 8);
-            _TestSpan(123456789, text, 0, 9);
+            _TestMemory(0, "0", 0, 1);
+            _TestMemory(1, text, 0, 1);
+            _TestMemory(12, text, 0, 2);
+            _TestMemory(123, text, 0, 3);
+            _TestMemory(1234, text, 0, 4);
+            _TestMemory(12345, text, 0, 5);
+            _TestMemory(123456, text, 0, 6);
+            _TestMemory(1234567, text, 0, 7);
+            _TestMemory(12345678, text, 0, 8);
+            _TestMemory(123456789, text, 0, 9);
         }
 
         [TestMethod]
@@ -181,20 +168,6 @@ namespace UnitTests.AM
             Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64("1234567890123456789"));
         }
 
-        private void _TestSpan
-            (
-                long expected,
-                string text,
-                int offset,
-                int length
-            )
-        {
-            char[] chars = text.ToCharArray();
-            ReadOnlySpan<char> span = new ReadOnlySpan<char>(chars, offset, length);
-            long actual = FastNumber.ParseInt64(span);
-            Assert.AreEqual(expected, actual);
-        }
-
         private void _TestMemory
             (
                 long expected,
@@ -213,26 +186,26 @@ namespace UnitTests.AM
         public void FastNumber_ParseInt64_2()
         {
             string text = "1234567890123456789";
-            _TestSpan(0L, "0", 0, 1);
-            _TestSpan(1L, text, 0, 1);
-            _TestSpan(12L, text, 0, 2);
-            _TestSpan(123L, text, 0, 3);
-            _TestSpan(1234L, text, 0, 4);
-            _TestSpan(12345L, text, 0, 5);
-            _TestSpan(123456L, text, 0, 6);
-            _TestSpan(1234567L, text, 0, 7);
-            _TestSpan(12345678L, text, 0, 8);
-            _TestSpan(123456789L, text, 0, 9);
-            _TestSpan(1234567890L, text, 0, 10);
-            _TestSpan(12345678901L, text, 0, 11);
-            _TestSpan(123456789012L, text, 0, 12);
-            _TestSpan(1234567890123L, text, 0, 13);
-            _TestSpan(12345678901234L, text, 0, 14);
-            _TestSpan(123456789012345L, text, 0, 15);
-            _TestSpan(1234567890123456L, text, 0, 16);
-            _TestSpan(12345678901234567L, text, 0, 17);
-            _TestSpan(123456789012345678L, text, 0, 18);
-            _TestSpan(1234567890123456789L, text, 0, 19);
+            _TestMemory(0L, "0", 0, 1);
+            _TestMemory(1L, text, 0, 1);
+            _TestMemory(12L, text, 0, 2);
+            _TestMemory(123L, text, 0, 3);
+            _TestMemory(1234L, text, 0, 4);
+            _TestMemory(12345L, text, 0, 5);
+            _TestMemory(123456L, text, 0, 6);
+            _TestMemory(1234567L, text, 0, 7);
+            _TestMemory(12345678L, text, 0, 8);
+            _TestMemory(123456789L, text, 0, 9);
+            _TestMemory(1234567890L, text, 0, 10);
+            _TestMemory(12345678901L, text, 0, 11);
+            _TestMemory(123456789012L, text, 0, 12);
+            _TestMemory(1234567890123L, text, 0, 13);
+            _TestMemory(12345678901234L, text, 0, 14);
+            _TestMemory(123456789012345L, text, 0, 15);
+            _TestMemory(1234567890123456L, text, 0, 16);
+            _TestMemory(12345678901234567L, text, 0, 17);
+            _TestMemory(123456789012345678L, text, 0, 18);
+            _TestMemory(1234567890123456789L, text, 0, 19);
         }
 
         [TestMethod]
