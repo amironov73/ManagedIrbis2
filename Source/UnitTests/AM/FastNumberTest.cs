@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-
 using AM;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -66,6 +64,98 @@ namespace UnitTests.AM
             Assert.AreEqual(123456789, FastNumber.ParseInt32("123456789"));
         }
 
+        private void _TestSpan
+            (
+                int expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            char[] chars = text.ToCharArray();
+            ReadOnlySpan<char> span = new ReadOnlySpan<char>(chars, offset, length);
+            int actual = FastNumber.ParseInt32(span);
+            Assert.AreEqual(expected, actual);
+        }
+
+        private void _TestMemory
+            (
+                int expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            char[] chars = text.ToCharArray();
+            ReadOnlyMemory<char> memory = new ReadOnlyMemory<char>(chars, offset, length);
+            int actual = FastNumber.ParseInt32(memory);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_2()
+        {
+            string text = "123456789";
+            _TestSpan(0, "0", 0, 1);
+            _TestSpan(1, text, 0, 1);
+            _TestSpan(12, text, 0, 2);
+            _TestSpan(123, text, 0, 3);
+            _TestSpan(1234, text, 0, 4);
+            _TestSpan(12345, text, 0, 5);
+            _TestSpan(123456, text, 0, 6);
+            _TestSpan(1234567, text, 0, 7);
+            _TestSpan(12345678, text, 0, 8);
+            _TestSpan(123456789, text, 0, 9);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_3()
+        {
+            string text = "123456789";
+            Assert.AreEqual(0, FastNumber.ParseInt32("0", 0, 1));
+            Assert.AreEqual(1, FastNumber.ParseInt32(text, 0, 1));
+            Assert.AreEqual(12, FastNumber.ParseInt32(text, 0, 2));
+            Assert.AreEqual(123, FastNumber.ParseInt32(text, 0, 3));
+            Assert.AreEqual(1234, FastNumber.ParseInt32(text, 0, 4));
+            Assert.AreEqual(12345, FastNumber.ParseInt32(text, 0, 5));
+            Assert.AreEqual(123456, FastNumber.ParseInt32(text, 0, 6));
+            Assert.AreEqual(1234567, FastNumber.ParseInt32(text, 0, 7));
+            Assert.AreEqual(12345678, FastNumber.ParseInt32(text, 0, 8));
+            Assert.AreEqual(123456789, FastNumber.ParseInt32(text, 0, 9));
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_4()
+        {
+            char[] text = "123456789".ToCharArray();
+            Assert.AreEqual(0, FastNumber.ParseInt32("0".ToCharArray(), 0, 1));
+            Assert.AreEqual(1, FastNumber.ParseInt32(text, 0, 1));
+            Assert.AreEqual(12, FastNumber.ParseInt32(text, 0, 2));
+            Assert.AreEqual(123, FastNumber.ParseInt32(text, 0, 3));
+            Assert.AreEqual(1234, FastNumber.ParseInt32(text, 0, 4));
+            Assert.AreEqual(12345, FastNumber.ParseInt32(text, 0, 5));
+            Assert.AreEqual(123456, FastNumber.ParseInt32(text, 0, 6));
+            Assert.AreEqual(1234567, FastNumber.ParseInt32(text, 0, 7));
+            Assert.AreEqual(12345678, FastNumber.ParseInt32(text, 0, 8));
+            Assert.AreEqual(123456789, FastNumber.ParseInt32(text, 0, 9));
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_5()
+        {
+            byte[] text = Encoding.ASCII.GetBytes("123456789");
+            Assert.AreEqual(0, FastNumber.ParseInt32(new byte[] { 0x30 }, 0, 1));
+            Assert.AreEqual(1, FastNumber.ParseInt32(text, 0, 1));
+            Assert.AreEqual(12, FastNumber.ParseInt32(text, 0, 2));
+            Assert.AreEqual(123, FastNumber.ParseInt32(text, 0, 3));
+            Assert.AreEqual(1234, FastNumber.ParseInt32(text, 0, 4));
+            Assert.AreEqual(12345, FastNumber.ParseInt32(text, 0, 5));
+            Assert.AreEqual(123456, FastNumber.ParseInt32(text, 0, 6));
+            Assert.AreEqual(1234567, FastNumber.ParseInt32(text, 0, 7));
+            Assert.AreEqual(12345678, FastNumber.ParseInt32(text, 0, 8));
+            Assert.AreEqual(123456789, FastNumber.ParseInt32(text, 0, 9));
+        }
+
         [TestMethod]
         public void FastNumber_ParseInt64_1()
         {
@@ -89,6 +179,138 @@ namespace UnitTests.AM
             Assert.AreEqual(12345678901234567L, FastNumber.ParseInt64("12345678901234567"));
             Assert.AreEqual(123456789012345678L, FastNumber.ParseInt64("123456789012345678"));
             Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64("1234567890123456789"));
+        }
+
+        private void _TestSpan
+            (
+                long expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            char[] chars = text.ToCharArray();
+            ReadOnlySpan<char> span = new ReadOnlySpan<char>(chars, offset, length);
+            long actual = FastNumber.ParseInt64(span);
+            Assert.AreEqual(expected, actual);
+        }
+
+        private void _TestMemory
+            (
+                long expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            char[] chars = text.ToCharArray();
+            ReadOnlyMemory<char> memory = new ReadOnlyMemory<char>(chars, offset, length);
+            long actual = FastNumber.ParseInt64(memory);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt64_2()
+        {
+            string text = "1234567890123456789";
+            _TestSpan(0L, "0", 0, 1);
+            _TestSpan(1L, text, 0, 1);
+            _TestSpan(12L, text, 0, 2);
+            _TestSpan(123L, text, 0, 3);
+            _TestSpan(1234L, text, 0, 4);
+            _TestSpan(12345L, text, 0, 5);
+            _TestSpan(123456L, text, 0, 6);
+            _TestSpan(1234567L, text, 0, 7);
+            _TestSpan(12345678L, text, 0, 8);
+            _TestSpan(123456789L, text, 0, 9);
+            _TestSpan(1234567890L, text, 0, 10);
+            _TestSpan(12345678901L, text, 0, 11);
+            _TestSpan(123456789012L, text, 0, 12);
+            _TestSpan(1234567890123L, text, 0, 13);
+            _TestSpan(12345678901234L, text, 0, 14);
+            _TestSpan(123456789012345L, text, 0, 15);
+            _TestSpan(1234567890123456L, text, 0, 16);
+            _TestSpan(12345678901234567L, text, 0, 17);
+            _TestSpan(123456789012345678L, text, 0, 18);
+            _TestSpan(1234567890123456789L, text, 0, 19);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt64_3()
+        {
+            string text = "1234567890123456789";
+            Assert.AreEqual(0L, FastNumber.ParseInt64("0", 0, 1));
+            Assert.AreEqual(1L, FastNumber.ParseInt64(text, 0, 1));
+            Assert.AreEqual(12L, FastNumber.ParseInt64(text, 0, 2));
+            Assert.AreEqual(123L, FastNumber.ParseInt64(text, 0, 3));
+            Assert.AreEqual(1234L, FastNumber.ParseInt64(text, 0, 4));
+            Assert.AreEqual(12345L, FastNumber.ParseInt64(text, 0, 5));
+            Assert.AreEqual(123456L, FastNumber.ParseInt64(text, 0, 6));
+            Assert.AreEqual(1234567L, FastNumber.ParseInt64(text, 0, 7));
+            Assert.AreEqual(12345678L, FastNumber.ParseInt64(text, 0, 8));
+            Assert.AreEqual(123456789L, FastNumber.ParseInt64(text, 0, 9));
+            Assert.AreEqual(1234567890L, FastNumber.ParseInt64(text, 0, 10));
+            Assert.AreEqual(12345678901L, FastNumber.ParseInt64(text, 0, 11));
+            Assert.AreEqual(123456789012L, FastNumber.ParseInt64(text, 0, 12));
+            Assert.AreEqual(1234567890123L, FastNumber.ParseInt64(text, 0, 13));
+            Assert.AreEqual(12345678901234L, FastNumber.ParseInt64(text, 0, 14));
+            Assert.AreEqual(123456789012345L, FastNumber.ParseInt64(text, 0, 15));
+            Assert.AreEqual(1234567890123456L, FastNumber.ParseInt64(text, 0, 16));
+            Assert.AreEqual(12345678901234567L, FastNumber.ParseInt64(text, 0, 17));
+            Assert.AreEqual(123456789012345678L, FastNumber.ParseInt64(text, 0, 18));
+            Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64(text, 0, 19));
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt64_4()
+        {
+            char[] text = "1234567890123456789".ToCharArray();
+            Assert.AreEqual(0L, FastNumber.ParseInt64("0".ToCharArray(), 0, 1));
+            Assert.AreEqual(1L, FastNumber.ParseInt64(text, 0, 1));
+            Assert.AreEqual(12L, FastNumber.ParseInt64(text, 0, 2));
+            Assert.AreEqual(123L, FastNumber.ParseInt64(text, 0, 3));
+            Assert.AreEqual(1234L, FastNumber.ParseInt64(text, 0, 4));
+            Assert.AreEqual(12345L, FastNumber.ParseInt64(text, 0, 5));
+            Assert.AreEqual(123456L, FastNumber.ParseInt64(text, 0, 6));
+            Assert.AreEqual(1234567L, FastNumber.ParseInt64(text, 0, 7));
+            Assert.AreEqual(12345678L, FastNumber.ParseInt64(text, 0, 8));
+            Assert.AreEqual(123456789L, FastNumber.ParseInt64(text, 0, 9));
+            Assert.AreEqual(1234567890L, FastNumber.ParseInt64(text, 0, 10));
+            Assert.AreEqual(12345678901L, FastNumber.ParseInt64(text, 0, 11));
+            Assert.AreEqual(123456789012L, FastNumber.ParseInt64(text, 0, 12));
+            Assert.AreEqual(1234567890123L, FastNumber.ParseInt64(text, 0, 13));
+            Assert.AreEqual(12345678901234L, FastNumber.ParseInt64(text, 0, 14));
+            Assert.AreEqual(123456789012345L, FastNumber.ParseInt64(text, 0, 15));
+            Assert.AreEqual(1234567890123456L, FastNumber.ParseInt64(text, 0, 16));
+            Assert.AreEqual(12345678901234567L, FastNumber.ParseInt64(text, 0, 17));
+            Assert.AreEqual(123456789012345678L, FastNumber.ParseInt64(text, 0, 18));
+            Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64(text, 0, 19));
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt64_5()
+        {
+            byte[] text = Encoding.ASCII.GetBytes("1234567890123456789");
+            Assert.AreEqual(0L, FastNumber.ParseInt64(new byte[] { 0x30 }, 0, 1));
+            Assert.AreEqual(1L, FastNumber.ParseInt64(text, 0, 1));
+            Assert.AreEqual(12L, FastNumber.ParseInt64(text, 0, 2));
+            Assert.AreEqual(123L, FastNumber.ParseInt64(text, 0, 3));
+            Assert.AreEqual(1234L, FastNumber.ParseInt64(text, 0, 4));
+            Assert.AreEqual(12345L, FastNumber.ParseInt64(text, 0, 5));
+            Assert.AreEqual(123456L, FastNumber.ParseInt64(text, 0, 6));
+            Assert.AreEqual(1234567L, FastNumber.ParseInt64(text, 0, 7));
+            Assert.AreEqual(12345678L, FastNumber.ParseInt64(text, 0, 8));
+            Assert.AreEqual(123456789L, FastNumber.ParseInt64(text, 0, 9));
+            Assert.AreEqual(1234567890L, FastNumber.ParseInt64(text, 0, 10));
+            Assert.AreEqual(12345678901L, FastNumber.ParseInt64(text, 0, 11));
+            Assert.AreEqual(123456789012L, FastNumber.ParseInt64(text, 0, 12));
+            Assert.AreEqual(1234567890123L, FastNumber.ParseInt64(text, 0, 13));
+            Assert.AreEqual(12345678901234L, FastNumber.ParseInt64(text, 0, 14));
+            Assert.AreEqual(123456789012345L, FastNumber.ParseInt64(text, 0, 15));
+            Assert.AreEqual(1234567890123456L, FastNumber.ParseInt64(text, 0, 16));
+            Assert.AreEqual(12345678901234567L, FastNumber.ParseInt64(text, 0, 17));
+            Assert.AreEqual(123456789012345678L, FastNumber.ParseInt64(text, 0, 18));
+            Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64(text, 0, 19));
         }
     }
 }

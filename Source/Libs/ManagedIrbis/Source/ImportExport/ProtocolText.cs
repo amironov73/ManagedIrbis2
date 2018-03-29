@@ -176,7 +176,7 @@ namespace ManagedIrbis.ImportExport
 
             RecordField result = new RecordField
             {
-                Tag = NumericUtility.ParseInt32(_ReadTo(reader, '#')),
+                Tag = FastNumber.ParseInt32(_ReadTo(reader, '#')),
                 Value = _ReadTo(reader, '^').EmptyToNull()
             };
 
@@ -217,18 +217,15 @@ namespace ManagedIrbis.ImportExport
 
             Regex regex = new Regex(@"^(-?\d+)\#(\d*)?");
             Match match = regex.Match(line1);
-            record.Mfn = Math.Abs(int.Parse(match.Groups[1].Value));
+            record.Mfn = Math.Abs(FastNumber.ParseInt32(match.Groups[1].Value));
             if (match.Groups[2].Length > 0)
             {
-                record.Status = (RecordStatus)int.Parse
-                    (
-                        match.Groups[2].Value
-                    );
+                record.Status = (RecordStatus) FastNumber.ParseInt32(match.Groups[2].Value);
             }
             match = regex.Match(line2);
             if (match.Groups[2].Length > 0)
             {
-                record.Version = int.Parse(match.Groups[2].Value);
+                record.Version = FastNumber.ParseInt32(match.Groups[2].Value);
             }
 
             return record;

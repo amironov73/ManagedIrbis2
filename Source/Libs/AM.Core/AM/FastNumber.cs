@@ -10,8 +10,6 @@
 #region Using directives
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using JetBrains.Annotations;
 
@@ -26,6 +24,8 @@ namespace AM
     public static class FastNumber
     {
         #region Public methods
+
+        // ==========================================================
 
         /// <summary>
         /// Convert integer to string.
@@ -54,6 +54,8 @@ namespace AM
             return new string(buffer, offset + 1, 9 - offset);
         }
 
+        // ==========================================================
+
         /// <summary>
         /// Convert integer to string.
         /// </summary>
@@ -81,6 +83,8 @@ namespace AM
             return new string(buffer, offset + 1, 19 - offset);
         }
 
+        // ==========================================================
+
         /// <summary>
         /// Fast number parsing.
         /// </summary>
@@ -104,6 +108,115 @@ namespace AM
         /// <summary>
         /// Fast number parsing.
         /// </summary>
+        public static int ParseInt32
+            (
+                [NotNull] string text,
+                int offset,
+                int length
+            )
+        {
+            int result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static int ParseInt32
+            (
+                [NotNull] char[] text,
+                int offset,
+                int length
+            )
+        {
+            int result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static int ParseInt32
+            (
+                [NotNull] byte[] text,
+                int offset,
+                int length
+            )
+        {
+            int result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static int ParseInt32
+            (
+                ReadOnlySpan<char> text
+            )
+        {
+            int result = 0;
+            unchecked
+            {
+                foreach (var c in text)
+                {
+                    result = result * 10 + c - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static int ParseInt32
+            (
+                ReadOnlyMemory<char> text
+            )
+        {
+            int result = 0;
+            var span = text.Span;
+            unchecked
+            {
+                foreach (var c in span)
+                {
+                    result = result * 10 + c - '0';
+                }
+            }
+
+            return result;
+        }
+
+        // ==========================================================
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
         public static long ParseInt64
             (
                 [NotNull] string text
@@ -120,6 +233,115 @@ namespace AM
 
             return result;
         }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                [NotNull] string text,
+                int offset,
+                int length
+            )
+        {
+            long result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                [NotNull] char[] text,
+                int offset,
+                int length
+            )
+        {
+            long result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                [NotNull] byte[] text,
+                int offset,
+                int length
+            )
+        {
+            long result = 0;
+            unchecked
+            {
+                for (; length > 0; length--, offset++)
+                {
+                    result = result * 10 + text[offset] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                ReadOnlySpan<char> text
+            )
+        {
+            long result = 0;
+            unchecked
+            {
+                foreach (var c in text)
+                {
+                    result = result * 10 + c - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                ReadOnlyMemory<char> text
+            )
+        {
+            long result = 0;
+            var span = text.Span;
+            unchecked
+            {
+                foreach (var c in span)
+                {
+                    result = result * 10 + c - '0';
+                }
+            }
+
+            return result;
+        }
+
+        // ==========================================================
 
         #endregion
     }
