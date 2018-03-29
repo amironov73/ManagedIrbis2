@@ -40,7 +40,6 @@
 
   <ItemGroup>
     <Compile Include="..\..\Common\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
-    <Folder Include="Source\" />
     <Folder Include="Properties\" />
   </ItemGroup>
 

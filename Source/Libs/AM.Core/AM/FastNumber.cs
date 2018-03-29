@@ -192,6 +192,27 @@ namespace AM
             return result;
         }
 
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static int ParseInt32
+            (
+                ReadOnlyMemory<byte> text
+            )
+        {
+            int result = 0;
+            var span = text.Span;
+            unchecked
+            {
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result = result * 10 + span[i] - '0';
+                }
+            }
+
+            return result;
+        }
+
         // ==========================================================
 
         /// <summary>
@@ -286,6 +307,27 @@ namespace AM
         public static long ParseInt64
             (
                 ReadOnlyMemory<char> text
+            )
+        {
+            long result = 0;
+            var span = text.Span;
+            unchecked
+            {
+                for (int i = 0; i < text.Length; i++)
+                {
+                    result = result * 10 + span[i] - '0';
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        public static long ParseInt64
+            (
+                ReadOnlyMemory<byte> text
             )
         {
             long result = 0;
