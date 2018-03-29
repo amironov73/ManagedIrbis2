@@ -88,7 +88,7 @@ namespace UnitTests.ManagedIrbis.Menus
         public void ReturnMnu_Item_1()
         {
             DateTime date = new DateTime(2018, 3, 29);
-            string comment = "Какая-то дата";
+            string comment = "Some date";
             ReturnMnu.Item item = new ReturnMnu.Item
             {
                 Date = date,
@@ -96,7 +96,7 @@ namespace UnitTests.ManagedIrbis.Menus
             };
             Assert.AreEqual(date, item.Date);
             Assert.AreEqual(comment, item.Comment);
-            Assert.AreEqual("29.03.2018 Какая-то дата", item.ToString());
+            Assert.AreEqual("29.03.2018 Some date", item.ToString());
         }
     }
 }

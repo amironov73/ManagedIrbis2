@@ -104,7 +104,7 @@ namespace ManagedIrbis.Menus
             /// <inheritdoc cref="object.ToString" />
             public override string ToString()
             {
-                return $"{Date.ToShortDateString()} {Comment}";
+                return $"{Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)} {Comment}";
             }
 
             #endregion
