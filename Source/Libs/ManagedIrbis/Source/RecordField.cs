@@ -173,6 +173,13 @@ namespace ManagedIrbis
         [JsonIgnore]
         public bool IsFixed => Tag > 0 && Tag < 10;
 
+        /// <summary>
+        /// Пустое ли поле?
+        /// </summary>
+        [XmlIgnore]
+        [JsonIgnore]
+        public bool IsEmpty => string.IsNullOrEmpty(Value) && SubFields.Count == 0;
+
         #endregion
 
         #region Construction
