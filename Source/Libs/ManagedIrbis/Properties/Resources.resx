@@ -118,4 +118,22 @@
   <data name="SmartRead_EmptyResponse" xml:space="preserve">
     <value>: empty response</value>
   </data>
+  <data name="ConnectionCreatorNotSet" xml:space="preserve">
+    <value>ConnectionCreator not set</value>
+  </data>
+  <data name="FieldTag_Verify_BadTag1" xml:space="preserve">
+    <value>: bad tag=</value>
+  </data>
+  <data name="FieldTag_Verify_BadTag2" xml:space="preserve">
+    <value>bad tag=</value>
+  </data>
+  <data name="FieldValue_Verify_BadValue" xml:space="preserve">
+    <value>: bad value=</value>
+  </data>
+  <data name="FieldValue_Verify_BadFieldValue" xml:space="preserve">
+    <value>Bad Field.Value: </value>
+  </data>
+  <data name="IrbisEncoding_NotSingleByteEncoding" xml:space="preserve">
+    <value>: not single-byte encoding</value>
+  </data>
 </root>

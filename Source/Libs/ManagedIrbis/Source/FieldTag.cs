@@ -18,6 +18,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis
@@ -112,8 +114,8 @@ namespace ManagedIrbis
             {
                 Log.Error
                     (
-                        "FieldTag::Verify: "
-                        + "bad tag="
+                        nameof(FieldTag) + "::" + nameof(Verify)
+                        + Resources.FieldTag_Verify_BadTag1
                         + tag.ToVisibleString()
                     );
 
@@ -121,7 +123,7 @@ namespace ManagedIrbis
                 {
                     throw new VerificationException
                         (
-                            "bad tag="
+                            Resources.FieldTag_Verify_BadTag2
                             + tag.ToVisibleString()
                         );
                 }
@@ -145,8 +147,8 @@ namespace ManagedIrbis
             {
                 Log.Error
                     (
-                        "FieldTag::Verify: "
-                        + "bad tag="
+                        nameof(FieldTag) + "::" + nameof(Verify)
+                        + Resources.FieldTag_Verify_BadTag1
                         + tag.ToInvariantString()
                     );
 
@@ -154,7 +156,7 @@ namespace ManagedIrbis
                 {
                     throw new VerificationException
                     (
-                        "bad tag="
+                        Resources.FieldTag_Verify_BadTag2
                         + tag.ToInvariantString()
                     );
                 }
@@ -171,11 +173,7 @@ namespace ManagedIrbis
                 int tag
             )
         {
-            return Verify
-                (
-                    tag,
-                    ThrowOnValidate
-                );
+            return Verify(tag, ThrowOnValidate);
         }
 
         /// <summary>
@@ -186,11 +184,7 @@ namespace ManagedIrbis
                 [CanBeNull] string tag
             )
         {
-            return Verify
-                (
-                    tag,
-                    ThrowOnValidate
-                );
+            return Verify(tag, ThrowOnValidate);
         }
 
         #endregion

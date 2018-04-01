@@ -17,6 +17,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis
@@ -27,10 +29,6 @@ namespace ManagedIrbis
     [PublicAPI]
     public static class FieldValue
     {
-        #region Constants
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -38,10 +36,6 @@ namespace ManagedIrbis
         /// </summary>
         [ExcludeFromCodeCoverage]
         public static bool ThrowOnVerify { get; set; }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -114,8 +108,8 @@ namespace ManagedIrbis
             {
                 Log.Error
                     (
-                        "FieldValue::Verify: "
-                        + "bad value="
+                        nameof(FieldValue) + "::" + nameof(Verify)
+                        + Resources.FieldValue_Verify_BadValue
                         + value.ToVisibleString()
                     );
 
@@ -123,7 +117,7 @@ namespace ManagedIrbis
                 {
                     throw new VerificationException
                         (
-                            "Bad Field.Value: "
+                            Resources.FieldValue_Verify_BadFieldValue
                             + value.ToVisibleString()
                         );
                 }

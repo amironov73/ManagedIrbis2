@@ -238,9 +238,9 @@ namespace ManagedIrbis
 
         private static void _Add
             (
-                List<Parameter> list,
-                string name,
-                string value
+                [NotNull] List<Parameter> list,
+                [NotNull] string name,
+                [CanBeNull] string value
             )
         {
             if (!string.IsNullOrEmpty(value))
@@ -250,10 +250,11 @@ namespace ManagedIrbis
             }
         }
 
+        [CanBeNull]
         private static string _Select
             (
-                string first,
-                string second
+                [CanBeNull] string first,
+                [CanBeNull] string second
             )
         {
             return string.IsNullOrEmpty(first)
@@ -293,8 +294,8 @@ namespace ManagedIrbis
             connection.Database = _Select(Database, connection.Database);
             connection.Workstation = (IrbisWorkstation)_Select
                 (
-                    (int)Workstation,
-                    (int)connection.Workstation
+                    first: (int)Workstation,
+                    second: (int)connection.Workstation
                 );
 
             if (!ReferenceEquals(EngineTypeName, null) && EngineTypeName.Length != 0)
@@ -306,8 +307,8 @@ namespace ManagedIrbis
             {
                 ClientSocketUtility.CreateSocket
                     (
-                        connection,
-                        SocketTypeName
+                        connection: connection,
+                        typeName: SocketTypeName
                     );
             }
 
@@ -331,8 +332,8 @@ namespace ManagedIrbis
             {
                 SlowSocket slowSocket = new SlowSocket
                     (
-                        connection,
-                        connection.Socket
+                        connection: connection,
+                        innerSocket: connection.Socket
                     );
                 if (NumericUtility.TryParseInt32(Slow, out int delay) && delay > 0)
                 {
@@ -345,11 +346,11 @@ namespace ManagedIrbis
             {
                 BrokenSocket brokenSocket = new BrokenSocket
                     (
-                        connection,
-                        connection.Socket
+                        connection: connection,
+                        innerSocket: connection.Socket
                     );
-                double probability;
-                if (NumericUtility.TryParseDouble(Broken, out probability)
+
+                if (NumericUtility.TryParseDouble(Broken, out double probability)
                     && probability > 0.0
                     && probability < 1.0)
                 {
@@ -757,14 +758,14 @@ namespace ManagedIrbis
                 = new Verifier<ConnectionSettings>(this, throwOnError);
 
             verifier
-                .NotNullNorEmpty(Host, "Host")
-                .Assert(Port > 0 && Port < 0x10000, "Port")
-                .NotNullNorEmpty(Username, "Username")
-                .NotNullNorEmpty(Password, "Password")
+                .NotNullNorEmpty(Host, nameof(Host))
+                .Assert(Port > 0 && Port < 0x10000, nameof(Port))
+                .NotNullNorEmpty(Username, nameof(Username))
+                .NotNullNorEmpty(Password, nameof(Password))
                 .Assert
                     (
                         Workstation != IrbisWorkstation.None,
-                        "Workstation"
+                        nameof(Workstation)
                     );
 
             return verifier.Result;

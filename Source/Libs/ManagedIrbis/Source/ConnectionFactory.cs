@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ConnectionFactory.cs -- 
+/* ConnectionFactory.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -16,12 +16,14 @@ using AM;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class ConnectionFactory
@@ -59,11 +61,11 @@ namespace ManagedIrbis
                 [NotNull] string connectionString
             )
         {
-            Sure.NotNull(connectionString, "connectionString");
+            Sure.NotNull(connectionString, nameof(connectionString));
 
             if (ReferenceEquals(ConnectionCreator, null))
             {
-                throw new IrbisException("ConnectionCreator not set");
+                throw new IrbisException(Resources.ConnectionCreatorNotSet);
             }
             IIrbisConnection result = ConnectionCreator(connectionString);
 
@@ -89,7 +91,7 @@ namespace ManagedIrbis
                 [NotNull] string connectionString
             )
         {
-            Sure.NotNull(connectionString, "connectionString");
+            Sure.NotNull(connectionString, nameof(connectionString));
 
             IIrbisConnection result = new IrbisConnection(connectionString);
 

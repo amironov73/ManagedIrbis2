@@ -118,4 +118,22 @@
   <data name="CantResolveHost" xml:space="preserve">
     <value>Невозможно разрешить сетевой адрес</value>
   </data>
+  <data name="ConnectionCreatorNotSet" xml:space="preserve">
+    <value>Не назначен ConnectionCreator</value>
+  </data>
+  <data name="FieldTag_Verify_BadTag1" xml:space="preserve">
+    <value>: неверная метка поля=</value>
+  </data>
+  <data name="FieldValue_Verify_BadValue" xml:space="preserve">
+    <value>: неверное значение поля=</value>
+  </data>
+  <data name="IrbisEncoding_NotSingleByteEncoding" xml:space="preserve">
+    <value>: ожидается однобайтовая кодировка</value>
+  </data>
+  <data name="FieldValue_Verify_BadFieldValue" xml:space="preserve">
+    <value>Неверное значение поля</value>
+  </data>
+  <data name="FieldTag_Verify_BadTag2" xml:space="preserve">
+    <value>Неверная метка поля=</value>
+  </data>
 </root>

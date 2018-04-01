@@ -19,6 +19,8 @@ using AM.Text;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 using CM=System.Configuration.ConfigurationManager;
 
 #endregion
@@ -62,8 +64,8 @@ namespace ManagedIrbis
             _oem = Encoding.GetEncoding(866);
             _utf8 = new UTF8Encoding
                 (
-                    false, // don't emit UTF-8 prefix
-                    true   // throw on invalid bytes
+                    encoderShouldEmitUTF8Identifier: false,
+                    throwOnInvalidBytes: true
                 );
         }
 
@@ -141,8 +143,8 @@ namespace ManagedIrbis
         {
             _utf8 = new UTF8Encoding
                 (
-                    false, // don't emit UTF-8 prefix,
-                    false  // don't throw on invalid bytes
+                    encoderShouldEmitUTF8Identifier: false,
+                    throwOnInvalidBytes: false
                 );
         }
 
@@ -154,8 +156,8 @@ namespace ManagedIrbis
         {
             _utf8 = new UTF8Encoding
                 (
-                    false, // don't emit UTF-8 prefix,
-                    true   // throw on invalid bytes
+                    encoderShouldEmitUTF8Identifier: false,
+                    throwOnInvalidBytes: true
                 );
         }
 
@@ -174,7 +176,7 @@ namespace ManagedIrbis
                 Log.Error
                     (
                         nameof(IrbisEncoding) + "::" + nameof(SetAnsiEncoding)
-                        + ": not single-byte encoding"
+                        + Resources.IrbisEncoding_NotSingleByteEncoding
                     );
 
                 throw new ArgumentOutOfRangeException(nameof(encoding));
@@ -198,7 +200,7 @@ namespace ManagedIrbis
                 Log.Error
                     (
                         nameof(IrbisEncoding) + "::" + nameof(SetOemEncoding)
-                        + ": not single-byte encoding"
+                        + Resources.IrbisEncoding_NotSingleByteEncoding
                     );
 
                 throw new ArgumentOutOfRangeException(nameof(encoding));

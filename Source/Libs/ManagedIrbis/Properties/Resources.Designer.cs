@@ -88,11 +88,65 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ConnectionCreator not set.
+        /// </summary>
+        internal static string ConnectionCreatorNotSet {
+            get {
+                return ResourceManager.GetString("ConnectionCreatorNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty response.
         /// </summary>
         internal static string EmptyResponse {
             get {
                 return ResourceManager.GetString("EmptyResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : bad tag=.
+        /// </summary>
+        internal static string FieldTag_Verify_BadTag1 {
+            get {
+                return ResourceManager.GetString("FieldTag_Verify_BadTag1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bad tag=.
+        /// </summary>
+        internal static string FieldTag_Verify_BadTag2 {
+            get {
+                return ResourceManager.GetString("FieldTag_Verify_BadTag2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad Field.Value: .
+        /// </summary>
+        internal static string FieldValue_Verify_BadFieldValue {
+            get {
+                return ResourceManager.GetString("FieldValue_Verify_BadFieldValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : bad value=.
+        /// </summary>
+        internal static string FieldValue_Verify_BadValue {
+            get {
+                return ResourceManager.GetString("FieldValue_Verify_BadValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : not single-byte encoding.
+        /// </summary>
+        internal static string IrbisEncoding_NotSingleByteEncoding {
+            get {
+                return ResourceManager.GetString("IrbisEncoding_NotSingleByteEncoding", resourceCulture);
             }
         }
         

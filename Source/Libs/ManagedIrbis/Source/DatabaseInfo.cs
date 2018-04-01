@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -37,7 +38,7 @@ namespace ManagedIrbis
     /// Информация о базе данных ИРБИС
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{Name} {Description}")]
+    [DebuggerDisplay("{" + nameof(Name) + "} {" + nameof(Description) + "}")]
     public sealed class DatabaseInfo
         : IHandmadeSerializable
     {
@@ -129,23 +130,20 @@ namespace ManagedIrbis
 
         #region Private members
 
+        [NotNull]
         private static int[] _ParseLine
             (
-                string text
+                [CanBeNull] string text
             )
         {
-            if (string.IsNullOrEmpty(text))
+            if (ReferenceEquals(text, null) || text.Length == 0)
             {
-                return new int[0];
+                return Array.Empty<int>();
             }
 
             string[] items = text.Split(ItemDelimiter);
-            int[] result = items
-                // ReSharper disable once ConvertClosureToMethodGroup
-                // Due to .NET 3.5
-                .Select(_ => int.Parse(_))
-                .OrderBy(_ => _)
-                .ToArray();
+            int[] result = items.Select(FastNumber.ParseInt32).ToArray();
+            Array.Sort(result);
 
             return result;
         }
@@ -371,19 +369,15 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Name = reader.ReadNullableString();
             Description = reader.ReadNullableString();
             MaxMfn = reader.ReadPackedInt32();
-            LogicallyDeletedRecords
-                = reader.ReadNullableInt32Array();
-            PhysicallyDeletedRecords
-                = reader.ReadNullableInt32Array();
-            NonActualizedRecords
-                = reader.ReadNullableInt32Array();
-            LockedRecords
-                = reader.ReadNullableInt32Array();
+            LogicallyDeletedRecords = reader.ReadNullableInt32Array();
+            PhysicallyDeletedRecords = reader.ReadNullableInt32Array();
+            NonActualizedRecords = reader.ReadNullableInt32Array();
+            LockedRecords = reader.ReadNullableInt32Array();
             DatabaseLocked = reader.ReadBoolean();
         }
 
@@ -393,7 +387,7 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WriteNullable(Name)
@@ -418,12 +412,7 @@ namespace ManagedIrbis
                 return Name.ToVisibleString();
             }
 
-            return string.Format
-                (
-                    "{0} - {1}",
-                    Name,
-                    Description
-                );
+            return $"{Name} - {Description}";
         }
 
         #endregion
