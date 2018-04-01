@@ -15,12 +15,15 @@ using AM;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Sockets
 {
     /// <summary>
-    /// 
+    /// Сокет, время от времени выдающий ошибку связи
+    /// (для тестирования).
     /// </summary>
     [PublicAPI]
     public sealed class BrokenSocket
@@ -29,7 +32,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         #region Constants
 
         /// <summary>
-        /// Default value for
+        /// Default value for <see cref="Probability"/> property.
         /// </summary>
         public const double DefaultProbability = 0.07;
 
@@ -73,10 +76,6 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region Public methods
-
-        #endregion
-
         #region AbstractClientSocket members
 
         /// <inheritdoc cref="AbstractClientSocket.AbortRequest"/>
@@ -100,10 +99,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 double value = _random.NextDouble();
                 if (value < probability)
                 {
-                    throw new IrbisNetworkException
-                        (
-                            "Broken network event"
-                        );
+                    throw new IrbisNetworkException(Resources.BrokenNetworkEvent);
                 }
             }
 

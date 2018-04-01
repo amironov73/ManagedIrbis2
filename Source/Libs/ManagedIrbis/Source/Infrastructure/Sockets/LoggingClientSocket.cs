@@ -86,23 +86,14 @@ namespace ManagedIrbis.Infrastructure.Sockets
             string path = Path.Combine
                 (
                     DebugPath,
-                    string.Format
-                    (
-                        "{0:00000000}{1}.packet",
-                        counter,
-                        suffix
-                    )
+                    $"{counter:00000000}{suffix}.packet"
                 );
-            File.WriteAllText
-                (
-                    path,
-                    text
-                );
+            File.WriteAllText(path, text);
         }
 
         private void _DumpException
             (
-                Exception exception
+                [NotNull] Exception exception
             )
         {
             _DumpGeneralInfo
@@ -114,8 +105,8 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         private void _DumpPackets
             (
-                byte[] request,
-                byte[] answer
+                [NotNull] byte[] request,
+                [NotNull] byte[] answer
             )
         {
             int counter = Interlocked.Increment(ref _counter);
@@ -123,22 +114,14 @@ namespace ManagedIrbis.Infrastructure.Sockets
             string upPath = Path.Combine
                 (
                     DebugPath,
-                    string.Format
-                    (
-                        "{0:00000000}up.packet",
-                        counter
-                    )
+                    $"{counter:00000000}up.packet"
                 );
             File.WriteAllBytes(upPath, request);
 
             string downPath = Path.Combine
                 (
                     DebugPath,
-                    string.Format
-                    (
-                        "{0:00000000}dn.packet",
-                        counter
-                    )
+                    $"{counter:00000000}dn.packet"
                 );
             File.WriteAllBytes(downPath, answer);
         }
@@ -169,7 +152,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 bool clearDirectory
             )
         {
-            Sure.NotNullNorEmpty(debugPath, "debugPath");
+            Sure.NotNullNorEmpty(debugPath, nameof(debugPath));
 
             if (!Directory.Exists(debugPath))
             {
@@ -196,7 +179,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         public override void AbortRequest()
         {
             AbstractClientSocket innerSocket = InnerSocket
-                .ThrowIfNull("InnerSocket");
+                .ThrowIfNull(nameof(InnerSocket));
 
             innerSocket.AbortRequest();
         }
@@ -209,10 +192,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 byte[] request
             )
         {
-            Sure.NotNull(request, "request");
+            Sure.NotNull(request, nameof(request));
 
             AbstractClientSocket innerSocket = InnerSocket
-                .ThrowIfNull("InnerSocket");
+                .ThrowIfNull(nameof(InnerSocket));
 
             byte[] result;
             try
@@ -223,7 +206,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 Log.TraceException
                     (
-                        "LoggingClientSocket::ExecuteRequest",
+                        nameof(LoggingClientSocket) + "::" + nameof(ExecuteRequest),
                         exception
                     );
 

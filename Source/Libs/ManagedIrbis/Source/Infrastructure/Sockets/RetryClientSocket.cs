@@ -33,8 +33,8 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public int DelayInterval
         {
-            get { return RetryManager.DelayInterval; }
-            set { RetryManager.DelayInterval = value; }
+            get => RetryManager.DelayInterval;
+            set => RetryManager.DelayInterval = value;
         }
 
         /// <summary>
@@ -61,16 +61,12 @@ namespace ManagedIrbis.Infrastructure.Sockets
             )
             : base(connection)
         {
-            Sure.NotNull(innerSocket, "innerSocket");
-            Sure.NotNull(retryManager, "retryManager");
+            Sure.NotNull(innerSocket, nameof(innerSocket));
+            Sure.NotNull(retryManager, nameof(retryManager));
 
             InnerSocket = innerSocket;
             RetryManager = retryManager;
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 
@@ -92,14 +88,13 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 byte[] request
             )
         {
-            Func<byte[], byte[]> func 
-                = InnerSocket.ThrowIfNull().ExecuteRequest;
+            Func<byte[], byte[]> func = InnerSocket.ThrowIfNull().ExecuteRequest;
 
 
             byte[] result = RetryManager.Try
                 (
-                    func,
-                    request
+                    function: func,
+                    argument: request
                 );
 
             return result;

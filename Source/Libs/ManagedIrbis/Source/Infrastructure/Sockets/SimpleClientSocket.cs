@@ -9,19 +9,11 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
-using System.Text;
-using System.Threading.Tasks;
-
 using AM;
-using AM.IO;
 using AM.Net;
 using AM.Threading;
 
@@ -59,7 +51,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         private void _ResolveHostAddress
             (
-                string host
+                [NotNull] string host
             )
         {
             Sure.NotNullNorEmpty(host, nameof(host));
@@ -67,40 +59,16 @@ namespace ManagedIrbis.Infrastructure.Sockets
             if (ReferenceEquals(_address, null))
             {
                 _address = SocketUtility.ResolveAddressIPv4(host);
-                if (_address.AddressFamily != AddressFamily.InterNetwork)
-                {
-                    throw new IrbisNetworkException
-                        (
-                            "Address must be IPv4 only!"
-                        );
-                }
             }
-
-            //if (ReferenceEquals(_address, null))
-            //{
-            //    throw new IrbisNetworkException
-            //        (
-            //            "Can't resolve host " + host
-            //        );
-            //}
         }
 
         private TcpClient _GetTcpClient()
         {
             TcpClient result = new TcpClient();
 
-            // TODO some setup
-
-#if UAP
-
-            Task task = result.ConnectAsync(_address, Connection.Port);
-            task.Wait();
-
-#else
+            // TODO some setup?
 
             result.Connect(_address, Connection.Port);
-
-#endif
 
             return result;
         }
@@ -121,10 +89,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 byte[] request
             )
         {
-            Sure.NotNull(request, "request");
+            Sure.NotNull(request, nameof(request));
 
             IrbisConnection connection = Connection as IrbisConnection;
-
             if (!ReferenceEquals(connection, null))
             {
                 connection.RawClientRequest = request;
@@ -144,8 +111,8 @@ namespace ManagedIrbis.Infrastructure.Sockets
                     byte[] result = socket.ReceiveToEnd(stream);
                     Connection.Executive.ReportMemoryUsage
                         (
-                            GetType(),
-                            result.Length
+                            consumer: GetType(),
+                            memoryUsage: result.Length
                         );
 
                     if (!ReferenceEquals(connection, null))

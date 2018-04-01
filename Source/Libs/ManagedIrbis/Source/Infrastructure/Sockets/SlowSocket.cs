@@ -9,15 +9,9 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 using AM;
-using AM.Threading;
 
 using JetBrains.Annotations;
 
@@ -26,7 +20,8 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure.Sockets
 {
     /// <summary>
-    /// 
+    /// Сокет, сознательно замедляющий связь с сервером
+    /// (для тестирования пользовательского интерфейса).
     /// </summary>
     [PublicAPI]
     public sealed class SlowSocket
@@ -71,14 +66,6 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region AbstractClientSocket members
 
         /// <inheritdoc cref="AbstractClientSocket.AbortRequest" />
@@ -98,11 +85,11 @@ namespace ManagedIrbis.Infrastructure.Sockets
             int delay = Delay;
             if (delay > 0)
             {
-                //ThreadUtility.Sleep(delay);
                 Thread.Sleep(delay);
             }
 
-            byte[] result = InnerSocket.ThrowIfNull().ExecuteRequest(request);
+            byte[] result = InnerSocket.ThrowIfNull(nameof(InnerSocket))
+                .ExecuteRequest(request);
 
             return result;
         }

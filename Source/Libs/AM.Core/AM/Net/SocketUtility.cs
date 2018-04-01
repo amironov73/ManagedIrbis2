@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* SocketUtility.cs -- 
+/* SocketUtility.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -15,16 +15,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
+using AM.Core.Properties;
 using AM.Logging;
 
 using JetBrains.Annotations;
+
 
 #endregion
 
 namespace AM.Net
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class SocketUtility
@@ -57,44 +59,37 @@ namespace AM.Net
             try
             {
                 result = IPAddress.Parse(address);
-                if (result.AddressFamily
-                    != AddressFamily.InterNetwork)
+                if (result.AddressFamily != AddressFamily.InterNetwork)
                 {
                     Log.Error
                         (
-                            "SocketUtility::ResolveAddressIPv4: "
-                            + "address must be IPv4 but "
+                            nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv4)
+                            + Resources.AddressMustBeIPv4ButGiven
                             + result.AddressFamily
                         );
 
-                    throw new Exception("Address must be IPv4");
+                    throw new ArsMagnaException(Resources.AddressMustBeIPv4);
                 }
             }
             catch
             {
                 IPHostEntry entry = Dns.GetHostEntry(address);
 
-                if (!ReferenceEquals(entry, null)
-                    && !ReferenceEquals(entry.AddressList, null)
-                    && entry.AddressList.Length != 0)
+                if (entry?.AddressList != null && entry.AddressList.Length != 0)
                 {
                     IPAddress[] addresses = entry.AddressList
-                        .Where
-                        (
-                            item => item.AddressFamily
-                                    == AddressFamily.InterNetwork
-                        )
+                        .Where(item => item.AddressFamily == AddressFamily.InterNetwork)
                         .ToArray();
 
                     if (addresses.Length == 0)
                     {
                         Log.Error
                             (
-                                "SocketUtility::ResolveAddressIPv4: "
-                                + "can't resolve IPv4 address"
+                                nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv4)
+                                + Resources.CantResolveIPv4Address2
                             );
 
-                        throw new Exception("Can't resolve IPv4 address");
+                        throw new ArsMagnaException(Resources.CantResolveIPv4Address);
                     }
 
                     result = addresses.Length == 1
@@ -107,11 +102,11 @@ namespace AM.Net
             {
                 Log.Error
                     (
-                        "SocketUtility::ResolveAddressIPv4: "
-                        + "can't resolve address"
+                        nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv4)
+                        + Resources.CantResolveAddress2
                     );
 
-                throw new ArsMagnaException("Can't resolve address");
+                throw new ArsMagnaException(Resources.CantResolveAddress);
             }
 
             return result;
@@ -139,44 +134,37 @@ namespace AM.Net
             try
             {
                 result = IPAddress.Parse(address);
-                if (result.AddressFamily
-                    != AddressFamily.InterNetworkV6)
+                if (result.AddressFamily != AddressFamily.InterNetworkV6)
                 {
                     Log.Error
                         (
-                            "SocketUtility::ResolveAddressIPv6: "
-                            + "address must be IPv6 but="
+                            nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                            + Resources.AddressMustBeIPv6ButGiven
                             + result.AddressFamily
                         );
 
-                    throw new Exception("Address must be IPv6");
+                    throw new Exception(Resources.AddressMustBeIPv6);
                 }
             }
             catch
             {
                 IPHostEntry entry = Dns.GetHostEntry(address);
 
-                if (!ReferenceEquals(entry, null)
-                    && !ReferenceEquals(entry.AddressList, null)
-                    && entry.AddressList.Length != 0)
+                if (entry?.AddressList != null && entry.AddressList.Length != 0)
                 {
                     IPAddress[] addresses = entry.AddressList
-                        .Where
-                        (
-                            item => item.AddressFamily
-                                    == AddressFamily.InterNetworkV6
-                        )
+                        .Where(item => item.AddressFamily == AddressFamily.InterNetworkV6)
                         .ToArray();
 
                     if (addresses.Length == 0)
                     {
                         Log.Error
                             (
-                                "SocketUtility::ResolveAddressIPv6: "
-                                + "can't resolve IPv6 address"
+                                nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                                + Resources.CantResolveIPv6Address2
                             );
 
-                        throw new Exception("Can't resolve IPv6 address");
+                        throw new ArsMagnaException(Resources.CantResolveIPv6Address);
                     }
 
                     result = addresses.Length == 1
@@ -189,259 +177,15 @@ namespace AM.Net
             {
                 Log.Error
                     (
-                        "SocketUtility::ResolveAddressIPv6: "
-                        + "can't resolve address"
+                        nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                        + Resources.CantResolveAddress2
                     );
 
-                throw new ArsMagnaException("Can't resolve address");
+                throw new ArsMagnaException(Resources.CantResolveAddress);
             }
 
             return result;
         }
-
-#if NOTDEF
-
-        [NotNull]
-        public static Task<Socket> AcceptAsync
-            (
-                [NotNull] this Socket socket
-            )
-        {
-            var tcs = new TaskCompletionSource<Socket>(socket);
-
-            socket.BeginAccept
-                (
-                    iar =>
-                    {
-                        var t = (TaskCompletionSource<Socket>) iar.AsyncState;
-                        var s = (Socket) t.Task.AsyncState;
-                        try
-                        {
-                            t.TrySetResult(s.EndAccept(iar));
-                        }
-                        catch (Exception ex)
-                        {
-                            t.TrySetException(ex);
-                        }
-                    },
-                    tcs
-                );
-
-            return tcs.Task;
-        }
-
-        [NotNull]
-        public static Task ConnectAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] IPAddress address,
-                int port
-            )
-        {
-            EndPoint endPoint = new IPEndPoint(address, port);
-            return ConnectAsync(socket, endPoint);
-        }
-
-        [NotNull]
-        public static Task ConnectAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] EndPoint endPoint
-            )
-        {
-            var tcs = new TaskCompletionSource<bool>(socket);
-
-            socket.BeginConnect
-                (
-                    endPoint,
-                    iar =>
-                    {
-                        var t = (TaskCompletionSource<bool>)iar.AsyncState;
-                        var s = (Socket)t.Task.AsyncState;
-                        try
-                        {
-                            s.EndConnect(iar);
-                            t.TrySetResult(true);
-                        }
-                        catch (Exception ex)
-                        {
-                            t.TrySetException(ex);
-                        }
-                    },
-                    tcs
-                );
-
-            return tcs.Task;
-        }
-
-        [NotNull]
-        public static Task DisconnectAsync
-            (
-                [NotNull] this Socket socket,
-                bool reuseSocket
-            )
-        {
-            var tcs = new TaskCompletionSource<bool>(socket);
-
-            socket.BeginDisconnect
-                (
-                    reuseSocket,
-                    iar =>
-                    {
-                        var t = (TaskCompletionSource<bool>) iar.AsyncState;
-                        var s = (Socket) t.Task.AsyncState;
-                        try
-                        {
-                            s.EndDisconnect(iar);
-                            t.TrySetResult(true);
-                        }
-                        catch (Exception ex)
-                        {
-                            t.TrySetException(ex);
-                        }
-                    },
-                    tcs
-                );
-
-            return tcs.Task;
-        }
-
-        [NotNull]
-        public static Task DisconnectAsync
-            (
-                [NotNull] this Socket socket
-            )
-        {
-            return DisconnectAsync(socket, false);
-        }
-
-        [NotNull]
-        public static Task<int> ReceiveAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] byte[] buffer,
-                int offset,
-                int size,
-                SocketFlags socketFlags
-            )
-        {
-            var tcs = new TaskCompletionSource<int>(socket);
-
-            socket.BeginReceive
-                (
-                    buffer,
-                    offset,
-                    size,
-                    socketFlags,
-                    iar =>
-                    {
-                        var t = (TaskCompletionSource<int>)iar.AsyncState;
-                        var s = (Socket)t.Task.AsyncState;
-                        try
-                        {
-                            t.TrySetResult(s.EndReceive(iar));
-                        }
-                        catch (Exception exc)
-                        {
-                            t.TrySetException(exc);
-                        }
-                    },
-                    tcs
-                );
-
-            return tcs.Task;
-        }
-
-        [NotNull]
-        public static Task<int> ReceiveAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] byte[] buffer
-            )
-        {
-            return ReceiveAsync
-                (
-                    socket,
-                    buffer,
-                    0,
-                    buffer.Length,
-                    SocketFlags.None
-                );
-        }
-            
-        [NotNull]
-        public static Task<int> SendAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] byte[] buffer,
-                int offset,
-                int size,
-                SocketFlags socketFlags
-            )
-        {
-            var tcs = new TaskCompletionSource<int>(socket);
-
-            socket.BeginSend
-                (
-                    buffer,
-                    offset,
-                    size,
-                    socketFlags,
-                    iar =>
-                    {
-                        var t = (TaskCompletionSource<int>)iar.AsyncState;
-                        var s = (Socket)t.Task.AsyncState;
-                        try
-                        {
-                            t.TrySetResult(s.EndReceive(iar));
-                        }
-                        catch (Exception exc)
-                        {
-                            t.TrySetException(exc);
-                        }
-                    },
-                    tcs
-                );
-
-            return tcs.Task;
-        }
-
-        [NotNull]
-        public static Task<int> SendAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] byte[] buffer,
-                int length
-            )
-        {
-            return SendAsync
-                (
-                    socket,
-                    buffer,
-                    0,
-                    length,
-                    SocketFlags.None
-                );
-        }
-
-        [NotNull]
-        public static Task<int> SendAsync
-            (
-                [NotNull] this Socket socket,
-                [NotNull] byte[] buffer
-            )
-        {
-            return SendAsync
-                (
-                    socket,
-                    buffer,
-                    0,
-                    buffer.Length,
-                    SocketFlags.None
-                );
-        }
-
-#endif
 
         /// <summary>
         /// Receive specified amount of data from the socket.
@@ -468,14 +212,11 @@ namespace AM.Net
                     {
                         Log.Error
                             (
-                                "SocketUtility::ReceiveExact: "
-                                + "error reading socket"
+                                nameof(SocketUtility) + "::" + nameof(ReceiveExact)
+                                + Resources.ErrorReadingSocket
                             );
 
-                        throw new ArsMagnaException
-                            (
-                                "Socket reading error"
-                            );
+                        throw new ArsMagnaException(Resources.SocketReadingError);
                     }
 
                     result.Write(buffer, 0, readed);
@@ -527,14 +268,11 @@ namespace AM.Net
                 {
                     Log.Error
                         (
-                            "SocketUtility::ReceiveToEnd: "
-                            + "error reading socket"
+                            nameof(SocketUtility) + "::" + nameof(ReceiveToEnd)
+                            + Resources.ErrorReadingSocket
                         );
 
-                    throw new ArsMagnaException
-                        (
-                            "Socket reading error"
-                        );
+                    throw new ArsMagnaException(Resources.SocketReadingError);
                 }
 
                 if (readed == 0)

@@ -9,16 +9,8 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-
-using System.Text;
-using System.Threading.Tasks;
 
 using AM;
 using AM.IO;
@@ -27,6 +19,8 @@ using AM.Net;
 using AM.Threading;
 
 using JetBrains.Annotations;
+
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -60,7 +54,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         private void _ResolveHostAddress
             (
-                string host
+                [NotNull] string host
             )
         {
             Sure.NotNullNorEmpty(host, nameof(host));
@@ -74,7 +68,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 throw new IrbisNetworkException
                     (
-                        "Can't resolve host " + host
+                        Resources.CantResolveHost + host
                     );
             }
         }
@@ -83,18 +77,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
         {
             TcpClient result = new TcpClient();
 
-            // TODO some setup
-
-#if UAP
-
-            Task task = result.ConnectAsync(_address, Connection.Port);
-            task.Wait();
-
-#else
+            // TODO some setup?
 
             result.Connect(_address, Connection.Port);
-
-#endif
 
             return result;
         }
@@ -112,11 +97,11 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 Log.Error
                     (
-                        "SmartClientSocket::_SmartRead: "
-                        + "empty response"
+                        nameof(SmartClientSocket) + "::" + nameof(_SmartRead)
+                        + Resources.SmartRead_EmptyResponse
                     );
 
-                throw new IrbisNetworkException("Empty response");
+                throw new IrbisNetworkException(Resources.EmptyResponse);
             }
 
             // Ожидаемый ответ сервера:
@@ -137,15 +122,14 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 Log.Error
                     (
-                        "SmartClientSocket::_SmartRead: "
-                        + "can't read first line of the response"
+                        nameof(SmartClientSocket) + "::" + nameof(_SmartRead)
+                        + Resources.CantReadFirstLineOfTheResponse
                     );
 
                 return head;
             }
 
-            int length;
-            if (!NumericUtility.TryParseInt32(text, out length))
+            if (!NumericUtility.TryParseInt32(text, out int length))
             {
                 if (readed1 < head.Length)
                 {
@@ -170,10 +154,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 Log.Error
                     (
-                        "SmartClientSocket::SmartRead: "
-                        + "expected="
+                        nameof(SmartClientSocket) + "::" + nameof(_SmartRead)
+                        + Resources.SmartRead_Expected
                         + remaining
-                        + ", readed="
+                        + Resources.SmartRead_Readed
                         + readed2
                     );
 

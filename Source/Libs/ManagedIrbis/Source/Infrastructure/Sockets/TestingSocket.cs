@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TestingSocket.cs -- 
+/* TestingSocket.cs -- dummy socket for unit-testing
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,7 +20,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure.Sockets
 {
     /// <summary>
-    /// 
+    /// Dummy socket for unit-testing.
     /// </summary>
     [PublicAPI]
     public sealed class TestingSocket
@@ -47,10 +47,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         public byte[] ExpectedRequest { get; set; }
 
         /// <inheritdoc cref="AbstractClientSocket.RequireConnection" />
-        public override bool RequireConnection
-        {
-            get { return false; }
-        }
+        public override bool RequireConnection => false;
 
         #endregion
 
@@ -89,16 +86,23 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
             if (!ReferenceEquals(ExpectedRequest, null))
             {
-                if (!ArrayUtility.Coincide(ExpectedRequest, 0, request, 0, request.Length))
+                if (!ArrayUtility.Coincide
+                    (
+                        firstArray: ExpectedRequest,
+                        firstOffset: 0,
+                        secondArray: request,
+                        secondOffset: 0,
+                        length: request.Length
+                    ))
                 {
-                    throw new Exception();
+                    throw new IrbisNetworkException();
                 }
             }
 
             byte[] answer = Response;
             if (ReferenceEquals(answer, null))
             {
-                throw new Exception();
+                throw new IrbisNetworkException();
             }
 
             return answer;

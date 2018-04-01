@@ -42,11 +42,13 @@ namespace ManagedIrbis.Infrastructure
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(typeName, nameof(typeName));
 
-            Type type = Type.GetType(typeName, true).ThrowIfNull("Type.GetType");
-            AbstractClientSocket result = (AbstractClientSocket)Activator.CreateInstance
+            Type socketType = Type.GetType(typeName, true)
+                .ThrowIfNull(nameof(Type.GetType));
+            AbstractClientSocket result
+                = (AbstractClientSocket)Activator.CreateInstance
                 (
-                    type,
-                    connection
+                    type: socketType,
+                    args: connection
                 );
             connection.SetSocket(result);
 
@@ -67,11 +69,11 @@ namespace ManagedIrbis.Infrastructure
         {
             Sure.NotNull(connection, nameof(connection));
 
-            Type type = typeof(T);
+            Type socketType = typeof(T);
             T result = (T)Activator.CreateInstance
                 (
-                    type,
-                    connection
+                    type: socketType,
+                    args: connection
                 );
             connection.SetSocket(result);
 
@@ -142,7 +144,7 @@ namespace ManagedIrbis.Infrastructure
 
             if (ReferenceEquals(connection.Socket, socket))
             {
-                inner = inner.ThrowIfNull("socket.InnerSocket");
+                inner = inner.ThrowIfNull(nameof(socket.InnerSocket));
                 connection.SetSocket(inner);
             }
             else
