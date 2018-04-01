@@ -48,23 +48,23 @@ namespace UnitTests.ManagedIrbis
         [TestMethod]
         public void IrbisException_GetErrorDescription_1()
         {
-            Assert.AreEqual("Нет ошибки", IrbisException.GetErrorDescription(100));
-            Assert.AreEqual("Нормальное завершение", IrbisException.GetErrorDescription(0));
-            Assert.AreEqual("Указанное поле отсутствует", IrbisException.GetErrorDescription(-200));
+            Assert.AreEqual("No error", IrbisException.GetErrorDescription(100));
+            Assert.AreEqual("Normal return", IrbisException.GetErrorDescription(0));
+            Assert.AreEqual("Field is absent", IrbisException.GetErrorDescription(-200));
         }
 
         [TestMethod]
         public void IrbisException_GetErrorDescription_2()
         {
-            Assert.AreEqual("Нормальное завершение", IrbisException.GetErrorDescription(IrbisReturnCode.NoError));
-            Assert.AreEqual("Файл не существует", IrbisException.GetErrorDescription(IrbisReturnCode.FileNotExist));
+            Assert.AreEqual("Normal return", IrbisException.GetErrorDescription(IrbisReturnCode.NoError));
+            Assert.AreEqual("File not exist", IrbisException.GetErrorDescription(IrbisReturnCode.FileNotExist));
         }
 
         [TestMethod]
         public void IrbisException_GetErrorDescription_3()
         {
-            Assert.AreEqual("Нет ошибки", IrbisException.GetErrorDescription(new IrbisException(100)));
-            Assert.AreEqual("Указанное поле отсутствует", IrbisException.GetErrorDescription(new IrbisException(-200)));
+            Assert.AreEqual("No error", IrbisException.GetErrorDescription(new IrbisException(100)));
+            Assert.AreEqual("Field is absent", IrbisException.GetErrorDescription(new IrbisException(-200)));
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace UnitTests.ManagedIrbis
         {
             Assert.AreEqual
                 (
-                    "ErrorCode: -200\nDescription: Указанное поле отсутствует\nManagedIrbis.IrbisException: Указанное поле отсутствует",
+                    "ErrorCode: -200\nDescription: Field is absent\nManagedIrbis.IrbisException: Field is absent",
                     new IrbisException(-200).ToString().DosToUnix()
                 );
 
