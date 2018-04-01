@@ -18,6 +18,7 @@ using AM;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -28,7 +29,7 @@ namespace ManagedIrbis
     /// ManagedClient
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("Code={ErrorCode}, Message={Message}")]
+    [DebuggerDisplay("Code={" + nameof(ErrorCode) + "}, Message={" + nameof(Message) + "}")]
     public class IrbisException
         : ArsMagnaException
     {
@@ -128,198 +129,198 @@ namespace ManagedIrbis
                 int code
             )
         {
-            string result = "Неизвестная ошибка";
+            string result = Resources.ErrorDescription_UnknownError;
 
             if (code > 0)
             {
-                result = "Нет ошибки";
+                result = Resources.ErrorDescription_NoError;
             }
             else
             {
                 switch (code)
                 {
                     case 0:
-                        result = "Нормальное завершение";
+                        result = Resources.ErrorDescription_NormalReturn;
                         break;
 
                     case -100:
-                        result = "Заданный MFN вне пределов БД";
+                        result = Resources.ErrorDescription_GivenMfnOutsideTheDatabaseRange;
                         break;
 
                     case -101:
-                        result = "Ошибочный размер полки";
+                        result = Resources.ErrorDescription_BadShelfSize;
                         break;
 
                     case -102:
-                        result = "Ошибочный номер полки";
+                        result = Resources.ErrorDescription_BadShelfNumber;
                         break;
 
                     case -140:
-                        result = "MFN вне пределов БД";
+                        result = Resources.ErrorDescription_MfnOutsideTheDatabaseRange;
                         break;
 
                     case -141:
-                        result = "Ошибка чтения";
+                        result = Resources.ErrorDescription_ReadError;
                         break;
 
                     case -200:
-                        result = "Указанное поле отсутствует";
+                        result = Resources.ErrorDescription_FieldIsAbsent;
                         break;
 
                     case -201:
-                        result = "Предыдущая версия записи отсутствует";
+                        result = Resources.ErrorDescription_NoPreviousVersionOfTheRecord;
                         break;
 
                     case -202:
-                        result = "Заданный термин не найден (термин не существует)";
+                        result = Resources.ErrorDescription_TermNotExist;
                         break;
 
                     case -203:
-                        result = "Последний термин в списке";
+                        result = Resources.ErrorDescription_LastTerm;
                         break;
 
                     case -204:
-                        result = "Первый термин в списке";
+                        result = Resources.ErrorDescription_FirstTerm;
                         break;
 
                     case -300:
-                        result = "База данных монопольно заблокирована";
+                        result = Resources.ErrorDescription_DatabaseIsLocked;
                         break;
 
                     case -301:
-                        result = "База данных монопольно заблокирована";
+                        result = Resources.ErrorDescription_DatabaseIsLocked;
                         break;
 
                     case -400:
-                        result = "Ошибка при открытии файлов MST или XRF (ошибка файла данных)";
+                        result = Resources.ErrorDescription_MstError;
                         break;
 
                     case -401:
-                        result = "Ошибка при открытии файлов IFP (ошибка файла индекса)";
+                        result = Resources.ErrorDescription_IfpError;
                         break;
 
                     case -402:
-                        result = "Ошибка при записи";
+                        result = Resources.ErrorDescription_WriteError;
                         break;
 
                     case -403:
-                        result = "Ошибка при актуализации";
+                        result = Resources.ErrorDescription_ActualizationError;
                         break;
 
                     case -600:
-                        result = "Запись логически удалена";
+                        result = Resources.ErrorDescription_RecordIsLogicallyDeleted;
                         break;
 
                     case -601:
-                        result = "Запись физически удалена";
+                        result = Resources.ErrorDescription_RecordIsPhysicallyDeleted;
                         break;
 
                     case -602:
-                        result = "Запись заблокирована на ввод";
+                        result = Resources.ErrorDescription_RecordIsBlocked;
                         break;
 
                     case -603:
-                        result = "Запись логически удалена";
+                        result = Resources.ErrorDescription_RecordIsLogicallyDeleted;
                         break;
 
                     case -605:
-                        result = "Запись физически удалена";
+                        result = Resources.ErrorDescription_RecordIsPhysicallyDeleted;
                         break;
 
                     case -607:
-                        result = "Ошибка autoin.gbl";
+                        result = Resources.ErrorDescription_AutoinGblError;
                         break;
 
                     case -608:
-                        result = "Ошибка версии записи";
+                        result = Resources.ErrorDescription_RecordVersionError;
                         break;
 
                     case -700:
-                        result = "Ошибка создания резервной копии";
+                        result = Resources.ErrorDescription_BackupCreationError;
                         break;
 
                     case -701:
-                        result = "Ошибка восстановления из резервной копии";
+                        result = Resources.ErrorDescription_BackupRestoreError;
                         break;
 
                     case -702:
-                        result = "Ошибка сортировки";
+                        result = Resources.ErrorDescription_SortingError;
                         break;
 
                     case -703:
-                        result = "Ошибочный термин";
+                        result = Resources.ErrorDescription_BadTerm;
                         break;
 
                     case -704:
-                        result = "Ошибка создания словаря";
+                        result = Resources.ErrorDescription_DictionaryCreationError;
                         break;
 
                     case -705:
-                        result = "Ошибка загрузки словаря";
+                        result = Resources.ErrorDescription_DictionaryLoadingError;
                         break;
 
                     case -800:
-                        result = "Ошибка в параметрах глобальной корректировки";
+                        result = Resources.ErrorDescription_GlobalCorrectionParameterError;
                         break;
 
                     case -801:
-                        result = "ERR_GBL_REP";
+                        result = Resources.ErrorDescription_ERR_GBL_REP;
                         break;
 
                     case -802:
-                        result = "ERR_GBL_MET";
+                        result = Resources.ErrorDescription_ERR_GBL_MET;
                         break;
 
                     case -1111:
-                        result = "Ошибка исполнения сервера (SERVER_EXECUTE_ERROR)";
+                        result = Resources.ErrorDescription_ServerExecutionError;
                         break;
 
                     case -2222:
-                        result = "Ошибка в протоколе (WRONG_PROTOCOL)";
+                        result = Resources.ErrorDescription_ProtocolError;
                         break;
 
                     case -3333:
-                        result = "Незарегистрированный клиент (ошибка входа на сервер) (клиент не в списке)";
+                        result = Resources.ErrorDescription_ClientNotRegistered;
                         break;
 
                     case -3334:
-                        result = "Клиент не выполнил вход на сервер (клиент не используется)";
+                        result = Resources.ErrorDescription_ClientNotInUse;
                         break;
 
                     case -3335:
-                        result = "Неправильный уникальный идентификатор клиента";
+                        result = Resources.ErrorDescription_BadClientIdentifier;
                         break;
 
                     case -3336:
-                        result = "Нет доступа к командам АРМ";
+                        result = Resources.ErrorDescription_WorkstationAccesDenied;
                         break;
 
                     case -3337:
-                        result = "Клиент уже зарегистрирован";
+                        result = Resources.ErrorDescription_ClientAlreadyRegistered;
                         break;
 
                     case -3338:
-                        result = "Недопустимый клиент";
+                        result = Resources.ErrorDescription_ClientNotAllowed;
                         break;
 
                     case -4444:
-                        result = "Неверный пароль";
+                        result = Resources.ErrorDescription_BadPassword;
                         break;
 
                     case -5555:
-                        result = "Файл не существует";
+                        result = Resources.ErrorDescription_FileNotExist;
                         break;
 
                     case -6666:
-                        result = "Сервер перегружен. Достигнуто максимальное число потоков обработки";
+                        result = Resources.ErrorDescription_ServerOverloaded;
                         break;
 
                     case -7777:
-                        result = "Не удалось запустить/прервать поток администратора (ошибка процесса)";
+                        result = Resources.ErrorDescription_ProcessError;
                         break;
 
                     case -8888:
-                        result = "Общая ошибка";
+                        result = Resources.ErrorDescription_GeneralError;
                         break;
                 }
             }

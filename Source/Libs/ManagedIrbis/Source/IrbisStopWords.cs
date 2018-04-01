@@ -19,6 +19,7 @@ using AM.Collections;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -107,15 +108,10 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
 
             string database = connection.Database
-                .ThrowIfNull("database not set");
+                .ThrowIfNull(Resources.DatabaseNotSet);
             string fileName = database + ".stw";
 
-            return FromServer
-                (
-                    connection,
-                    database,
-                    fileName
-                );
+            return FromServer(connection, database, fileName);
         }
 
         /// <summary>
@@ -135,9 +131,9 @@ namespace ManagedIrbis
 
             FileSpecification specification = new FileSpecification
                 (
-                    IrbisPath.MasterFile,
-                    database,
-                    fileName
+                    path: IrbisPath.MasterFile,
+                    database: database,
+                    fileName: fileName
                 );
 
             string text = connection.ReadTextFile(specification);
@@ -213,11 +209,7 @@ namespace ManagedIrbis
 
             string[] lines = text.SplitLines();
 
-            return ParseLines
-                (
-                    name,
-                    lines
-                );
+            return ParseLines(name, lines);
         }
 
         /// <summary>
@@ -234,15 +226,11 @@ namespace ManagedIrbis
             string name = Path.GetFileNameWithoutExtension(fileName);
             string[] lines = File.ReadAllLines
                 (
-                    fileName,
-                    IrbisEncoding.Ansi
+                    path: fileName,
+                    encoding: IrbisEncoding.Ansi
                 );
 
-            return ParseLines
-                (
-                    name,
-                    lines
-                );
+            return ParseLines(name, lines);
         }
 
         /// <summary>
@@ -253,10 +241,10 @@ namespace ManagedIrbis
         [ItemNotNull]
         public string[] ToLines()
         {
-            return _dictionary
-                .Keys
-                .OrderBy(word => word)
-                .ToArray();
+            string[] result = _dictionary.Keys.ToArray();
+            Array.Sort(result);
+
+            return result;
         }
 
         /// <summary>
@@ -267,8 +255,8 @@ namespace ManagedIrbis
         {
             return string.Join
                 (
-                    Environment.NewLine,
-                    ToLines()
+                    separator: Environment.NewLine,
+                    value: ToLines()
                 );
         }
 

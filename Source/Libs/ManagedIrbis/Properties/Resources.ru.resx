@@ -136,4 +136,148 @@
   <data name="FieldTag_Verify_BadTag2" xml:space="preserve">
     <value>Неверная метка поля=</value>
   </data>
+  <data name="ErrorDescription_GeneralError" xml:space="preserve">
+    <value>Общая ошибка</value>
+  </data>
+  <data name="ErrorDescription_GivenMfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>Заданный MFN вне пределов БД</value>
+  </data>
+  <data name="ErrorDescription_NoError" xml:space="preserve">
+    <value>Нет ошибки</value>
+  </data>
+  <data name="ErrorDescription_NormalReturn" xml:space="preserve">
+    <value>Нормальное завершение</value>
+  </data>
+  <data name="ErrorDescription_UnknownError" xml:space="preserve">
+    <value>Неизвестная ошибка</value>
+  </data>
+  <data name="ErrorDescription_ActualizationError" xml:space="preserve">
+    <value>Ошибка при актуализации</value>
+  </data>
+  <data name="ErrorDescription_BadPassword" xml:space="preserve">
+    <value>Неверный пароль</value>
+  </data>
+  <data name="ErrorDescription_BadShelfNumber" xml:space="preserve">
+    <value>Ошибочный номер полки</value>
+  </data>
+  <data name="ErrorDescription_BadShelfSize" xml:space="preserve">
+    <value>Ошибочный размер полки</value>
+  </data>
+  <data name="ErrorDescription_ClientAlreadyRegistered" xml:space="preserve">
+    <value>Клиент уже зарегистрирован</value>
+  </data>
+  <data name="ErrorDescription_ClientNotAllowed" xml:space="preserve">
+    <value>Недопустимый клиент</value>
+  </data>
+  <data name="ErrorDescription_FieldIsAbsent" xml:space="preserve">
+    <value>Указанное поле отсутствует</value>
+  </data>
+  <data name="ErrorDescription_FileNotExist" xml:space="preserve">
+    <value>Файл не существует</value>
+  </data>
+  <data name="ErrorDescription_MfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>MFN вне пределов БД</value>
+  </data>
+  <data name="ErrorDescription_BadClientIdentifier" xml:space="preserve">
+    <value>Неправильный уникальный идентификатор клиента</value>
+  </data>
+  <data name="ErrorDescription_ClientNotInUse" xml:space="preserve">
+    <value>Клиент не выполнил вход на сервер (клиент не используется)</value>
+  </data>
+  <data name="ErrorDescription_ClientNotRegistered" xml:space="preserve">
+    <value>Незарегистрированный клиент (ошибка входа на сервер) (клиент не в списке)</value>
+  </data>
+  <data name="ErrorDescription_NoPreviousVersionOfTheRecord" xml:space="preserve">
+    <value>Предыдущая версия записи отсутствует</value>
+  </data>
+  <data name="ErrorDescription_ProtocolError" xml:space="preserve">
+    <value>Ошибка в протоколе (WRONG_PROTOCOL)</value>
+  </data>
+  <data name="ErrorDescription_ReadError" xml:space="preserve">
+    <value>Ошибка чтения</value>
+  </data>
+  <data name="ErrorDescription_RecordIsBlocked" xml:space="preserve">
+    <value>Запись заблокирована на ввод</value>
+  </data>
+  <data name="ErrorDescription_RecordIsLogicallyDeleted" xml:space="preserve">
+    <value>Запись логически удалена</value>
+  </data>
+  <data name="ErrorDescription_RecordIsPhysicallyDeleted" xml:space="preserve">
+    <value>Запись физически удалена</value>
+  </data>
+  <data name="ErrorDescription_WorkstationAccesDenied" xml:space="preserve">
+    <value>Нет доступа к командам АРМ</value>
+  </data>
+  <data name="ErrorDescription_WriteError" xml:space="preserve">
+    <value>Ошибка при записи</value>
+  </data>
+  <data name="ErrorDescription_DictionaryLoadingError" xml:space="preserve">
+    <value>Ошибка загрузки словаря</value>
+  </data>
+  <data name="ErrorDescription_AutoinGblError" xml:space="preserve">
+    <value>Ошибка autoin.gbl</value>
+  </data>
+  <data name="ErrorDescription_BackupCreationError" xml:space="preserve">
+    <value>Ошибка создания резервной копии</value>
+  </data>
+  <data name="ErrorDescription_BackupRestoreError" xml:space="preserve">
+    <value>Ошибка восстановления из резервной копии</value>
+  </data>
+  <data name="ErrorDescription_BadTerm" xml:space="preserve">
+    <value>Ошибочный термин</value>
+  </data>
+  <data name="ErrorDescription_GlobalCorrectionParameterError" xml:space="preserve">
+    <value>Ошибка в параметрах глобальной корректировки</value>
+  </data>
+  <data name="ErrorDescription_ServerExecutionError" xml:space="preserve">
+    <value>Ошибка исполнения сервера (SERVER_EXECUTE_ERROR)</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_MET" xml:space="preserve">
+    <value>Ошибка в метке поля при глобальной корректировке</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_REP" xml:space="preserve">
+    <value>Ошибка в REP-метке при глобальной корректировке</value>
+  </data>
+  <data name="ErrorDescription_DictionaryCreationError" xml:space="preserve">
+    <value>Ошибка создания словаря</value>
+  </data>
+  <data name="ErrorDescription_ProcessError" xml:space="preserve">
+    <value>Не удалось запустить/прервать поток администратора (ошибка процесса)</value>
+  </data>
+  <data name="ErrorDescription_LastTerm" xml:space="preserve">
+    <value>Последний термин в списке</value>
+  </data>
+  <data name="ErrorDescription_DatabaseIsLocked" xml:space="preserve">
+    <value>База данных монопольно заблокирована</value>
+  </data>
+  <data name="ErrorDescription_FirstTerm" xml:space="preserve">
+    <value>Первый термин в списке</value>
+  </data>
+  <data name="ErrorDescription_IfpError" xml:space="preserve">
+    <value>Ошибка при открытии файлов IFP (ошибка файла индекса)</value>
+  </data>
+  <data name="ErrorDescription_MstError" xml:space="preserve">
+    <value>Ошибка при открытии файлов MST или XRF (ошибка файла данных)</value>
+  </data>
+  <data name="ErrorDescription_RecordVersionError" xml:space="preserve">
+    <value>Ошибка версии записи</value>
+  </data>
+  <data name="ErrorDescription_ServerOverloaded" xml:space="preserve">
+    <value>Сервер перегружен. Достигнуто максимальное число потоков обработки</value>
+  </data>
+  <data name="ErrorDescription_SortingError" xml:space="preserve">
+    <value>Ошибка сортировки</value>
+  </data>
+  <data name="ErrorDescription_TermNotExist" xml:space="preserve">
+    <value>Заданный термин не найден (термин не существует)</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent" xml:space="preserve">
+    <value>Отсутствует текст</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent2" xml:space="preserve">
+    <value>: отсутствует текст</value>
+  </data>
+  <data name="DatabaseNotSet" xml:space="preserve">
+    <value>Не указана база данных</value>
+  </data>
 </root>

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* Credentials.cs -- 
+/* Credentials.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -85,7 +85,7 @@ namespace ManagedIrbis.Authentication
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
+            Sure.NotNull(reader, nameof(reader));
 
             Hostname = reader.ReadNullableString();
             Username = reader.ReadNullableString();
@@ -100,7 +100,7 @@ namespace ManagedIrbis.Authentication
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
+            Sure.NotNull(writer, nameof(writer));
 
             writer
                 .WriteNullable(Hostname)
@@ -124,7 +124,7 @@ namespace ManagedIrbis.Authentication
                 = new Verifier<IrbisCredentials>(this, throwOnError);
 
             verifier
-                .NotNullNorEmpty(Username, "Username");
+                .NotNullNorEmpty(Username, nameof(Username));
 
             return verifier.Result;
         }

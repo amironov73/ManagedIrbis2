@@ -97,11 +97,425 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database not set.
+        /// </summary>
+        internal static string DatabaseNotSet {
+            get {
+                return ResourceManager.GetString("DatabaseNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty response.
         /// </summary>
         internal static string EmptyResponse {
             get {
                 return ResourceManager.GetString("EmptyResponse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during actualization.
+        /// </summary>
+        internal static string ErrorDescription_ActualizationError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ActualizationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during autoin.gbl processing.
+        /// </summary>
+        internal static string ErrorDescription_AutoinGblError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_AutoinGblError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup creation error.
+        /// </summary>
+        internal static string ErrorDescription_BackupCreationError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BackupCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup restore error.
+        /// </summary>
+        internal static string ErrorDescription_BackupRestoreError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BackupRestoreError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad client identifier.
+        /// </summary>
+        internal static string ErrorDescription_BadClientIdentifier {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BadClientIdentifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad password.
+        /// </summary>
+        internal static string ErrorDescription_BadPassword {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BadPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad shelf number.
+        /// </summary>
+        internal static string ErrorDescription_BadShelfNumber {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BadShelfNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad shelf size.
+        /// </summary>
+        internal static string ErrorDescription_BadShelfSize {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BadShelfSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad term.
+        /// </summary>
+        internal static string ErrorDescription_BadTerm {
+            get {
+                return ResourceManager.GetString("ErrorDescription_BadTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The client already registered.
+        /// </summary>
+        internal static string ErrorDescription_ClientAlreadyRegistered {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ClientAlreadyRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client not allowed.
+        /// </summary>
+        internal static string ErrorDescription_ClientNotAllowed {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ClientNotAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client doesn&apos;t in use.
+        /// </summary>
+        internal static string ErrorDescription_ClientNotInUse {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ClientNotInUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client not registered.
+        /// </summary>
+        internal static string ErrorDescription_ClientNotRegistered {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ClientNotRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database is exclusively locked.
+        /// </summary>
+        internal static string ErrorDescription_DatabaseIsLocked {
+            get {
+                return ResourceManager.GetString("ErrorDescription_DatabaseIsLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dictionary creation error.
+        /// </summary>
+        internal static string ErrorDescription_DictionaryCreationError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_DictionaryCreationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dictionary loading error.
+        /// </summary>
+        internal static string ErrorDescription_DictionaryLoadingError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_DictionaryLoadingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global correction: bad tag.
+        /// </summary>
+        internal static string ErrorDescription_ERR_GBL_MET {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ERR_GBL_MET", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global correction: bad rep tag.
+        /// </summary>
+        internal static string ErrorDescription_ERR_GBL_REP {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ERR_GBL_REP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Field is absent.
+        /// </summary>
+        internal static string ErrorDescription_FieldIsAbsent {
+            get {
+                return ResourceManager.GetString("ErrorDescription_FieldIsAbsent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File not exist.
+        /// </summary>
+        internal static string ErrorDescription_FileNotExist {
+            get {
+                return ResourceManager.GetString("ErrorDescription_FileNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First term in the list.
+        /// </summary>
+        internal static string ErrorDescription_FirstTerm {
+            get {
+                return ResourceManager.GetString("ErrorDescription_FirstTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General error.
+        /// </summary>
+        internal static string ErrorDescription_GeneralError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Given MFN outside the database range.
+        /// </summary>
+        internal static string ErrorDescription_GivenMfnOutsideTheDatabaseRange {
+            get {
+                return ResourceManager.GetString("ErrorDescription_GivenMfnOutsideTheDatabaseRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global correction parameter error.
+        /// </summary>
+        internal static string ErrorDescription_GlobalCorrectionParameterError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_GlobalCorrectionParameterError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index file error.
+        /// </summary>
+        internal static string ErrorDescription_IfpError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_IfpError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last term in the list.
+        /// </summary>
+        internal static string ErrorDescription_LastTerm {
+            get {
+                return ResourceManager.GetString("ErrorDescription_LastTerm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MFN outside the database range.
+        /// </summary>
+        internal static string ErrorDescription_MfnOutsideTheDatabaseRange {
+            get {
+                return ResourceManager.GetString("ErrorDescription_MfnOutsideTheDatabaseRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Master file error.
+        /// </summary>
+        internal static string ErrorDescription_MstError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_MstError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No error.
+        /// </summary>
+        internal static string ErrorDescription_NoError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_NoError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No previous version of the record.
+        /// </summary>
+        internal static string ErrorDescription_NoPreviousVersionOfTheRecord {
+            get {
+                return ResourceManager.GetString("ErrorDescription_NoPreviousVersionOfTheRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Normal return.
+        /// </summary>
+        internal static string ErrorDescription_NormalReturn {
+            get {
+                return ResourceManager.GetString("ErrorDescription_NormalReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administrator thread error.
+        /// </summary>
+        internal static string ErrorDescription_ProcessError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ProcessError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Protocol error.
+        /// </summary>
+        internal static string ErrorDescription_ProtocolError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ProtocolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Read error.
+        /// </summary>
+        internal static string ErrorDescription_ReadError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The record is blocked.
+        /// </summary>
+        internal static string ErrorDescription_RecordIsBlocked {
+            get {
+                return ResourceManager.GetString("ErrorDescription_RecordIsBlocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The record is logically deleted.
+        /// </summary>
+        internal static string ErrorDescription_RecordIsLogicallyDeleted {
+            get {
+                return ResourceManager.GetString("ErrorDescription_RecordIsLogicallyDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The record is physically deleted.
+        /// </summary>
+        internal static string ErrorDescription_RecordIsPhysicallyDeleted {
+            get {
+                return ResourceManager.GetString("ErrorDescription_RecordIsPhysicallyDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ошибка версии записи.
+        /// </summary>
+        internal static string ErrorDescription_RecordVersionError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_RecordVersionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server execution error.
+        /// </summary>
+        internal static string ErrorDescription_ServerExecutionError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ServerExecutionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server is overloaded.
+        /// </summary>
+        internal static string ErrorDescription_ServerOverloaded {
+            get {
+                return ResourceManager.GetString("ErrorDescription_ServerOverloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error during sorting.
+        /// </summary>
+        internal static string ErrorDescription_SortingError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_SortingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Term doesn&apos;t exist.
+        /// </summary>
+        internal static string ErrorDescription_TermNotExist {
+            get {
+                return ResourceManager.GetString("ErrorDescription_TermNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown error.
+        /// </summary>
+        internal static string ErrorDescription_UnknownError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workstation access denied.
+        /// </summary>
+        internal static string ErrorDescription_WorkstationAccesDenied {
+            get {
+                return ResourceManager.GetString("ErrorDescription_WorkstationAccesDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Write error.
+        /// </summary>
+        internal static string ErrorDescription_WriteError {
+            get {
+                return ResourceManager.GetString("ErrorDescription_WriteError", resourceCulture);
             }
         }
         
@@ -174,6 +588,24 @@ namespace ManagedIrbis.Properties {
         internal static string SmartRead_Readed {
             get {
                 return ResourceManager.GetString("SmartRead_Readed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text is absent.
+        /// </summary>
+        internal static string VerifyFormat_TextIsAbsent {
+            get {
+                return ResourceManager.GetString("VerifyFormat_TextIsAbsent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : text is absent.
+        /// </summary>
+        internal static string VerifyFormat_TextIsAbsent2 {
+            get {
+                return ResourceManager.GetString("VerifyFormat_TextIsAbsent2", resourceCulture);
             }
         }
     }

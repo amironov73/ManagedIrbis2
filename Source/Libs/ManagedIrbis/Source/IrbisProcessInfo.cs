@@ -35,7 +35,7 @@ namespace ManagedIrbis
     /// </summary>
     [PublicAPI]
     [XmlRoot("process")]
-    [DebuggerDisplay("[{Number}] {Name} ({Workstation})")]
+    [DebuggerDisplay("[{" + nameof(Number) + "}] {" + nameof(Name) + "} ({" + nameof(Workstation) + "})")]
     public sealed class IrbisProcessInfo
         : IHandmadeSerializable
     {
@@ -153,7 +153,7 @@ namespace ManagedIrbis
                     Name = lines[4],
                     ClientID = lines[5],
                     Workstation = lines[6],
-                    Started  = lines[7],
+                    Started = lines[7],
                     LastCommand = lines[8],
                     CommandNumber = lines[9]
                 };

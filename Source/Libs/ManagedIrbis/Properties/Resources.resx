@@ -136,4 +136,148 @@
   <data name="IrbisEncoding_NotSingleByteEncoding" xml:space="preserve">
     <value>: not single-byte encoding</value>
   </data>
+  <data name="ErrorDescription_UnknownError" xml:space="preserve">
+    <value>Unknown error</value>
+  </data>
+  <data name="ErrorDescription_NoError" xml:space="preserve">
+    <value>No error</value>
+  </data>
+  <data name="ErrorDescription_NormalReturn" xml:space="preserve">
+    <value>Normal return</value>
+  </data>
+  <data name="ErrorDescription_GivenMfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>Given MFN outside the database range</value>
+  </data>
+  <data name="ErrorDescription_GeneralError" xml:space="preserve">
+    <value>General error</value>
+  </data>
+  <data name="ErrorDescription_FileNotExist" xml:space="preserve">
+    <value>File not exist</value>
+  </data>
+  <data name="ErrorDescription_BadPassword" xml:space="preserve">
+    <value>Bad password</value>
+  </data>
+  <data name="ErrorDescription_ClientAlreadyRegistered" xml:space="preserve">
+    <value>The client already registered</value>
+  </data>
+  <data name="ErrorDescription_WorkstationAccesDenied" xml:space="preserve">
+    <value>Workstation access denied</value>
+  </data>
+  <data name="ErrorDescription_ClientNotAllowed" xml:space="preserve">
+    <value>Client not allowed</value>
+  </data>
+  <data name="ErrorDescription_WriteError" xml:space="preserve">
+    <value>Write error</value>
+  </data>
+  <data name="ErrorDescription_ActualizationError" xml:space="preserve">
+    <value>Error during actualization</value>
+  </data>
+  <data name="ErrorDescription_NoPreviousVersionOfTheRecord" xml:space="preserve">
+    <value>No previous version of the record</value>
+  </data>
+  <data name="ErrorDescription_FieldIsAbsent" xml:space="preserve">
+    <value>Field is absent</value>
+  </data>
+  <data name="ErrorDescription_MfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>MFN outside the database range</value>
+  </data>
+  <data name="ErrorDescription_BadShelfNumber" xml:space="preserve">
+    <value>Bad shelf number</value>
+  </data>
+  <data name="ErrorDescription_BadShelfSize" xml:space="preserve">
+    <value>Bad shelf size</value>
+  </data>
+  <data name="ErrorDescription_ReadError" xml:space="preserve">
+    <value>Read error</value>
+  </data>
+  <data name="ErrorDescription_RecordIsLogicallyDeleted" xml:space="preserve">
+    <value>The record is logically deleted</value>
+  </data>
+  <data name="ErrorDescription_RecordIsPhysicallyDeleted" xml:space="preserve">
+    <value>The record is physically deleted</value>
+  </data>
+  <data name="ErrorDescription_RecordIsBlocked" xml:space="preserve">
+    <value>The record is blocked</value>
+  </data>
+  <data name="ErrorDescription_ProtocolError" xml:space="preserve">
+    <value>Protocol error</value>
+  </data>
+  <data name="ErrorDescription_ClientNotRegistered" xml:space="preserve">
+    <value>Client not registered</value>
+  </data>
+  <data name="ErrorDescription_ClientNotInUse" xml:space="preserve">
+    <value>Client doesn't in use</value>
+  </data>
+  <data name="ErrorDescription_BadClientIdentifier" xml:space="preserve">
+    <value>Bad client identifier</value>
+  </data>
+  <data name="ErrorDescription_ProcessError" xml:space="preserve">
+    <value>Administrator thread error</value>
+  </data>
+  <data name="ErrorDescription_ServerOverloaded" xml:space="preserve">
+    <value>Server is overloaded</value>
+  </data>
+  <data name="ErrorDescription_AutoinGblError" xml:space="preserve">
+    <value>Error during autoin.gbl processing</value>
+  </data>
+  <data name="ErrorDescription_RecordVersionError" xml:space="preserve">
+    <value>Ошибка версии записи</value>
+  </data>
+  <data name="ErrorDescription_BackupCreationError" xml:space="preserve">
+    <value>Backup creation error</value>
+  </data>
+  <data name="ErrorDescription_BackupRestoreError" xml:space="preserve">
+    <value>Backup restore error</value>
+  </data>
+  <data name="ErrorDescription_SortingError" xml:space="preserve">
+    <value>Error during sorting</value>
+  </data>
+  <data name="ErrorDescription_BadTerm" xml:space="preserve">
+    <value>Bad term</value>
+  </data>
+  <data name="ErrorDescription_DictionaryCreationError" xml:space="preserve">
+    <value>Dictionary creation error</value>
+  </data>
+  <data name="ErrorDescription_ServerExecutionError" xml:space="preserve">
+    <value>Server execution error</value>
+  </data>
+  <data name="ErrorDescription_DictionaryLoadingError" xml:space="preserve">
+    <value>Dictionary loading error</value>
+  </data>
+  <data name="ErrorDescription_GlobalCorrectionParameterError" xml:space="preserve">
+    <value>Global correction parameter error</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_REP" xml:space="preserve">
+    <value>Global correction: bad rep tag</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_MET" xml:space="preserve">
+    <value>Global correction: bad tag</value>
+  </data>
+  <data name="ErrorDescription_TermNotExist" xml:space="preserve">
+    <value>Term doesn't exist</value>
+  </data>
+  <data name="ErrorDescription_LastTerm" xml:space="preserve">
+    <value>Last term in the list</value>
+  </data>
+  <data name="ErrorDescription_FirstTerm" xml:space="preserve">
+    <value>First term in the list</value>
+  </data>
+  <data name="ErrorDescription_DatabaseIsLocked" xml:space="preserve">
+    <value>Database is exclusively locked</value>
+  </data>
+  <data name="ErrorDescription_MstError" xml:space="preserve">
+    <value>Master file error</value>
+  </data>
+  <data name="ErrorDescription_IfpError" xml:space="preserve">
+    <value>Index file error</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent" xml:space="preserve">
+    <value>Text is absent</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent2" xml:space="preserve">
+    <value>: text is absent</value>
+  </data>
+  <data name="DatabaseNotSet" xml:space="preserve">
+    <value>Database not set</value>
+  </data>
 </root>

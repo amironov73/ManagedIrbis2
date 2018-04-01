@@ -18,6 +18,8 @@ using AM.Text;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 // ReSharper disable InconsistentNaming
@@ -126,7 +128,7 @@ namespace ManagedIrbis
                         break;
 
                     default:
-                        Debug.Assert(state == ZERO, "state == ZERO");
+                        Debug.Assert(state == ZERO, nameof(state) + " == ZERO");
 
                         if (c == '/')
                         {
@@ -225,7 +227,7 @@ namespace ManagedIrbis
                         break;
 
                     default:
-                        Debug.Assert(state == ZERO, "state == ZERO");
+                        Debug.Assert(state == ZERO, nameof(state) + " == ZERO");
 
                         if (c == '\'' || c == '"' || c == '|')
                         {
@@ -257,12 +259,12 @@ namespace ManagedIrbis
                 Log.Error
                     (
                         nameof(IrbisFormat) + "::" + nameof(VerifyFormat)
-                        + ": text is absent"
+                        + Resources.VerifyFormat_TextIsAbsent2
                     );
 
                 if (throwOnError)
                 {
-                    throw new VerificationException("text is absent");
+                    throw new VerificationException(Resources.VerifyFormat_TextIsAbsent);
                 }
 
                 return false;
