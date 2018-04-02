@@ -22,7 +22,7 @@ namespace AM.Text
     /// </summary>
     [PublicAPI]
     [DebuggerDisplay("Column={Column} Line={Line} Position={Position}")]
-    public sealed class TextPosition
+    public struct TextPosition
     {
         #region Properties
 
@@ -51,6 +51,21 @@ namespace AM.Text
         public TextPosition
             (
                 [NotNull] TextNavigator navigator
+            )
+        {
+            Sure.NotNull(navigator, nameof(navigator));
+
+            Column = navigator.Column;
+            Line = navigator.Line;
+            Position = navigator.Position;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public TextPosition
+            (
+                [NotNull] TextNavigator2 navigator
             )
         {
             Sure.NotNull(navigator, nameof(navigator));

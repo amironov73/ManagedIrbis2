@@ -26,7 +26,7 @@ namespace AM.Text
     /// Навигатор по тексту.
     /// </summary>
     [PublicAPI]
-    public sealed class TextNavigator
+    public sealed class TextNavigator2
     {
         #region Constants
 
@@ -66,11 +66,11 @@ namespace AM.Text
         /// </summary>
         public int Position => _position;
 
-        /// <summary>
-        /// Обрабатываемый текст.
-        /// </summary>
-        [NotNull]
-        public string Text => _text;
+        ///// <summary>
+        ///// Обрабатываемый текст.
+        ///// </summary>
+        //[NotNull]
+        //public string Text => _text;
 
         #endregion
 
@@ -79,15 +79,12 @@ namespace AM.Text
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TextNavigator
+        public TextNavigator2
             (
-                [NotNull] string text,
-                bool normalize = false
+                Memory<char> text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
-            _text = normalize ? text.Normalize() : text;
+            _text = text;
             _position = 0;
             _length = _text.Length;
             _line = 1;
@@ -98,7 +95,7 @@ namespace AM.Text
 
         #region Private members
 
-        private readonly string _text;
+        private Memory<char> _text;
 
         private int _position, _length, _line, _column;
 
@@ -110,10 +107,9 @@ namespace AM.Text
         /// Clone the navigator.
         /// </summary>
         [Pure]
-        [NotNull]
-        public TextNavigator Clone()
+        public TextNavigator2 Clone()
         {
-            TextNavigator result = new TextNavigator(_text)
+            TextNavigator2 result = new TextNavigator2(_text)
             {
                 _column = _column,
                 _length = _length,
@@ -131,29 +127,14 @@ namespace AM.Text
         public static TextNavigator FromFile
             (
                 [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                Encoding encoding = null
             )
         {
             Sure.FileExists(fileName, nameof(fileName));
+
+            encoding = encoding ?? Encoding.UTF8;
 
             string text = File.ReadAllText(fileName, encoding);
-            TextNavigator result = new TextNavigator(text);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Навигатор по текстовому файлу.
-        /// </summary>
-        [NotNull]
-        public static TextNavigator FromFile
-            (
-                [NotNull] string fileName
-            )
-        {
-            Sure.FileExists(fileName, nameof(fileName));
-
-            string text = File.ReadAllText(fileName, Encoding.UTF8);
             TextNavigator result = new TextNavigator(text);
 
             return result;
@@ -165,19 +146,9 @@ namespace AM.Text
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
         [Pure]
-        [CanBeNull]
-        public string GetRemainingText()
+        public Memory<char> GetRemainingText()
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            string result = _text.Substring
-                (
-                    _position,
-                    _length - _position
-                );
+            Memory<char> result = _text.Slice(_position, _length - _position);
 
             return result;
         }
@@ -296,7 +267,7 @@ namespace AM.Text
                 return EOF;
             }
 
-            return _text[newPosition];
+            return _text.Span[newPosition];
         }
 
         /// <summary>
@@ -316,7 +287,7 @@ namespace AM.Text
                 return EOF;
             }
 
-            return _text[newPosition];
+            return _text.Span[newPosition];
         }
 
         /// <summary>
@@ -330,7 +301,7 @@ namespace AM.Text
                 return EOF;
             }
 
-            return _text[_position - 1];
+            return _text.Span[_position - 1];
         }
 
         /// <summary>
@@ -349,14 +320,14 @@ namespace AM.Text
                 return EOF;
             }
 
-            return _text[_position - distance];
+            return _text.Span[_position - distance];
         }
 
         /// <summary>
         /// Смещение указателя.
         /// </summary>
         [NotNull]
-        public TextNavigator Move
+        public TextNavigator2 Move
             (
                 int distance
             )
@@ -380,31 +351,22 @@ namespace AM.Text
                 return EOF;
             }
 
-            return _text[_position];
+            return _text.Span[_position];
         }
 
         /// <summary>
         /// Подглядывание строки вплоть до указанной длины.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekString
+        public Memory<char> PeekString
             (
                 int length
             )
         {
             Sure.Positive(length, nameof(length));
 
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
-            StringBuilder result = new StringBuilder(length);
-
+            int start = _position;
             for (int i = 0; i < length; i++)
             {
                 char c = ReadChar();
@@ -412,37 +374,29 @@ namespace AM.Text
                 {
                     break;
                 }
-                result.Append(c);
             }
 
+            Memory<char> result = _text.Slice(start, _position - start);
             _position = savePosition;
             _column = saveColumn;
             _line = saveLine;
 
-            return result.ToString();
+            return result;
         }
 
         /// <summary>
         /// Подглядывание вплоть до указанного символа
         /// (включая его).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekTo
+        public Memory<char> PeekTo
             (
                 char stopChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadTo(stopChar);
+            Memory<char> result = ReadTo(stopChar);
 
             _position = savePosition;
             _column = saveColumn;
@@ -455,23 +409,15 @@ namespace AM.Text
         /// Подглядывание вплоть до указанных символов
         /// (включая их).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekTo
+        public Memory<char> PeekTo
             (
                 char[] stopChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadTo(stopChars);
+            Memory<char> result = ReadTo(stopChars);
 
             _position = savePosition;
             _column = saveColumn;
@@ -483,23 +429,15 @@ namespace AM.Text
         /// <summary>
         /// Подглядывание вплоть до указанного символа.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekUntil
+        public Memory<char> PeekUntil
             (
                 char stopChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadUntil(stopChar);
+            Memory<char> result = ReadUntil(stopChar);
 
             _position = savePosition;
             _column = saveColumn;
@@ -511,23 +449,15 @@ namespace AM.Text
         /// <summary>
         /// Подглядывание вплоть до указанных символов.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string PeekUntil
+        public Memory<char> PeekUntil
             (
                 char[] stopChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadUntil(stopChars);
+            Memory<char> result = ReadUntil(stopChars);
 
             _position = savePosition;
             _column = saveColumn;
@@ -546,7 +476,7 @@ namespace AM.Text
                 return EOF;
             }
 
-            char result = _text[_position];
+            char result = _text.Span[_position];
             _position++;
             if (result == '\n')
             {
@@ -565,20 +495,12 @@ namespace AM.Text
         /// Считывание экранированной строки вплоть до разделителя
         /// (не включая его).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
         public string ReadEscapedUntil
             (
                 char escapeChar,
                 char stopChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             StringBuilder result = new StringBuilder();
             while (true)
             {
@@ -623,12 +545,7 @@ namespace AM.Text
         /// Считывание начиная с открывающего символа
         /// до закрывающего (включая их).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// Пустая строка, если нет открывающего
-        /// или закрывающего символа.
-        /// </returns>
-        [CanBeNull]
-        public string ReadFrom
+        public Memory<char> ReadFrom
             (
                 char openChar,
                 char closeChar
@@ -644,7 +561,7 @@ namespace AM.Text
             char c = PeekChar();
             if (c != openChar)
             {
-                return string.Empty;
+                return Memory<char>.Empty;
             }
             ReadChar();
 
@@ -653,7 +570,7 @@ namespace AM.Text
                 c = ReadChar();
                 if (c == EOF)
                 {
-                    return string.Empty;
+                    return Memory<char>.Empty;
                 }
                 if (c == closeChar)
                 {
@@ -661,10 +578,10 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -674,28 +591,18 @@ namespace AM.Text
         /// Считывание начиная с открывающего символа
         /// до закрывающего (включая их).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// Пустая строка, если нет открывающего
-        /// или закрывающего символа.
-        /// </returns>
-        [CanBeNull]
-        public string ReadFrom
+        public Memory<char> ReadFrom
             (
                 char[] openChars,
                 char[] closeChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             char c = PeekChar();
             if (Array.IndexOf(openChars, c) < 0)
             {
-                return string.Empty;
+                return Memory<char>.Empty;
             }
             ReadChar();
 
@@ -704,7 +611,7 @@ namespace AM.Text
                 c = ReadChar();
                 if (c == EOF)
                 {
-                    return string.Empty;
+                    return Memory<char>.Empty;
                 }
                 if (Array.IndexOf(closeChars, c) >= 0)
                 {
@@ -712,10 +619,10 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -724,19 +631,11 @@ namespace AM.Text
         /// <summary>
         /// Чтение беззнакового целого.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// Пустую строку, если не число.</returns>
-        [CanBeNull]
-        public string ReadInteger()
+        public Memory<char> ReadInteger()
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             if (!IsDigit())
             {
-                return string.Empty;
+                return Memory<char>.Empty;
             }
 
             int savePosition = _position;
@@ -746,10 +645,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -758,15 +657,9 @@ namespace AM.Text
         /// <summary>
         /// Чтение до конца строки.
         /// </summary>
-        [CanBeNull]
-        public string ReadLine()
+        public Memory<char> ReadLine()
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            StringBuilder result = new StringBuilder();
+            int start = _position;
 
             while (!IsEOF)
             {
@@ -775,9 +668,14 @@ namespace AM.Text
                 {
                     break;
                 }
-                c = ReadChar();
-                result.Append(c);
+                ReadChar();
             }
+
+            Memory<char> result = _text.Slice
+                (
+                    start: start,
+                    length: _position - start
+                );
 
             if (!IsEOF)
             {
@@ -794,29 +692,20 @@ namespace AM.Text
                 }
             }
 
-            return result.ToString();
+            return result;
         }
 
         /// <summary>
         /// Чтение строки вплоть до указанной длины.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadString
+        public Memory<char> ReadString
             (
                 int length
             )
         {
             Sure.Positive(length, nameof(length));
 
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            StringBuilder result = new StringBuilder(length);
-
+            int start = _position;
             for (int i = 0; i < length; i++)
             {
                 char c = ReadChar();
@@ -824,31 +713,27 @@ namespace AM.Text
                 {
                     break;
                 }
-                result.Append(c);
             }
 
-            return result.ToString();
+            Memory<char> result = _text.Slice
+                (
+                    start: start,
+                    length: _position - start
+                );
+
+            return result;
         }
 
         /// <summary>
         /// Считывание вплоть до указанного символа
         /// (включая его).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadTo
+        public Memory<char> ReadTo
             (
                 char stopChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
-            int savePosition = _position;
-
+            int start = _position;
             while (true)
             {
                 char c = ReadChar();
@@ -858,10 +743,10 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: start,
+                    length: _position - start
                 );
 
             return result;
@@ -872,21 +757,16 @@ namespace AM.Text
         /// (разделитель не помещается в возвращаемое значение,
         /// однако, считывается).
         /// </summary>
-        [CanBeNull]
-        public string ReadTo
+        public Memory<char> ReadTo
             (
                 [NotNull] string stopString
             )
         {
             Sure.NotNullNorEmpty(stopString, nameof(stopString));
 
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
             int length = 0;
+            var span = _text.Span;
 
             while (true)
             {
@@ -904,7 +784,7 @@ namespace AM.Text
                     int start = _position - stopString.Length;
                     for (int i = 0; i < stopString.Length; i++)
                     {
-                        if (_text[start + i] != stopString[i])
+                        if (span[start + i] != stopString[i])
                         {
                             goto AGAIN;
                         }
@@ -913,7 +793,7 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
                     savePosition,
                     _position - savePosition - stopString.Length
@@ -926,19 +806,11 @@ namespace AM.Text
         /// Считывание вплоть до указанного символа
         /// (включая один из них).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadTo
+        public Memory<char> ReadTo
             (
                 params char[] stopChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -951,10 +823,10 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -964,19 +836,11 @@ namespace AM.Text
         /// Считывание вплоть до указанного символа
         /// (не включая его).
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadUntil
+        public Memory<char> ReadUntil
             (
                 char stopChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -989,10 +853,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -1003,21 +867,16 @@ namespace AM.Text
         /// (разделитель не помещается в возвращаемое значение
         /// и не считывается).
         /// </summary>
-        [CanBeNull]
-        public string ReadUntil
+        public Memory<char> ReadUntil
             (
                 [NotNull] string stopString
             )
         {
             Sure.NotNullNorEmpty(stopString, nameof(stopString));
 
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
             int length = 0;
+            var span = _text.Span;
 
             while (true)
             {
@@ -1036,7 +895,7 @@ namespace AM.Text
                     int start = _position - stopString.Length;
                     for (int i = 0; i < stopString.Length; i++)
                     {
-                        if (_text[start + i] != stopString[i])
+                        if (span[start + i] != stopString[i])
                         {
                             goto AGAIN;
                         }
@@ -1045,10 +904,10 @@ namespace AM.Text
                 }
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition - stopString.Length
+                    start: savePosition,
+                    length: _position - savePosition - stopString.Length
                 );
             _position -= stopString.Length;
 
@@ -1059,19 +918,11 @@ namespace AM.Text
         /// Считывание вплоть до указанных символов
         /// (не включая их).
         /// </summary>
-        /// <remarks><c>null</c>, если достигнут конец текста.
-        /// </remarks>
-        [CanBeNull]
-        public string ReadUntil
+        public Memory<char> ReadUntil
             (
                 params char[] stopChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -1085,10 +936,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -1098,21 +949,13 @@ namespace AM.Text
         /// Считывание вплоть до указанных символов
         /// (не включая их).
         /// </summary>
-        /// <remarks><c>null</c>, если достигнут конец текста.
-        /// </remarks>
-        [CanBeNull]
-        public string ReadUntil
+        public Memory<char> ReadUntil
             (
                 [NotNull] char[] openChars,
                 [NotNull] char[] closeChars,
                 [NotNull] char[] stopChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
             int level = 0;
 
@@ -1149,7 +992,7 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
                     savePosition,
                     _position - savePosition
@@ -1161,19 +1004,11 @@ namespace AM.Text
         /// <summary>
         /// Считывание, пока встречается указанный символ.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadWhile
+        public Memory<char> ReadWhile
             (
                 char goodChar
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -1186,10 +1021,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -1198,19 +1033,11 @@ namespace AM.Text
         /// <summary>
         /// Считывание, пока встречается указанные символы.
         /// </summary>
-        /// <returns><c>null</c>, если достигнут конец текста.
-        /// </returns>
-        [CanBeNull]
-        public string ReadWhile
+        public Memory<char> ReadWhile
             (
                 params char[] goodChars
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -1224,10 +1051,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -1236,14 +1063,8 @@ namespace AM.Text
         /// <summary>
         /// Read word.
         /// </summary>
-        [CanBeNull]
-        public string ReadWord()
+        public Memory<char> ReadWord()
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -1257,10 +1078,10 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
-                    savePosition,
-                    _position - savePosition
+                    start: savePosition,
+                    length: _position - savePosition
                 );
 
             return result;
@@ -1269,17 +1090,11 @@ namespace AM.Text
         /// <summary>
         /// Read word.
         /// </summary>
-        [CanBeNull]
-        public string ReadWord
+        public Memory<char> ReadWord
             (
                 params char[] additionalWordCharacters
             )
         {
-            if (IsEOF)
-            {
-                return null;
-            }
-
             int savePosition = _position;
 
             while (true)
@@ -1294,7 +1109,7 @@ namespace AM.Text
                 ReadChar();
             }
 
-            string result = _text.Substring
+            Memory<char> result = _text.Slice
                 (
                     savePosition,
                     _position - savePosition
@@ -1307,8 +1122,7 @@ namespace AM.Text
         /// Get recent text.
         /// </summary>
         [Pure]
-        [NotNull]
-        public string RecentText
+        public Memory<char> RecentText
             (
                 int length
             )
@@ -1329,11 +1143,7 @@ namespace AM.Text
                 length = 0;
             }
 
-            return _text.Substring
-                (
-                    start,
-                    length
-                );
+            return _text.Slice(start, length);
         }
 
         /// <summary>
@@ -1408,6 +1218,7 @@ namespace AM.Text
             if (Array.IndexOf(allowed, PeekChar()) >= 0)
             {
                 ReadChar();
+
                 return true;
             }
 
@@ -1694,109 +1505,98 @@ namespace AM.Text
             }
         }
 
-        /// <summary>
-        /// Split text by given good characters.
-        /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public string[] SplitByGoodCharacters
-            (
-                params char[] goodCharacters
-            )
-        {
-            List<string> result = new List<string>();
+        ///// <summary>
+        ///// Split text by given good characters.
+        ///// </summary>
+        //[NotNull]
+        //[ItemNotNull]
+        //public string[] SplitByGoodCharacters
+        //    (
+        //        params char[] goodCharacters
+        //    )
+        //{
+        //    List<string> result = new List<string>();
 
-            while (!IsEOF)
-            {
-                if (SkipWhileNot(goodCharacters))
-                {
-                    string word = ReadWhile(goodCharacters);
-                    if (!string.IsNullOrEmpty(word))
-                    {
-                        result.Add(word);
-                    }
-                }
-            }
+        //    while (!IsEOF)
+        //    {
+        //        if (SkipWhileNot(goodCharacters))
+        //        {
+        //            string word = ReadWhile(goodCharacters);
+        //            if (!string.IsNullOrEmpty(word))
+        //            {
+        //                result.Add(word);
+        //            }
+        //        }
+        //    }
 
-            return result.ToArray();
-        }
+        //    return result.ToArray();
+        //}
 
-        /// <summary>
-        /// Split the remaining text to array of words.
-        /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public string[] SplitToWords()
-        {
-            List<string> result = new List<string>();
+        ///// <summary>
+        ///// Split the remaining text to array of words.
+        ///// </summary>
+        //[NotNull]
+        //[ItemNotNull]
+        //public string[] SplitToWords()
+        //{
+        //    List<string> result = new List<string>();
 
-            while (true)
-            {
-                if (!SkipNonWord())
-                {
-                    break;
-                }
+        //    while (true)
+        //    {
+        //        if (!SkipNonWord())
+        //        {
+        //            break;
+        //        }
 
-                string word = ReadWord();
-                result.Add(word);
-            }
+        //        string word = ReadWord();
+        //        result.Add(word);
+        //    }
 
-            return result.ToArray();
-        }
+        //    return result.ToArray();
+        //}
 
-        /// <summary>
-        /// Split the remaining text to array of words.
-        /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public string[] SplitToWords
-            (
-                params char[] additionalWordCharacters
-            )
-        {
-            List<string> result = new List<string>();
+        ///// <summary>
+        ///// Split the remaining text to array of words.
+        ///// </summary>
+        //[NotNull]
+        //[ItemNotNull]
+        //public string[] SplitToWords
+        //    (
+        //        params char[] additionalWordCharacters
+        //    )
+        //{
+        //    List<string> result = new List<string>();
 
-            while (true)
-            {
-                if (!SkipNonWord(additionalWordCharacters))
-                {
-                    break;
-                }
+        //    while (true)
+        //    {
+        //        if (!SkipNonWord(additionalWordCharacters))
+        //        {
+        //            break;
+        //        }
 
-                string word = ReadWord(additionalWordCharacters);
-                result.Add(word);
-            }
+        //        string word = ReadWord(additionalWordCharacters);
+        //        result.Add(word);
+        //    }
 
-            return result.ToArray();
-        }
+        //    return result.ToArray();
+        //}
 
         /// <summary>
         /// Get substring.
         /// </summary>
         [Pure]
-        [NotNull]
-        public string Substring
+        public Memory<char> Substring
             (
                 int offset,
                 int length
             )
         {
-            string result = _text.Substring(offset, length);
+            Memory<char> result = _text.Slice(offset, length);
 
             return result;
         }
 
         #endregion
 
-        #region Object members
-
-        /// <inheritdoc cref="object.ToString" />
-        [Pure]
-        public override string ToString()
-        {
-            return $"Line={Line}, Column={Column}";
-        }
-
-        #endregion
     }
 }

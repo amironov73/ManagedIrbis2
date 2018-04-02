@@ -72,10 +72,7 @@ namespace AM.IO
                 [CanBeNull] Encoding encoding = null
             )
         {
-            if (ReferenceEquals(encoding, null))
-            {
-                encoding = Encoding.Default;
-            }
+            encoding = encoding ?? Encoding.Default;
 
             _data = data;
             Position = 0;
