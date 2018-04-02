@@ -50,10 +50,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AM" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="..\..\Common\AssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
