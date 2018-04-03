@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,130 @@ namespace ManagedIrbis.Mapping
     public sealed class SubFieldMapper
     {
         #region Public methods
+
+        /// <summary>
+        /// Преобразование из булевого значения в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromBoolean
+            (
+                bool value
+            )
+        {
+            return value ? "1" : null;
+        }
+
+        /// <summary>
+        /// Преобразование из символа в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromChar
+            (
+                char value
+            )
+        {
+            return value == '\0' ? null : new string(value, 1);
+        }
+
+        /// <summary>
+        /// Преобразование из даты в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromDateTime
+            (
+                DateTime value
+            )
+        {
+            return value == DateTime.MinValue ? null : IrbisDate.ConvertDateToString(value);
+        }
+
+        /// <summary>
+        /// Преобразвание из числа с фиксированной точкой в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromDecimal
+            (
+                decimal value
+            )
+        {
+            return value == 0m ? null : value.ToInvariantString();
+        }
+
+        /// <summary>
+        /// Преобразвание из числа с плавающей точкой двойной точности в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromDouble
+            (
+                double value
+            )
+        {
+            // ReSharper disable CompareOfFloatsByEqualityOperator
+            return value == 0.0 ? null : value.ToInvariantString();
+            // ReSharper restore CompareOfFloatsByEqualityOperator
+        }
+
+        /// <summary>
+        /// Преобразвание из числа с плавающей точкой одинарной точности в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromSingle
+            (
+                float value
+            )
+        {
+            // ReSharper disable CompareOfFloatsByEqualityOperator
+            return value == 0.0 ? null : value.ToString(CultureInfo.InvariantCulture);
+            // ReSharper restore CompareOfFloatsByEqualityOperator
+        }
+
+        /// <summary>
+        /// Преобразвание из 16-битного целого в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromInt16
+            (
+                short value
+            )
+        {
+            return value == 0 ? null : value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Преобразвание из 32-битного целого в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromInt32
+            (
+                int value
+            )
+        {
+            return value == 0 ? null : value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Преобразвание из 64-битного целого в строку.
+        /// </summary>
+        [CanBeNull]
+        public static string FromInt64
+            (
+                long value
+            )
+        {
+            return value == 0 ? null : value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Преобразвание из строки в строку (тривиальное).
+        /// </summary>
+        [CanBeNull]
+        public static string FromString
+            (
+                [CanBeNull] string value
+            )
+        {
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
 
         /// <summary>
         /// Преобразование в булево значение.
