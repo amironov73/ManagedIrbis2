@@ -565,6 +565,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to : non overriden.
+        /// </summary>
+        internal static string IrbisProvider_NonOverriden {
+            get {
+                return ResourceManager.GetString("IrbisProvider_NonOverriden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : empty response.
         /// </summary>
         internal static string SmartRead_EmptyResponse {

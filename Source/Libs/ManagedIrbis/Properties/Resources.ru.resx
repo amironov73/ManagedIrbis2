@@ -280,4 +280,7 @@
   <data name="DatabaseNotSet" xml:space="preserve">
     <value>Не указана база данных</value>
   </data>
+  <data name="IrbisProvider_NonOverriden" xml:space="preserve">
+    <value>: метод не переопределён в потомке</value>
+  </data>
 </root>

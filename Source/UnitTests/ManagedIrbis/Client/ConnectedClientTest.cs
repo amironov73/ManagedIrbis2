@@ -372,7 +372,7 @@ namespace UnitTests.ManagedIrbis.Client
                     (
                         path: IrbisPath.MasterFile,
                         database: "IBIS",
-                        fileName: "someFile.init"
+                        fileName: "someFile.ini"
                     );
                 IniFile iniFile = client.ReadIniFile(specification);
                 Assert.IsNotNull(iniFile);
@@ -397,7 +397,7 @@ namespace UnitTests.ManagedIrbis.Client
                     (
                         path: IrbisPath.MasterFile,
                         database: "IBIS",
-                        fileName: "someFile.init"
+                        fileName: "someFile.ini"
                     );
                 IniFile iniFile = client.ReadIniFile(specification);
                 Assert.IsNull(iniFile);

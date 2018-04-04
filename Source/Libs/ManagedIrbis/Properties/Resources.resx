@@ -280,4 +280,7 @@
   <data name="DatabaseNotSet" xml:space="preserve">
     <value>Database not set</value>
   </data>
+  <data name="IrbisProvider_NonOverriden" xml:space="preserve">
+    <value>: non overriden</value>
+  </data>
 </root>

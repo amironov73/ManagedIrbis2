@@ -27,6 +27,8 @@ using ManagedIrbis.Menus;
 using ManagedIrbis.Pft;
 using ManagedIrbis.Search;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 // ReSharper disable VirtualMemberNeverOverridden.Global
@@ -74,7 +76,7 @@ namespace ManagedIrbis.Client
         /// Resolves the credentials.
         /// </summary>
         [CanBeNull]
-        public ICredentialsResolver CredentialsResolver { get;set; }
+        public ICredentialsResolver CredentialsResolver { get; set; }
 
         #endregion
 
@@ -101,6 +103,8 @@ namespace ManagedIrbis.Client
         [CanBeNull]
         public virtual IPftFormatter AcquireFormatter()
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(AcquireFormatter) + Resources.IrbisProvider_NonOverriden);
+
             return null;
         }
 
@@ -114,11 +118,7 @@ namespace ManagedIrbis.Client
         {
             // Nothing to do here
 
-            Log.Warn
-                (
-                    "IrbisProvider::Configure: "
-                    + "not overridden"
-                );
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(Configure) + Resources.IrbisProvider_NonOverriden);
         }
 
         /// <summary>
@@ -130,7 +130,9 @@ namespace ManagedIrbis.Client
                 [NotNull] string term
             )
         {
-            return new TermLink[0];
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ExactSearchLinks) + Resources.IrbisProvider_NonOverriden);
+
+            return Array.Empty<TermLink>();
         }
 
         /// <summary>
@@ -143,7 +145,9 @@ namespace ManagedIrbis.Client
                 int limit
             )
         {
-            return new TermLink[0];
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ExactSearchTrimLinks) + Resources.IrbisProvider_NonOverriden);
+
+            return Array.Empty<TermLink>();
         }
 
         /// <summary>
@@ -154,6 +158,8 @@ namespace ManagedIrbis.Client
                 [NotNull] FileSpecification specification
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(FileExist) + Resources.IrbisProvider_NonOverriden);
+
             return false;
         }
 
@@ -167,6 +173,8 @@ namespace ManagedIrbis.Client
                 string format
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(FormatRecord) + Resources.IrbisProvider_NonOverriden);
+
             return string.Empty;
         }
 
@@ -179,6 +187,8 @@ namespace ManagedIrbis.Client
                 string format
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(FormatRecords) + Resources.IrbisProvider_NonOverriden);
+
             return StringUtility.EmptyArray;
         }
 
@@ -200,6 +210,8 @@ namespace ManagedIrbis.Client
                 [NotNull] string database
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(GetCatalogState) + Resources.IrbisProvider_NonOverriden);
+
             Sure.NotNullNorEmpty(database, nameof(database));
 
             CatalogState result = new CatalogState
@@ -226,6 +238,8 @@ namespace ManagedIrbis.Client
         /// </summary>
         public virtual int GetMaxMfn()
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(GetMaxMfn) + Resources.IrbisProvider_NonOverriden);
+
             return 0;
         }
 
@@ -236,6 +250,8 @@ namespace ManagedIrbis.Client
         [ItemNotNull]
         public virtual string[] GetFileSearchPath()
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(GetFileSearchPath) + Resources.IrbisProvider_NonOverriden);
+
             return StringUtility.EmptyArray;
         }
 
@@ -263,6 +279,8 @@ namespace ManagedIrbis.Client
         [NotNull]
         public virtual IniFile GetUserIniFile()
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(GetUserIniFile) + Resources.IrbisProvider_NonOverriden);
+
             IniFile result = new IniFile();
 
             return result;
@@ -274,7 +292,9 @@ namespace ManagedIrbis.Client
         [NotNull]
         public virtual DatabaseInfo[] ListDatabases()
         {
-            return new DatabaseInfo[0];
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ListDatabases) + Resources.IrbisProvider_NonOverriden);
+
+            return Array.Empty<DatabaseInfo>();
         }
 
         /// <summary>
@@ -294,7 +314,7 @@ namespace ManagedIrbis.Client
                 [NotNull] FileSpecification fileSpecification
             )
         {
-            Sure.NotNull(fileSpecification, nameof(fileSpecification));
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReadFile) + Resources.IrbisProvider_NonOverriden);
 
             return null;
         }
@@ -358,6 +378,8 @@ namespace ManagedIrbis.Client
                 int mfn
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReadRecord) + Resources.IrbisProvider_NonOverriden);
+
             return null;
         }
 
@@ -371,6 +393,8 @@ namespace ManagedIrbis.Client
                 int version
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReadRecordVersion) + Resources.IrbisProvider_NonOverriden);
+
             return null;
         }
 
@@ -380,6 +404,8 @@ namespace ManagedIrbis.Client
         [CanBeNull]
         public virtual SearchScenario[] ReadSearchScenarios()
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReadSearchScenarios) + Resources.IrbisProvider_NonOverriden);
+
             return Array.Empty<SearchScenario>();
         }
 
@@ -392,6 +418,8 @@ namespace ManagedIrbis.Client
                 [NotNull] TermParameters parameters
             )
         {
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReadTerms) + Resources.IrbisProvider_NonOverriden);
+
             return Array.Empty<TermInfo>();
         }
 
@@ -412,6 +440,8 @@ namespace ManagedIrbis.Client
             )
         {
             // Nothing to do here
+
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(ReleaseFormatter) + Resources.IrbisProvider_NonOverriden);
         }
 
         /// <summary>
@@ -423,7 +453,9 @@ namespace ManagedIrbis.Client
                 [CanBeNull] string expression
             )
         {
-            return new int[0];
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(Search) + Resources.IrbisProvider_NonOverriden);
+
+            return Array.Empty<int>();
         }
 
         /// <summary>
@@ -435,6 +467,8 @@ namespace ManagedIrbis.Client
             )
         {
             // Nothing to do here
+
+            Log.Warn(nameof(IrbisProvider) + "::" + nameof(WriteRecord) + Resources.IrbisProvider_NonOverriden);
         }
 
         #endregion
