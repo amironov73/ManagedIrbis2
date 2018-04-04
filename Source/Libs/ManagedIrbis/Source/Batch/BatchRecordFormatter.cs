@@ -106,7 +106,7 @@ namespace ManagedIrbis.Batch
                 Log.Error
                     (
                         nameof(BatchRecordFormatter) + "::Constructor: "
-                        + "batchSize="
+                        + nameof(batchSize) + "="
                         + batchSize
                     );
 
@@ -328,18 +328,18 @@ namespace ManagedIrbis.Batch
             {
                 Log.Error
                     (
-                        "BatchRecordFormatter::WholeDatabase: "
-                        + "batchSize="
+                        nameof(BatchRecordFormatter) + "::" + nameof(WholeDatabase)
+                        + ": " + nameof(batchSize) + "="
                         + batchSize
                     );
 
-                throw new ArgumentOutOfRangeException("batchSize");
+                throw new ArgumentOutOfRangeException(nameof(batchSize));
             }
 
             int maxMfn = connection.GetMaxMfn(database) - 1;
             if (maxMfn == 0)
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
 
             BatchRecordFormatter result = new BatchRecordFormatter
@@ -361,10 +361,7 @@ namespace ManagedIrbis.Batch
         /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public IEnumerator<string> GetEnumerator()
         {
-            Log.Trace
-                (
-                    "BatchRecordFormatter::GetEnumerator: start"
-                );
+            Log.Trace(nameof(BatchRecordFormatter) + "::" + nameof(GetEnumerator) + ": start");
 
             foreach (int[] package in _packages)
             {
@@ -387,10 +384,7 @@ namespace ManagedIrbis.Batch
                 }
             }
 
-            Log.Trace
-                (
-                    "BatchRecordFormatter::GetEnumerator: end"
-                );
+            Log.Trace(nameof(BatchRecordFormatter) + "::" + nameof(GetEnumerator) + ": end");
 
             if (_ownConnection)
             {

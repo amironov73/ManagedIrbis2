@@ -59,18 +59,18 @@ namespace UnitTests.ManagedIrbis.Mapping
             Assert.AreEqual(DateTime.MinValue, SubFieldMapper.ToDateTime(subField));
         }
 
-        [TestMethod]
-        public void SubFieldMapper_ToDateTime_2()
-        {
-            RecordField field = new RecordField(100, new SubField('a', "20180321"));
-            DateTime? expected = new DateTime(2018, 3, 21);
-            Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'a'));
-            field = new RecordField(100, new SubField('a'));
-            expected = DateTime.MinValue;
-            Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'a'));
-            expected = null;
-            Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'b'));
-        }
+        //[TestMethod]
+        //public void SubFieldMapper_ToDateTime_2()
+        //{
+        //    RecordField field = new RecordField(100, new SubField('a', "20180321"));
+        //    DateTime? expected = new DateTime(2018, 3, 21);
+        //    Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'a'));
+        //    field = new RecordField(100, new SubField('a'));
+        //    expected = DateTime.MinValue;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'a'));
+        //    expected = null;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToDateTime(field, 'b'));
+        //}
 
         [TestMethod]
         public void SubFieldMapper_ToDecimal_1()
@@ -117,18 +117,18 @@ namespace UnitTests.ManagedIrbis.Mapping
             Assert.AreEqual(0, SubFieldMapper.ToInt32(subField));
         }
 
-        [TestMethod]
-        public void SubFieldMapper_ToInt32_2()
-        {
-            RecordField field = new RecordField(100, new SubField('a', "123"));
-            int? expected = 123;
-            Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'a'));
-            expected = 0;
-            field = new RecordField(100, new SubField('a'));
-            Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'a'));
-            expected = null;
-            Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'b'));
-        }
+        //[TestMethod]
+        //public void SubFieldMapper_ToInt32_2()
+        //{
+        //    RecordField field = new RecordField(100, new SubField('a', "123"));
+        //    int? expected = 123;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'a'));
+        //    expected = 0;
+        //    field = new RecordField(100, new SubField('a'));
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'a'));
+        //    expected = null;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt32(field, 'b'));
+        //}
 
         [TestMethod]
         public void SubFieldMapper_ToInt64_1()
@@ -139,18 +139,18 @@ namespace UnitTests.ManagedIrbis.Mapping
             Assert.AreEqual(0L, SubFieldMapper.ToInt64(subField));
         }
 
-        [TestMethod]
-        public void SubFieldMapper_ToInt64_2()
-        {
-            RecordField field = new RecordField(100, new SubField('a', "123"));
-            long? expected = 123;
-            Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'a'));
-            expected = 0;
-            field = new RecordField(100, new SubField('a'));
-            Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'a'));
-            expected = null;
-            Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'b'));
-        }
+        //[TestMethod]
+        //public void SubFieldMapper_ToInt64_2()
+        //{
+        //    RecordField field = new RecordField(100, new SubField('a', "123"));
+        //    long? expected = 123;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'a'));
+        //    expected = 0;
+        //    field = new RecordField(100, new SubField('a'));
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'a'));
+        //    expected = null;
+        //    Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'b'));
+        //}
 
         [TestMethod]
         public void SubFieldMapper_ToString_1()

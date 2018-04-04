@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ConnectedClient.cs -- 
+/* ConnectedClient.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -31,7 +31,7 @@ using ManagedIrbis.Search;
 namespace ManagedIrbis.Client
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public class ConnectedClient
@@ -216,7 +216,7 @@ namespace ManagedIrbis.Client
         {
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            var lines = BatchRecordFormatter.WholeDatabase
+            IEnumerable<string> lines = BatchRecordFormatter.WholeDatabase
                 (
                     Connection,
                     database,
@@ -231,13 +231,11 @@ namespace ManagedIrbis.Client
                 MaxMfn = Connection.GetMaxMfn(database)
             };
 
-            List <RecordState> records
-                = new List<RecordState>(result.MaxMfn);
+            List <RecordState> records = new List<RecordState>(result.MaxMfn);
 
             foreach (string line in lines)
             {
-                RecordState record
-                    = RecordState.ParseServerAnswer(line);
+                RecordState record = RecordState.ParseServerAnswer(line);
                 if (record.Mfn != 0)
                 {
                     records.Add(record);
@@ -246,11 +244,10 @@ namespace ManagedIrbis.Client
 
             result.Records = records.ToArray();
 
-            DatabaseInfo info
-                = Connection.GetDatabaseInfo(database);
+            DatabaseInfo info = Connection.GetDatabaseInfo(database);
             result.LogicallyDeleted
                 = info.LogicallyDeletedRecords
-                .ThrowIfNull("info.LogicallyDeletedRecords")
+                .ThrowIfNull(nameof(info.LogicallyDeletedRecords))
                 .Where(mfn => mfn != 0)
                 .ToArray();
 

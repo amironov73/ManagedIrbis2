@@ -222,25 +222,25 @@ namespace ManagedIrbis.Mapping
             return IrbisDate.ConvertStringToDate(subField.Value);
         }
 
-        /// <summary>
-        /// Преобразование в дату.
-        /// </summary>
-        [CanBeNull]
-        public static DateTime? ToDateTime
-            (
-                [NotNull] RecordField field,
-                char code
-            )
-        {
-            SubField subField = field.GetFirstSubField(code);
-            DateTime? result = null;
-            if (!ReferenceEquals(subField, null))
-            {
-                result = ToDateTime(subField);
-            }
+        ///// <summary>
+        ///// Преобразование в дату.
+        ///// </summary>
+        //[CanBeNull]
+        //public static DateTime? ToDateTime
+        //    (
+        //        [NotNull] RecordField field,
+        //        char code
+        //    )
+        //{
+        //    SubField subField = field.GetFirstSubField(code);
+        //    DateTime? result = null;
+        //    if (!ReferenceEquals(subField, null))
+        //    {
+        //        result = ToDateTime(subField);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Преобразование в число с фиксированной точкой.
@@ -309,24 +309,24 @@ namespace ManagedIrbis.Mapping
             return result;
         }
 
-        /// <summary>
-        /// Преобразование в 32-битное целое со знаком.
-        /// </summary>
-        public static int? ToInt32
-            (
-                [NotNull] RecordField field,
-                char code
-            )
-        {
-            SubField subField = field.GetFirstSubField(code);
-            int? result = null;
-            if (!ReferenceEquals(subField, null))
-            {
-                result = ToInt32(subField);
-            }
+        ///// <summary>
+        ///// Преобразование в 32-битное целое со знаком.
+        ///// </summary>
+        //public static int? ToInt32
+        //    (
+        //        [NotNull] RecordField field,
+        //        char code
+        //    )
+        //{
+        //    SubField subField = field.GetFirstSubField(code);
+        //    int? result = null;
+        //    if (!ReferenceEquals(subField, null))
+        //    {
+        //        result = ToInt32(subField);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Преобразование в 64-битное целое со знаком.
@@ -341,24 +341,24 @@ namespace ManagedIrbis.Mapping
             return result;
         }
 
-        /// <summary>
-        /// Преобразование в 64-битное целое со знаком.
-        /// </summary>
-        public static long? ToInt64
-            (
-                [NotNull] RecordField field,
-                char code
-            )
-        {
-            SubField subField = field.GetFirstSubField(code);
-            long? result = null;
-            if (!ReferenceEquals(subField, null))
-            {
-                result = ToInt64(subField);
-            }
+        ///// <summary>
+        ///// Преобразование в 64-битное целое со знаком.
+        ///// </summary>
+        //public static long? ToInt64
+        //    (
+        //        [NotNull] RecordField field,
+        //        char code
+        //    )
+        //{
+        //    SubField subField = field.GetFirstSubField(code);
+        //    long? result = null;
+        //    if (!ReferenceEquals(subField, null))
+        //    {
+        //        result = ToInt64(subField);
+        //    }
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Преобразование в строку (тривиальное).
