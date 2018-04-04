@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 using AM;
@@ -20,6 +21,8 @@ using AM.Parameters;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Client
@@ -28,6 +31,7 @@ namespace ManagedIrbis.Client
     ///
     /// </summary>
     [PublicAPI]
+    [ExcludeFromCodeCoverage]
     public static class ProviderManager
     {
         #region Constants
@@ -103,19 +107,19 @@ namespace ManagedIrbis.Client
             Sure.NotNullNorEmpty(configurationString, nameof(configurationString));
 
             Parameter[] parameters = ParameterUtility.ParseString(configurationString);
-            string name = parameters.GetParameter("Provider", null);
-            if (ReferenceEquals(name, null) || name.Length == 0)
+            string providerName = parameters.GetParameter("Provider", null);
+            if (ReferenceEquals(providerName, null) || providerName.Length == 0)
             {
                 Log.Warn
                     (
                         nameof(ProviderManager) + "::" + nameof(GetAndConfigureProvider)
-                        + ": provider name not specified"
+                        + Resources.ProviderManager_ProviderNameNotSpecified
                     );
 
-                name = Default;
+                providerName = Default;
             }
 
-            name = name.ThrowIfNull("provider name");
+            providerName = providerName.ThrowIfNull(nameof(providerName));
 
             string assemblyParameter = parameters.GetParameter("Assembly", null)
                 ?? parameters.GetParameter("Assemblies", null);
@@ -140,7 +144,7 @@ namespace ManagedIrbis.Client
                 }
             }
 
-            IrbisProvider result = GetProvider(name, true)
+            IrbisProvider result = GetProvider(providerName, true)
                 .ThrowIfNull();
             result.Configure(configurationString);
 
@@ -164,13 +168,13 @@ namespace ManagedIrbis.Client
                 Log.Error
                     (
                         nameof(ProviderManager) + "::" + nameof(GetProvider)
-                        + ": provider not found: "
+                        + Resources.ProviderManager_ProviderNotFound
                         + name
                     );
 
                 if (throwOnError)
                 {
-                    throw new IrbisException("Provider not found: " + name);
+                    throw new IrbisException(Resources.ProviderManager_ProviderNotFound2 + name);
                 }
 
                 return null;
@@ -181,13 +185,13 @@ namespace ManagedIrbis.Client
                 Log.Error
                     (
                         nameof(ProviderManager) + "::" + nameof(GetProvider)
-                        + ": can't find type: "
+                        + Resources.ProviderManager_CanTFindType
                         + name
                     );
 
                 if (throwOnError)
                 {
-                    throw new IrbisException("Can't find type: " + name);
+                    throw new IrbisException(Resources.ProviderManager_CantFindType2 + name);
                 }
 
                 return null;
@@ -210,10 +214,10 @@ namespace ManagedIrbis.Client
                 Log.Error
                     (
                         nameof(ProviderManager) + "::" + nameof(GetPreconfiguredProvider)
-                        + ": IrbisProvider configuration key not specified"
+                        + ": " + Resources.ProviderManager_IrbisProviderConfigurationKeyNotSpecified
                     );
 
-                throw new IrbisException("IrbisProvider configuration key not specified");
+                throw new IrbisException(Resources.ProviderManager_IrbisProviderConfigurationKeyNotSpecified);
             }
 
             IrbisProvider result = GetAndConfigureProvider(configurationString);

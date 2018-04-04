@@ -574,6 +574,60 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to : can&apos;t find type: .
+        /// </summary>
+        internal static string ProviderManager_CanTFindType {
+            get {
+                return ResourceManager.GetString("ProviderManager_CanTFindType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t find type: .
+        /// </summary>
+        internal static string ProviderManager_CantFindType2 {
+            get {
+                return ResourceManager.GetString("ProviderManager_CantFindType2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IrbisProvider configuration key not specified.
+        /// </summary>
+        internal static string ProviderManager_IrbisProviderConfigurationKeyNotSpecified {
+            get {
+                return ResourceManager.GetString("ProviderManager_IrbisProviderConfigurationKeyNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : provider name not specified.
+        /// </summary>
+        internal static string ProviderManager_ProviderNameNotSpecified {
+            get {
+                return ResourceManager.GetString("ProviderManager_ProviderNameNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : provider not found: .
+        /// </summary>
+        internal static string ProviderManager_ProviderNotFound {
+            get {
+                return ResourceManager.GetString("ProviderManager_ProviderNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Provider not found: .
+        /// </summary>
+        internal static string ProviderManager_ProviderNotFound2 {
+            get {
+                return ResourceManager.GetString("ProviderManager_ProviderNotFound2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : empty response.
         /// </summary>
         internal static string SmartRead_EmptyResponse {

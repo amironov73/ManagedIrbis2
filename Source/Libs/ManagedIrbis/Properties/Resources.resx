@@ -283,4 +283,22 @@
   <data name="IrbisProvider_NonOverriden" xml:space="preserve">
     <value>: non overriden</value>
   </data>
+  <data name="ProviderManager_ProviderNameNotSpecified" xml:space="preserve">
+    <value>: provider name not specified</value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound" xml:space="preserve">
+    <value>: provider not found: </value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound2" xml:space="preserve">
+    <value>Provider not found: </value>
+  </data>
+  <data name="ProviderManager_CanTFindType" xml:space="preserve">
+    <value>: can't find type: </value>
+  </data>
+  <data name="ProviderManager_CantFindType2" xml:space="preserve">
+    <value>Can't find type: </value>
+  </data>
+  <data name="ProviderManager_IrbisProviderConfigurationKeyNotSpecified" xml:space="preserve">
+    <value>IrbisProvider configuration key not specified</value>
+  </data>
 </root>

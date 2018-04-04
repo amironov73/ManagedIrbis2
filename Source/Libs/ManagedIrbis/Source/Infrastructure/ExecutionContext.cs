@@ -106,8 +106,8 @@ namespace ManagedIrbis.Infrastructure
                 = new Verifier<ExecutionContext>(this, throwOnError);
 
             verifier
-                .NotNull(Command, "Command")
-                .NotNull(Connection, "Connection");
+                .NotNull(Command, nameof(Command))
+                .NotNull(Connection, nameof(Connection));
 
             return verifier.Result;
         }

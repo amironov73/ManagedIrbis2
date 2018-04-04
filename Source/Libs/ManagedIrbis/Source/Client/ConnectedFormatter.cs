@@ -43,7 +43,7 @@ namespace ManagedIrbis.Client
         public string Source { get; set; }
 
         /// <inheritdoc cref="IPftFormatter.SupportsExtendedSyntax" />
-        public bool SupportsExtendedSyntax { get { return false; } }
+        public bool SupportsExtendedSyntax => false;
 
         #endregion
 
@@ -73,7 +73,8 @@ namespace ManagedIrbis.Client
             )
         {
             if (ReferenceEquals(record, null)
-                || ReferenceEquals(Source, null) || Source.Length == 0)
+                || ReferenceEquals(Source, null)
+                || Source.Length == 0)
             {
                 return string.Empty;
             }
@@ -114,9 +115,9 @@ namespace ManagedIrbis.Client
             string source = Source.ThrowIfNull(nameof(Source));
             string[] result = Connection.FormatRecords
                 (
-                    Connection.Database,
-                    source,
-                    mfns
+                    database: Connection.Database,
+                    format: source,
+                    mfnList: mfns
                 );
 
             return result;
