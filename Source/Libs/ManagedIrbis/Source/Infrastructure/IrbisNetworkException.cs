@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* IrbisNetworkException.exe --
+/* IrbisNetworkException.cs -- exception during IRBIS network communication
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -10,7 +10,9 @@
 #region Using directives
 
 using System;
+
 using AM;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -18,7 +20,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// 
+    /// Exception during IRBIS network communication.
     /// </summary>
     [PublicAPI]
     public sealed class IrbisNetworkException
@@ -27,8 +29,7 @@ namespace ManagedIrbis.Infrastructure
         #region Construction
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="IrbisNetworkException"/> class.
+        /// Constructor.
         /// </summary>
         public IrbisNetworkException()
         {
@@ -37,12 +38,8 @@ namespace ManagedIrbis.Infrastructure
         #endregion
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="IrbisNetworkException" />
-        /// class with a specified error message.
+        /// Constructor.
         /// </summary>
-        /// <param name="message">
-        /// A message that describes the error.</param>
         public IrbisNetworkException
             (
                 string message
@@ -52,20 +49,8 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="IrbisNetworkException" /> class
-        /// with a specified error message and a reference
-        /// to the inner exception that is the cause
-        /// of this exception.
+        /// Constructor.
         /// </summary>
-        /// <param name="message">The error message
-        /// that explains the reason for the exception.</param>
-        /// <param name="innerException">The exception
-        /// that is the cause of the current exception.
-        /// If the <paramref name="innerException" /> parameter
-        /// is not a null reference, the current exception
-        /// is raised in a catch block that handles
-        /// the inner exception.</param>
         public IrbisNetworkException
             (
                 string message,

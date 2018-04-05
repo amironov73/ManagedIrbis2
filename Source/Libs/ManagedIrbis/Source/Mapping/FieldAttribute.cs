@@ -15,7 +15,7 @@ using JetBrains.Annotations;
 
 #endregion
 
-namespace ManagedIrbis.Source.Mapping
+namespace ManagedIrbis.Mapping
 {
     /// <summary>
     /// Устанавливает отображение поля записи на свойство объекта.
