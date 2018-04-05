@@ -301,4 +301,7 @@
   <data name="ProviderManager_IrbisProviderConfigurationKeyNotSpecified" xml:space="preserve">
     <value>IrbisProvider configuration key not specified</value>
   </data>
+  <data name="ServerResponse_BadFormat" xml:space="preserve">
+    <value>: bad format=</value>
+  </data>
 </root>

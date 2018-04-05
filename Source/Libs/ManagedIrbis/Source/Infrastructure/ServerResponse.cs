@@ -267,6 +267,7 @@ namespace ManagedIrbis.Infrastructure
                 {
                     return null;
                 }
+
                 result.Add(line);
             }
             for (; index < count; index++)
@@ -351,7 +352,7 @@ namespace ManagedIrbis.Infrastructure
                 IIrbisConnection connection
             )
         {
-            byte[] empty = new byte[0];
+            byte[] empty = Array.Empty<byte>();
 
             ServerResponse result = new ServerResponse
                 (
@@ -483,10 +484,10 @@ namespace ManagedIrbis.Infrastructure
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(length, nameof(length));
 
-            if (ReferenceEquals(RawAnswer, null))
-            {
-                throw new IrbisException("packet is null");
-            }
+            //if (ReferenceEquals(RawAnswer, null))
+            //{
+            //    throw new IrbisException("packet is null");
+            //}
 
             byte[] result = RawAnswer.GetSpan(offset, length);
 
@@ -499,10 +500,10 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public byte[] GetAnswerCopy()
         {
-            if (ReferenceEquals(RawAnswer, null))
-            {
-                throw new IrbisException("packet is null");
-            }
+            //if (ReferenceEquals(RawAnswer, null))
+            //{
+            //    throw new IrbisException("packet is null");
+            //}
 
             byte[] result = RawAnswer.GetSpan((int)_stream.Position);
 
@@ -512,14 +513,13 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Get stream with current state.
         /// </summary>
-        /// <returns></returns>
         [NotNull]
         public Stream GetStream()
         {
-            if (ReferenceEquals(RawAnswer, null))
-            {
-                throw new IrbisException("packet is null");
-            }
+            //if (ReferenceEquals(RawAnswer, null))
+            //{
+            //    throw new IrbisException("packet is null");
+            //}
 
             return _stream;
         }
@@ -549,10 +549,10 @@ namespace ManagedIrbis.Infrastructure
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(length, nameof(length));
 
-            if (ReferenceEquals(RawAnswer, null))
-            {
-                throw new IrbisException("packet is null");
-            }
+            //if (ReferenceEquals(RawAnswer, null))
+            //{
+            //    throw new IrbisException("packet is null");
+            //}
 
             MemoryStream result = new MemoryStream
                 (
@@ -766,7 +766,7 @@ namespace ManagedIrbis.Infrastructure
                 Log.Error
                     (
                         nameof(ServerResponse) + "::" + nameof(RequireInt32)
-                        + ": bad format="
+                        + ManagedIrbis.Properties.Resources.ServerResponse_BadFormat
                         + line.ToVisibleString()
                     );
 
@@ -819,10 +819,10 @@ namespace ManagedIrbis.Infrastructure
                 = new Verifier<ServerResponse>(this, throwOnError);
 
             verifier
-                .NotNull(RawAnswer, "RawAnswer")
-                .NotNull(RawRequest, "RawRequest")
-                .NotNullNorEmpty(CommandCode, "CommandCode")
-                .Assert(CommandNumber != 0, "CommandNumber");
+                .NotNull(RawAnswer, nameof(RawAnswer))
+                .NotNull(RawRequest, nameof(RawRequest))
+                .NotNullNorEmpty(CommandCode, nameof(CommandCode))
+                .Assert(CommandNumber != 0, nameof(CommandNumber));
 
             return verifier.Result;
         }

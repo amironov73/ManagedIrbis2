@@ -628,6 +628,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to : bad format=.
+        /// </summary>
+        internal static string ServerResponse_BadFormat {
+            get {
+                return ResourceManager.GetString("ServerResponse_BadFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : empty response.
         /// </summary>
         internal static string SmartRead_EmptyResponse {

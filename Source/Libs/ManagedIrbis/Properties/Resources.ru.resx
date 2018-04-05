@@ -283,4 +283,25 @@
   <data name="IrbisProvider_NonOverriden" xml:space="preserve">
     <value>: метод не переопределён в потомке</value>
   </data>
+  <data name="ProviderManager_ProviderNameNotSpecified" xml:space="preserve">
+    <value>: не задано имя провайдера</value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound" xml:space="preserve">
+    <value>: провайдер не найден: </value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound2" xml:space="preserve">
+    <value>Провайдер не найден: </value>
+  </data>
+  <data name="ProviderManager_CanTFindType" xml:space="preserve">
+    <value>: не найден тип: </value>
+  </data>
+  <data name="ProviderManager_CantFindType2" xml:space="preserve">
+    <value>Не найден тип: </value>
+  </data>
+  <data name="ProviderManager_IrbisProviderConfigurationKeyNotSpecified" xml:space="preserve">
+    <value>Не задан элемент конфигурации IrbisProvider</value>
+  </data>
+  <data name="ServerResponse_BadFormat" xml:space="preserve">
+    <value>: плохой формат=</value>
+  </data>
 </root>
