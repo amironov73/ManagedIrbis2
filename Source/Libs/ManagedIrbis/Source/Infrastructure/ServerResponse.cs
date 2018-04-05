@@ -21,6 +21,7 @@ using AM.Logging;
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -766,7 +767,7 @@ namespace ManagedIrbis.Infrastructure
                 Log.Error
                     (
                         nameof(ServerResponse) + "::" + nameof(RequireInt32)
-                        + ManagedIrbis.Properties.Resources.ServerResponse_BadFormat
+                        + Resources.ServerResponse_BadFormat
                         + line.ToVisibleString()
                     );
 

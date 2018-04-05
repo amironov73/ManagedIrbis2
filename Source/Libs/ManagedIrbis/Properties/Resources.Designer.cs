@@ -61,6 +61,33 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not connected.
+        /// </summary>
+        internal static string AbstractEngine_NotConnected {
+            get {
+                return ResourceManager.GetString("AbstractEngine_NotConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to : not connected.
+        /// </summary>
+        internal static string AbstractEngine_NotConnected2 {
+            get {
+                return ResourceManager.GetString("AbstractEngine_NotConnected2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  failed.
+        /// </summary>
+        internal static string AbstractEngine_StandardExecution_Failed {
+            get {
+                return ResourceManager.GetString("AbstractEngine_StandardExecution_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken network event.
         /// </summary>
         internal static string BrokenNetworkEvent {

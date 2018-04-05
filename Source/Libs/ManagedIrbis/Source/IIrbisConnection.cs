@@ -138,7 +138,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Признак: команда прервана.
         /// </summary>
-        bool Interrupted { get; }
+        bool Interrupted { get; set; }
 
         /// <summary>
         /// Socket.

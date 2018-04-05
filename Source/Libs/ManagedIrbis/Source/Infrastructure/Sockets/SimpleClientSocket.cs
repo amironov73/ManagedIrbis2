@@ -37,7 +37,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public SimpleClientSocket
             (
-                [NotNull] IrbisConnection connection
+                [NotNull] IIrbisConnection connection
             )
             : base(connection)
         {

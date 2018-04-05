@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 using AM.IO;
 using AM.Text;
+
 using JetBrains.Annotations;
 
 using ManagedIrbis;

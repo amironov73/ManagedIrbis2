@@ -11,6 +11,7 @@
 
 using System;
 using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using AM;
@@ -20,6 +21,7 @@ using AM.Threading;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -116,8 +118,7 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
-            IrbisConnection connection = (context.Connection as IrbisConnection)
-                .ThrowIfNull(nameof(context.Connection));
+            IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
             if (command.RequireConnection && connection.Socket.RequireConnection)
             {
@@ -126,10 +127,10 @@ namespace ManagedIrbis.Infrastructure
                     Log.Error
                         (
                             nameof(AbstractEngine) + "::" + nameof(CheckConnection)
-                            + ": not connected"
+                            + Resources.AbstractEngine_NotConnected2
                         );
 
-                    throw new IrbisException("Not connected");
+                    throw new IrbisException(Resources.AbstractEngine_NotConnected);
                 }
             }
         }
@@ -211,18 +212,21 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
+
             Log.Trace(nameof(AbstractEngine) + "::" + nameof(StandardExecution));
 
+            CheckConnection(context);
+
             AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
-            IrbisConnection connection = (context.Connection as IrbisConnection)
-                .ThrowIfNull(nameof(context.Connection));
+            IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
             if (!command.Verify(ThrowOnVerify))
             {
                 Log.Error
                     (
                         nameof(AbstractEngine) + "::" + nameof(StandardExecution)
-                        + ": " + nameof(command) + "." + nameof(command.Verify) + " failed"
+                        + ": " + nameof(command) + "." + nameof(command.Verify)
+                        + Resources.AbstractEngine_StandardExecution_Failed
                     );
             }
 
@@ -239,7 +243,8 @@ namespace ManagedIrbis.Infrastructure
                         Log.Error
                             (
                                 nameof(AbstractEngine) + "::" + nameof(StandardExecution)
-                                + ": " + nameof(query) + "." + nameof(query.Verify) + " failed"
+                                + ": " + nameof(query) + "." + nameof(query.Verify)
+                                + Resources.AbstractEngine_StandardExecution_Failed
                             );
                     }
 
@@ -249,7 +254,8 @@ namespace ManagedIrbis.Infrastructure
                         Log.Error
                             (
                                 nameof(AbstractEngine) + "::" + nameof(StandardExecution)
-                                + ": " + nameof(result) + "." + nameof(result.Verify) + " failed"
+                                + ": " + nameof(result) + "." + nameof(result.Verify)
+                                + Resources.AbstractEngine_StandardExecution_Failed
                             );
                     }
 
@@ -287,6 +293,7 @@ namespace ManagedIrbis.Infrastructure
         /// Get <see cref="MemoryStream"/>.
         /// </summary>
         [NotNull]
+        [ExcludeFromCodeCoverage]
         public virtual MemoryStream GetMemoryStream
             (
                 [NotNull] Type consumer
@@ -323,6 +330,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Report memory usage.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public virtual void ReportMemoryUsage
             (
                 [NotNull] Type consumer,

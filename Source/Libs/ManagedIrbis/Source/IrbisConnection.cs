@@ -243,7 +243,7 @@ namespace ManagedIrbis
         /// Признак: команда прервана.
         /// </summary>
         [DefaultValue(false)]
-        public bool Interrupted { get; internal set; }
+        public bool Interrupted { get; set; }
 
         /// <summary>
         /// Socket.

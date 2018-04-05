@@ -299,22 +299,22 @@ namespace ManagedIrbis.Infrastructure
                 );
 
             verifier
-                .NotNullNorEmpty(CommandCode, "CommandCode")
+                .NotNullNorEmpty(CommandCode, nameof(CommandCode))
                 .Assert
-                (
-                    Workstation != IrbisWorkstation.None,
-                    "Workstation"
-                )
+                    (
+                        Workstation != IrbisWorkstation.None,
+                        nameof(Workstation)
+                    )
                 .Assert
-                (
-                    ClientID != 0,
-                    "ClientID"
-                )
+                    (
+                        ClientID != 0,
+                        nameof(ClientID)
+                    )
                 .Assert
-                (
-                    CommandNumber != 0,
-                    "CommandNumber"
-                );
+                    (
+                        CommandNumber != 0,
+                        nameof(CommandNumber)
+                    );
 
             return verifier.Result;
         }

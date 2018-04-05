@@ -123,7 +123,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 bool throwOnError
             )
         {
-            bool result = Verify(throwOnError);
+            bool result = base.Verify(throwOnError);
 
             return result;
         }
@@ -197,22 +197,18 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region IVerifiable members
 
-        // TODO Fix this
+        /// <inheritdoc cref="AbstractCommand.Verify" />
+        public override bool Verify
+            (
+                bool throwOnError
+            )
+        {
+            Func<DynamicCommand, bool, bool> handler = VerifyHandler;
 
-        ///// <inheritdoc cref="AbstractCommand.Verify" />
-        //public override bool Verify
-        //    (
-        //        bool throwOnError
-        //    )
-        //{
-        //    Func<DynamicCommand, bool, bool> handler = VerifyHandler;
+            bool result = handler?.Invoke(this, throwOnError) ?? BaseVerify(throwOnError);
 
-        //    bool result = !ReferenceEquals(handler, null)
-        //      ? handler(this, throwOnError)
-        //      : BaseVerify(throwOnError);
-
-        //    return result;
-        //}
+            return result;
+        }
 
         #endregion
     }

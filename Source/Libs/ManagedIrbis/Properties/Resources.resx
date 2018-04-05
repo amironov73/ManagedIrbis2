@@ -304,4 +304,13 @@
   <data name="ServerResponse_BadFormat" xml:space="preserve">
     <value>: bad format=</value>
   </data>
+  <data name="AbstractEngine_NotConnected" xml:space="preserve">
+    <value>Not connected</value>
+  </data>
+  <data name="AbstractEngine_NotConnected2" xml:space="preserve">
+    <value>: not connected</value>
+  </data>
+  <data name="AbstractEngine_StandardExecution_Failed" xml:space="preserve">
+    <value> failed</value>
+  </data>
 </root>
