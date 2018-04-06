@@ -31,16 +31,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void CreateDictionaryCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            CreateDictionaryCommand command = new CreateDictionaryCommand(connection);
-            command.CreateQuery();
-        }
-
-        [TestMethod]
         public void CreateDictionaryCommand_CreateQuery_2()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
@@ -70,8 +60,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(returnCode, response.ReturnCode);
         }
 

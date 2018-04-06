@@ -211,11 +211,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.Search;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.Search;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
@@ -229,23 +229,23 @@ namespace ManagedIrbis.Infrastructure.Commands
                 throw new IrbisException("database not set");
             }
 
-            result.Add(database);
+            query.Add(database);
 
             string preparedQuery = IrbisSearchQuery.PrepareQuery
                     (
                         SearchExpression
                     );
-            result.AddUtf8(preparedQuery);
+            query.AddUtf8(preparedQuery);
 
-            result.Add(NumberOfRecords);
-            result.Add(FirstRecord);
+            query.Add(NumberOfRecords);
+            query.Add(FirstRecord);
 
             string preparedFormat = IrbisFormat.PrepareFormat
                 (
                     FormatSpecification
                 );
 
-            result.Add
+            query.Add
                 (
                     new TextWithEncoding
                         (
@@ -260,8 +260,8 @@ namespace ManagedIrbis.Infrastructure.Commands
 
             if (!string.IsNullOrEmpty(SequentialSpecification))
             {
-                result.Add(MinMfn);
-                result.Add(MaxMfn);
+                query.Add(MinMfn);
+                query.Add(MaxMfn);
 
                 string preparedSequential = IrbisFormat.PrepareFormat
                         (
@@ -276,22 +276,11 @@ namespace ManagedIrbis.Infrastructure.Commands
                             + " then '1' else '0'";
                     }
 
-                    result.AddUtf8(preparedSequential);
+                    query.AddUtf8(preparedSequential);
                 }
             }
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery clientQuery
-            )
-        {
-            Sure.NotNull(clientQuery, nameof(clientQuery));
-
-            ServerResponse result = base.Execute(clientQuery);
+            ServerResponse result = base.Execute(query);
             result.GetReturnCode();
 
             Found = result.RemainingUtfStrings()

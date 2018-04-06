@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* MaxMfnCommand.cs -- 
+/* MaxMfnCommand.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -14,12 +14,14 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public class MaxMfnCommand
@@ -52,11 +54,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.GetMaxMfn;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.GetMaxMfn;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
@@ -64,12 +66,14 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "MaxMfnCommand::CreateQuery: "
-                        + "database not specified"
+                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
                     );
 
-                throw new IrbisException("database not specified");
+                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
+
+            ServerResponse result = Execute(query);
 
             return result;
         }

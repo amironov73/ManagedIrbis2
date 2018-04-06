@@ -114,15 +114,10 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <summary>
-        /// Execute the command.
-        /// </summary>
-        public override ServerResponse Execute
-            (
-                ClientQuery clientQuery
-            )
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ServerResponse result = base.Execute(clientQuery);
+            ServerResponse result = base.Execute();
 
             if (result.ReturnCode == 0)
             {

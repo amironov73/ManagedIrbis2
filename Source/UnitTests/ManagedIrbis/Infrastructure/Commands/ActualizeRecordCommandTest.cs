@@ -31,16 +31,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void ActualizeRecordCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection);
-            command.CreateQuery();
-        }
-
-        [TestMethod]
         public void ActualizeRecordCommand_CreateQuery_2()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
@@ -54,28 +44,27 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
             Assert.IsNotNull(query);
         }
 
-        [TestMethod]
-        public void ActualizeRecordCommand_ExecuteRequest_1()
-        {
-            int returnCode = 0;
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection)
-            {
-                Database = "IBIS",
-                Mfn = 123
-            };
-            ResponseBuilder builder = new ResponseBuilder()
-                .StandardHeader(CommandCode.ActualizeRecord, 123, 456)
-                .NewLine()
-                .Append(returnCode)
-                .NewLine();
-            TestingSocket socket = (TestingSocket) connection.Socket;
-            socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
-            Assert.AreEqual(returnCode, response.ReturnCode);
-        }
+        //[TestMethod]
+        //public void ActualizeRecordCommand_ExecuteRequest_1()
+        //{
+        //    int returnCode = 0;
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ActualizeRecordCommand command = new ActualizeRecordCommand(connection)
+        //    {
+        //        Database = "IBIS",
+        //        Mfn = 123
+        //    };
+        //    ResponseBuilder builder = new ResponseBuilder()
+        //        .StandardHeader(CommandCode.ActualizeRecord, 123, 456)
+        //        .NewLine()
+        //        .Append(returnCode)
+        //        .NewLine();
+        //    TestingSocket socket = (TestingSocket) connection.Socket;
+        //    socket.Response = builder.Encode();
+        //    ServerResponse response = command.Execute();
+        //    Assert.AreEqual(returnCode, response.ReturnCode);
+        //}
 
         [TestMethod]
         public void ActualizeRecordCommand_Verify_1()

@@ -237,18 +237,18 @@ namespace ManagedIrbis.Infrastructure
 
                 try
                 {
-                    ClientQuery query = command.CreateQuery();
-                    if (!query.Verify(ThrowOnVerify))
-                    {
-                        Log.Error
-                            (
-                                nameof(AbstractEngine) + "::" + nameof(StandardExecution)
-                                + ": " + nameof(query) + "." + nameof(query.Verify)
-                                + Resources.AbstractEngine_StandardExecution_Failed
-                            );
-                    }
+                    //ClientQuery query = command.CreateQuery();
+                    //if (!query.Verify(ThrowOnVerify))
+                    //{
+                    //    Log.Error
+                    //        (
+                    //            nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                    //            + ": " + nameof(query) + "." + nameof(query.Verify)
+                    //            + Resources.AbstractEngine_StandardExecution_Failed
+                    //        );
+                    //}
 
-                    result = command.Execute(query);
+                    result = command.Execute();
                     if (!result.Verify(ThrowOnVerify))
                     {
                         Log.Error

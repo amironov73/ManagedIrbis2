@@ -33,11 +33,6 @@ namespace ManagedIrbis.Infrastructure.Commands
         public Func<DynamicCommand, int[]> GoodReturnCodesHandler { get; set; }
 
         /// <summary>
-        /// Create query.
-        /// </summary>
-        public Func<DynamicCommand, ClientQuery> CreateQueryHandler { get; set; }
-
-        /// <summary>
         /// Check server response.
         /// </summary>
         public Action<DynamicCommand, ServerResponse> CheckResponseHandler { get; set; }
@@ -45,7 +40,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <summary>
         /// Execute command.
         /// </summary>
-        public Func<DynamicCommand, ClientQuery, ServerResponse> ExecuteHandler { get; set; }
+        public Func<DynamicCommand, ServerResponse> ExecuteHandler { get; set; }
 
         /// <summary>
         /// Verify command settings.
@@ -77,16 +72,6 @@ namespace ManagedIrbis.Infrastructure.Commands
         public int[] BaseGoodReturnCodes()
         {
             int[] result = base.GoodReturnCodes;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Basic implementation of <see cref="CreateQuery"/>.
-        /// </summary>
-        public ClientQuery BaseCreateQuery()
-        {
-            ClientQuery result = base.CreateQuery();
 
             return result;
         }
@@ -165,29 +150,20 @@ namespace ManagedIrbis.Infrastructure.Commands
             }
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            Func<DynamicCommand, ClientQuery> handler = CreateQueryHandler;
+            // TODO Fix this
 
-            ClientQuery result = !ReferenceEquals(handler, null)
-                ? handler(this)
-                : BaseCreateQuery();
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.UnregisterClient;
 
-            return result;
-        }
+            query.AddAnsi(Connection.Username);
 
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Func<DynamicCommand, ClientQuery, ServerResponse> handler
-                = ExecuteHandler;
+            Func<DynamicCommand, ServerResponse> handler = ExecuteHandler;
 
             ServerResponse result = !ReferenceEquals(handler, null)
-                ? handler(this, query)
+                ? handler(this)
                 : BaseExecute(query);
 
             return result;

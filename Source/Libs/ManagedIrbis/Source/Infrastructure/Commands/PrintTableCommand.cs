@@ -72,26 +72,24 @@ namespace ManagedIrbis.Infrastructure.Commands
             response.RefuseAnReturnCode();
         }
 
-        /// <summary>
-        /// Create client query.
-        /// </summary>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
             TableDefinition definition = Definition;
 
             if (ReferenceEquals(definition, null))
             {
                 Log.Error
-                    (
-                        "PrintTableCommand::CreateQuery: "
-                        + "Definition is null"
-                    );
+                (
+                    "PrintTableCommand::CreateQuery: "
+                    + "Definition is null"
+                );
 
                 throw new IrbisException("Definition == null");
             }
 
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.Print;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.Print;
 
             // "7"         PRINT
             // "IBIS"      database
@@ -104,7 +102,7 @@ namespace ManagedIrbis.Infrastructure.Commands
             // ""          sequential
             // ""          mfn list
 
-            result
+            query
                 .AddAnsi(definition.DatabaseName)
                 .AddAnsi(definition.Table)
                 .Add(string.Empty) // instead of headers
@@ -115,19 +113,6 @@ namespace ManagedIrbis.Infrastructure.Commands
                 .AddUtf8(definition.SequentialQuery)
                 .Add(string.Empty) // instead of MFN list
                 ;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Execute the command.
-        /// </summary>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

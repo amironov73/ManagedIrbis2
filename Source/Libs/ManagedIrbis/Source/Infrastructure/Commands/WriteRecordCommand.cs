@@ -16,6 +16,7 @@ using AM.Logging;
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -83,56 +84,42 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.UpdateRecord;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.UpdateRecord;
 
             if (ReferenceEquals(Record, null))
             {
                 Log.Error
-                    (
-                        "WriteRecordCommand::CreateQuery: "
-                        + "record is null"
-                    );
+                (
+                    "WriteRecordCommand::CreateQuery: "
+                    + Resources.IrbisNetworkUtility_RecordIsNull
+                );
 
-                throw new IrbisNetworkException("record is null");
+                throw new IrbisNetworkException(Resources.IrbisNetworkUtility_RecordIsNull);
             }
 
             string database = Record.Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "WriteRecordCommand::CreateQuery: "
-                        + "database not set"
-                    );
+                (
+                    "WriteRecordCommand::CreateQuery: "
+                    + Resources.WriteRecordsCommand_DatabaseNotSet
+                );
 
-                throw new IrbisNetworkException("database not set");
+                throw new IrbisNetworkException(Resources.WriteRecordsCommand_DatabaseNotSet);
             }
 
-            result
+            query
                 .Add(database)
                 .Add(Lock)
                 .Add(Actualize)
                 .Add(Record);
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            string database = Record.ThrowIfNull("Record").Database
-                ?? Connection.Database;
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
 
             MaxMfn = result.GetReturnCode();
 

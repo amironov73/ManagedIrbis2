@@ -42,26 +42,17 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
-        {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.UnregisterClient;
-
-            result.AddAnsi(Connection.Username);
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
             Log.Trace("DisconnectCommand::Execute");
 
-            ServerResponse result = base.Execute(query);
+            ClientQuery query = base.CreateQuery();
+            query.CommandCode = CommandCode.UnregisterClient;
+
+            query.AddAnsi(Connection.Username);
+
+            ServerResponse result = Execute(query);
 
             Log.Trace
                 (

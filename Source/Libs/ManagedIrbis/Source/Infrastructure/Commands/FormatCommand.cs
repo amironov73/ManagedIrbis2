@@ -17,6 +17,8 @@ using AM.Text;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -173,69 +175,58 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.FormatRecord;
+            ClientQuery query = base.CreateQuery();
+            query.CommandCode = CommandCode.FormatRecord;
 
             string database = Database ?? Connection.Database;
-            result.Add(database);
+            query.Add(database);
 
             string preparedFormat = IrbisFormat.PrepareFormat
-                (
-                    FormatSpecification
-                );
+            (
+                FormatSpecification
+            );
 
-            result.Add
+            query.Add
+            (
+                new TextWithEncoding
                 (
-                    new TextWithEncoding
-                        (
-                            UtfFormat
-                            ? "!" + preparedFormat
-                            : preparedFormat,
-                            UtfFormat
-                            ? IrbisEncoding.Utf8
-                            : IrbisEncoding.Ansi
-                        )
-                );
+                    UtfFormat
+                        ? "!" + preparedFormat
+                        : preparedFormat,
+                    UtfFormat
+                        ? IrbisEncoding.Utf8
+                        : IrbisEncoding.Ansi
+                )
+            );
 
             if (MfnList.Count >= IrbisConstants.MaxPostings)
             {
                 Log.Error
-                    (
-                        nameof(FormatCommand) + "::" + nameof(CreateQuery)
-                        + ": too many MFNs: "
-                        + MfnList.Count
-                    );
+                (
+                    nameof(FormatCommand) + "::" + nameof(CreateQuery)
+                    + ": too many MFNs: "
+                    + MfnList.Count
+                );
 
                 throw new IrbisNetworkException("too many MFNs");
             }
 
             if (MfnList.Count == 0)
             {
-                result.Add(-2);
-                result.Add(VirtualRecord);
+                query.Add(-2);
+                query.Add(VirtualRecord);
             }
             else
             {
-                result.Add(MfnList.Count);
+                query.Add(MfnList.Count);
                 foreach (int mfn in MfnList)
                 {
-                    result.Add(mfn);
+                    query.Add(mfn);
                 }
             }
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             if (!string.IsNullOrEmpty(FormatSpecification))

@@ -111,11 +111,9 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// <summary>
         /// Create client query.
         /// </summary>
-        public virtual ClientQuery CreateQuery()
+        public ClientQuery CreateQuery()
         {
             Log.Trace(nameof(AbstractCommand) + "::" + nameof(CreateQuery));
-
-            // TODO fix it!
 
             ClientQuery result = new ClientQuery(Connection)
             {
@@ -138,14 +136,18 @@ namespace ManagedIrbis.Infrastructure.Commands
         /// Execute the command.
         /// </summary>
         [NotNull]
-        public virtual ServerResponse Execute
+        public abstract ServerResponse Execute();
+
+        /// <summary>
+        /// Execute the query.
+        /// </summary>
+        [NotNull]
+        protected ServerResponse Execute
             (
                 [NotNull] ClientQuery query
             )
         {
-            Sure.NotNull(query, nameof(query));
-
-            Log.Trace(nameof(AbstractCommand) + "::" + nameof(Execute));
+            query.Verify(true);
 
             byte[] request = query.EncodePacket();
             byte[] answer = Connection.Socket.ExecuteRequest(request);

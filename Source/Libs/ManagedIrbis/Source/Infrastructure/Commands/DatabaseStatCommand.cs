@@ -77,11 +77,11 @@ namespace ManagedIrbis.Infrastructure.Commands
             response.RefuseAnReturnCode();
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.DatabaseStat;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.DatabaseStat;
 
             // "2"               STAT
             // "IBIS"            database
@@ -93,14 +93,14 @@ namespace ManagedIrbis.Infrastructure.Commands
             // ""                mfn list
 
             string items = string.Join
-                (
-                    IrbisText.IrbisDelimiter,
-                    Definition.Items
-                        .Select(item => item.ToString())
-                        .ToArray()
-                );
+            (
+                IrbisText.IrbisDelimiter,
+                Definition.Items
+                    .Select(item => item.ToString())
+                    .ToArray()
+            );
 
-            result
+            query
                 .Add(Definition.DatabaseName)
                 .Add(items)
                 .AddUtf8(Definition.SearchQuery)
@@ -110,18 +110,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                 .Add(string.Empty) // instead of MFN list
                 ;
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
 
             Result = "{\\rtf1 "
                 + result.RemainingUtfText()

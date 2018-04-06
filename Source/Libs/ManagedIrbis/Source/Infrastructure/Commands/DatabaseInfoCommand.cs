@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* DatabaseInfoCommand.cs -- 
+/* DatabaseInfoCommand.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure.Commands
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public class DatabaseInfoCommand
@@ -58,34 +58,25 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.RecordList;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.RecordList;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "DatabaseInfoCommand::CreateQuery: "
-                        + "database not specified"
-                    );
+                (
+                    "DatabaseInfoCommand::CreateQuery: "
+                    + "database not specified"
+                );
 
                 throw new IrbisException("database not specified");
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
             ServerResponse response = base.Execute(query);
             Result = DatabaseInfo.ParseServerResponse(response);
             Result.Name = Database;

@@ -52,7 +52,7 @@ namespace ManagedIrbis.Infrastructure.Commands
     // метки поля, взятого из 1-й ссылки для данного термина
     // (например, для ссылки 1.200.1.1 формат вида v***  будет
     // заменен на v200).
-    // 
+    //
     // ВОЗВРАТ
     // список строк в следующей последовательности:
     // В 1-й строке – код возврата, который определяется тем,
@@ -191,50 +191,38 @@ namespace ManagedIrbis.Infrastructure.Commands
             get { return new[] { -202, -203, -204 }; }
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result =  base.CreateQuery();
-            result.CommandCode = ReverseOrder
+            ClientQuery query =  CreateQuery();
+            query.CommandCode = ReverseOrder
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
 
-            string database = Database
-                ?? Connection.Database;
+            string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "ReadTermsCommand::CreateQuery: "
-                        + "database not specified"
-                    );
+                (
+                    "ReadTermsCommand::CreateQuery: "
+                    + "database not specified"
+                );
 
                 throw new IrbisException("database not specified");
             }
 
             string preparedFormat = IrbisFormat.PrepareFormat
-                (
-                    Format
-                );
+            (
+                Format
+            );
 
-            result
+            query
                 .AddAnsi(database)
                 .AddUtf8(StartTerm)
                 .Add(NumberOfTerms)
                 .AddAnsi(preparedFormat);
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
             CheckResponse(result);
 
             // ReSharper disable CoVariantArrayConversion

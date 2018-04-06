@@ -93,24 +93,20 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #endregion
 
-        #region Public methods
-
-        #endregion
-
         #region AbstractCommand members
 
-        /// <summary>
-        /// Create client query.
-        /// </summary>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode;
 
             foreach (TextWithEncoding line in TextLines)
             {
-                result.Add(line);
+                query.Add(line);
             }
+
+            ServerResponse result = Execute(query);
 
             return result;
         }

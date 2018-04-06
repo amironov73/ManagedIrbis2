@@ -62,49 +62,38 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.UnlockRecords;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.UnlockRecords;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "UnlockRecordsCommand::CreateQuery: "
-                        + "database not specified"
-                    );
+                (
+                    "UnlockRecordsCommand::CreateQuery: "
+                    + "database not specified"
+                );
 
                 throw new IrbisException("database not specified");
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
 
             if (Records.Count == 0)
             {
                 Log.Error
-                    (
-                        "UnlockRecordsCommand::CreateQuery: "
-                        + "record list is empty"
-                    );
+                (
+                    "UnlockRecordsCommand::CreateQuery: "
+                    + "record list is empty"
+                );
 
                 throw new IrbisException("record list is empty");
             }
-            result.Arguments.AddRange(Records.Cast<object>());
+            query.Arguments.AddRange(Records.Cast<object>());
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
             result.GetReturnCode();
 
             return result;

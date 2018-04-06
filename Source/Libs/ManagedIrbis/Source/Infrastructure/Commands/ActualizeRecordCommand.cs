@@ -16,6 +16,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -63,11 +65,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ActualizeRecord;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ActualizeRecord;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
@@ -75,14 +77,16 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "ActualizeRecordCommand::CreateQuery: "
-                        + "database not specified"
+                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
                     );
 
-                throw new IrbisException("database not specified");
+                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
             }
-            result.AddAnsi(database);
 
-            result.Add(Mfn);
+            query.AddAnsi(database);
+            query.Add(Mfn);
+
+            ServerResponse result = Execute(query);
 
             return result;
         }

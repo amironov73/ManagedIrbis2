@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ListProcessesCommand.cs -- 
+/* ListProcessesCommand.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure.Commands
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public class ListProcessesCommand
@@ -49,22 +49,13 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.GetProcessList;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.GetProcessList;
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            ServerResponse response = base.Execute(query);
+            ServerResponse response = Execute(query);
             response.GetReturnCode();
             Result = IrbisProcessInfo.Parse(response);
 

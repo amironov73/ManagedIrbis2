@@ -50,48 +50,29 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.SetUserList;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.SetUserList;
 
             if (ReferenceEquals(UserList, null))
             {
                 Log.Error
-                    (
-                        "UpdateUserListCommand::CreateQuery: "
-                        + "UserList not set"
-                    );
+                (
+                    "UpdateUserListCommand::CreateQuery: "
+                    + "UserList not set"
+                );
                 throw new IrbisException("UserList not set");
             }
 
             foreach (UserInfo userInfo in UserList)
             {
                 string line = userInfo.Encode();
-                result.AddAnsi(line);
+                query.AddAnsi(line);
             }
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

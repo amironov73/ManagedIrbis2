@@ -87,31 +87,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void SearchCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            SearchCommand command = new SearchCommand(connection);
-            ClientQuery query = command.CreateQuery();
-            Assert.IsNotNull(query);
-        }
-
-        [TestMethod]
-        public void SearchCommand_CreateQuery_2()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            SearchCommand command = new SearchCommand(connection)
-            {
-                Database = "IBIS",
-                SearchExpression = "A=AUTHOR$"
-            };
-            ClientQuery query = command.CreateQuery();
-            Assert.IsNotNull(query);
-        }
-
-        [TestMethod]
         public void SearchCommand_ExecuteRequest_1()
         {
             int returnCode = 0;
@@ -131,8 +106,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(returnCode, response.ReturnCode);
             Assert.IsNotNull(command.Found);
             Assert.AreEqual(0, command.Found.Count);
@@ -162,8 +136,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(returnCode, response.ReturnCode);
             Assert.IsNotNull(command.Found);
             Assert.AreEqual(0, command.Found.Count);

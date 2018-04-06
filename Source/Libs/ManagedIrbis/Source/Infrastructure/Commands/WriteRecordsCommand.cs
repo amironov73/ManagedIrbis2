@@ -5,7 +5,7 @@
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: moderate
- * 
+ *
  * TODO determine max MFN
  */
 
@@ -18,6 +18,7 @@ using AM.Logging;
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -68,21 +69,21 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.SaveRecordGroup;
+            ClientQuery query = base.CreateQuery();
+            query.CommandCode = CommandCode.SaveRecordGroup;
 
             if (References.Count == 0)
             {
                 Log.Error
                     (
                         "WriteRecordsCommand::CreateQuery: "
-                        + "no records given"
+                        + Resources.WriteRecordsCommand_NoRecordsGiven
                     );
 
-                throw new IrbisNetworkException("no records given");
+                throw new IrbisNetworkException(Resources.WriteRecordsCommand_NoRecordsGiven);
             }
 
             if (References.Count >= IrbisConstants.MaxPostings)
@@ -90,13 +91,13 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "WriteRecordsCommand::CreateQuery: "
-                        + "too many records"
+                        + Resources.WriteRecordsCommand_TooManyRecords
                     );
 
-                throw new IrbisNetworkException("too many records");
+                throw new IrbisNetworkException(Resources.WriteRecordsCommand_TooManyRecords);
             }
 
-            result
+            query
                 .Add(Lock)
                 .Add(Actualize);
 
@@ -107,10 +108,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                     Log.Error
                         (
                             "WriteRecordsCommand::CreateQuery: "
-                            + "record is null"
+                            + Resources.IrbisNetworkUtility_RecordIsNull
                         );
 
-                    throw new IrbisException("record is null");
+                    throw new IrbisException(Resources.IrbisNetworkUtility_RecordIsNull);
                 }
 
                 if (ReferenceEquals(reference.Database, null))
@@ -123,10 +124,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                     Log.Error
                     (
                         "WriteRecordsCommand::CreateQuery: "
-                        + "database not set"
+                        + Resources.WriteRecordsCommand_DatabaseNotSet
                     );
 
-                    throw new IrbisException("database not set");
+                    throw new IrbisException(Resources.WriteRecordsCommand_DatabaseNotSet);
                 }
 
                 if (string.IsNullOrEmpty(reference.Record.Database))
@@ -134,27 +135,13 @@ namespace ManagedIrbis.Infrastructure.Commands
                     reference.Record.Database = reference.Database;
                 }
 
-                result.Add(reference);
+                query.Add(reference);
             }
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 
             result.GetReturnCode();
 
-            // ReSharper disable AssignNullToNotNullAttribute
-            // ReSharper disable PossibleNullReferenceException
-            // ReSharper disable ForCanBeConvertedToForeach
             for (int i = 0; i < References.Count; i++)
             {
                 ProtocolText.ParseResponseForWriteRecords
@@ -165,9 +152,6 @@ namespace ManagedIrbis.Infrastructure.Commands
 
                 References[i].Mfn = References[i].Record.Mfn;
             }
-            // ReSharper restore ForCanBeConvertedToForeach
-            // ReSharper restore PossibleNullReferenceException
-            // ReSharper restore AssignNullToNotNullAttribute
 
             return result;
         }
@@ -189,12 +173,11 @@ namespace ManagedIrbis.Infrastructure.Commands
                         throwOnError
                     );
 
-            verifier
-                .Assert
-                (
-                    References.Count < IrbisConstants.MaxPostings,
-                    "References.Count"
-                );
+            verifier.Assert
+                    (
+                        References.Count < IrbisConstants.MaxPostings,
+                        "References.Count"
+                    );
 
             foreach (RecordReference reference in References)
             {

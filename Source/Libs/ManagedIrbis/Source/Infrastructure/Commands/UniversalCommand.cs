@@ -94,18 +94,18 @@ namespace ManagedIrbis.Infrastructure.Commands
             }
         }
 
-        /// <summary>
-        /// Create client query.
-        /// </summary>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
+            ClientQuery query = CreateQuery();
 
-            result.CommandCode = CommandCode;
+            query.CommandCode = CommandCode;
             if (!ReferenceEquals(Arguments, null))
             {
-                result.Arguments.AddRange(Arguments);
+                query.Arguments.AddRange(Arguments);
             }
+
+            ServerResponse result = Execute(query);
 
             return result;
         }

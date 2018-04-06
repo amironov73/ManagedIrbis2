@@ -44,7 +44,7 @@ namespace ManagedIrbis.Infrastructure.Commands
 
     //
     // Answer layout is (delimiter: \x1E)
-    // 
+    //
     // 0
     // 0#32 700#^aИванов^bИ. И. 701#^aПетров^bП. П.
     //
@@ -116,62 +116,43 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.CorrectVirtualRecord;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.CorrectVirtualRecord;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "GblVirtualCommand::CreateQuery: "
-                        + "database not specified"
-                    );
+                (
+                    "GblVirtualCommand::CreateQuery: "
+                    + "database not specified"
+                );
 
                 throw new IrbisException("database not specified");
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
 
-            result.Add(Actualize);
+            query.Add(Actualize);
 
             if (!string.IsNullOrEmpty(FileName))
             {
-                result.AddAnsi(FileName);
+                query.AddAnsi(FileName);
             }
             else
             {
                 string statements = GblUtility.EncodeStatements
-                    (
-                        Statements.ThrowIfNull("Statements")
-                    );
-                result.AddUtf8(statements);
+                (
+                    Statements.ThrowIfNull("Statements")
+                );
+                query.AddUtf8(statements);
             }
 
-            result.Add(Record.ThrowIfNull("Record"));
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, "query");
+            query.Add(Record.ThrowIfNull("Record"));
 
             ServerResponse response = base.Execute(query);
             CheckResponse(response);

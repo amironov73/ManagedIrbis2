@@ -52,11 +52,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.DeleteDatabase;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.DeleteDatabase;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
@@ -69,7 +69,9 @@ namespace ManagedIrbis.Infrastructure.Commands
 
                 throw new IrbisException("database not specified");
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
+
+            ServerResponse result = Execute(query);
 
             return result;
         }

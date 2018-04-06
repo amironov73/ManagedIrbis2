@@ -9,8 +9,6 @@
 
 #region Using directives
 
-using AM;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -51,30 +49,19 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.UpdateIniFile;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.UpdateIniFile;
 
             if (Lines != null)
             {
                 foreach (string line in Lines)
                 {
-                    result.AddAnsi(line);
+                    query.AddAnsi(line);
                 }
             }
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
             result.GetReturnCode();

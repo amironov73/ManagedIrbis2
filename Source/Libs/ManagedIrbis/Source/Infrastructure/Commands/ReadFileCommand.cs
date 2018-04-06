@@ -111,34 +111,19 @@ namespace ManagedIrbis.Infrastructure.Commands
             response.RefuseAnReturnCode();
         }
 
-        /// <summary>
-        /// Create client query.
-        /// </summary>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute() "/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ReadDocument;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ReadDocument;
 
             foreach (FileSpecification fileName in Files)
             {
                 string item = fileName.ToString();
-                result.AddAnsi(item);
+                query.AddAnsi(item);
             }
 
-            return result;
-        }
-
-        /// <summary>
-        /// Execute the command.
-        /// </summary>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
             Result = GetFileText(result);
 
             return result;

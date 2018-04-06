@@ -101,10 +101,6 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #endregion
 
-        #region Public methods
-
-        #endregion
-
         #region AbstractCommand members
 
         /// <summary>
@@ -121,37 +117,26 @@ namespace ManagedIrbis.Infrastructure.Commands
             response.RefuseAnReturnCode();
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ReadDocument;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ReadDocument;
 
             if (ReferenceEquals(File, null))
             {
                 Log.Error
-                    (
-                        "ReadBinaryFileCommand::CreateQuery: "
-                        + "file name not specified"
-                    );
+                (
+                    "ReadBinaryFileCommand::CreateQuery: "
+                    + "file name not specified"
+                );
 
                 throw new IrbisException("File name not specified");
             }
             File.BinaryFile = true;
-            result.AddAnsi(File.ToString());
+            query.AddAnsi(File.ToString());
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
 
             byte[] buffer = result.RawAnswer;
             Encoding encoding = IrbisEncoding.Ansi;

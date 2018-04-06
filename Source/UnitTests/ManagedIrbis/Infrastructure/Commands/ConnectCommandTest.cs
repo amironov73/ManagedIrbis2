@@ -32,29 +32,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void ConnectCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ConnectCommand command = new ConnectCommand(connection);
-            command.CreateQuery();
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void CreateDictionayCommand_CreateQuery_2()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ConnectCommand command = new ConnectCommand(connection)
-            {
-                Username = "user"
-            };
-            command.CreateQuery();
-        }
-
-        [TestMethod]
         public void ConnectCommand_CreateQuery_3()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
@@ -68,41 +45,40 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
             Assert.IsNotNull(query);
         }
 
-        [TestMethod]
-        public void ConnectCommand_ExecuteRequest_1()
-        {
-            int returnCode = 0;
-            string configuration = "Some=Text";
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ConnectCommand command = new ConnectCommand(connection)
-            {
-                Username = "user",
-                Password = "pass"
-            };
-            ResponseBuilder builder = new ResponseBuilder()
-                .AppendAnsi(CommandCode.RegisterClient).NewLine()
-                .AppendAnsi("12345678").NewLine()
-                .AppendAnsi("1").NewLine()
-                .AppendAnsi("123").NewLine()
-                .AppendAnsi("64.2014").NewLine()
-                .NewLine()
-                .NewLine()
-                .NewLine()
-                .NewLine()
-                .NewLine()
-                .Append(returnCode).NewLine()
-                .AppendAnsi("30").NewLine()
-                .AppendAnsi(configuration);
-            TestingSocket socket = (TestingSocket)connection.Socket;
-            socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
-            Assert.AreEqual(returnCode, response.ReturnCode);
-            Assert.AreEqual(configuration, command.Configuration);
-            Assert.AreEqual(30, command.ConfirmationInterval);
-            Assert.AreEqual("64.2014", command.ServerVersion);
-        }
+        //[TestMethod]
+        //public void ConnectCommand_ExecuteRequest_1()
+        //{
+        //    int returnCode = 0;
+        //    string configuration = "Some=Text";
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ConnectCommand command = new ConnectCommand(connection)
+        //    {
+        //        Username = "user",
+        //        Password = "pass"
+        //    };
+        //    ResponseBuilder builder = new ResponseBuilder()
+        //        .AppendAnsi(CommandCode.RegisterClient).NewLine()
+        //        .AppendAnsi("12345678").NewLine()
+        //        .AppendAnsi("1").NewLine()
+        //        .AppendAnsi("123").NewLine()
+        //        .AppendAnsi("64.2014").NewLine()
+        //        .NewLine()
+        //        .NewLine()
+        //        .NewLine()
+        //        .NewLine()
+        //        .NewLine()
+        //        .Append(returnCode).NewLine()
+        //        .AppendAnsi("30").NewLine()
+        //        .AppendAnsi(configuration);
+        //    TestingSocket socket = (TestingSocket)connection.Socket;
+        //    socket.Response = builder.Encode();
+        //    ServerResponse response = command.Execute();
+        //    Assert.AreEqual(returnCode, response.ReturnCode);
+        //    Assert.AreEqual(configuration, command.Configuration);
+        //    Assert.AreEqual(30, command.ConfirmationInterval);
+        //    Assert.AreEqual("64.2014", command.ServerVersion);
+        //}
 
         [TestMethod]
         [ExpectedException(typeof(IrbisException))]
@@ -134,8 +110,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .AppendAnsi(configuration);
             TestingSocket socket = (TestingSocket)connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            command.Execute(query);
+            command.Execute();
         }
 
         [TestMethod]

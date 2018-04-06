@@ -352,4 +352,13 @@
   <data name="IrbisNetworkUtility_RecordIsNull" xml:space="preserve">
     <value>record is null</value>
   </data>
+  <data name="WriteRecordsCommand_NoRecordsGiven" xml:space="preserve">
+    <value>no records given</value>
+  </data>
+  <data name="WriteRecordsCommand_TooManyRecords" xml:space="preserve">
+    <value>too many records</value>
+  </data>
+  <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
+    <value>database not set</value>
+  </data>
 </root>

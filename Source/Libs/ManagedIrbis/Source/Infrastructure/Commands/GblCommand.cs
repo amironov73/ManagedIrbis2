@@ -214,11 +214,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.GlobalCorrection;
+            ClientQuery query = base.CreateQuery();
+            query.CommandCode = CommandCode.GlobalCorrection;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
@@ -231,14 +231,14 @@ namespace ManagedIrbis.Infrastructure.Commands
 
                 throw new IrbisException("database not specified");
             }
-            result.AddAnsi(database);
+            query.AddAnsi(database);
 
-            result.Add(Actualize);
+            query.Add(Actualize);
 
             if (!string.IsNullOrEmpty(FileName))
             {
                 // @filename without extension
-                result.AddAnsi(FileName);
+                query.AddAnsi(FileName);
             }
             else
             {
@@ -246,19 +246,19 @@ namespace ManagedIrbis.Infrastructure.Commands
                     (
                         Statements.ThrowIfNull("Statements")
                     );
-                result.AddUtf8(statements);
+                query.AddUtf8(statements);
             }
 
             string preparedSearch = IrbisSearchQuery.PrepareQuery
                 (
                     SearchExpression
                 );
-            result.AddUtf8(preparedSearch);
+            query.AddUtf8(preparedSearch);
 
-            result.Add(FirstRecord);
-            result.Add(NumberOfRecords);
+            query.Add(FirstRecord);
+            query.Add(NumberOfRecords);
 
-            result.Add(string.Empty);
+            query.Add(string.Empty);
 
             if (ReferenceEquals(MfnList, null))
             {
@@ -268,10 +268,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                 //result.Add(MaxMfn);
 
                 int count = MaxMfn - MinMfn + 1;
-                result.Add(count);
+                query.Add(count);
                 for (int mfn = MinMfn; mfn < MaxMfn; mfn++)
                 {
-                    result.Add(mfn);
+                    query.Add(mfn);
                 }
             }
             else
@@ -287,33 +287,23 @@ namespace ManagedIrbis.Infrastructure.Commands
 
                     throw new IrbisException("MfnList.Length == 0");
                 }
-                result.Add(MfnList.Length);
+                query.Add(MfnList.Length);
                 foreach (var mfn in MfnList)
                 {
-                    result.Add(mfn);
+                    query.Add(mfn);
                 }
             }
 
             if (!FormalControl)
             {
-                result.Add("*");
+                query.Add("*");
             }
 
             if (!AutoIn)
             {
-                result.Add("&");
+                query.Add("&");
             }
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, "query");
 
             GblResult gblResult = new GblResult
             {

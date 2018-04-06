@@ -70,39 +70,28 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.CreateDatabase;
+            ClientQuery query = base.CreateQuery();
+            query.CommandCode = CommandCode.CreateDatabase;
 
             // Layout is:
             // NEWDB          // database name
             // New database   // description
             // 0              // reader access
 
-            result
+            query
                 .Add(Database)
                 .Add(Description)
                 .Add(ReaderAccess);
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
 
             // Response is (ANSI):
             // 0
             // NewDB NEWDB,New database,0 - Создана новая БД NEWDB
-            // CloseDB - 
+            // CloseDB -
             // Exit C:\IRBIS64_2015\workdir\1126_0.ibf
 
             return result;
@@ -120,6 +109,7 @@ namespace ManagedIrbis.Infrastructure.Commands
         {
             Verifier<CreateDatabaseCommand> verifier
                 = new Verifier<CreateDatabaseCommand>(this, throwOnError);
+
             verifier
                 .NotNullNorEmpty(Database, "Database")
                 .NotNullNorEmpty(Description, "Description");

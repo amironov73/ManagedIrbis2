@@ -43,8 +43,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(0, response.ReturnCode);
         }
 

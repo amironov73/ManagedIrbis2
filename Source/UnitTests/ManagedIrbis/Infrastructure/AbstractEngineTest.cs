@@ -113,8 +113,10 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
             AbstractEngine engine = _GetEngine();
             engine.ExceptionOccurs += (sender, args) => { exceptionSeen = true; };
-            DynamicCommand command = new DynamicCommand(engine.Connection);
-            command.ExecuteHandler = (dynamicCommand, query) => throw new IrbisNetworkException();
+            DynamicCommand command = new DynamicCommand(engine.Connection)
+            {
+                ExecuteHandler = dynamicCommand => throw new IrbisNetworkException()
+            };
             ExecutionContext context = new ExecutionContext(engine.Connection, command);
 
             try

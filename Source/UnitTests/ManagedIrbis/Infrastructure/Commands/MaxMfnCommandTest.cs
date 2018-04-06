@@ -31,16 +31,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
-        public void MaxMfnCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            MaxMfnCommand command = new MaxMfnCommand(connection);
-            command.CreateQuery();
-        }
-
-        [TestMethod]
         public void MaxMfnCommand_ExecuteRequest_1()
         {
             int maxMfn = 123456;
@@ -57,8 +47,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(maxMfn, response.ReturnCode);
         }
 

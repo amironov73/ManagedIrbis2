@@ -122,20 +122,31 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()" />
+        public override ServerResponse Execute()
         {
-            Log.Trace("ConnectCommand::CreateQuery");
+            Log.Trace(nameof(ConnectCommand) + "::" + nameof(Execute));
 
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.RegisterClient;
+            if (Connection.Connected)
+            {
+                Log.Error
+                    (
+                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
+                        + Resources.ConnectCommand_Execute_AlreadyConnected
+                    );
+
+                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
+            }
+
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.RegisterClient;
 
             string username = Username ?? Connection.Username;
             if (string.IsNullOrEmpty(username))
             {
                 Log.Error
                     (
-                        "ConnectCommand::CreateQuery: "
+                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
                         + Resources.ConnectCommand_UsernameNotSpecified
                     );
 
@@ -147,52 +158,29 @@ namespace ManagedIrbis.Infrastructure.Commands
             {
                 Log.Error
                     (
-                        "ConnectCommand::CreateQuery: "
+                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
                         + Resources.ConnectCommand_PasswordNotSpecified
                     );
 
                 throw new IrbisException(Resources.ConnectCommand_PasswordNotSpecified);
             }
 
-            result.UserLogin = username;
-            result.UserPassword = password;
+            query.UserLogin = username;
+            query.UserPassword = password;
 
-            result.Arguments.Add(username);
-            result.Arguments.Add(password);
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute" />
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            Log.Trace("ConnectCommand::Execute");
-
-            if (Connection.Connected)
-            {
-                Log.Error
-                    (
-                        "ConnectCommand::Execute: "
-                        + Resources.ConnectCommand_Execute_AlreadyConnected
-                    );
-
-                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
-            }
+            query.Arguments.Add(username);
+            query.Arguments.Add(password);
 
             ServerResponse result;
 
             while (true)
             {
-                result = base.Execute(query);
+                result = Execute(query);
 
                 Log.Trace
                     (
-                        "ConnectCommand::Execute: returnCode="
+                        nameof(ConnectCommand) + "::" + nameof(Execute)
+                        + ": returnCode="
                         + result.ReturnCode
                     );
 

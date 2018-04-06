@@ -79,11 +79,11 @@ namespace ManagedIrbis.Infrastructure.Commands
 
         #region AbstractCommand members
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery" />
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ReadRecord;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ReadRecord;
 
             string database = Database ?? Connection.Database;
 
@@ -92,30 +92,21 @@ namespace ManagedIrbis.Infrastructure.Commands
                 throw new IrbisNetworkException("database not specified");
             }
 
-            result.Arguments.Add(database);
-            result.Arguments.Add(Mfn);
+            query.Arguments.Add(database);
+            query.Arguments.Add(Mfn);
             if (VersionNumber != 0)
             {
-                result.Arguments.Add(VersionNumber);
+                query.Arguments.Add(VersionNumber);
             }
             else
             {
-                result.Arguments.Add(Lock);
+                query.Arguments.Add(Lock);
             }
             if (!string.IsNullOrEmpty(Format))
             {
-                result.Arguments.Add(Format);
+                query.Arguments.Add(Format);
             }
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
             ServerResponse result = base.Execute(query);
 
             // Check whether no records read

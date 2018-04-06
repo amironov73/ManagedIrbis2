@@ -44,16 +44,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
         }
 
         [TestMethod]
-        public void DisconnectCommand_CreateQuery_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            DisconnectCommand command = new DisconnectCommand(connection);
-            ClientQuery query = command.CreateQuery();
-            Assert.IsNotNull(query);
-        }
-
-        [TestMethod]
         public void DisconnectCommand_ExecuteRequest_1()
         {
             int returnCode = 0;
@@ -67,8 +57,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.Commands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ClientQuery query = command.CreateQuery();
-            ServerResponse response = command.Execute(query);
+            ServerResponse response = command.Execute();
             Assert.AreEqual(returnCode, response.ReturnCode);
         }
 

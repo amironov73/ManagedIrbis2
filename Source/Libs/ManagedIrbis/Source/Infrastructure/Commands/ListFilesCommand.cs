@@ -75,19 +75,19 @@ namespace ManagedIrbis.Infrastructure.Commands
             response.RefuseAnReturnCode();
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ListFiles;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ListFiles;
 
             if (Specifications.Count == 0)
             {
                 Log.Error
-                    (
-                        "ListFilesCommand::CreateQuery: "
-                        + "specification list is empty"
-                    );
+                (
+                    "ListFilesCommand::CreateQuery: "
+                    + "specification list is empty"
+                );
 
                 throw new IrbisException("specification list is empty");
             }
@@ -95,19 +95,8 @@ namespace ManagedIrbis.Infrastructure.Commands
             foreach (FileSpecification specification in Specifications)
             {
                 specification.Verify(true);
-                result.Add(specification);
+                query.Add(specification);
             }
-
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
 
             ServerResponse result = base.Execute(query);
 

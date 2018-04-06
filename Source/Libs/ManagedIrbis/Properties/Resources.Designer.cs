@@ -824,5 +824,32 @@ namespace ManagedIrbis.Properties {
                 return ResourceManager.GetString("VerifyFormat_TextIsAbsent2", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to database not set.
+        /// </summary>
+        internal static string WriteRecordsCommand_DatabaseNotSet {
+            get {
+                return ResourceManager.GetString("WriteRecordsCommand_DatabaseNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no records given.
+        /// </summary>
+        internal static string WriteRecordsCommand_NoRecordsGiven {
+            get {
+                return ResourceManager.GetString("WriteRecordsCommand_NoRecordsGiven", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to too many records.
+        /// </summary>
+        internal static string WriteRecordsCommand_TooManyRecords {
+            get {
+                return ResourceManager.GetString("WriteRecordsCommand_TooManyRecords", resourceCulture);
+            }
+        }
     }
 }

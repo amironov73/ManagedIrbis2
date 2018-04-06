@@ -70,11 +70,11 @@ namespace ManagedIrbis.Infrastructure.Commands
     //
     // и
     //
-    // 0001063267 
+    // 0001063267
     // #331/1:_ Текст на французском языке об Александре Невском.
     // #463/1:_ ^wИ208/2014/1^CИностранные языки в школе^J2014^1С. 58-61^h№ 1
     // #700/1:_ ^AБаженова^BН. Г.^Cкандидат педагогических наук^W01^4070^2a
-    // #200/1:_ ^AAlexandre Nevski^FН. Г. Баженова 
+    // #200/1:_ ^AAlexandre Nevski^FН. Г. Баженова
     //
     // Обе записи сформировали в инверсном файле поисковый
     // терм T=ALEXANDRE NEVSKI. Посмотрим, что делает ВЫБОР ПОЛЯ (ЗВЁЗДОЧКА).
@@ -168,7 +168,7 @@ namespace ManagedIrbis.Infrastructure.Commands
             : base(connection)
         {
             _postings = new List<TermPosting>();
-            
+
             FirstPosting = 1;
         }
 
@@ -234,25 +234,25 @@ namespace ManagedIrbis.Infrastructure.Commands
             get { return new[] { -202, -203, -204 }; }
         }
 
-        /// <inheritdoc cref="AbstractCommand.CreateQuery"/>
-        public override ClientQuery CreateQuery()
+        /// <inheritdoc cref="AbstractCommand.Execute()"/>
+        public override ServerResponse Execute()
         {
-            ClientQuery result = base.CreateQuery();
-            result.CommandCode = CommandCode.ReadPostings;
+            ClientQuery query = CreateQuery();
+            query.CommandCode = CommandCode.ReadPostings;
 
             string database = Database ?? Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                    (
-                        "ReadPostingsCommand::CreateQuery: "
-                        + "database not specified"
-                    );
+                (
+                    "ReadPostingsCommand::CreateQuery: "
+                    + "database not specified"
+                );
 
                 throw new IrbisException("database not specified");
             }
 
-            result
+            query
                 .Add(database)
                 .Add(NumberOfPostings)
                 .Add(FirstPosting)
@@ -263,36 +263,25 @@ namespace ManagedIrbis.Infrastructure.Commands
                 if (ReferenceEquals(ListOfTerms, null))
                 {
                     Log.Error
-                        (
-                            "ReadPostingsCommand::CreateQuery: "
-                            + "list of terms == null"
-                        );
+                    (
+                        "ReadPostingsCommand::CreateQuery: "
+                        + "list of terms == null"
+                    );
 
                     throw new IrbisException("list of terms == null");
                 }
 
                 foreach (string term in ListOfTerms)
                 {
-                    result.AddUtf8(term);
+                    query.AddUtf8(term);
                 }
             }
             else
             {
-                result.AddUtf8(Term);
+                query.AddUtf8(Term);
             }
 
-            return result;
-        }
-
-        /// <inheritdoc cref="AbstractCommand.Execute"/>
-        public override ServerResponse Execute
-            (
-                ClientQuery query
-            )
-        {
-            Sure.NotNull(query, nameof(query));
-
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(query);
             CheckResponse(result);
 
             Postings = TermPosting.Parse(result);
