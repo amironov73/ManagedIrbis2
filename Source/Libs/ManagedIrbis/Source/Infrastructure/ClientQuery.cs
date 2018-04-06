@@ -27,8 +27,9 @@ namespace ManagedIrbis.Infrastructure
     /// Client network packet with query to the server.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{CommandCode} {Workstation}"
-        + " {ClientID} {CommandNumber}")]
+    [DebuggerDisplay("{" + nameof(CommandCode) + "} {"
+        + nameof(Workstation) + "} {" + nameof(ClientID) + "} {"
+        + nameof(CommandNumber) + "}")]
     public sealed class ClientQuery
         : IVerifiable
     {
@@ -53,7 +54,7 @@ namespace ManagedIrbis.Infrastructure
         /// Connection.
         /// </summary>
         [NotNull]
-        public IIrbisConnection Connection { get; private set; }
+        public IIrbisConnection Connection { get; }
 
         /// <summary>
         /// Код АРМ.
@@ -89,7 +90,7 @@ namespace ManagedIrbis.Infrastructure
         /// <remarks>List can be empty.</remarks>
         [NotNull]
         [ItemCanBeNull]
-        public List<object> Arguments { get; private set; }
+        public List<object> Arguments { get; }
 
         #endregion
 
@@ -135,14 +136,7 @@ namespace ManagedIrbis.Infrastructure
                 [CanBeNull] string text
             )
         {
-            Arguments.Add
-                (
-                    new TextWithEncoding
-                    (
-                        text,
-                        IrbisEncoding.Ansi
-                    )
-                );
+            Arguments.Add(new TextWithEncoding(text, IrbisEncoding.Ansi));
 
             return this;
         }
@@ -155,14 +149,7 @@ namespace ManagedIrbis.Infrastructure
                 [CanBeNull] string text
             )
         {
-            Arguments.Add
-                (
-                    new TextWithEncoding
-                    (
-                        text,
-                        IrbisEncoding.Utf8
-                    )
-                );
+            Arguments.Add(new TextWithEncoding(text, IrbisEncoding.Utf8));
 
             return this;
         }
@@ -185,24 +172,12 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] TextWriter writer
             )
         {
-            writer.WriteLine("Command code: '{0}'", CommandCode);
-            writer.WriteLine
-                (
-                    "Workstation: '{0}'",
-                    (char)Workstation
-                );
-            writer.WriteLine("Client ID: {0}", ClientID);
-            writer.WriteLine("Command number: {0}", CommandNumber);
-            writer.WriteLine
-                (
-                    "Login: '{0}'",
-                    UserLogin.ToVisibleString()
-                );
-            writer.WriteLine
-                (
-                    "Password: '{0}'",
-                    UserPassword.ToVisibleString()
-                );
+            writer.WriteLine($"Command code: '{CommandCode}'");
+            writer.WriteLine($"Workstation: '{(char)Workstation}'");
+            writer.WriteLine($"Client ID: {ClientID}");
+            writer.WriteLine($"Command number: {CommandNumber}");
+            writer.WriteLine($"Login: '{UserLogin.ToVisibleString()}'");
+            writer.WriteLine($"Password: '{UserPassword.ToVisibleString()}'");
 
             writer.WriteLine("Arguments:");
             foreach (object argument in Arguments)
@@ -214,12 +189,7 @@ namespace ManagedIrbis.Infrastructure
                 else
                 {
                     Type type = argument.GetType();
-                    writer.WriteLine
-                    (
-                        "{0}: {1}",
-                        type,
-                        argument.ToVisibleString()
-                    );
+                    writer.WriteLine($"{type}: {argument.ToVisibleString()}");
                 }
             }
 
@@ -237,13 +207,13 @@ namespace ManagedIrbis.Infrastructure
 
             // Query header: 7 lines
             stream
-                .EncodeString(CommandCode)      .EncodeDelimiter()
-                .EncodeWorkstation(Workstation) .EncodeDelimiter()
-                .EncodeString(CommandCode)      .EncodeDelimiter()
-                .EncodeInt32(ClientID)          .EncodeDelimiter()
-                .EncodeInt32(CommandNumber)     .EncodeDelimiter()
-                .EncodeString(UserPassword)     .EncodeDelimiter()
-                .EncodeString(UserLogin)        .EncodeDelimiter()
+                .EncodeString(CommandCode).EncodeDelimiter()
+                .EncodeWorkstation(Workstation).EncodeDelimiter()
+                .EncodeString(CommandCode).EncodeDelimiter()
+                .EncodeInt32(ClientID).EncodeDelimiter()
+                .EncodeInt32(CommandNumber).EncodeDelimiter()
+                .EncodeString(UserPassword).EncodeDelimiter()
+                .EncodeString(UserLogin).EncodeDelimiter()
 
                 // Three empty lines
                 .EncodeDelimiter()
@@ -292,11 +262,8 @@ namespace ManagedIrbis.Infrastructure
                 bool throwOnError
             )
         {
-            Verifier<ClientQuery> verifier = new Verifier<ClientQuery>
-                (
-                    this,
-                    throwOnError
-                );
+            Verifier<ClientQuery> verifier
+                = new Verifier<ClientQuery>(this, throwOnError);
 
             verifier
                 .NotNullNorEmpty(CommandCode, nameof(CommandCode))

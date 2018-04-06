@@ -682,6 +682,33 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to database not specified.
+        /// </summary>
+        internal static string IrbisNetworkUtility_DatabaseNotSpecified {
+            get {
+                return ResourceManager.GetString("IrbisNetworkUtility_DatabaseNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to empty record detected.
+        /// </summary>
+        internal static string IrbisNetworkUtility_EmptyRecordDetected {
+            get {
+                return ResourceManager.GetString("IrbisNetworkUtility_EmptyRecordDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to record is null.
+        /// </summary>
+        internal static string IrbisNetworkUtility_RecordIsNull {
+            get {
+                return ResourceManager.GetString("IrbisNetworkUtility_RecordIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : non overriden.
         /// </summary>
         internal static string IrbisProvider_NonOverriden {

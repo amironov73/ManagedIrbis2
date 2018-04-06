@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* IrbisNetworkUtility.cs -- 
+/* IrbisNetworkUtility.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: moderate
@@ -21,6 +21,7 @@ using AM.Text;
 using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -80,11 +81,11 @@ namespace ManagedIrbis.Infrastructure
                 {
                     encoding.GetChars
                         (
-                            bytes,
-                            offset + i,
-                            1,
-                            chars,
-                            i
+                            bytes: bytes,
+                            byteIndex: offset + i,
+                            byteCount: 1,
+                            chars: chars,
+                            charIndex: i
                         );
                 }
             }
@@ -129,11 +130,8 @@ namespace ManagedIrbis.Infrastructure
             Sure.NotNull(bytes, nameof(bytes));
 
             StringWriter writer = new StringWriter();
-            DumpBytes
-                (
-                    bytes,
-                    writer
-                );
+            DumpBytes(bytes, writer);
+
             return writer.ToString();
         }
 
@@ -160,6 +158,7 @@ namespace ManagedIrbis.Infrastructure
             else if (anyObject is byte)
             {
                 stream.WriteByte((byte)anyObject);
+
                 return stream;
             }
             else if (anyObject is byte[])
@@ -367,10 +366,10 @@ namespace ManagedIrbis.Infrastructure
                 Log.Error
                     (
                         "IrbisNetworkUtility::EncodeRecordReference: "
-                        + "database not specified"
+                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
                     );
 
-                throw new IrbisException("database not specified");
+                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
             }
 
             if (ReferenceEquals(reference.Record, null))
@@ -378,10 +377,10 @@ namespace ManagedIrbis.Infrastructure
                 Log.Error
                     (
                         "IrbisNetworkUtility::EncodeRecordReference: "
-                        + "record is null"
+                        + Resources.IrbisNetworkUtility_RecordIsNull
                     );
 
-                throw new IrbisException("record is null");
+                throw new IrbisException(Resources.IrbisNetworkUtility_RecordIsNull);
             }
 
             string text = reference.Database
@@ -474,11 +473,10 @@ namespace ManagedIrbis.Infrastructure
                 Log.Error
                     (
                         "IrbisNetworkUtility::ThrowIfEmptyRecord: "
-                        + "empty record detected"
+                        + Resources.IrbisNetworkUtility_EmptyRecordDetected
                     );
 
-                IrbisNetworkException exception
-                    = new IrbisNetworkException(message);
+                IrbisNetworkException exception = new IrbisNetworkException(message);
                 BinaryAttachment attachment = new BinaryAttachment
                     (
                         "response",

@@ -343,4 +343,13 @@
   <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
     <value>already connected</value>
   </data>
+  <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
+    <value>database not specified</value>
+  </data>
+  <data name="IrbisNetworkUtility_EmptyRecordDetected" xml:space="preserve">
+    <value>empty record detected</value>
+  </data>
+  <data name="IrbisNetworkUtility_RecordIsNull" xml:space="preserve">
+    <value>record is null</value>
+  </data>
 </root>

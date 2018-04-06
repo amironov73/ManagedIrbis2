@@ -1,16 +1,18 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using JetBrains.Annotations;
 
 using ManagedIrbis;
 using ManagedIrbis.Infrastructure;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTests.ManagedIrbis.Infrastructure
 {
     [TestClass]
     public class ClientQueryTest
     {
+        [NotNull]
         private ClientQuery _GetClientQuery()
         {
             IrbisConnection connection = new IrbisConnection();
@@ -27,24 +29,25 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
             result
                 .AddAnsi("Строка ANSI")
+                .Add(null)
                 .AddUtf8("Строка UTF8");
 
             return result;
         }
 
         [TestMethod]
-        public void TestClientQuery_Constructor()
+        public void ClientQuery_Construction_1()
         {
             ClientQuery query = _GetClientQuery();
 
-            Assert.AreEqual(2, query.Arguments.Count);
+            Assert.AreEqual(3, query.Arguments.Count);
             Assert.IsNotNull(query.CommandCode);
             Assert.IsNotNull(query.UserLogin);
             Assert.IsNotNull(query.UserPassword);
         }
 
         [TestMethod]
-        public void TestClientQuery_Clear()
+        public void ClientQuery_Clear_1()
         {
             ClientQuery query = _GetClientQuery();
 
@@ -53,7 +56,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void TestClientQuery_EncodePacket()
+        public void ClientQuery_EncodePacket_1()
         {
             ClientQuery query = _GetClientQuery();
             byte[] packet = query.EncodePacket();
@@ -63,7 +66,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void TestClientQuery_Verify()
+        public void ClientQuery_Verify_1()
         {
             ClientQuery query = _GetClientQuery();
 
@@ -71,7 +74,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void TestClientQuery_Dump()
+        public void ClientQuery_Dump_1()
         {
             ClientQuery query = _GetClientQuery();
 
@@ -79,6 +82,15 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             query.Dump(writer);
             string text = writer.ToString();
             Assert.IsNotNull(text);
+        }
+
+        [TestMethod]
+        public void ClientQuery_ToString_1()
+        {
+            ClientQuery query = _GetClientQuery();
+            string expected = "CommandCode: N, Workstation: Cataloger, ClientID: 123456, CommandNumber: 123, UserLogin: логин, UserPassword: пароль, Arguments: 3";
+            string actual = query.ToString();
+            Assert.AreEqual(expected, actual);
         }
     }
 }
