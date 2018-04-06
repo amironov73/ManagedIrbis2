@@ -313,4 +313,34 @@
   <data name="AbstractEngine_StandardExecution_Failed" xml:space="preserve">
     <value> failed</value>
   </data>
+  <data name="BatchAccessor_SomeRecordsNotRetrieved" xml:space="preserve">
+    <value>some records not retrieved</value>
+  </data>
+  <data name="BatchAccessor_EmptyRecordDetected" xml:space="preserve">
+    <value>: empty record detected</value>
+  </data>
+  <data name="IrbisConnection_CantSetSocketWhileConnected" xml:space="preserve">
+    <value>Can't set socket while connected</value>
+  </data>
+  <data name="IrbisConnection_DecryptedStateIsNull" xml:space="preserve">
+    <value>Decrypted state is null</value>
+  </data>
+  <data name="IrbisConnection_NoRecordRetrieved" xml:space="preserve">
+    <value>no record retrieved</value>
+  </data>
+  <data name="IrbisConnection_ResultRecordIsNull" xml:space="preserve">
+    <value>result record is null</value>
+  </data>
+  <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
+    <value>Already connected</value>
+  </data>
+  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+    <value>username not specified</value>
+  </data>
+  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+    <value>password not specified</value>
+  </data>
+  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
+    <value>already connected</value>
+  </data>
 </root>

@@ -88,6 +88,24 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to : empty record detected.
+        /// </summary>
+        internal static string BatchAccessor_EmptyRecordDetected {
+            get {
+                return ResourceManager.GetString("BatchAccessor_EmptyRecordDetected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to some records not retrieved.
+        /// </summary>
+        internal static string BatchAccessor_SomeRecordsNotRetrieved {
+            get {
+                return ResourceManager.GetString("BatchAccessor_SomeRecordsNotRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Broken network event.
         /// </summary>
         internal static string BrokenNetworkEvent {
@@ -111,6 +129,33 @@ namespace ManagedIrbis.Properties {
         internal static string CantResolveHost {
             get {
                 return ResourceManager.GetString("CantResolveHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to already connected.
+        /// </summary>
+        internal static string ConnectCommand_Execute_AlreadyConnected {
+            get {
+                return ResourceManager.GetString("ConnectCommand_Execute_AlreadyConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to password not specified.
+        /// </summary>
+        internal static string ConnectCommand_PasswordNotSpecified {
+            get {
+                return ResourceManager.GetString("ConnectCommand_PasswordNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to username not specified.
+        /// </summary>
+        internal static string ConnectCommand_UsernameNotSpecified {
+            get {
+                return ResourceManager.GetString("ConnectCommand_UsernameNotSpecified", resourceCulture);
             }
         }
         
@@ -579,6 +624,51 @@ namespace ManagedIrbis.Properties {
         internal static string FieldValue_Verify_BadValue {
             get {
                 return ResourceManager.GetString("FieldValue_Verify_BadValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already connected.
+        /// </summary>
+        internal static string IrbisConnection_AlreadyConnected {
+            get {
+                return ResourceManager.GetString("IrbisConnection_AlreadyConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Can&apos;t set socket while connected.
+        /// </summary>
+        internal static string IrbisConnection_CantSetSocketWhileConnected {
+            get {
+                return ResourceManager.GetString("IrbisConnection_CantSetSocketWhileConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Decrypted state is null.
+        /// </summary>
+        internal static string IrbisConnection_DecryptedStateIsNull {
+            get {
+                return ResourceManager.GetString("IrbisConnection_DecryptedStateIsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no record retrieved.
+        /// </summary>
+        internal static string IrbisConnection_NoRecordRetrieved {
+            get {
+                return ResourceManager.GetString("IrbisConnection_NoRecordRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to result record is null.
+        /// </summary>
+        internal static string IrbisConnection_ResultRecordIsNull {
+            get {
+                return ResourceManager.GetString("IrbisConnection_ResultRecordIsNull", resourceCulture);
             }
         }
         

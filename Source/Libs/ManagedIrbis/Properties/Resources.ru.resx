@@ -304,4 +304,40 @@
   <data name="ServerResponse_BadFormat" xml:space="preserve">
     <value>: плохой формат=</value>
   </data>
+  <data name="AbstractEngine_NotConnected" xml:space="preserve">
+    <value>Не установлено подключение к серверу</value>
+  </data>
+  <data name="AbstractEngine_NotConnected2" xml:space="preserve">
+    <value>: не установлено подключение к серверу</value>
+  </data>
+  <data name="AbstractEngine_StandardExecution_Failed" xml:space="preserve">
+    <value> сбой</value>
+  </data>
+  <data name="BatchAccessor_SomeRecordsNotRetrieved" xml:space="preserve">
+    <value>некоторые записи не были получены</value>
+  </data>
+  <data name="BatchAccessor_EmptyRecordDetected" xml:space="preserve">
+    <value>: обнаружена пустая запись</value>
+  </data>
+  <data name="IrbisConnection_CantSetSocketWhileConnected" xml:space="preserve">
+    <value>Нельзя менять сокет, пока установлено подключение к серверу</value>
+  </data>
+  <data name="IrbisConnection_DecryptedStateIsNull" xml:space="preserve">
+    <value>Расшифрованное состояние подключения пустое</value>
+  </data>
+  <data name="IrbisConnection_NoRecordRetrieved" xml:space="preserve">
+    <value>ни одной записи не получено</value>
+  </data>
+  <data name="IrbisConnection_ResultRecordIsNull" xml:space="preserve">
+    <value>результирующая запись пуста</value>
+  </data>
+  <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
+    <value>Уже установлено подключение к серверу</value>
+  </data>
+  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+    <value>не задано имя пользователя</value>
+  </data>
+  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+    <value>не задан пароль</value>
+  </data>
 </root>

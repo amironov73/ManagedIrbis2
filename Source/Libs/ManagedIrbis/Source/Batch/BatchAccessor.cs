@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 using ManagedIrbis.ImportExport;
 using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Infrastructure.Commands;
-
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -99,7 +99,7 @@ namespace ManagedIrbis.Batch
                 Log.Error
                     (
                         nameof(BatchAccessor) + "::" + nameof(_ThrowIfEmptyRecord)
-                        + ": empty record detected"
+                        + Resources.BatchAccessor_EmptyRecordDetected
                     );
 
                 byte[] bytes = Encoding.UTF8.GetBytes(line);
@@ -242,18 +242,18 @@ namespace ManagedIrbis.Batch
                     {
                         MarcRecord record = Connection.ReadRecord
                             (
-                                database,
-                                slice[0],
-                                false,
-                                null
+                                database: database,
+                                mfn: slice[0],
+                                lockFlag: false,
+                                format: null
                             );
 
                         _records.Add(record);
                     }
                     else
                     {
-                        FormatCommand command
-                            = Connection.CommandFactory.GetFormatCommand();
+                        FormatCommand command = Connection.CommandFactory
+                            .CreateCommand<FormatCommand>();
                         command.Database = database;
                         command.FormatSpecification = IrbisFormat.All;
                         command.MfnList.AddRange(slice);
@@ -261,15 +261,12 @@ namespace ManagedIrbis.Batch
                         Connection.ExecuteCommand(command);
 
                         string[] lines = command.FormatResult
-                            .ThrowIfNullOrEmpty
-                                (
-                                    "command.FormatResult"
-                                );
+                            .ThrowIfNullOrEmpty(nameof(command.FormatResult));
 
                         Debug.Assert
                             (
                                 lines.Length == slice.Length,
-                                "some records not retrieved"
+                                Resources.BatchAccessor_SomeRecordsNotRetrieved
                             );
 
                         Parallel.ForEach
@@ -315,10 +312,10 @@ namespace ManagedIrbis.Batch
 
                 MarcRecord record = Connection.ReadRecord
                     (
-                        database,
-                        mfn,
-                        false,
-                        null
+                        database: database,
+                        mfn: mfn,
+                        lockFlag: false,
+                        format: null
                     );
 
                 T result1 = func(record);
@@ -349,7 +346,7 @@ namespace ManagedIrbis.Batch
                     else
                     {
                         FormatCommand command = Connection.CommandFactory
-                                .GetFormatCommand();
+                            .CreateCommand<FormatCommand>();
                         command.Database = database;
                         command.FormatSpecification = IrbisFormat.All;
                         command.MfnList.AddRange(slice);
@@ -362,7 +359,7 @@ namespace ManagedIrbis.Batch
                         Debug.Assert
                             (
                                 lines.Length == slice.Length,
-                                "some records not retrieved"
+                                Resources.BatchAccessor_SomeRecordsNotRetrieved
                             );
 
                         Parallel.ForEach

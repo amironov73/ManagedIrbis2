@@ -28,6 +28,7 @@ using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Gbl;
 using ManagedIrbis.Infrastructure.Commands;
 using ManagedIrbis.Infrastructure.Sockets;
+using ManagedIrbis.Properties;
 using ManagedIrbis.Search;
 
 #endregion
@@ -64,8 +65,6 @@ namespace ManagedIrbis
 
         #region Properties
 
-#if !UAP
-
         // TODO Implement properly
 
         /// <summary>
@@ -75,8 +74,6 @@ namespace ManagedIrbis
             .GetExecutingAssembly()
             .GetName()
             .Version;
-
-#endif
 
         /// <summary>
         /// Признак занятости клиента.
@@ -262,16 +259,8 @@ namespace ManagedIrbis
         #region Construction
 
         /// <summary>
-        /// Конструктор по умолчанию
+        /// Constructor.
         /// </summary>
-        /// <remarks>
-        /// Обратите внимание, деструктор не нужен!
-        /// Он помешает сохранению состояния клиента
-        /// при сериализации и последующему восстановлению,
-        /// т. к. попытается закрыть уже установленное
-        /// соединение. Восстановленная копия клиента
-        /// ломанётся в закрытое соедиение, и выйдет облом.
-        /// </remarks>
         public IrbisConnection()
         {
             Log.Trace(nameof(IrbisConnection) + "::Constructor");
@@ -319,8 +308,7 @@ namespace ManagedIrbis
 
         private static Random _random = new Random();
 
-        private readonly Stack<string> _databaseStack
-            = new Stack<string>();
+        private readonly Stack<string> _databaseStack = new Stack<string>();
 
         private string _host;
         private int _port;
@@ -347,18 +335,16 @@ namespace ManagedIrbis
         {
             if (Connected)
             {
-                throw new IrbisException("Already connected");
+                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
             }
         }
 
-        // ReSharper disable InconsistentNaming
-        internal int GenerateClientID()
+        internal int GenerateClientId()
         {
             _clientID = _random.Next(1000000, 9999999);
 
             return _clientID;
         }
-        // ReSharper restore InconsistentNaming
 
         internal int IncrementCommandNumber()
         {
@@ -386,8 +372,8 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NonNegative(mfn, nameof(mfn));
 
-            ActualizeRecordCommand command
-                = CommandFactory.GetActualizeRecordCommand();
+            ActualizeRecordCommand command = CommandFactory
+                .CreateCommand<ActualizeRecordCommand>();
             command.Database = database;
             command.Mfn = mfn;
 
@@ -441,20 +427,17 @@ namespace ManagedIrbis
 
             if (!_connected)
             {
-                Log.Trace
-                    (
-                        "IrbisConnection::Connect"
-                    );
+                Log.Trace(nameof(IrbisConnection) + "::" + nameof(Connect));
 
-                ConnectCommand command
-                    = CommandFactory.GetConnectCommand();
+                ConnectCommand command = CommandFactory
+                    .CreateCommand<ConnectCommand>();
                 ClientQuery query = command.CreateQuery();
                 ServerResponse response = command.Execute(query);
                 command.CheckResponse(response);
                 _connected = true;
 
                 string iniText = command.Configuration
-                    .ThrowIfNull("command.Configuration");
+                    .ThrowIfNull(nameof(command.Configuration));
                 IniFile result = new IniFile();
                 StringReader reader = new StringReader(iniText);
                 result.Read(reader);
@@ -488,7 +471,8 @@ namespace ManagedIrbis
             Sure.NotNull(record, nameof(record));
             Sure.NotNull(statements, nameof(statements));
 
-            GblVirtualCommand command = CommandFactory.GetGblVirtualCommand();
+            GblVirtualCommand command = CommandFactory
+                .CreateCommand<GblVirtualCommand>();
             command.Database = database;
             command.Record = record;
             command.Statements = statements;
@@ -496,7 +480,7 @@ namespace ManagedIrbis
             ExecuteCommand(command);
 
             return command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
         }
 
         /// <inheritdoc cref="IIrbisConnection.CorrectVirtualRecord(string,MarcRecord,string)"/>
@@ -511,7 +495,8 @@ namespace ManagedIrbis
             Sure.NotNull(record, nameof(record));
             Sure.NotNullNorEmpty(filename, nameof(filename));
 
-            GblVirtualCommand command = CommandFactory.GetGblVirtualCommand();
+            GblVirtualCommand command = CommandFactory
+                .CreateCommand<GblVirtualCommand>();
             command.Database = database;
             command.Record = record;
             command.FileName = filename;
@@ -519,7 +504,7 @@ namespace ManagedIrbis
             ExecuteCommand(command);
 
             return command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
         }
 
         // ========================================================
@@ -536,8 +521,8 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
             Sure.NotNullNorEmpty(description, nameof(description));
 
-            CreateDatabaseCommand command
-                = CommandFactory.GetCreateDatabaseCommand();
+            CreateDatabaseCommand command = CommandFactory
+                .CreateCommand<CreateDatabaseCommand>();
             command.Database = databaseName;
             command.Description = description;
             command.ReaderAccess = readerAccess;
@@ -556,8 +541,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            CreateDictionaryCommand command
-                = CommandFactory.GetCreateDictionaryCommand();
+            CreateDictionaryCommand command = CommandFactory
+                .CreateCommand<CreateDictionaryCommand>();
             command.Database = database;
             command.RelaxResponse = true;
 
@@ -574,8 +559,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            DeleteDatabaseCommand command
-                = CommandFactory.GetDeleteDatabaseCommand();
+            DeleteDatabaseCommand command = CommandFactory
+                .CreateCommand<DeleteDatabaseCommand>();
             command.Database = database;
 
             ExecuteCommand(command);
@@ -593,16 +578,12 @@ namespace ManagedIrbis
         {
             Sure.NotNull(command, nameof(command));
 
-            Log.Trace("IrbisConnection::ExecuteCommand");
+            Log.Trace(nameof(IrbisConnection) + "::" + nameof(ExecuteCommand));
 
             RawClientRequest = null;
             RawServerResponse = null;
 
-            ExecutionContext context = new ExecutionContext
-                (
-                    this,
-                    command
-                );
+            ExecutionContext context = new ExecutionContext(this, command);
             ServerResponse result = Executive.ExecuteCommand(context);
 
             RawClientRequest = null;
@@ -620,12 +601,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            UniversalCommand command
-                = CommandFactory.GetUniversalCommand
-                (
-                    commandCode,
-                    arguments
-                );
+            UniversalCommand command = CommandFactory
+                .CreateUniversalCommand(commandCode, arguments);
 
             return ExecuteCommand(command);
         }
@@ -646,14 +623,14 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.Positive(mfn, nameof(mfn));
 
-            FormatCommand command = CommandFactory.GetFormatCommand();
+            FormatCommand command = CommandFactory.CreateCommand<FormatCommand>();
             command.FormatSpecification = format;
             command.MfnList.Add(mfn);
 
             ExecuteCommand(command);
 
             string result = command.FormatResult
-                .ThrowIfNullOrEmpty("command.FormatResult")
+                .ThrowIfNullOrEmpty(nameof(command.FormatResult))
                 [0];
 
             return result;
@@ -669,14 +646,14 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.NotNull(record, nameof(record));
 
-            FormatCommand command = CommandFactory.GetFormatCommand();
+            FormatCommand command = CommandFactory.CreateCommand<FormatCommand>();
             command.FormatSpecification = format;
             command.VirtualRecord = record;
 
             ExecuteCommand(command);
 
             string result = command.FormatResult
-                .ThrowIfNullOrEmpty("command.FormatResult")
+                .ThrowIfNullOrEmpty(nameof(command.FormatResult))
                 [0];
 
             return result;
@@ -694,7 +671,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNull(format, nameof(format));
 
-            FormatCommand command = CommandFactory.GetFormatCommand();
+            FormatCommand command = CommandFactory.CreateCommand<FormatCommand>();
             command.Database = database;
             command.FormatSpecification = format;
             command.MfnList.AddRange(mfnList);
@@ -707,7 +684,7 @@ namespace ManagedIrbis
             ExecuteCommand(command);
 
             string[] result = command.FormatResult
-                .ThrowIfNull("command.FormatResult");
+                .ThrowIfNull(nameof(command.FormatResult));
 
             return result;
         }
@@ -724,13 +701,13 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
-            DatabaseInfoCommand command
-                = CommandFactory.GetDatabaseInfoCommand();
+            DatabaseInfoCommand command = CommandFactory
+                .CreateCommand<DatabaseInfoCommand>();
             command.Database = databaseName;
 
             ExecuteCommand(command);
             DatabaseInfo result = command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
 
             return result;
         }
@@ -745,13 +722,13 @@ namespace ManagedIrbis
         {
             Sure.NotNull(definition, nameof(definition));
 
-            DatabaseStatCommand command
-                = CommandFactory.GetDatabaseStatCommand();
+            DatabaseStatCommand command = CommandFactory
+                .CreateCommand<DatabaseStatCommand>();
             command.Definition = definition;
 
             ExecuteCommand(command);
             string result = command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
 
             return result;
         }
@@ -770,13 +747,9 @@ namespace ManagedIrbis
                 string database
             )
         {
-            if (ReferenceEquals(database, null))
-            {
-                database = Database;
-            }
+            database = database ?? Database;
 
-
-            MaxMfnCommand command = CommandFactory.GetMaxMfnCommand();
+            MaxMfnCommand command = CommandFactory.CreateCommand<MaxMfnCommand>();
             command.Database = database;
 
             ServerResponse response = ExecuteCommand(command);
@@ -790,12 +763,12 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IIrbisConnection.GetServerStat" />
         public virtual ServerStat GetServerStat()
         {
-            ServerStatCommand command
-                = CommandFactory.GetServerStatCommand();
+            ServerStatCommand command = CommandFactory
+                .CreateCommand<ServerStatCommand>();
             ExecuteCommand(command);
 
             ServerStat result = command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
 
             return result;
         }
@@ -805,12 +778,11 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IIrbisConnection.GetServerVersion" />
         public virtual IrbisVersion GetServerVersion()
         {
-            ServerVersionCommand command
-                = CommandFactory.GetServerVersionCommand();
+            ServerVersionCommand command = CommandFactory
+                .CreateCommand<ServerVersionCommand>();
             ExecuteCommand(command);
 
-            IrbisVersion result = command.Result
-                .ThrowIfNull("command.Result");
+            IrbisVersion result = command.Result.ThrowIfNull(nameof(command.Result));
 
             ServerVersion = result;
 
@@ -832,13 +804,11 @@ namespace ManagedIrbis
                 settings.Database = Database;
             }
 
-            GblCommand command
-                = CommandFactory.GetGblCommand(settings);
+            GblCommand command = CommandFactory.CreateCommand<GblCommand>();
 
             ExecuteCommand(command);
 
-            return command.Result
-                .ThrowIfNull("command.Result");
+            return command.Result.ThrowIfNull(nameof(command.Result));
         }
 
         // =========================================================
@@ -892,12 +862,12 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IIrbisConnection.ListProcesses" />
         public virtual IrbisProcessInfo[] ListProcesses()
         {
-            ListProcessesCommand command
-                = CommandFactory.GetListProcessCommand();
+            ListProcessesCommand command = CommandFactory
+                .CreateCommand<ListProcessesCommand>();
             ExecuteCommand(command);
 
             IrbisProcessInfo[] result = command.Result
-                .ThrowIfNullOrEmpty("command.Result");
+                .ThrowIfNullOrEmpty(nameof(command.Result));
 
             return result;
         }
@@ -907,12 +877,12 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IIrbisConnection.ListUsers" />
         public virtual UserInfo[] ListUsers()
         {
-            ListUsersCommand command
-                = CommandFactory.GetListUsersCommand();
+            ListUsersCommand command = CommandFactory
+                .CreateCommand<ListUsersCommand>();
             ExecuteCommand(command);
 
             UserInfo[] result = command.Result
-                .ThrowIfNull("command.Result");
+                .ThrowIfNull(nameof(command.Result));
 
             return result;
         }
@@ -922,7 +892,8 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IIrbisConnection.NoOp" />
         public virtual void NoOp()
         {
-            NopCommand command = CommandFactory.GetNopCommand();
+            NopCommand command = CommandFactory
+                .CreateCommand<NopCommand>();
 
             ExecuteCommand(command);
         }
@@ -965,7 +936,8 @@ namespace ManagedIrbis
         {
             Sure.NotNull(tableDefinition, nameof(tableDefinition));
 
-            PrintTableCommand command = CommandFactory.GetPrintTableCommand();
+            PrintTableCommand command = CommandFactory
+                .CreateCommand<PrintTableCommand>();
             command.Definition = tableDefinition;
 
             ExecuteCommand(command);
@@ -1003,8 +975,8 @@ namespace ManagedIrbis
         {
             Sure.NotNull(file, nameof(file));
 
-            ReadBinaryFileCommand command
-                = CommandFactory.GetReadBinaryFileCommand();
+            ReadBinaryFileCommand command = CommandFactory
+                .CreateCommand<ReadBinaryFileCommand>();
             command.File = file;
 
             ExecuteCommand(command);
@@ -1025,13 +997,14 @@ namespace ManagedIrbis
         {
             Sure.NotNull(parameters, nameof(parameters));
 
-            ReadPostingsCommand command
-                = CommandFactory.GetReadPostingsCommand();
+            ReadPostingsCommand command = CommandFactory
+                .CreateCommand<ReadPostingsCommand>();
             command.ApplyParameters(parameters);
 
             ExecuteCommand(command);
 
-            return command.Postings.ThrowIfNull("command.Postings");
+            return command.Postings
+                .ThrowIfNull(nameof(command.Postings));
         }
 
         // ========================================================
@@ -1053,7 +1026,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.Positive(mfn, nameof(mfn));
 
-            ReadRecordCommand command = CommandFactory.GetReadRecordCommand();
+            ReadRecordCommand command = CommandFactory.CreateCommand<ReadRecordCommand>();
             command.Mfn = mfn;
             command.Database = database;
             command.Lock = lockFlag;
@@ -1061,8 +1034,7 @@ namespace ManagedIrbis
 
             ExecuteCommand(command);
 
-            return command.Record
-                .ThrowIfNull("no record retrieved");
+            return command.Record.ThrowIfNull(Resources.IrbisConnection_NoRecordRetrieved);
         }
 
         /// <summary>
@@ -1082,7 +1054,7 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.Positive(mfn, nameof(mfn));
 
-            ReadRecordCommand command = CommandFactory.GetReadRecordCommand();
+            ReadRecordCommand command = CommandFactory.CreateCommand<ReadRecordCommand>();
             command.Mfn = mfn;
             command.Database = database;
             command.VersionNumber = versionNumber;
@@ -1108,12 +1080,12 @@ namespace ManagedIrbis
         {
             Sure.NotNull(parameters, nameof(parameters));
 
-            ReadTermsCommand command = CommandFactory.GetReadTermsCommand();
+            ReadTermsCommand command = CommandFactory.CreateCommand<ReadTermsCommand>();
             command.ApplyParameters(parameters);
 
             ExecuteCommand(command);
 
-            return command.Terms.ThrowIfNull("command.Terms");
+            return command.Terms.ThrowIfNull(nameof(command.Terms));
         }
 
         // ========================================================
@@ -1133,8 +1105,10 @@ namespace ManagedIrbis
             command.Files.Add(fileSpecification);
 
             ExecuteCommand(command);
+
             string result = command.Result
-                .ThrowIfNullOrEmpty("command.Result")[0];
+                .ThrowIfNullOrEmpty(nameof(command.Result))
+                [0];
 
             return result;
         }
@@ -1155,13 +1129,13 @@ namespace ManagedIrbis
                 return StringUtility.EmptyArray;
             }
 
-            ReadFileCommand command = CommandFactory.GetReadFileCommand();
+            ReadFileCommand command = CommandFactory.CreateCommand<ReadFileCommand>();
             command.Files.AddRange(files);
 
             ExecuteCommand(command);
 
             string[] result = command.Result
-                .ThrowIfNullOrEmpty("command.Result");
+                .ThrowIfNullOrEmpty(nameof(command.Result));
 
             return result;
         }
@@ -1173,15 +1147,11 @@ namespace ManagedIrbis
         /// </summary>
         public virtual void Reconnect()
         {
-            Log.Trace
-                (
-                    "IrbisConnection::Reconnect"
-                );
+            Log.Trace(nameof(IrbisConnection) + "::" + nameof(Reconnect));
 
             if (_connected)
             {
-                DisconnectCommand command
-                    = CommandFactory.GetDisconnectCommand();
+                DisconnectCommand command = CommandFactory.CreateCommand<DisconnectCommand>();
 
                 ExecuteCommand(command);
             }
@@ -1208,8 +1178,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
-            ReloadDictionaryCommand command
-                = CommandFactory.GetReloadDictionaryCommand();
+            ReloadDictionaryCommand command = CommandFactory
+                .CreateCommand<ReloadDictionaryCommand>();
             command.Database = databaseName;
 
             ExecuteCommand(command);
@@ -1228,8 +1198,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
-            ReloadMasterFileCommand command
-                = CommandFactory.GetReloadMasterFileCommand();
+            ReloadMasterFileCommand command = CommandFactory
+                .CreateCommand<ReloadMasterFileCommand>();
             command.Database = databaseName;
 
             ExecuteCommand(command);
@@ -1243,8 +1213,8 @@ namespace ManagedIrbis
         /// <remarks>For Administrator only.</remarks>
         public virtual void RestartServer()
         {
-            RestartServerCommand command
-                = CommandFactory.GetRestartServerCommand();
+            RestartServerCommand command = CommandFactory
+                .CreateCommand<RestartServerCommand>();
 
             ExecuteCommand(command);
         }
@@ -1262,15 +1232,11 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(state, nameof(state));
 
-            ConnectionSettings settings
-                = ConnectionSettings.Decrypt(state);
+            ConnectionSettings settings = ConnectionSettings.Decrypt(state);
 
             if (ReferenceEquals(settings, null))
             {
-                throw new IrbisException
-                    (
-                        "Decrypted state is null"
-                    );
+                throw new IrbisException(Resources.IrbisConnection_DecryptedStateIsNull);
             }
 
             IrbisConnection result = new IrbisConnection();
@@ -1292,14 +1258,14 @@ namespace ManagedIrbis
         {
             Sure.NotNull(expression, nameof(expression));
 
-            SearchCommand command = CommandFactory.GetSearchCommand();
+            SearchCommand command = CommandFactory.CreateCommand<SearchCommand>();
             command.SearchExpression = expression;
 
             ExecuteCommand(command);
 
             int[] result = FoundItem.ConvertToMfn
                 (
-                    command.Found.ThrowIfNull("Found")
+                    command.Found.ThrowIfNull(nameof(command.Found))
                 );
 
             return result;
@@ -1318,14 +1284,14 @@ namespace ManagedIrbis
         {
             Sure.NotNull(parameters, nameof(parameters));
 
-            SearchCommand command = CommandFactory.GetSearchCommand();
+            SearchCommand command = CommandFactory .CreateCommand<SearchCommand>();
             command.ApplyParameters(parameters);
 
             ExecuteCommand(command);
 
             int[] result = FoundItem.ConvertToMfn
                 (
-                    command.Found.ThrowIfNull("Found")
+                    command.Found.ThrowIfNull(nameof(command.Found))
                 );
 
             return result;
@@ -1410,8 +1376,7 @@ namespace ManagedIrbis
             Sure.NotNull(typeName, nameof(typeName));
 
             Type type = Type.GetType(typeName, true);
-            AbstractEngine newEngine
-                = (AbstractEngine)Activator.CreateInstance
+            AbstractEngine newEngine = (AbstractEngine)Activator.CreateInstance
                 (
                     type,
                     this,
@@ -1461,8 +1426,7 @@ namespace ManagedIrbis
                 Func<Exception, bool> resolver
             )
         {
-            RetryClientSocket oldSocket
-                = ClientSocketUtility.FindSocket<RetryClientSocket>(this);
+            RetryClientSocket oldSocket = ClientSocketUtility.FindSocket<RetryClientSocket>(this);
 
             if (retryCount <= 0)
             {
@@ -1471,7 +1435,7 @@ namespace ManagedIrbis
                     SetSocket
                         (
                             oldSocket.InnerSocket
-                            .ThrowIfNull("oldSocket.InnerSocket")
+                            .ThrowIfNull(nameof(oldSocket.InnerSocket))
                         );
                 }
             }
@@ -1506,10 +1470,7 @@ namespace ManagedIrbis
 
             if (Connected)
             {
-                throw new IrbisException
-                    (
-                        "Can't set socket while connected"
-                    );
+                throw new IrbisException(Resources.IrbisConnection_CantSetSocketWhileConnected);
             }
 
             socket.Connection = this;
@@ -1524,8 +1485,7 @@ namespace ManagedIrbis
         [NotNull]
         public virtual string Suspend()
         {
-            ConnectionSettings settings
-                = ConnectionSettings.FromConnection(this);
+            ConnectionSettings settings = ConnectionSettings.FromConnection(this);
             string result = settings.Encrypt();
 
             _connected = false;
@@ -1546,8 +1506,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
-            TruncateDatabaseCommand command
-                = CommandFactory.GetTruncateDatabaseCommand();
+            TruncateDatabaseCommand command = CommandFactory
+                .CreateCommand<TruncateDatabaseCommand>();
             command.Database = databaseName;
 
             ExecuteCommand(command);
@@ -1566,8 +1526,8 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(databaseName, nameof(databaseName));
 
-            UnlockDatabaseCommand command
-                = CommandFactory.GetUnlockDatabaseCommand();
+            UnlockDatabaseCommand command = CommandFactory
+                .CreateCommand<UnlockDatabaseCommand>();
             command.Database = databaseName;
 
             ExecuteCommand(command);
@@ -1593,8 +1553,8 @@ namespace ManagedIrbis
                 return;
             }
 
-            UnlockRecordsCommand command
-                = CommandFactory.GetUnlockRecordsCommand();
+            UnlockRecordsCommand command = CommandFactory
+                .CreateCommand<UnlockRecordsCommand>();
             command.Database = database;
             command.Records.AddRange(mfnList);
 
@@ -1616,8 +1576,8 @@ namespace ManagedIrbis
                 return;
             }
 
-            UpdateIniFileCommand command
-                = CommandFactory.GetUpdateIniFileCommand();
+            UpdateIniFileCommand command = CommandFactory
+                .CreateCommand<UpdateIniFileCommand>();
             command.Lines = lines;
 
             ExecuteCommand(command);
@@ -1633,8 +1593,8 @@ namespace ManagedIrbis
         {
             Sure.NotNull(userList, nameof(userList));
 
-            UpdateUserListCommand command
-                = CommandFactory.GetUpdateUserListCommand();
+            UpdateUserListCommand command = CommandFactory
+                .CreateCommand<UpdateUserListCommand>();
             command.UserList = userList;
 
             ExecuteCommand(command);
@@ -1669,7 +1629,7 @@ namespace ManagedIrbis
 
             if (ReferenceEquals(result, null))
             {
-                throw new IrbisException("result record is null");
+                throw new IrbisException(Resources.IrbisConnection_ResultRecordIsNull);
             }
 
             return result;
@@ -1724,8 +1684,8 @@ namespace ManagedIrbis
         {
             Sure.NotNull(file, nameof(file));
 
-            WriteFileCommand command
-                = CommandFactory.GetWriteFileCommand();
+            WriteFileCommand command = CommandFactory
+                .CreateCommand<WriteFileCommand>();
             command.Files.Add(file);
 
             ExecuteCommand(command);
@@ -1737,7 +1697,8 @@ namespace ManagedIrbis
                 params FileSpecification[] files
             )
         {
-            WriteFileCommand command = CommandFactory.GetWriteFileCommand();
+            WriteFileCommand command = CommandFactory
+                .CreateCommand<WriteFileCommand>();
             foreach (FileSpecification file in files)
             {
                 command.Files.Add(file);
@@ -1753,14 +1714,14 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IDisposable.Dispose" />
         public virtual void Dispose()
         {
-            Log.Trace("IrbisConnection::Dispose");
+            Log.Trace(nameof(IrbisConnection) + "::" + nameof(Dispose));
 
             Disposing.Raise(this);
 
             if (_connected)
             {
-                DisconnectCommand command
-                    = CommandFactory.GetDisconnectCommand();
+                DisconnectCommand command = CommandFactory
+                    .CreateCommand<DisconnectCommand>();
 
                 ExecuteCommand(command);
             }
@@ -1786,15 +1747,11 @@ namespace ManagedIrbis
         {
             Sure.NotNull(reader, nameof(reader));
 
-            Host = reader.ReadNullableString()
-                .ThrowIfNull("Host");
-            Port = reader.ReadPackedInt32();
-            Username = reader.ReadNullableString()
-                .ThrowIfNull("Username");
-            Password = reader.ReadNullableString()
-                .ThrowIfNull("Password");
-            Database = reader.ReadNullableString()
-                .ThrowIfNull("Database");
+            Host = reader.ReadString();
+            Port = reader.ReadInt32();
+            Username = reader.ReadString();
+            Password = reader.ReadString();
+            Database = reader.ReadString();
             Workstation = (IrbisWorkstation)reader.ReadPackedInt32();
         }
 
@@ -1804,13 +1761,12 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            writer
-                .WriteNullable(Host)
-                .WritePackedInt32(Port)
-                .WriteNullable(Username)
-                .WriteNullable(Password)
-                .WriteNullable(Database)
-                .WritePackedInt32((int)Workstation);
+            writer.Write(Host);
+            writer.Write(Port);
+            writer.Write(Username);
+            writer.Write(Password);
+            writer.Write(Database);
+            writer.Write((int)Workstation);
         }
 
         #endregion

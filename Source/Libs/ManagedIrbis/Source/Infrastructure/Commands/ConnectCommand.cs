@@ -14,6 +14,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Commands
@@ -24,9 +26,9 @@ namespace ManagedIrbis.Infrastructure.Commands
     // Если код возврата равен ZERO,
     // то следующие строки - это ini-файл определенный
     // на сервере для данного пользователя.
-    // 
+    //
     // Если код возврата не равен ZERO - только одна строка.
-    // 
+    //
     // Коды возврата:
     // ZERO
     // CLIENT_ALREADY_EXISTS  - пользователь
@@ -111,7 +113,7 @@ namespace ManagedIrbis.Infrastructure.Commands
             IrbisConnection nativeConnection = connection as IrbisConnection;
             if (!ReferenceEquals(nativeConnection, null))
             {
-                nativeConnection.GenerateClientID();
+                nativeConnection.GenerateClientId();
                 nativeConnection.ResetCommandNumber();
             }
         }
@@ -134,10 +136,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "ConnectCommand::CreateQuery: "
-                        + "username not specified"
+                        + Resources.ConnectCommand_UsernameNotSpecified
                     );
 
-                throw new IrbisException("username not specified");
+                throw new IrbisException(Resources.ConnectCommand_UsernameNotSpecified);
             }
 
             string password = Password ?? Connection.Password;
@@ -146,10 +148,10 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "ConnectCommand::CreateQuery: "
-                        + "password not specified"
+                        + Resources.ConnectCommand_PasswordNotSpecified
                     );
 
-                throw new IrbisException("password not specified");
+                throw new IrbisException(Resources.ConnectCommand_PasswordNotSpecified);
             }
 
             result.UserLogin = username;
@@ -176,14 +178,14 @@ namespace ManagedIrbis.Infrastructure.Commands
                 Log.Error
                     (
                         "ConnectCommand::Execute: "
-                        + "already connected"
+                        + Resources.ConnectCommand_Execute_AlreadyConnected
                     );
 
-                throw new IrbisException("Already connected");
+                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
             }
 
             ServerResponse result;
-            
+
             while (true)
             {
                 result = base.Execute(query);
@@ -200,7 +202,7 @@ namespace ManagedIrbis.Infrastructure.Commands
                     IrbisConnection connection = Connection as IrbisConnection;
                     int newId = ReferenceEquals(connection, null)
                         ? Connection.ClientID + 1
-                        : connection.GenerateClientID();
+                        : connection.GenerateClientId();
                     query.ClientID = newId;
                 }
                 else
@@ -234,8 +236,8 @@ namespace ManagedIrbis.Infrastructure.Commands
                 = new Verifier<ConnectCommand>(this, throwOnError);
 
             verifier
-                .NotNullNorEmpty(Username, "Username")
-                .NotNullNorEmpty(Password, "Password");
+                .NotNullNorEmpty(Username, nameof(Username))
+                .NotNullNorEmpty(Password, nameof(Password));
 
             return verifier.Result;
         }
