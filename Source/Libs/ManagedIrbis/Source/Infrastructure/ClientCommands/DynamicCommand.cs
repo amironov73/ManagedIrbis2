@@ -115,7 +115,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region AbstractCommand members
+        #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
         public override int[] GoodReturnCodes
@@ -150,8 +150,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
         }
 
-        /// <inheritdoc cref="ClientCommand.Execute()" />
-        public override ServerResponse Execute()
+        /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
+        public override ServerResponse Execute
+            (
+                ClientContext context
+            )
         {
             // TODO Fix this
 

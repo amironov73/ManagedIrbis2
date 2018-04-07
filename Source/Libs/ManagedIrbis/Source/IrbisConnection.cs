@@ -430,7 +430,8 @@ namespace ManagedIrbis
                 Log.Trace(nameof(IrbisConnection) + "::" + nameof(Connect));
 
                 ConnectCommand command = CommandFactory.CreateCommand<ConnectCommand>();
-                ServerResponse response = command.Execute();
+                ClientContext context = new ClientContext(this);
+                ServerResponse response = command.Execute(context);
                 command.CheckResponse(response);
                 _connected = true;
 

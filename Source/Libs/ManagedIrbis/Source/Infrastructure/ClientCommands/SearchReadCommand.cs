@@ -112,12 +112,15 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region AbstractCommand members
+        #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.Execute()" />
-        public override ServerResponse Execute()
+        /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
+        public override ServerResponse Execute
+            (
+                ClientContext context
+            )
         {
-            ServerResponse result = base.Execute();
+            ServerResponse result = base.Execute(context);
 
             if (result.ReturnCode == 0)
             {

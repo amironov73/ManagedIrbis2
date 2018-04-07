@@ -61,7 +61,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region AbstractCommand members
+        #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.CheckResponse"/>
         public override void CheckResponse
@@ -75,8 +75,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             response.RefuseAnReturnCode();
         }
 
-        /// <inheritdoc cref="ClientCommand.Execute()"/>
-        public override ServerResponse Execute()
+        /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
+        public override ServerResponse Execute
+            (
+                ClientContext context
+            )
         {
             ClientQuery query = CreateQuery();
             query.CommandCode = CommandCode.ListFiles;

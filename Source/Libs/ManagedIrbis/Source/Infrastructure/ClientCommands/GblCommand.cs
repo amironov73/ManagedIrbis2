@@ -212,10 +212,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region AbstractCommand members
+        #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.Execute()"/>
-        public override ServerResponse Execute()
+        /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
+        public override ServerResponse Execute
+            (
+                ClientContext context
+            )
         {
             ClientQuery query = base.CreateQuery();
             query.CommandCode = CommandCode.GlobalCorrection;
@@ -325,7 +328,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region IVerifiable members
 
-        ///// <inheritdoc cref="AbstractCommand.Verify"/>
+        ///// <inheritdoc cref="ClientCommand.Verify"/>
         //public override bool Verify
         //    (
         //        bool throwOnError

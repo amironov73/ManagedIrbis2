@@ -104,7 +104,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ServerResponse response = command.Execute();
+            ClientContext context = new ClientContext(connection);
+            ServerResponse response = command.Execute(context);
             Assert.AreEqual(returnCode, response.ReturnCode);
             Assert.IsNotNull(command.Found);
             Assert.AreEqual(0, command.Found.Length);
@@ -132,7 +133,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
                 .NewLine();
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
-            ServerResponse response = command.Execute();
+            ClientContext context = new ClientContext(connection);
+            ServerResponse response = command.Execute(context);
             Assert.AreEqual(returnCode, response.ReturnCode);
             Assert.IsNotNull(command.Found);
             Assert.AreEqual(0, command.Found.Length);

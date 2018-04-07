@@ -110,7 +110,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
                 .AppendAnsi(configuration);
             TestingSocket socket = (TestingSocket)connection.Socket;
             socket.Response = builder.Encode();
-            command.Execute();
+            ClientContext context = new ClientContext(connection);
+            command.Execute(context);
         }
 
         [TestMethod]

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* AbstractCommand.cs -- abstract command of IRBIS protocol
+/* ClientCommand.cs -- abstract command of IRBIS protocol
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -136,7 +136,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Execute the command.
         /// </summary>
         [NotNull]
-        public abstract ServerResponse Execute();
+        public abstract ServerResponse Execute
+            (
+                [NotNull] ClientContext context
+            );
 
         /// <summary>
         /// Execute the query.

@@ -248,7 +248,8 @@ namespace ManagedIrbis.Infrastructure
                     //        );
                     //}
 
-                    result = command.Execute();
+                    ClientContext clientContext = new ClientContext(Connection);
+                    result = command.Execute(clientContext);
                     if (!result.Verify(ThrowOnVerify))
                     {
                         Log.Error
