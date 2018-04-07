@@ -153,7 +153,7 @@ namespace UnitTests.ManagedIrbis
             string expected = "Результат расформатирования";
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            AbstractEngine engine = new StandardEngine(connection, null);
+            ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
             mock.SetupGet(c => c.CommandFactory).Returns(factory);
@@ -185,7 +185,7 @@ namespace UnitTests.ManagedIrbis
             string expected = "Результат расформатирования";
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            AbstractEngine engine = new StandardEngine(connection, null);
+            ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
             mock.SetupGet(c => c.CommandFactory).Returns(factory);
@@ -217,7 +217,7 @@ namespace UnitTests.ManagedIrbis
             string expected = "Результат расформатирования";
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            AbstractEngine engine = new StandardEngine(connection, null);
+            ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
             mock.SetupGet(c => c.CommandFactory).Returns(factory);
@@ -250,7 +250,7 @@ namespace UnitTests.ManagedIrbis
             string[] expected = {"Результат 1", "Результат 2", "Результат 3"};
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            AbstractEngine engine = new StandardEngine(connection, null);
+            ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
             mock.SetupGet(c => c.CommandFactory).Returns(factory);
@@ -861,7 +861,7 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.Executive).Returns(new StandardEngine(connection, null));
+            mock.SetupGet(c => c.Executive).Returns(new ExecutionEngine(connection, null));
             mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()))
                 .Returns((UniversalCommand command) =>
@@ -973,7 +973,7 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             CommandFactory factory = new CommandFactory(connection);
             mock.SetupGet(c => c.CommandFactory).Returns(factory);
-            AbstractEngine engine = new StandardEngine(connection, null);
+            ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))

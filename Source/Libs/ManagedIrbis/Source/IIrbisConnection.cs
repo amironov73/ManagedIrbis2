@@ -98,7 +98,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Executive engine.
         /// </summary>
-        AbstractEngine Executive { get; }
+        ExecutionEngine Executive { get; }
 
         /// <summary>
         /// Command factory.
@@ -544,9 +544,9 @@ namespace ManagedIrbis
         /// <summary>
         /// Set execution engine.
         /// </summary>
-        AbstractEngine SetEngine
+        ExecutionEngine SetEngine
             (
-                [NotNull] AbstractEngine engine
+                [NotNull] ExecutionEngine engine
             );
 
         /// <summary>
@@ -554,7 +554,7 @@ namespace ManagedIrbis
         /// </summary>
         /// <returns>Previous <see cref="IrbisConnection.Executive"/>.
         /// </returns>
-        AbstractEngine SetEngine
+        ExecutionEngine SetEngine
             (
                 [NotNull] string typeName
             );

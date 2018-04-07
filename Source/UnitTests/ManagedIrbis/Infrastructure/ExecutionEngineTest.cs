@@ -19,10 +19,10 @@ using Moq;
 namespace UnitTests.ManagedIrbis.Infrastructure
 {
     [TestClass]
-    public class AbstractEngineTest
+    public class ExecutionEngineTest
     {
         [NotNull]
-        private AbstractEngine _GetEngine()
+        private ExecutionEngine _GetEngine()
         {
             IServiceProvider services = new ServiceContainer();
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
@@ -31,7 +31,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             mock.SetupGet(c => c.Busy).Returns(busyState);
             mock.SetupGet(c => c.Workstation).Returns(IrbisWorkstation.Cataloger);
             mock.SetupGet(c => c.ClientID).Returns(123456);
-            AbstractEngine result = new StandardEngine(connection, null);
+            ExecutionEngine result = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(result);
             TestingSocket socket = new TestingSocket(connection);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
@@ -43,7 +43,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [NotNull]
-        private AbstractEngine _GetEngine2()
+        private ExecutionEngine _GetEngine2()
         {
             IServiceProvider services = new ServiceContainer();
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
@@ -52,7 +52,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             mock.SetupGet(c => c.Busy).Returns(busyState);
             mock.SetupGet(c => c.Workstation).Returns(IrbisWorkstation.Cataloger);
             mock.SetupGet(c => c.ClientID).Returns(123456);
-            AbstractEngine result = new StandardEngine(connection, null);
+            ExecutionEngine result = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(result);
             SimpleClientSocket socket = new SimpleClientSocket(connection);
             mock.SetupGet(c => c.Socket).Returns(socket);
@@ -62,38 +62,38 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void AbstractEngine_Construction_1()
+        public void ExecutionEngine_Construction_1()
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
 
-            AbstractEngine inner = new StandardEngine(connection, null);
+            ExecutionEngine inner = new ExecutionEngine(connection);
             Assert.AreSame(connection, inner.Connection);
             Assert.IsNotNull(inner.Services.Value);
 
-            AbstractEngine outer = new StandardEngine(connection, inner);
+            ExecutionEngine outer = new ExecutionEngine(connection, inner);
             Assert.AreSame(connection, outer.Connection);
             Assert.AreSame(inner, outer.NestedEngine);
             Assert.IsNotNull(outer.Services.Value);
         }
 
         [TestMethod]
-        public void AbstractEngine_ThrowOnVerify_1()
+        public void ExecutionEngine_ThrowOnVerify_1()
         {
-            bool saved = AbstractEngine.ThrowOnVerify;
-            AbstractEngine.ThrowOnVerify = false;
-            Assert.IsFalse(AbstractEngine.ThrowOnVerify);
-            AbstractEngine.ThrowOnVerify = true;
-            Assert.IsTrue(AbstractEngine.ThrowOnVerify);
-            AbstractEngine.ThrowOnVerify = saved;
+            bool saved = ExecutionEngine.ThrowOnVerify;
+            ExecutionEngine.ThrowOnVerify = false;
+            Assert.IsFalse(ExecutionEngine.ThrowOnVerify);
+            ExecutionEngine.ThrowOnVerify = true;
+            Assert.IsTrue(ExecutionEngine.ThrowOnVerify);
+            ExecutionEngine.ThrowOnVerify = saved;
         }
 
         [TestMethod]
-        public void AbstractEngine_ExecuteCommand_1()
+        public void ExecutionEngine_ExecuteCommand_1()
         {
             bool before = false, after = false;
 
-            AbstractEngine engine = _GetEngine();
+            ExecutionEngine engine = _GetEngine();
             engine.BeforeExecution += (sender, args) => { before = true; };
             engine.AfterExecution += (sender, args) => { after = true; };
             ClientCommand command = new NopCommand(engine.Connection);
@@ -107,11 +107,11 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void AbstractEngine_ExecuteCommand_2()
+        public void ExecutionEngine_ExecuteCommand_2()
         {
             bool exceptionSeen = false;
 
-            AbstractEngine engine = _GetEngine();
+            ExecutionEngine engine = _GetEngine();
             engine.ExceptionOccurs += (sender, args) => { exceptionSeen = true; };
             DynamicCommand command = new DynamicCommand(engine.Connection)
             {
@@ -133,9 +133,9 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
         [TestMethod]
         [ExpectedException(typeof(IrbisException))]
-        public void AbstractEngine_ExecuteCommand_3()
+        public void ExecutionEngine_ExecuteCommand_3()
         {
-            AbstractEngine engine = _GetEngine2();
+            ExecutionEngine engine = _GetEngine2();
             ClientCommand command = new NopCommand(engine.Connection);
             ExecutionContext context = new ExecutionContext(engine.Connection, command);
 
@@ -144,13 +144,13 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
         [TestMethod]
         [ExpectedException(typeof(IrbisNetworkException))]
-        public void AbstractEngine_ExecuteCommand_4()
+        public void ExecutionEngine_ExecuteCommand_4()
         {
-            bool saved = AbstractEngine.ThrowOnVerify;
+            bool saved = ExecutionEngine.ThrowOnVerify;
             try
             {
-                AbstractEngine.ThrowOnVerify = false;
-                AbstractEngine engine = _GetEngine();
+                ExecutionEngine.ThrowOnVerify = false;
+                ExecutionEngine engine = _GetEngine();
                 DynamicCommand command = new DynamicCommand(engine.Connection);
                 command.VerifyHandler += (dynamicCommand, b) => false;
                 ExecutionContext context = new ExecutionContext(engine.Connection, command);
@@ -159,23 +159,23 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             }
             finally
             {
-                AbstractEngine.ThrowOnVerify = saved;
+                ExecutionEngine.ThrowOnVerify = saved;
             }
         }
 
         [TestMethod]
-        public void AbstractEngine_GetMemoryStream_1()
+        public void ExecutionEngine_GetMemoryStream_1()
         {
-            AbstractEngine engine = _GetEngine();
-            MemoryStream stream = engine.GetMemoryStream(typeof(AbstractEngineTest));
+            ExecutionEngine engine = _GetEngine();
+            MemoryStream stream = engine.GetMemoryStream(typeof(ExecutionEngineTest));
             Assert.IsNotNull(stream);
         }
 
         [TestMethod]
-        public void AbstractEngine_ReportMemoryUsage_1()
+        public void ExecutionEngine_ReportMemoryUsage_1()
         {
-            AbstractEngine engine = _GetEngine();
-            engine.ReportMemoryUsage(typeof(AbstractEngineTest), 100500);
+            ExecutionEngine engine = _GetEngine();
+            engine.ReportMemoryUsage(typeof(ExecutionEngineTest), 100500);
         }
     }
 }

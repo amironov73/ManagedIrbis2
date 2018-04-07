@@ -33,7 +33,7 @@ namespace ManagedIrbis.Infrastructure
     /// Abstract execution engine.
     /// </summary>
     [PublicAPI]
-    public abstract class AbstractEngine
+    public class ExecutionEngine
     {
         #region Events
 
@@ -66,7 +66,7 @@ namespace ManagedIrbis.Infrastructure
         /// Nested engine.
         /// </summary>
         [CanBeNull]
-        public AbstractEngine NestedEngine { get; private set; }
+        public ExecutionEngine NestedEngine { get; private set; }
 
         /// <summary>
         /// Additional services.
@@ -85,22 +85,22 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        protected AbstractEngine
+        public ExecutionEngine
             (
                 [NotNull] IIrbisConnection connection,
-                [CanBeNull] AbstractEngine nestedEngine
+                [CanBeNull] ExecutionEngine nestedEngine = null
             )
         {
             Sure.NotNull(connection, nameof(connection));
 
-            Log.Trace(nameof(AbstractEngine) + "::Constructor");
+            Log.Trace(nameof(ExecutionEngine) + "::Constructor");
 
             Connection = connection;
             NestedEngine = nestedEngine;
             Services = new ServiceContainer();
         }
 
-        static AbstractEngine()
+        static ExecutionEngine()
         {
             ThrowOnVerify = true;
         }
@@ -126,7 +126,7 @@ namespace ManagedIrbis.Infrastructure
                 {
                     Log.Error
                         (
-                            nameof(AbstractEngine) + "::" + nameof(CheckConnection)
+                            nameof(ExecutionEngine) + "::" + nameof(CheckConnection)
                             + Resources.AbstractEngine_NotConnected2
                         );
 
@@ -144,7 +144,7 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
-            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnAfterExecute));
+            Log.Trace(nameof(ExecutionEngine) + "::" + nameof(OnAfterExecute));
 
             AfterExecution?.Invoke(this, new ExecutionEventArgs(context));
         }
@@ -158,7 +158,7 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
-            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnBeforeExecute));
+            Log.Trace(nameof(ExecutionEngine) + "::" + nameof(OnBeforeExecute));
 
             BeforeExecution?.Invoke(this, new ExecutionEventArgs(context));
         }
@@ -172,7 +172,7 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
-            Log.Trace(nameof(AbstractEngine) + "::" + nameof(OnException));
+            Log.Trace(nameof(ExecutionEngine) + "::" + nameof(OnException));
 
             // TODO Implement properly!
 
@@ -213,7 +213,7 @@ namespace ManagedIrbis.Infrastructure
         {
             Sure.NotNull(context, nameof(context));
 
-            Log.Trace(nameof(AbstractEngine) + "::" + nameof(StandardExecution));
+            Log.Trace(nameof(ExecutionEngine) + "::" + nameof(StandardExecution));
 
             CheckConnection(context);
 
@@ -224,7 +224,7 @@ namespace ManagedIrbis.Infrastructure
             {
                 Log.Error
                     (
-                        nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                        nameof(ExecutionEngine) + "::" + nameof(StandardExecution)
                         + ": " + nameof(command) + "." + nameof(command.Verify)
                         + Resources.AbstractEngine_StandardExecution_Failed
                     );
@@ -254,7 +254,7 @@ namespace ManagedIrbis.Infrastructure
                     {
                         Log.Error
                             (
-                                nameof(AbstractEngine) + "::" + nameof(StandardExecution)
+                                nameof(ExecutionEngine) + "::" + nameof(StandardExecution)
                                 + ": " + nameof(result) + "." + nameof(result.Verify)
                                 + Resources.AbstractEngine_StandardExecution_Failed
                             );
@@ -266,7 +266,7 @@ namespace ManagedIrbis.Infrastructure
                 {
                     Log.TraceException
                         (
-                            nameof(AbstractEngine) + "::" + nameof(StandardExecution),
+                            nameof(ExecutionEngine) + "::" + nameof(StandardExecution),
                             exception
                         );
 
@@ -315,7 +315,7 @@ namespace ManagedIrbis.Infrastructure
             )
         {
             Sure.NotNull(context, nameof(context));
-            Log.Trace(nameof(AbstractEngine) + "::" + nameof(ExecuteCommand));
+            Log.Trace(nameof(ExecutionEngine) + "::" + nameof(ExecuteCommand));
 
             context.Verify(true);
 

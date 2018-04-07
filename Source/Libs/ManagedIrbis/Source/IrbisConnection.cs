@@ -195,7 +195,7 @@ namespace ManagedIrbis
         /// Executive engine.
         /// </summary>
         [NotNull]
-        public AbstractEngine Executive { get; private set; }
+        public ExecutionEngine Executive { get; private set; }
 
         /// <summary>
         /// Command factory.
@@ -274,7 +274,7 @@ namespace ManagedIrbis
             Password = "111";
             Workstation = ConnectionSettings.DefaultWorkstation;
 
-            Executive = new StandardEngine(this, null);
+            Executive = new ExecutionEngine(this, null);
             CommandFactory = CommandFactory
                 .GetDefaultFactory(this);
             Socket = new SimpleClientSocket(this);
@@ -1348,14 +1348,14 @@ namespace ManagedIrbis
         /// Set execution engine.
         /// </summary>
         [NotNull]
-        public virtual AbstractEngine SetEngine
+        public virtual ExecutionEngine SetEngine
             (
-                AbstractEngine engine
+                ExecutionEngine engine
             )
         {
             Sure.NotNull(engine, nameof(engine));
 
-            AbstractEngine previous = Executive;
+            ExecutionEngine previous = Executive;
             Executive = engine;
 
             return previous;
@@ -1367,7 +1367,7 @@ namespace ManagedIrbis
         /// <returns>Previous <see cref="Executive"/>.
         /// </returns>
         [NotNull]
-        public virtual AbstractEngine SetEngine
+        public virtual ExecutionEngine SetEngine
             (
                 string typeName
             )
@@ -1375,13 +1375,13 @@ namespace ManagedIrbis
             Sure.NotNull(typeName, nameof(typeName));
 
             Type type = Type.GetType(typeName, true);
-            AbstractEngine newEngine = (AbstractEngine)Activator.CreateInstance
+            ExecutionEngine newEngine = (ExecutionEngine)Activator.CreateInstance
                 (
                     type,
                     this,
                     Executive
                 );
-            AbstractEngine previous = SetEngine(newEngine);
+            ExecutionEngine previous = SetEngine(newEngine);
 
             return previous;
         }

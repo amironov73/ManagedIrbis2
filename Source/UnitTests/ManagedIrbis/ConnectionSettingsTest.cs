@@ -34,12 +34,12 @@ namespace UnitTests.ManagedIrbis
     }
 
     class MyEngine
-        : AbstractEngine
+        : ExecutionEngine
     {
         public MyEngine
             (
                 [NotNull] IrbisConnection connection,
-                [CanBeNull] AbstractEngine nestedEngine
+                [CanBeNull] ExecutionEngine nestedEngine
             )
             : base(connection, nestedEngine)
         {

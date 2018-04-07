@@ -312,7 +312,7 @@ namespace UnitTests.ManagedIrbis
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             mock.SetupGet(c => c.Host).Returns(host);
             IIrbisConnection connection = mock.Object;
-            AbstractEngine executive = new StandardEngine(connection, null);
+            ExecutionEngine executive = new ExecutionEngine(connection, null);
             mock.SetupGet(c => c.Executive).Returns(executive);
             string database = "IBIS";
             string[] lines = _GetLines();

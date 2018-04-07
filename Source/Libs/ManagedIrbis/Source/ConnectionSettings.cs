@@ -513,7 +513,7 @@ namespace ManagedIrbis
                     .GetType().AssemblyQualifiedName;
             }
 
-            if (connection.Executive.GetType() != typeof(StandardEngine))
+            if (connection.Executive.GetType() != typeof(ExecutionEngine))
             {
                 result.EngineTypeName = connection.Executive
                     .GetType().AssemblyQualifiedName;
