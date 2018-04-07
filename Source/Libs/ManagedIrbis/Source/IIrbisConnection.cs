@@ -20,7 +20,7 @@ using JetBrains.Annotations;
 
 using ManagedIrbis.Gbl;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Search;
 
 #endregion
@@ -241,7 +241,7 @@ namespace ManagedIrbis
         [NotNull]
         ServerResponse ExecuteCommand
             (
-                [NotNull] AbstractCommand command
+                [NotNull] ClientCommand command
             );
 
         /// <summary>

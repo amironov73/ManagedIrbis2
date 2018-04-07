@@ -15,7 +15,7 @@ using AM;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 #endregion
 
@@ -34,7 +34,7 @@ namespace ManagedIrbis.Infrastructure
         /// Command to execute.
         /// </summary>
         [CanBeNull]
-        public AbstractCommand Command { get; set; }
+        public ClientCommand Command { get; set; }
 
         /// <summary>
         /// Connection.
@@ -82,7 +82,7 @@ namespace ManagedIrbis.Infrastructure
         public ExecutionContext
             (
                 [NotNull] IIrbisConnection connection,
-                [NotNull] AbstractCommand command
+                [NotNull] ClientCommand command
             )
         {
             Sure.NotNull(connection, nameof(connection));

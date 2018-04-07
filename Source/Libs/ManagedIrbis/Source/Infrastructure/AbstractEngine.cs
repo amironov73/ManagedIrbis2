@@ -20,7 +20,7 @@ using AM.Threading;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Properties;
 
 #endregion
@@ -117,7 +117,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] ExecutionContext context
             )
         {
-            AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
+            ClientCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
             if (command.RequireConnection && connection.Socket.RequireConnection)
@@ -217,7 +217,7 @@ namespace ManagedIrbis.Infrastructure
 
             CheckConnection(context);
 
-            AbstractCommand command = context.Command.ThrowIfNull(nameof(context.Command));
+            ClientCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
             if (!command.Verify(ThrowOnVerify))

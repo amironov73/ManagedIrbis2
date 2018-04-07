@@ -5,7 +5,7 @@ using AM.IO;
 using AM.Runtime;
 
 using ManagedIrbis;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Search;
 
 namespace UnitTests.ManagedIrbis.Search

@@ -30,7 +30,7 @@ using JetBrains.Annotations;
 using ManagedIrbis.Batch;
 using ManagedIrbis.Menus;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Infrastructure.Sockets;
 using ManagedIrbis.Search;
 

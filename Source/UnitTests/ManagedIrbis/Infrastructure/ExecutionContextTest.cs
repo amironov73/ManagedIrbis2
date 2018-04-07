@@ -2,7 +2,7 @@
 
 using ManagedIrbis;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -27,7 +27,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ExecutionContext_Construction_2()
         {
             IIrbisConnection connection = new IrbisConnection();
-            AbstractCommand command = new NopCommand(connection);
+            ClientCommand command = new NopCommand(connection);
             ExecutionContext context = new ExecutionContext(connection, command);
             Assert.AreSame(command, context.Command);
             Assert.AreSame(connection, context.Connection);
@@ -41,7 +41,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ExecutionContext_Properties_1()
         {
             IIrbisConnection connection = new IrbisConnection();
-            AbstractCommand command = new NopCommand(connection);
+            ClientCommand command = new NopCommand(connection);
             ExecutionContext context = new ExecutionContext(connection, command);
 
             Exception exception = new Exception();
@@ -64,7 +64,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ExecutionContext_Verify_1()
         {
             IIrbisConnection connection = new IrbisConnection();
-            AbstractCommand command = new NopCommand(connection);
+            ClientCommand command = new NopCommand(connection);
             ExecutionContext context = new ExecutionContext(connection, command);
             Assert.IsTrue(context.Verify(false));
 

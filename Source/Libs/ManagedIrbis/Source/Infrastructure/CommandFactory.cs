@@ -17,7 +17,7 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 #endregion
 
@@ -76,7 +76,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         [NotNull]
         public virtual T CreateCommand<T>()
-            where T : AbstractCommand
+            where T : ClientCommand
         {
             T result = (T)Activator.CreateInstance(typeof(T), Connection);
 

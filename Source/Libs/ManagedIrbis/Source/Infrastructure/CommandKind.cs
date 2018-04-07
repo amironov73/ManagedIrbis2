@@ -11,14 +11,14 @@
 
 using System;
 
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 #endregion
 
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// Kind of <see cref="AbstractCommand"/>
+    /// Kind of <see cref="ClientCommand"/>
     /// </summary>
     [Flags]
     public enum CommandKind

@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 
 using ManagedIrbis;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Infrastructure.Sockets;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -96,7 +96,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             AbstractEngine engine = _GetEngine();
             engine.BeforeExecution += (sender, args) => { before = true; };
             engine.AfterExecution += (sender, args) => { after = true; };
-            AbstractCommand command = new NopCommand(engine.Connection);
+            ClientCommand command = new NopCommand(engine.Connection);
             command.RelaxResponse = true;
             ExecutionContext context = new ExecutionContext(engine.Connection, command);
 
@@ -136,7 +136,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void AbstractEngine_ExecuteCommand_3()
         {
             AbstractEngine engine = _GetEngine2();
-            AbstractCommand command = new NopCommand(engine.Connection);
+            ClientCommand command = new NopCommand(engine.Connection);
             ExecutionContext context = new ExecutionContext(engine.Connection, command);
 
             engine.ExecuteCommand(context);

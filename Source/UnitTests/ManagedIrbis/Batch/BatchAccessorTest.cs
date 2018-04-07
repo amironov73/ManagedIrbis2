@@ -10,7 +10,7 @@ using ManagedIrbis;
 using ManagedIrbis.Batch;
 using ManagedIrbis.ImportExport;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Moq;
 
@@ -132,7 +132,7 @@ namespace UnitTests.ManagedIrbis.Batch
                 .Returns(new CommandFactory(connection));
 
             // ExecuteCommand
-            result.Setup(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()))
+            result.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
                 => ExecuteFormatCommand(command, false));
 
@@ -214,7 +214,7 @@ namespace UnitTests.ManagedIrbis.Batch
             mock.Verify(c => c.ReadRecord(It.IsAny<string>(),
                 It.IsAny<int>(), It.IsAny<bool>(),
                 It.IsAny<string>()), Times.Never);
-            mock.Verify(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()),
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()),
                 Times.Once);
         }
 
@@ -231,7 +231,7 @@ namespace UnitTests.ManagedIrbis.Batch
             mock.Verify(c => c.ReadRecord(It.IsAny<string>(),
                 It.IsAny<int>(), It.IsAny<bool>(),
                 It.IsAny<string>()), Times.Never);
-            mock.Verify(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()),
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()),
                 Times.Never);
         }
 
@@ -249,7 +249,7 @@ namespace UnitTests.ManagedIrbis.Batch
             mock.Verify(c => c.ReadRecord(It.IsAny<string>(),
                 It.IsAny<int>(), It.IsAny<bool>(),
                 It.IsAny<string>()), Times.Once);
-            mock.Verify(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()),
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()),
                 Times.Never);
         }
 
@@ -270,7 +270,7 @@ namespace UnitTests.ManagedIrbis.Batch
             mock.Verify(c => c.ReadRecord(It.IsAny<string>(),
                 It.IsAny<int>(), It.IsAny<bool>(),
                 It.IsAny<string>()), Times.Never);
-            mock.Verify(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()),
+            mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()),
                 Times.Once);
         }
 
@@ -283,7 +283,7 @@ namespace UnitTests.ManagedIrbis.Batch
 
             mock.SetupGet(c => c.CommandFactory)
                 .Returns(new CommandFactory(connection));
-            mock.Setup(c => c.ExecuteCommand(It.IsAny<AbstractCommand>()))
+            mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
                 => ExecuteFormatCommand(command, true));
             BatchAccessor batch = new BatchAccessor(connection);

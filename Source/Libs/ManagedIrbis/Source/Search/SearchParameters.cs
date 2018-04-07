@@ -18,7 +18,7 @@ using AM.Runtime;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Newtonsoft.Json;
 

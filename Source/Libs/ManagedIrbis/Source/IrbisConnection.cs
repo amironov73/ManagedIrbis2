@@ -26,7 +26,7 @@ using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Gbl;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Infrastructure.Sockets;
 using ManagedIrbis.Properties;
 using ManagedIrbis.Search;
@@ -568,10 +568,10 @@ namespace ManagedIrbis
 
         #region ExecuteCommand
 
-        /// <inheritdoc cref="IIrbisConnection.ExecuteCommand(AbstractCommand)" />
+        /// <inheritdoc cref="IIrbisConnection.ExecuteCommand(ClientCommand)" />
         public virtual ServerResponse ExecuteCommand
             (
-                AbstractCommand command
+                ClientCommand command
             )
         {
             Sure.NotNull(command, nameof(command));

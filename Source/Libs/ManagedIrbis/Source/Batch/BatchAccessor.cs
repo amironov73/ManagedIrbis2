@@ -25,7 +25,7 @@ using JetBrains.Annotations;
 
 using ManagedIrbis.ImportExport;
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Infrastructure.Commands;
+using ManagedIrbis.Infrastructure.ClientCommands;
 using ManagedIrbis.Properties;
 
 #endregion
