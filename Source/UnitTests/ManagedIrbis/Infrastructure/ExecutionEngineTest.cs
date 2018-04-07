@@ -37,7 +37,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             socket.Response = response.GetDump();
             mock.SetupGet(c => c.Socket).Returns(socket);
-            result.Services = new NonNullValue<IServiceProvider>(services);
+            result.Services = services;
 
             return result;
         }
@@ -56,7 +56,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             mock.SetupGet(c => c.Executive).Returns(result);
             SimpleClientSocket socket = new SimpleClientSocket(connection);
             mock.SetupGet(c => c.Socket).Returns(socket);
-            result.Services = new NonNullValue<IServiceProvider>(services);
+            result.Services = services;
 
             return result;
         }
@@ -69,23 +69,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
             ExecutionEngine inner = new ExecutionEngine(connection);
             Assert.AreSame(connection, inner.Connection);
-            Assert.IsNotNull(inner.Services.Value);
-
-            ExecutionEngine outer = new ExecutionEngine(connection, inner);
-            Assert.AreSame(connection, outer.Connection);
-            Assert.AreSame(inner, outer.NestedEngine);
-            Assert.IsNotNull(outer.Services.Value);
-        }
-
-        [TestMethod]
-        public void ExecutionEngine_ThrowOnVerify_1()
-        {
-            bool saved = ExecutionEngine.ThrowOnVerify;
-            ExecutionEngine.ThrowOnVerify = false;
-            Assert.IsFalse(ExecutionEngine.ThrowOnVerify);
-            ExecutionEngine.ThrowOnVerify = true;
-            Assert.IsTrue(ExecutionEngine.ThrowOnVerify);
-            ExecutionEngine.ThrowOnVerify = saved;
+            Assert.IsNotNull(inner.Services);
         }
 
         [TestMethod]
@@ -98,7 +82,10 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             engine.AfterExecution += (sender, args) => { after = true; };
             ClientCommand command = new NopCommand(engine.Connection);
             command.RelaxResponse = true;
-            ExecutionContext context = new ExecutionContext(engine.Connection, command);
+            ClientContext context = new ClientContext(engine.Connection)
+            {
+                Command = command
+            };
 
             engine.ExecuteCommand(context);
 
@@ -117,7 +104,10 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             {
                 ExecuteHandler = dynamicCommand => throw new IrbisNetworkException()
             };
-            ExecutionContext context = new ExecutionContext(engine.Connection, command);
+            ClientContext context = new ClientContext(engine.Connection)
+            {
+                Command = command
+            };
 
             try
             {
@@ -137,30 +127,12 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             ExecutionEngine engine = _GetEngine2();
             ClientCommand command = new NopCommand(engine.Connection);
-            ExecutionContext context = new ExecutionContext(engine.Connection, command);
+            ClientContext context = new ClientContext(engine.Connection)
+            {
+                Command = command
+            };
 
             engine.ExecuteCommand(context);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(IrbisNetworkException))]
-        public void ExecutionEngine_ExecuteCommand_4()
-        {
-            bool saved = ExecutionEngine.ThrowOnVerify;
-            try
-            {
-                ExecutionEngine.ThrowOnVerify = false;
-                ExecutionEngine engine = _GetEngine();
-                DynamicCommand command = new DynamicCommand(engine.Connection);
-                command.VerifyHandler += (dynamicCommand, b) => false;
-                ExecutionContext context = new ExecutionContext(engine.Connection, command);
-
-                engine.ExecuteCommand(context);
-            }
-            finally
-            {
-                ExecutionEngine.ThrowOnVerify = saved;
-            }
         }
 
         [TestMethod]

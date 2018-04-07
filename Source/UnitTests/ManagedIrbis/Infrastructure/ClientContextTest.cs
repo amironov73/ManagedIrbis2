@@ -9,14 +9,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTests.ManagedIrbis.Infrastructure
 {
     [TestClass]
-    public class ExecutionContextTest
+    public class ClientContextTest
     {
         [TestMethod]
-        public void ExecutionContext_Construction_1()
+        public void ClientContext_Construction_1()
         {
-            ExecutionContext context = new ExecutionContext();
+            IIrbisConnection connection = new IrbisConnection();
+            ClientContext context = new ClientContext(connection);
+            Assert.AreSame(connection, context.Connection);
             Assert.IsNull(context.Command);
-            Assert.IsNull(context.Connection);
             Assert.IsNull(context.Exception);
             Assert.IsFalse(context.ExceptionHandled);
             Assert.IsNull(context.Response);
@@ -24,11 +25,14 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void ExecutionContext_Construction_2()
+        public void ClientContext_Construction_2()
         {
             IIrbisConnection connection = new IrbisConnection();
             ClientCommand command = new NopCommand(connection);
-            ExecutionContext context = new ExecutionContext(connection, command);
+            ClientContext context = new ClientContext(connection)
+            {
+                Command = command
+            };
             Assert.AreSame(command, context.Command);
             Assert.AreSame(connection, context.Connection);
             Assert.IsNull(context.Exception);
@@ -38,11 +42,11 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        public void ExecutionContext_Properties_1()
+        public void ClientContext_Properties_1()
         {
             IIrbisConnection connection = new IrbisConnection();
             ClientCommand command = new NopCommand(connection);
-            ExecutionContext context = new ExecutionContext(connection, command);
+            ClientContext context = new ClientContext(connection);
 
             Exception exception = new Exception();
             context.Exception = exception;
@@ -58,18 +62,6 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             object userData = new object();
             context.UserData = userData;
             Assert.AreSame(userData, context.UserData);
-        }
-
-        [TestMethod]
-        public void ExecutionContext_Verify_1()
-        {
-            IIrbisConnection connection = new IrbisConnection();
-            ClientCommand command = new NopCommand(connection);
-            ExecutionContext context = new ExecutionContext(connection, command);
-            Assert.IsTrue(context.Verify(false));
-
-            context = new ExecutionContext();
-            Assert.IsFalse(context.Verify(false));
         }
     }
 }

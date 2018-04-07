@@ -38,10 +38,9 @@ namespace UnitTests.ManagedIrbis
     {
         public MyEngine
             (
-                [NotNull] IrbisConnection connection,
-                [CanBeNull] ExecutionEngine nestedEngine
+                [NotNull] IrbisConnection connection
             )
-            : base(connection, nestedEngine)
+            : base(connection)
         {
         }
     }

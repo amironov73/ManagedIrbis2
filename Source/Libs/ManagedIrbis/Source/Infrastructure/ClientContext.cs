@@ -15,9 +15,11 @@ using AM;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Infrastructure.ClientCommands;
+
 #endregion
 
-namespace ManagedIrbis.Infrastructure.ClientCommands
+namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
     /// Контекст формирования и отправки клиентской команды,

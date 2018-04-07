@@ -20,10 +20,12 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// Event arguments.
+    /// Аргументы для событий, возникающих на клиенте
+    /// при отправке на сервер запросов и при обработке
+    /// ответов сервера.
     /// </summary>
     [PublicAPI]
-    public sealed class ExecutionEventArgs
+    public sealed class ClientEventArgs
         : EventArgs
     {
         #region Properties
@@ -32,7 +34,7 @@ namespace ManagedIrbis.Infrastructure
         /// Context.
         /// </summary>
         [NotNull]
-        public ExecutionContext Context { get; }
+        public ClientContext Context { get; }
 
         #endregion
 
@@ -41,9 +43,9 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ExecutionEventArgs
+        public ClientEventArgs
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));

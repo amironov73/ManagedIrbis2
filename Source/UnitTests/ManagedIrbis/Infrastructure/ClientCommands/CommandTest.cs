@@ -28,7 +28,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             IIrbisConnection connection = result.Object;
 
             result.SetupGet(c => c.Executive)
-                .Returns(new ExecutionEngine(connection, null));
+                .Returns(new ExecutionEngine(connection));
             result.SetupGet(c => c.Socket)
                 .Returns(new TestingSocket(connection));
 

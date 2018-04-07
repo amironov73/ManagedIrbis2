@@ -861,7 +861,7 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.Executive).Returns(new ExecutionEngine(connection, null));
+            mock.SetupGet(c => c.Executive).Returns(new ExecutionEngine(connection));
             mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()))
                 .Returns((UniversalCommand command) =>

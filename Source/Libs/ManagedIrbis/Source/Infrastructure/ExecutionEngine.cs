@@ -40,17 +40,17 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Raised after execution.
         /// </summary>
-        public event EventHandler<ExecutionEventArgs> AfterExecution;
+        public event EventHandler<ClientEventArgs> AfterExecution;
 
         /// <summary>
         /// Raised before execution.
         /// </summary>
-        public event EventHandler<ExecutionEventArgs> BeforeExecution;
+        public event EventHandler<ClientEventArgs> BeforeExecution;
 
         /// <summary>
         /// Raised on exception.
         /// </summary>
-        public event EventHandler<ExecutionEventArgs> ExceptionOccurs;
+        public event EventHandler<ClientEventArgs> ExceptionOccurs;
 
         #endregion
 
@@ -63,20 +63,9 @@ namespace ManagedIrbis.Infrastructure
         public IIrbisConnection Connection { get; private set; }
 
         /// <summary>
-        /// Nested engine.
-        /// </summary>
-        [CanBeNull]
-        public ExecutionEngine NestedEngine { get; private set; }
-
-        /// <summary>
         /// Additional services.
         /// </summary>
-        public NonNullValue<IServiceProvider> Services { get; set; }
-
-        /// <summary>
-        /// Throw on <see cref="IVerifiable.Verify"/> calling.
-        /// </summary>
-        public static bool ThrowOnVerify { get; set; }
+        public IServiceProvider Services { get; set; }
 
         #endregion
 
@@ -87,8 +76,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public ExecutionEngine
             (
-                [NotNull] IIrbisConnection connection,
-                [CanBeNull] ExecutionEngine nestedEngine = null
+                [NotNull] IIrbisConnection connection
             )
         {
             Sure.NotNull(connection, nameof(connection));
@@ -96,13 +84,7 @@ namespace ManagedIrbis.Infrastructure
             Log.Trace(nameof(ExecutionEngine) + "::Constructor");
 
             Connection = connection;
-            NestedEngine = nestedEngine;
             Services = new ServiceContainer();
-        }
-
-        static ExecutionEngine()
-        {
-            ThrowOnVerify = true;
         }
 
         #endregion
@@ -114,7 +96,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         protected virtual void CheckConnection
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             ClientCommand command = context.Command.ThrowIfNull(nameof(context.Command));
@@ -140,13 +122,14 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         protected void OnAfterExecute
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));
+
             Log.Trace(nameof(ExecutionEngine) + "::" + nameof(OnAfterExecute));
 
-            AfterExecution?.Invoke(this, new ExecutionEventArgs(context));
+            AfterExecution?.Invoke(this, new ClientEventArgs(context));
         }
 
         /// <summary>
@@ -154,13 +137,13 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         protected void OnBeforeExecute
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));
             Log.Trace(nameof(ExecutionEngine) + "::" + nameof(OnBeforeExecute));
 
-            BeforeExecution?.Invoke(this, new ExecutionEventArgs(context));
+            BeforeExecution?.Invoke(this, new ClientEventArgs(context));
         }
 
         /// <summary>
@@ -168,7 +151,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         protected void OnException
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));
@@ -176,31 +159,31 @@ namespace ManagedIrbis.Infrastructure
 
             // TODO Implement properly!
 
-            if (context.Exception is ArsMagnaException exception
-                && context.Connection is IrbisConnection connection)
-            {
-                if (!ReferenceEquals(connection.RawClientRequest, null))
-                {
-                    BinaryAttachment request = new BinaryAttachment
-                        (
-                            "request",
-                            connection.RawClientRequest
-                        );
-                    exception.Attach(request);
-                }
+            //if (context.Exception is ArsMagnaException exception
+            //    && context.Connection is IrbisConnection connection)
+            //{
+                //if (!ReferenceEquals(connection.RawClientRequest, null))
+                //{
+                //    BinaryAttachment request = new BinaryAttachment
+                //        (
+                //            "request",
+                //            connection.RawClientRequest
+                //        );
+                //    exception.Attach(request);
+                //}
 
-                if (!ReferenceEquals(connection.RawServerResponse, null))
-                {
-                    BinaryAttachment response = new BinaryAttachment
-                        (
-                            "response",
-                            connection.RawServerResponse
-                        );
-                    exception.Attach(response);
-                }
-            }
+                //if (!ReferenceEquals(connection.RawServerResponse, null))
+                //{
+                //    BinaryAttachment response = new BinaryAttachment
+                //        (
+                //            "response",
+                //            connection.RawServerResponse
+                //        );
+                //    exception.Attach(response);
+                //}
+            //}
 
-            ExceptionOccurs?.Invoke(this, new ExecutionEventArgs(context));
+            ExceptionOccurs?.Invoke(this, new ClientEventArgs(context));
         }
 
         /// <summary>
@@ -208,7 +191,7 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         protected ServerResponse StandardExecution
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));
@@ -220,16 +203,6 @@ namespace ManagedIrbis.Infrastructure
             ClientCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
-            if (!command.Verify(ThrowOnVerify))
-            {
-                Log.Error
-                    (
-                        nameof(ExecutionEngine) + "::" + nameof(StandardExecution)
-                        + ": " + nameof(command) + "." + nameof(command.Verify)
-                        + Resources.AbstractEngine_StandardExecution_Failed
-                    );
-            }
-
             using (new BusyGuard(connection.Busy))
             {
                 ServerResponse result = ServerResponse.GetEmptyResponse(connection);
@@ -237,28 +210,8 @@ namespace ManagedIrbis.Infrastructure
 
                 try
                 {
-                    //ClientQuery query = command.CreateQuery();
-                    //if (!query.Verify(ThrowOnVerify))
-                    //{
-                    //    Log.Error
-                    //        (
-                    //            nameof(AbstractEngine) + "::" + nameof(StandardExecution)
-                    //            + ": " + nameof(query) + "." + nameof(query.Verify)
-                    //            + Resources.AbstractEngine_StandardExecution_Failed
-                    //        );
-                    //}
-
                     ClientContext clientContext = new ClientContext(Connection);
                     result = command.Execute(clientContext);
-                    if (!result.Verify(ThrowOnVerify))
-                    {
-                        Log.Error
-                            (
-                                nameof(ExecutionEngine) + "::" + nameof(StandardExecution)
-                                + ": " + nameof(result) + "." + nameof(result.Verify)
-                                + Resources.AbstractEngine_StandardExecution_Failed
-                            );
-                    }
 
                     command.CheckResponse(result);
                 }
@@ -311,18 +264,18 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public virtual ServerResponse ExecuteCommand
             (
-                [NotNull] ExecutionContext context
+                [NotNull] ClientContext context
             )
         {
             Sure.NotNull(context, nameof(context));
+
             Log.Trace(nameof(ExecutionEngine) + "::" + nameof(ExecuteCommand));
 
-            context.Verify(true);
-
             OnBeforeExecute(context);
-            ServerResponse result = NestedEngine?.ExecuteCommand(context)
-                                    ?? StandardExecution(context);
+
+            ServerResponse result = StandardExecution(context);
             context.Response = result;
+
             OnAfterExecute(context);
 
             return result;

@@ -91,11 +91,11 @@ namespace ManagedIrbis.Infrastructure.Sockets
         {
             Sure.NotNull(request, nameof(request));
 
-            IrbisConnection connection = Connection as IrbisConnection;
-            if (!ReferenceEquals(connection, null))
-            {
-                connection.RawClientRequest = request;
-            }
+            //IrbisConnection connection = Connection as IrbisConnection;
+            //if (!ReferenceEquals(connection, null))
+            //{
+            //    connection.RawClientRequest = request;
+            //}
 
             _ResolveHostAddress(Connection.Host);
 
@@ -115,10 +115,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
                             memoryUsage: result.Length
                         );
 
-                    if (!ReferenceEquals(connection, null))
-                    {
-                        connection.RawServerResponse = result;
-                    }
+                    //if (!ReferenceEquals(connection, null))
+                    //{
+                    //    connection.RawServerResponse = result;
+                    //}
 
                     return result;
                 }

@@ -274,9 +274,8 @@ namespace ManagedIrbis
             Password = "111";
             Workstation = ConnectionSettings.DefaultWorkstation;
 
-            Executive = new ExecutionEngine(this, null);
-            CommandFactory = CommandFactory
-                .GetDefaultFactory(this);
+            Executive = new ExecutionEngine(this);
+            CommandFactory = CommandFactory.GetDefaultFactory(this);
             Socket = new SimpleClientSocket(this);
         }
 
@@ -319,17 +318,17 @@ namespace ManagedIrbis
 
         private IniFile _iniFile;
 
-        /// <summary>
-        /// Raw last client query.
-        /// </summary>
-        [CanBeNull]
-        internal byte[] RawClientRequest { get; set; }
+        ///// <summary>
+        ///// Raw last client query.
+        ///// </summary>
+        //[CanBeNull]
+        //internal byte[] RawClientRequest { get; set; }
 
-        /// <summary>
-        /// Raw last server response.
-        /// </summary>
-        [CanBeNull]
-        internal byte[] RawServerResponse { get; set; }
+        ///// <summary>
+        ///// Raw last server response.
+        ///// </summary>
+        //[CanBeNull]
+        //internal byte[] RawServerResponse { get; set; }
 
         internal void ThrowIfConnected()
         {
@@ -579,14 +578,17 @@ namespace ManagedIrbis
 
             Log.Trace(nameof(IrbisConnection) + "::" + nameof(ExecuteCommand));
 
-            RawClientRequest = null;
-            RawServerResponse = null;
+            //RawClientRequest = null;
+            //RawServerResponse = null;
 
-            ExecutionContext context = new ExecutionContext(this, command);
+            ClientContext context = new ClientContext(this)
+            {
+                Command = command
+            };
             ServerResponse result = Executive.ExecuteCommand(context);
 
-            RawClientRequest = null;
-            RawServerResponse = null;
+            //RawClientRequest = null;
+            //RawServerResponse = null;
 
             return result;
         }
@@ -1378,8 +1380,7 @@ namespace ManagedIrbis
             ExecutionEngine newEngine = (ExecutionEngine)Activator.CreateInstance
                 (
                     type,
-                    this,
-                    Executive
+                    this
                 );
             ExecutionEngine previous = SetEngine(newEngine);
 
