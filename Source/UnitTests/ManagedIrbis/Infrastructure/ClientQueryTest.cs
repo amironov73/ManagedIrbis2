@@ -15,9 +15,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         [NotNull]
         private ClientQuery _GetClientQuery()
         {
-            IrbisConnection connection = new IrbisConnection();
-
-            ClientQuery result = new ClientQuery (connection)
+            ClientQuery result = new ClientQuery
             {
                 CommandCode = CommandCode.Nop,
                 Workstation = IrbisWorkstation.Cataloger,

@@ -21,21 +21,21 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
     public class DisconnectCommandTest
         : CommandTest
     {
-        [TestMethod]
-        public void DisconnectCommand_Construciton_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            DisconnectCommand command = new DisconnectCommand(connection);
-            Assert.AreSame(connection, command.Connection);
-        }
+        //[TestMethod]
+        //public void DisconnectCommand_Construciton_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    DisconnectCommand command = new DisconnectCommand();
+        //    Assert.AreSame(connection, command.Connection);
+        //}
 
         [TestMethod]
         public void DisconnectCommand_CheckResponse_1()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            DisconnectCommand command = new DisconnectCommand(connection);
+            DisconnectCommand command = new DisconnectCommand();
             ResponseBuilder builder = new ResponseBuilder();
             builder.Append(0).NewLine();
             byte[] bytes = builder.Encode();
@@ -49,7 +49,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             int returnCode = 0;
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            DisconnectCommand command = new DisconnectCommand(connection);
+            DisconnectCommand command = new DisconnectCommand();
             ResponseBuilder builder = new ResponseBuilder()
                 .StandardHeader(CommandCode.UnregisterClient, 123, 456)
                 .NewLine()
@@ -62,13 +62,13 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             Assert.AreEqual(returnCode, response.ReturnCode);
         }
 
-        [TestMethod]
-        public void DisconnectCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            DisconnectCommand command = new DisconnectCommand(connection);
-            Assert.IsTrue(command.Verify(false));
-        }
+        //[TestMethod]
+        //public void DisconnectCommand_Verify_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    DisconnectCommand command = new DisconnectCommand();
+        //    Assert.IsTrue(command.Verify(false));
+        //}
     }
 }

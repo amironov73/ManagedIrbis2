@@ -27,7 +27,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             IIrbisConnection connection = new IrbisConnection();
             CommandFactory factory = new CommandFactory(connection);
             NopCommand command = factory.CreateCommand<NopCommand>();
-            Assert.AreSame(connection, command.Connection);
+            Assert.IsNull(command);
         }
 
         [TestMethod]
