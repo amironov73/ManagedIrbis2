@@ -21,15 +21,14 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
     public class ReadTermsCommandTest
         : CommandTest
     {
-        [TestMethod]
-        public void ReadTermsCommandCommand_Construciton_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ReadTermsCommand command
-                = new ReadTermsCommand(connection);
-            Assert.AreSame(connection, command.Connection);
-        }
+        //[TestMethod]
+        //public void ReadTermsCommandCommand_Construciton_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ReadTermsCommand command = new ReadTermsCommand();
+        //    Assert.AreSame(connection, command.Connection);
+        //}
 
         [TestMethod]
         public void ReadTermsCommand_ExecuteRequest_1()
@@ -37,7 +36,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             int returnCode = 0;
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            ReadTermsCommand command = new ReadTermsCommand(connection)
+            ReadTermsCommand command = new ReadTermsCommand
             {
                 Database = "IBIS"
             };
@@ -53,14 +52,13 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             Assert.AreEqual(returnCode, response.ReturnCode);
         }
 
-        [TestMethod]
-        public void ReadTermsCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ReadTermsCommand command
-                = new ReadTermsCommand(connection);
-            Assert.IsTrue(command.Verify(false));
-        }
+        //[TestMethod]
+        //public void ReadTermsCommand_Verify_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ReadTermsCommand command = new ReadTermsCommand();
+        //    Assert.IsTrue(command.Verify(false));
+        //}
     }
 }

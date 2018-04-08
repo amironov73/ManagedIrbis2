@@ -21,15 +21,14 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
     public class ReadFileCommandTest
         : CommandTest
     {
-        [TestMethod]
-        public void ReadFileCommand_Construciton_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ReadFileCommand command
-                = new ReadFileCommand(connection);
-            Assert.AreSame(connection, command.Connection);
-        }
+        //[TestMethod]
+        //public void ReadFileCommand_Construciton_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ReadFileCommand command = new ReadFileCommand();
+        //    Assert.AreSame(connection, command.Connection);
+        //}
 
         [TestMethod]
         public void ReadFileCommand_ExecuteRequest_1()
@@ -37,7 +36,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             int returnCode = 0;
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            ReadFileCommand command = new ReadFileCommand(connection)
+            ReadFileCommand command = new ReadFileCommand
             {
                 Files =
                 {
@@ -56,14 +55,13 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             Assert.IsNotNull(response);
         }
 
-        [TestMethod]
-        public void ReadFileCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ReadFileCommand command
-                = new ReadFileCommand(connection);
-            Assert.IsFalse(command.Verify(false));
-        }
+        //[TestMethod]
+        //public void ReadFileCommand_Verify_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ReadFileCommand command = new ReadFileCommand();
+        //    Assert.IsFalse(command.Verify(false));
+        //}
     }
 }

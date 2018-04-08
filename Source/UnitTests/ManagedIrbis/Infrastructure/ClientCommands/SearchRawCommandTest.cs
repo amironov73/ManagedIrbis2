@@ -22,21 +22,21 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
     public class SearchRawCommandTest
         : CommandTest
     {
-        [TestMethod]
-        public void SearchRawCommand_Construciton_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection);
-            Assert.AreSame(connection, command.Connection);
-        }
+        //[TestMethod]
+        //public void SearchRawCommand_Construciton_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    SearchRawCommand command = new SearchRawCommand();
+        //    Assert.AreSame(connection, command.Connection);
+        //}
 
         [TestMethod]
         public void SearchRawCommand_ApplyParameters_1()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection);
+            SearchRawCommand command = new SearchRawCommand();
             SearchParameters parameters = new SearchParameters
             {
                 Database = "IBIS",
@@ -64,7 +64,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            SearchRawCommand first = new SearchRawCommand(connection)
+            SearchRawCommand first = new SearchRawCommand
             {
                 Database = "IBIS",
                 FirstRecord = 1,
@@ -92,7 +92,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             int returnCode = 0;
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection)
+            SearchRawCommand command = new SearchRawCommand
             {
                 Database = "IBIS",
                 SearchExpression = "A=AUTHOR$"
@@ -117,7 +117,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             int returnCode = 0;
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection)
+            SearchRawCommand command = new SearchRawCommand
             {
                 Database = "IBIS",
                 SearchExpression = "A=AUTHOR$",
@@ -145,7 +145,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection)
+            SearchRawCommand command = new SearchRawCommand
             {
                 Database = "IBIS",
                 FirstRecord = 1,
@@ -167,13 +167,13 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             Assert.AreEqual(command.SequentialSpecification, parameters.SequentialSpecification);
         }
 
-        [TestMethod]
-        public void SearchRawCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            SearchRawCommand command = new SearchRawCommand(connection);
-            Assert.IsTrue(command.Verify(false));
-        }
+        //[TestMethod]
+        //public void SearchRawCommand_Verify_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    SearchRawCommand command = new SearchRawCommand();
+        //    Assert.IsTrue(command.Verify(false));
+        //}
     }
 }

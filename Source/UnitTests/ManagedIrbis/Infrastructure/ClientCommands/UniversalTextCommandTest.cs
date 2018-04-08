@@ -27,20 +27,18 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            UniversalTextCommand command
-                = new UniversalTextCommand(connection, commandCode);
-            Assert.AreSame(connection, command.Connection);
+            UniversalTextCommand command = new UniversalTextCommand(commandCode);
             Assert.AreEqual(commandCode, command.CommandCode);
         }
 
-        [TestMethod]
-        public void UniversalTextCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            UniversalTextCommand command
-                = new UniversalTextCommand(connection, commandCode);
-            Assert.IsFalse(command.Verify(false));
-        }
+        //[TestMethod]
+        //public void UniversalTextCommand_Verify_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    UniversalTextCommand command
+        //        = new UniversalTextCommand(connection, commandCode);
+        //    Assert.IsFalse(command.Verify(false));
+        //}
     }
 }
