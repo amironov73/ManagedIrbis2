@@ -61,16 +61,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public WriteRecordCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public WriteRecordCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -90,21 +90,22 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.UpdateRecord;
 
             if (ReferenceEquals(Record, null))
             {
                 Log.Error
-                (
-                    "WriteRecordCommand::CreateQuery: "
-                    + Resources.IrbisNetworkUtility_RecordIsNull
-                );
+                    (
+                        "WriteRecordCommand::CreateQuery: "
+                        + Resources.IrbisNetworkUtility_RecordIsNull
+                    );
 
                 throw new IrbisNetworkException(Resources.IrbisNetworkUtility_RecordIsNull);
             }
 
-            string database = Record.Database ?? Connection.Database;
+            string database = Record.Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -122,14 +123,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(Actualize)
                 .Add(Record);
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             MaxMfn = result.GetReturnCode();
 
             MarcRecord record = Record.ThrowIfNull("Record");
 
             record.Database = database;
-            record.HostName = Connection.Host;
+            record.HostName = connection.Host;
 
             if (!DontParseResponse)
             {

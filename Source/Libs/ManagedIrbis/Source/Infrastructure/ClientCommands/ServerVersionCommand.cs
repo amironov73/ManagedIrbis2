@@ -34,16 +34,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ServerVersionCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ServerVersionCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -55,10 +55,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ServerInfo;
 
-            ServerResponse response = Execute(query);
+            ServerResponse response = Execute(connection, query);
             response.GetReturnCode();
             Result = IrbisVersion.ParseServerResponse(response);
 

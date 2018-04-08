@@ -54,16 +54,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ReadBinaryFileCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ReadBinaryFileCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -123,23 +123,25 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ReadDocument;
 
             if (ReferenceEquals(File, null))
             {
                 Log.Error
-                (
-                    "ReadBinaryFileCommand::CreateQuery: "
-                    + "file name not specified"
-                );
+                    (
+                        "ReadBinaryFileCommand::CreateQuery: "
+                        + "file name not specified"
+                    );
 
                 throw new IrbisException("File name not specified");
             }
             File.BinaryFile = true;
             query.AddAnsi(File.ToString());
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             byte[] buffer = result.RawAnswer;
             Encoding encoding = IrbisEncoding.Ansi;

@@ -102,19 +102,19 @@ namespace ManagedIrbis.Infrastructure
             ClientCommand command = context.Command.ThrowIfNull(nameof(context.Command));
             IIrbisConnection connection = context.Connection.ThrowIfNull(nameof(context.Connection));
 
-            if (command.RequireConnection && connection.Socket.RequireConnection)
-            {
-                if (!connection.Connected)
-                {
-                    Log.Error
-                        (
-                            nameof(ExecutionEngine) + "::" + nameof(CheckConnection)
-                            + Resources.AbstractEngine_NotConnected2
-                        );
+            //if (command.RequireConnection && connection.Socket.RequireConnection)
+            //{
+            //    if (!connection.Connected)
+            //    {
+            //        Log.Error
+            //            (
+            //                nameof(ExecutionEngine) + "::" + nameof(CheckConnection)
+            //                + Resources.AbstractEngine_NotConnected2
+            //            );
 
-                    throw new IrbisException(Resources.AbstractEngine_NotConnected);
-                }
-            }
+            //        throw new IrbisException(Resources.AbstractEngine_NotConnected);
+            //    }
+            //}
         }
 
         /// <summary>

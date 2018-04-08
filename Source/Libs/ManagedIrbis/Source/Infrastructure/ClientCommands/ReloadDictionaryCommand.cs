@@ -37,16 +37,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ReloadDictionaryCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ReloadDictionaryCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -58,23 +58,25 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ReloadDictionary;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                (
-                    "ReloadDictionaryCommand::CreateQuery: "
-                    + "database not specified"
-                );
+                    (
+                        "ReloadDictionaryCommand::CreateQuery: "
+                        + "database not specified"
+                    );
 
                 throw new IrbisException("database not specified");
             }
             query.AddAnsi(database);
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
             result.GetReturnCode();
 
             return result;

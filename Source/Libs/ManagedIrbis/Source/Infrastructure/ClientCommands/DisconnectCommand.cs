@@ -26,17 +26,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     {
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public DisconnectCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-            Log.Trace("DisconnectCommand::Constructor");
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public DisconnectCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //    Log.Trace("DisconnectCommand::Constructor");
+        //}
 
         #endregion
 
@@ -48,14 +48,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
+            IIrbisConnection connection = context.Connection;
+
             Log.Trace("DisconnectCommand::Execute");
 
-            ClientQuery query = base.CreateQuery();
+            ClientQuery query = base.CreateQuery(connection);
             query.CommandCode = CommandCode.UnregisterClient;
 
-            query.AddAnsi(Connection.Username);
+            query.AddAnsi(connection.Username);
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             Log.Trace
                 (
@@ -63,10 +65,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     + result.ReturnCode
                 );
 
-            IrbisConnection connection = Connection as IrbisConnection;
-            if (!ReferenceEquals(connection, null))
+            if (connection is IrbisConnection iconnection)
             {
-                connection._connected = false;
+                iconnection._connected = false;
             }
 
             return result;

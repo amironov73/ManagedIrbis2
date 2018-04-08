@@ -34,16 +34,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public UpdateIniFileCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public UpdateIniFileCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -55,10 +55,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.UpdateIniFile;
 
-            if (Lines != null)
+            if (!ReferenceEquals(Lines, null))
             {
                 foreach (string line in Lines)
                 {
@@ -66,7 +67,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
             result.GetReturnCode();
 
             return result;

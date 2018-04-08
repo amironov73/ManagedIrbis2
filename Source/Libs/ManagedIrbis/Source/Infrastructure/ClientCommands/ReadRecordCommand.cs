@@ -87,16 +87,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             ThrowOnVerify = true;
         }
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ReadRecordCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ReadRecordCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -108,10 +108,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ReadRecord;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
 
             if (string.IsNullOrEmpty(database))
             {
@@ -139,14 +141,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Arguments.Add(Format);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             // Check whether no records read
             if (result.GetReturnCode() != -201)
             {
                 MarcRecord record = new MarcRecord
                 {
-                    HostName = Connection.Host,
+                    HostName = connection.Host,
                     Database = Database
                 };
 
@@ -172,13 +174,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             return result;
         }
 
-        /// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
-        public override int[] GoodReturnCodes
-        {
-            // Record can be logically deleted
-            // or blocked. It's normal.
-            get { return new[] { -201, -600, -602, -603 }; }
-        }
+        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
+        //public override int[] GoodReturnCodes
+        //{
+        //    // Record can be logically deleted
+        //    // or blocked. It's normal.
+        //    get { return new[] { -201, -600, -602, -603 }; }
+        //}
 
         #endregion
 

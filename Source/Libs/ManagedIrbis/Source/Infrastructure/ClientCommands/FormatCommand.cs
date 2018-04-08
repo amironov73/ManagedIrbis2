@@ -103,11 +103,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public FormatCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public FormatCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             MfnList = new List<int>();
         }
@@ -181,29 +181,29 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = base.CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.FormatRecord;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             query.Add(database);
 
-            string preparedFormat = IrbisFormat.PrepareFormat
-            (
-                FormatSpecification
-            );
+            string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
 
             query.Add
-            (
-                new TextWithEncoding
                 (
-                    UtfFormat
-                        ? "!" + preparedFormat
-                        : preparedFormat,
-                    UtfFormat
-                        ? IrbisEncoding.Utf8
-                        : IrbisEncoding.Ansi
-                )
-            );
+                    new TextWithEncoding
+                        (
+                            UtfFormat
+                                ? "!" + preparedFormat
+                                : preparedFormat,
+
+                            UtfFormat
+                                ? IrbisEncoding.Utf8
+                                : IrbisEncoding.Ansi
+                        )
+                );
 
             if (MfnList.Count >= IrbisConstants.MaxPostings)
             {
@@ -231,7 +231,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
             if (!string.IsNullOrEmpty(FormatSpecification))
             {
                 result.GetReturnCode();

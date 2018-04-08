@@ -165,11 +165,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GblCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public GblCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             Actualize = true;
             FormalControl = false;
@@ -184,7 +184,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 [NotNull] IIrbisConnection connection,
                 [NotNull] GblSettings settings
             )
-            : base(connection)
+            //: base(connection)
         {
             Sure.NotNull(settings, nameof(settings));
 
@@ -220,10 +220,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = base.CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = base.CreateQuery(connection);
             query.CommandCode = CommandCode.GlobalCorrection;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -313,7 +315,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 TimeStarted = DateTime.Now
             };
 
-            ServerResponse response = base.Execute(query);
+            ServerResponse response = base.Execute(connection, query);
             CheckResponse(response);
 
             gblResult.TimeElapsed = DateTime.Now - gblResult.TimeStarted;

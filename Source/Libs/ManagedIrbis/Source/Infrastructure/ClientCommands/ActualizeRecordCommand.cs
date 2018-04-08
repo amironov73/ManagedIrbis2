@@ -49,17 +49,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="connection"></param>
-        public ActualizeRecordCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        ///// <param name="connection"></param>
+        //public ActualizeRecordCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -71,10 +71,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ActualizeRecord;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? context.Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -89,7 +91,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             query.AddAnsi(database);
             query.Add(Mfn);
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             return result;
         }

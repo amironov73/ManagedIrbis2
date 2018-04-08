@@ -50,11 +50,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ListFilesCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public ListFilesCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             Specifications = new NonNullCollection<FileSpecification>();
         }
@@ -81,16 +81,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ListFiles;
 
             if (Specifications.Count == 0)
             {
                 Log.Error
-                (
-                    "ListFilesCommand::CreateQuery: "
-                    + "specification list is empty"
-                );
+                    (
+                        "ListFilesCommand::CreateQuery: "
+                        + "specification list is empty"
+                    );
 
                 throw new IrbisException("specification list is empty");
             }
@@ -101,7 +103,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(specification);
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = base.Execute(connection, query);
 
             List<string> files = result.RemainingAnsiStrings();
             Files = files.SelectMany

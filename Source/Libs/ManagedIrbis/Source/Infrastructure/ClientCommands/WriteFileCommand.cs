@@ -43,11 +43,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public WriteFileCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public WriteFileCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             Files = new NonNullCollection<FileSpecification>();
         }
@@ -62,7 +62,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ReadDocument;
 
             foreach (FileSpecification fileName in Files)
@@ -75,7 +77,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Arguments.Add(text);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             return result;
         }

@@ -190,11 +190,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SearchCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public SearchCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             FirstRecord = 1;
         }
@@ -207,6 +207,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         private void _FetchRemaining
             (
+                ClientContext context,
                 ServerResponse mainResponse,
                 int expected
             )
@@ -218,6 +219,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             if (!_subCommand && expected > IrbisConstants.MaxPostings)
             {
+                IIrbisConnection connection = context.Connection;
                 int firstRecord = FirstRecord + Found.Count;
 
                 while (firstRecord < expected)
@@ -232,9 +234,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         );
                     subCommand._subCommand = true;
 
-                    ClientQuery clientQuery = subCommand.CreateQuery();
-                    ServerResponse subResponse = subCommand
-                        .Execute(clientQuery);
+                    ClientQuery clientQuery = subCommand.CreateQuery(connection);
+                    ServerResponse subResponse = subCommand.Execute(connection, clientQuery);
                     subCommand.CheckResponse(subResponse);
 
                     List<FoundItem> found = subCommand.Found
@@ -284,9 +285,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         public SearchCommand Clone()
         {
             SearchCommand result = new SearchCommand
-                (
-                    Connection
-                )
             {
                 Database = Database,
                 FirstRecord = FirstRecord,
@@ -335,10 +333,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.Search;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -361,10 +360,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             query.Add(NumberOfRecords);
             query.Add(FirstRecord);
 
-            string preparedFormat = IrbisFormat.PrepareFormat
-                (
-                    FormatSpecification
-                );
+            string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
 
             query.Add
                 (
@@ -373,6 +369,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                             UtfFormat
                             ? "!" + preparedFormat
                             : preparedFormat,
+
                             UtfFormat
                             ? IrbisEncoding.Utf8
                             : IrbisEncoding.Ansi
@@ -412,7 +409,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
             result.GetReturnCode();
             if (result.ReturnCode == 0)
             {
@@ -423,7 +420,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     .ThrowIfNull("Found");
                 Found = foundList;
 
-                _FetchRemaining(result, expected);
+                _FetchRemaining(context, result, expected);
 
                 if (!_subCommand
                     && FirstRecord == 1

@@ -103,16 +103,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public GblVirtualCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public GblVirtualCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -124,10 +124,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.CorrectVirtualRecord;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -157,7 +159,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             query.Add(Record.ThrowIfNull("Record"));
 
-            ServerResponse response = base.Execute(query);
+            ServerResponse response = base.Execute(connection, query);
             CheckResponse(response);
 
             string line = response.RequireUtfString();

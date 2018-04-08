@@ -43,16 +43,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public PrintTableCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public PrintTableCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -78,20 +78,22 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
+            IIrbisConnection connection = context.Connection;
+
             TableDefinition definition = Definition;
 
             if (ReferenceEquals(definition, null))
             {
                 Log.Error
-                (
-                    "PrintTableCommand::CreateQuery: "
-                    + "Definition is null"
-                );
+                    (
+                        "PrintTableCommand::CreateQuery: "
+                        + "Definition is null"
+                    );
 
                 throw new IrbisException("Definition == null");
             }
 
-            ClientQuery query = CreateQuery();
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.Print;
 
             // "7"         PRINT
@@ -117,7 +119,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(string.Empty) // instead of MFN list
                 ;
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = base.Execute(connection, query);
 
             Result = "{\\rtf1 "
                 + result.RemainingUtfText()

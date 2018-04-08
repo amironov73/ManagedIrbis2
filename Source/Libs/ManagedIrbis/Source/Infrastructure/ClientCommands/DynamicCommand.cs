@@ -27,10 +27,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     {
         #region Properties
 
-        /// <summary>
-        /// Handle return codes.
-        /// </summary>
-        public Func<DynamicCommand, int[]> GoodReturnCodesHandler { get; set; }
+        ///// <summary>
+        ///// Handle return codes.
+        ///// </summary>
+        //public Func<DynamicCommand, int[]> GoodReturnCodesHandler { get; set; }
 
         /// <summary>
         /// Check server response.
@@ -51,30 +51,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public DynamicCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public DynamicCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
         #region Public methods
 
-        /// <summary>
-        /// Basic implementation of <see cref="GoodReturnCodes"/>.
-        /// </summary>
-        public int[] BaseGoodReturnCodes()
-        {
-            int[] result = base.GoodReturnCodes;
+        ///// <summary>
+        ///// Basic implementation of <see cref="GoodReturnCodes"/>.
+        ///// </summary>
+        //public int[] BaseGoodReturnCodes()
+        //{
+        //    int[] result = base.GoodReturnCodes;
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Basic implementation of <see cref="CheckResponse"/>.
@@ -92,10 +92,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public ServerResponse BaseExecute
             (
+                IIrbisConnection connection,
                 ClientQuery query
             )
         {
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = base.Execute(connection, query);
 
             return result;
         }
@@ -117,20 +118,20 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
-        public override int[] GoodReturnCodes
-        {
-            get
-            {
-                Func<DynamicCommand, int[]> handler = GoodReturnCodesHandler;
+        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
+        //public override int[] GoodReturnCodes
+        //{
+        //    get
+        //    {
+        //        Func<DynamicCommand, int[]> handler = GoodReturnCodesHandler;
 
-                int[] result = !ReferenceEquals(handler, null)
-                      ? handler(this)
-                      : BaseGoodReturnCodes();
+        //        int[] result = !ReferenceEquals(handler, null)
+        //              ? handler(this)
+        //              : BaseGoodReturnCodes();
 
-                return result;
-            }
-        }
+        //        return result;
+        //    }
+        //}
 
         /// <inheritdoc cref="ClientCommand.CheckResponse" />
         public override void CheckResponse
@@ -158,16 +159,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             // TODO Fix this
 
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.UnregisterClient;
 
-            query.AddAnsi(Connection.Username);
+            query.AddAnsi(context.Connection.Username);
 
             Func<DynamicCommand, ServerResponse> handler = ExecuteHandler;
 
             ServerResponse result = !ReferenceEquals(handler, null)
                 ? handler(this)
-                : BaseExecute(query);
+                : BaseExecute(connection, query);
 
             return result;
         }

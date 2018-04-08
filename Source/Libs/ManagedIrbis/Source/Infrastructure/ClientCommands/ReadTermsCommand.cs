@@ -119,23 +119,23 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ReadTermsCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-            _terms = new List<TermInfo>();
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ReadTermsCommand()
+        //    //(
+        //    //    [NotNull] IIrbisConnection connection
+        //    //)
+        //    //: base(connection)
+        //{
+        //    //_terms = new List<TermInfo>();
+        //}
 
         #endregion
 
         #region Private members
 
-        private readonly List<TermInfo> _terms;
+        //private readonly List<TermInfo> _terms;
 
         #endregion
 
@@ -182,14 +182,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
-        public override int[] GoodReturnCodes
-        {
-            // TERM_NOT_EXISTS = -202;
-            // TERM_LAST_IN_LIST = -203;
-            // TERM_FIRST_IN_LIST = -204;
-            get { return new[] { -202, -203, -204 }; }
-        }
+        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
+        //public override int[] GoodReturnCodes
+        //{
+        //    // TERM_NOT_EXISTS = -202;
+        //    // TERM_LAST_IN_LIST = -203;
+        //    // TERM_FIRST_IN_LIST = -204;
+        //    get { return new[] { -202, -203, -204 }; }
+        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
         public override ServerResponse Execute
@@ -197,19 +197,21 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query =  CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query =  CreateQuery(connection);
             query.CommandCode = ReverseOrder
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                (
-                    "ReadTermsCommand::CreateQuery: "
-                    + "database not specified"
-                );
+                    (
+                        "ReadTermsCommand::CreateQuery: "
+                        + "database not specified"
+                    );
 
                 throw new IrbisException("database not specified");
             }
@@ -225,7 +227,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(NumberOfTerms)
                 .AddAnsi(preparedFormat);
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
             CheckResponse(result);
 
             // ReSharper disable CoVariantArrayConversion

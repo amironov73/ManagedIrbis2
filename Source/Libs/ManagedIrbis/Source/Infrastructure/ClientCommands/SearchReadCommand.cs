@@ -71,16 +71,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public SearchReadCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public SearchReadCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -88,13 +88,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         private MarcRecord _ConvertRecord
             (
+                IIrbisConnection connection,
                 FoundItem item
             )
         {
             MarcRecord result = new MarcRecord
             {
-                HostName = Connection.Host,
-                Database = Database ?? Connection.Database
+                HostName = connection.Host,
+                Database = Database ?? connection.Database
             };
             ProtocolText.ParseResponseForAllFormat
                 (
@@ -120,6 +121,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
+            IIrbisConnection connection = context.Connection;
             ServerResponse result = base.Execute(context);
 
             if (result.ReturnCode == 0)
@@ -130,9 +132,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         (
                             Found.ThrowIfNull(nameof(Found))
                         );
-                    Records = Connection.ReadRecords
+                    Records = connection.ReadRecords
                         (
-                            Database ?? Connection.Database,
+                            Database ?? connection.Database,
                             mfns
                         );
                 }
@@ -142,7 +144,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         .ThrowIfNull(nameof(Found))
                         .AsParallel()
                         .AsOrdered()
-                        .Select(item => _ConvertRecord(item))
+                        .Select(item => _ConvertRecord(connection, item))
                         .ToArray();
                 }
             }

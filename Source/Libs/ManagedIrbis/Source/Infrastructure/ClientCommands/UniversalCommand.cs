@@ -52,12 +52,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public UniversalCommand
             (
-                [NotNull] IIrbisConnection connection,
+                //[NotNull] IIrbisConnection connection,
                 [NotNull] string commandCode
             )
-            : base(connection)
+            //: base(connection)
         {
-            Sure.NotNullNorEmpty(commandCode, "commandCode");
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
             CommandCode = commandCode;
         }
@@ -67,11 +67,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public UniversalCommand
             (
-                [NotNull] IIrbisConnection connection,
+                // [NotNull] IIrbisConnection connection,
                 [NotNull] string commandCode,
                 params object[] arguments
             )
-            : this (connection, commandCode)
+            : this (commandCode)
         {
             Arguments = arguments;
         }
@@ -100,7 +100,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
 
             query.CommandCode = CommandCode;
             if (!ReferenceEquals(Arguments, null))
@@ -108,7 +109,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Arguments.AddRange(Arguments);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             return result;
         }

@@ -128,11 +128,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SearchRawCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public SearchRawCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             FirstRecord = 1;
         }
@@ -168,7 +168,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public SearchRawCommand Clone()
         {
-            SearchRawCommand result = new SearchRawCommand(Connection)
+            SearchRawCommand result = new SearchRawCommand
             {
                 Database = Database,
                 FirstRecord = FirstRecord,
@@ -217,10 +217,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.Search;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -283,7 +284,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
             result.GetReturnCode();
 
             Found = result.RemainingUtfStrings()

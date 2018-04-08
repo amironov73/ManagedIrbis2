@@ -161,13 +161,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ReadPostingsCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public ReadPostingsCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
-            _postings = new List<TermPosting>();
+            // _postings = new List<TermPosting>();
 
             FirstPosting = 1;
         }
@@ -176,7 +176,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Private members
 
-        private readonly List<TermPosting> _postings;
+        //private readonly List<TermPosting> _postings;
 
         #endregion
 
@@ -225,14 +225,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
-        public override int[] GoodReturnCodes
-        {
-            // TERM_NOT_EXISTS = -202;
-            // TERM_LAST_IN_LIST = -203;
-            // TERM_FIRST_IN_LIST = -204;
-            get { return new[] { -202, -203, -204 }; }
-        }
+        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
+        //public override int[] GoodReturnCodes
+        //{
+        //    // TERM_NOT_EXISTS = -202;
+        //    // TERM_LAST_IN_LIST = -203;
+        //    // TERM_FIRST_IN_LIST = -204;
+        //    get { return new[] { -202, -203, -204 }; }
+        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
         public override ServerResponse Execute
@@ -240,10 +240,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            ClientQuery query = CreateQuery(context.Connection);
             query.CommandCode = CommandCode.ReadPostings;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? context.Connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
@@ -284,7 +284,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddUtf8(Term);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(context.Connection, query);
             CheckResponse(result);
 
             Postings = TermPosting.Parse(result);

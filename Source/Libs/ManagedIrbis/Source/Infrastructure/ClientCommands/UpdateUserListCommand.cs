@@ -37,16 +37,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public UpdateUserListCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public UpdateUserListCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //}
 
         #endregion
 
@@ -58,16 +58,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.SetUserList;
 
             if (ReferenceEquals(UserList, null))
             {
                 Log.Error
-                (
-                    "UpdateUserListCommand::CreateQuery: "
-                    + "UserList not set"
-                );
+                    (
+                        "UpdateUserListCommand::CreateQuery: "
+                        + "UserList not set"
+                    );
+
                 throw new IrbisException("UserList not set");
             }
 
@@ -77,7 +79,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddAnsi(line);
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             return result;
         }

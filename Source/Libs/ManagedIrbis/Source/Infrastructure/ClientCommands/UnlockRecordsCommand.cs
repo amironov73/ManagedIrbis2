@@ -49,11 +49,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public UnlockRecordsCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public UnlockRecordsCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             Records = new List<int>();
         }
@@ -68,17 +68,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.UnlockRecords;
 
-            string database = Database ?? Connection.Database;
+            string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                (
-                    "UnlockRecordsCommand::CreateQuery: "
-                    + "database not specified"
-                );
+                    (
+                        "UnlockRecordsCommand::CreateQuery: "
+                        + "database not specified"
+                    );
 
                 throw new IrbisException("database not specified");
             }
@@ -87,16 +88,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             if (Records.Count == 0)
             {
                 Log.Error
-                (
-                    "UnlockRecordsCommand::CreateQuery: "
-                    + "record list is empty"
-                );
+                    (
+                        "UnlockRecordsCommand::CreateQuery: "
+                        + "record list is empty"
+                    );
 
                 throw new IrbisException("record list is empty");
             }
             query.Arguments.AddRange(Records.Cast<object>());
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
             result.GetReturnCode();
 
             return result;

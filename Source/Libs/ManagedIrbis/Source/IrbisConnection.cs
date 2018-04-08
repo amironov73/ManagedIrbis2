@@ -824,7 +824,7 @@ namespace ManagedIrbis
 
             specification.Verify(true);
 
-            ListFilesCommand command = new ListFilesCommand(this);
+            ListFilesCommand command = new ListFilesCommand();
             command.Specifications.Add(specification);
 
             ExecuteCommand(command);
@@ -843,7 +843,7 @@ namespace ManagedIrbis
         {
             Sure.NotNull(specifications, nameof(specifications));
 
-            ListFilesCommand command = new ListFilesCommand(this);
+            ListFilesCommand command = new ListFilesCommand();
             foreach (FileSpecification specification in specifications)
             {
                 specification.Verify(true);
@@ -1102,7 +1102,7 @@ namespace ManagedIrbis
         {
             Sure.NotNull(fileSpecification, nameof(fileSpecification));
 
-            ReadFileCommand command = new ReadFileCommand(this);
+            ReadFileCommand command = new ReadFileCommand();
             command.Files.Add(fileSpecification);
 
             ExecuteCommand(command);
@@ -1615,7 +1615,7 @@ namespace ManagedIrbis
         {
             Sure.NotNull(record, nameof(record));
 
-            WriteRecordCommand command = new WriteRecordCommand(this)
+            WriteRecordCommand command = new WriteRecordCommand()
             {
                 Record = record,
                 Actualize = actualize,
@@ -1652,7 +1652,7 @@ namespace ManagedIrbis
                 return records;
             }
 
-            WriteRecordsCommand command = new WriteRecordsCommand(this)
+            WriteRecordsCommand command = new WriteRecordsCommand()
             {
                 Actualize = actualize,
                 Lock = lockFlag

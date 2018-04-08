@@ -93,12 +93,7 @@ namespace ManagedIrbis.Infrastructure
                 params object[] arguments
             )
         {
-            return new UniversalCommand
-                (
-                    Connection,
-                    commandCode,
-                    arguments
-                );
+            return new UniversalCommand(commandCode, arguments);
         }
 
         /// <summary>
@@ -114,7 +109,6 @@ namespace ManagedIrbis.Infrastructure
         {
             return new UniversalTextCommand
                 (
-                    Connection,
                     commandCode,
                     lines,
                     encoding

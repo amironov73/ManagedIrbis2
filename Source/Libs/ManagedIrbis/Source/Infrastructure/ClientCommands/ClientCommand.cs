@@ -30,50 +30,50 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     {
         #region Properties
 
-        /// <summary>
-        /// Connection.
-        /// </summary>
-        [NotNull]
-        public IIrbisConnection Connection { get; private set; }
+        ///// <summary>
+        ///// Connection.
+        ///// </summary>
+        //[NotNull]
+        //public IIrbisConnection Connection { get; private set; }
 
-        /// <summary>
-        /// Good return codes.
-        /// </summary>
-        public virtual int[] GoodReturnCodes => Array.Empty<int>();
+        ///// <summary>
+        ///// Good return codes.
+        ///// </summary>
+        //public virtual int[] GoodReturnCodes => Array.Empty<int>();
 
         /// <summary>
         /// Relax (may be malformed) server response.
         /// </summary>
         public bool RelaxResponse { get; set; }
 
-        /// <summary>
-        /// Does the command require established connection?
-        /// </summary>
-        public virtual bool RequireConnection => true;
+        ///// <summary>
+        ///// Does the command require established connection?
+        ///// </summary>
+        //public virtual bool RequireConnection => true;
 
-        /// <summary>
-        /// Kind of the command.
-        /// </summary>
-        public virtual CommandKind Kind => CommandKind.None;
+        ///// <summary>
+        ///// Kind of the command.
+        ///// </summary>
+        //public virtual CommandKind Kind => CommandKind.None;
 
         #endregion
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected ClientCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //protected ClientCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //{
+        //    Sure.NotNull(connection, nameof(connection));
 
-            Log.Trace(nameof(ClientCommand) + "::Constructor");
+        //    Log.Trace(nameof(ClientCommand) + "::Constructor");
 
-            Connection = connection;
-        }
+        //    Connection = connection;
+        //}
 
         #endregion
 
@@ -87,47 +87,47 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 [NotNull] ServerResponse response
             )
         {
-            Sure.NotNull(response, nameof(response));
+            //Sure.NotNull(response, nameof(response));
 
-            int returnCode = response.ReturnCode;
-            if (returnCode < 0)
-            {
-                int[] goodCodes = GoodReturnCodes;
+            //int returnCode = response.ReturnCode;
+            //if (returnCode < 0)
+            //{
+            //    int[] goodCodes = GoodReturnCodes;
 
-                if (!goodCodes.Contains(returnCode))
-                {
-                    Log.Error
-                        (
-                            nameof(ClientCommand) + "::" + nameof(CheckResponse)
-                            + ": code="
-                            + returnCode
-                        );
+            //    if (!goodCodes.Contains(returnCode))
+            //    {
+            //        Log.Error
+            //            (
+            //                nameof(ClientCommand) + "::" + nameof(CheckResponse)
+            //                + ": code="
+            //                + returnCode
+            //            );
 
-                    throw new IrbisException(returnCode);
-                }
-            }
+            //        throw new IrbisException(returnCode);
+            //    }
+            //}
         }
 
         /// <summary>
         /// Create client query.
         /// </summary>
-        public ClientQuery CreateQuery()
+        public ClientQuery CreateQuery(IIrbisConnection connection)
         {
             Log.Trace(nameof(ClientCommand) + "::" + nameof(CreateQuery));
 
-            ClientQuery result = new ClientQuery(Connection)
+            ClientQuery result = new ClientQuery
             {
-                Workstation = Connection.Workstation,
-                ClientID = Connection.ClientID,
+                Workstation = connection.Workstation,
+                ClientID = connection.ClientID,
                 CommandNumber = 1,
-                UserLogin = Connection.Username,
-                UserPassword = Connection.Password
+                UserLogin = connection.Username,
+                UserPassword = connection.Password
             };
 
-            if (Connection is IrbisConnection connection)
-            {
-                result.CommandNumber = connection.IncrementCommandNumber();
-            }
+            //if (Connection is IrbisConnection connection)
+            //{
+            //    result.CommandNumber = connection.IncrementCommandNumber();
+            //}
 
             return result;
         }
@@ -147,13 +147,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         [NotNull]
         protected ServerResponse Execute
             (
+                [NotNull] IIrbisConnection connection,
                 [NotNull] ClientQuery query
             )
         {
             query.Verify(true);
 
             byte[] request = query.EncodePacket();
-            byte[] answer = Connection.Socket.ExecuteRequest(request);
+            byte[] answer = connection.Socket.ExecuteRequest(request);
 
             Log.Trace
                 (
@@ -164,7 +165,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             ServerResponse result = new ServerResponse
                 (
-                    Connection,
+                    connection,
                     answer,
                     request,
                     RelaxResponse

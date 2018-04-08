@@ -56,11 +56,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        public WriteRecordsCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public WriteRecordsCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             References = new NonNullCollection<RecordReference>();
         }
@@ -75,7 +75,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = base.CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.SaveRecordGroup;
 
             if (References.Count == 0)
@@ -141,7 +142,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(reference);
             }
 
-            ServerResponse result = base.Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             result.GetReturnCode();
 

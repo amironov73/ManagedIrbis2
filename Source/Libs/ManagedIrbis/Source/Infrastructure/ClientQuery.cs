@@ -50,11 +50,11 @@ namespace ManagedIrbis.Infrastructure
         [CanBeNull]
         public string CommandCode { get; set; }
 
-        /// <summary>
-        /// Connection.
-        /// </summary>
-        [NotNull]
-        public IIrbisConnection Connection { get; }
+        ///// <summary>
+        ///// Connection.
+        ///// </summary>
+        //[NotNull]
+        //public IIrbisConnection Connection { get; }
 
         /// <summary>
         /// Код АРМ.
@@ -99,14 +99,14 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ClientQuery
-            (
-                [NotNull] IIrbisConnection connection
-            )
+        public ClientQuery()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
         {
-            Sure.NotNull(connection, nameof(connection));
+            //Sure.NotNull(connection, nameof(connection));
 
-            Connection = connection;
+            //Connection = connection;
             Arguments = new List<object>();
         }
 
@@ -202,8 +202,9 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public byte[] EncodePacket()
         {
-            MemoryStream stream = Connection.Executive
-                .GetMemoryStream(GetType());
+            MemoryStream stream = new MemoryStream();
+            //MemoryStream stream = Connection.Executive
+            //    .GetMemoryStream(GetType());
 
             // Query header: 7 lines
             stream

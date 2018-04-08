@@ -86,37 +86,37 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         [CanBeNull]
         public string ServerVersion { get; set; }
 
-        /// <summary>
-        /// Doesn't require connection.
-        /// </summary>
-        public override bool RequireConnection
-        {
-            get { return false; }
-        }
+        ///// <summary>
+        ///// Doesn't require connection.
+        ///// </summary>
+        //public override bool RequireConnection
+        //{
+        //    get { return false; }
+        //}
 
         #endregion
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ConnectCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-            Log.Trace("ConnectCommand::Constructor");
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public ConnectCommand
+        //    (
+        //        [NotNull] IIrbisConnection connection
+        //    )
+        //    : base(connection)
+        //{
+        //    Log.Trace("ConnectCommand::Constructor");
 
-            // TODO fix it!
-            IrbisConnection nativeConnection = connection as IrbisConnection;
-            if (!ReferenceEquals(nativeConnection, null))
-            {
-                nativeConnection.GenerateClientId();
-                nativeConnection.ResetCommandNumber();
-            }
-        }
+        //    // TODO fix it!
+        //    IrbisConnection nativeConnection = connection as IrbisConnection;
+        //    if (!ReferenceEquals(nativeConnection, null))
+        //    {
+        //        nativeConnection.GenerateClientId();
+        //        nativeConnection.ResetCommandNumber();
+        //    }
+        //}
 
         #endregion
 
@@ -130,7 +130,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             Log.Trace(nameof(ConnectCommand) + "::" + nameof(Execute));
 
-            if (Connection.Connected)
+            IIrbisConnection connection = context.Connection;
+
+            if (connection.Connected)
             {
                 Log.Error
                     (
@@ -141,10 +143,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
             }
 
-            ClientQuery query = CreateQuery();
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.RegisterClient;
 
-            string username = Username ?? Connection.Username;
+            string username = Username ?? connection.Username;
             if (string.IsNullOrEmpty(username))
             {
                 Log.Error
@@ -156,7 +158,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisException(Resources.ConnectCommand_UsernameNotSpecified);
             }
 
-            string password = Password ?? Connection.Password;
+            string password = Password ?? connection.Password;
             if (string.IsNullOrEmpty(password))
             {
                 Log.Error
@@ -178,7 +180,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             while (true)
             {
-                result = Execute(query);
+                result = Execute(connection, query);
 
                 Log.Trace
                     (
@@ -187,19 +189,19 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         + result.ReturnCode
                     );
 
-                // CLIENT_ALREADY_EXISTS
-                if (result.ReturnCode == -3337)
-                {
-                    IrbisConnection connection = Connection as IrbisConnection;
-                    int newId = ReferenceEquals(connection, null)
-                        ? Connection.ClientID + 1
-                        : connection.GenerateClientId();
-                    query.ClientID = newId;
-                }
-                else
-                {
+                //// CLIENT_ALREADY_EXISTS
+                //if (result.ReturnCode == -3337)
+                //{
+                //    IrbisConnection connection = Connection as IrbisConnection;
+                //    int newId = ReferenceEquals(connection, null)
+                //        ? Connection.ClientID + 1
+                //        : connection.GenerateClientId();
+                //    query.ClientID = newId;
+                //}
+                //else
+                //{
                     break;
-                }
+                //}
             }
 
             if (result.ReturnCode == 0)

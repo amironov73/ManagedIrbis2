@@ -49,12 +49,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="connection"></param>
-        public ReadFileCommand
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
+        public ReadFileCommand()
+            //(
+            //    [NotNull] IIrbisConnection connection
+            //)
+            //: base(connection)
         {
             _files = new NonNullCollection<FileSpecification>();
         }
@@ -117,7 +116,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode.ReadDocument;
 
             foreach (FileSpecification fileName in Files)
@@ -126,7 +127,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddAnsi(item);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
             Result = GetFileText(result);
 
             return result;

@@ -51,12 +51,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public UniversalTextCommand
             (
-                [NotNull] IIrbisConnection connection,
+                //[NotNull] IIrbisConnection connection,
                 [NotNull] string commandCode
             )
-            : base(connection)
+            //: base(connection)
         {
-            Sure.NotNull(connection, nameof(connection));
+            //Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
             CommandCode = commandCode;
@@ -68,12 +68,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public UniversalTextCommand
             (
-                [NotNull] IIrbisConnection connection,
+                //[NotNull] IIrbisConnection connection,
                 [NotNull] string commandCode,
                 [NotNull] string[] lines,
                 [NotNull] Encoding encoding
             )
-            : this (connection, commandCode)
+            : this (commandCode)
         {
             Sure.NotNull(lines, nameof(lines));
             Sure.NotNull(encoding, nameof(encoding));
@@ -101,7 +101,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery();
+            IIrbisConnection connection = context.Connection;
+            ClientQuery query = CreateQuery(connection);
             query.CommandCode = CommandCode;
 
             foreach (TextWithEncoding line in TextLines)
@@ -109,7 +110,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(line);
             }
 
-            ServerResponse result = Execute(query);
+            ServerResponse result = Execute(connection, query);
 
             return result;
         }
