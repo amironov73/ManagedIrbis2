@@ -20,7 +20,7 @@ namespace UnitTests.ManagedIrbis.Search
                 Format = "@brief"
             };
             IrbisConnection connection = new IrbisConnection();
-            ReadPostingsCommand command = new ReadPostingsCommand(connection);
+            ReadPostingsCommand command = new ReadPostingsCommand();
             command.ApplyParameters(parameters);
 
             Assert.AreEqual(parameters.Database, command.Database);
@@ -41,7 +41,7 @@ namespace UnitTests.ManagedIrbis.Search
                 Format = "@brief"
             };
             IrbisConnection connection = new IrbisConnection();
-            ReadPostingsCommand command = new ReadPostingsCommand(connection);
+            ReadPostingsCommand command = new ReadPostingsCommand();
             command.ApplyParameters(parameters);
 
             Assert.AreEqual(parameters.Database, command.Database);
@@ -91,7 +91,7 @@ namespace UnitTests.ManagedIrbis.Search
         public void TestPostingParameters_GatherFromCommand1()
         {
             IrbisConnection connection = new IrbisConnection();
-            ReadPostingsCommand command = new ReadPostingsCommand(connection)
+            ReadPostingsCommand command = new ReadPostingsCommand()
             {
                 Database = "IBIS",
                 Term = "T=HELLO",
@@ -111,7 +111,7 @@ namespace UnitTests.ManagedIrbis.Search
         public void TestPostingParameters_GatherFromCommand2()
         {
             IrbisConnection connection = new IrbisConnection();
-            ReadPostingsCommand command = new ReadPostingsCommand(connection)
+            ReadPostingsCommand command = new ReadPostingsCommand()
             {
                 Database = "IBIS",
                 ListOfTerms = new[] { "T=HELLO", "T=WORLD" },

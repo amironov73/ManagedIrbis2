@@ -26,7 +26,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     /// </summary>
     [PublicAPI]
     public abstract class ClientCommand
-        : IVerifiable
     {
         #region Properties
 
@@ -173,13 +172,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             return result;
         }
-
-        #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify" />
-        public virtual bool Verify(bool throwOnError) => true;
 
         #endregion
     }

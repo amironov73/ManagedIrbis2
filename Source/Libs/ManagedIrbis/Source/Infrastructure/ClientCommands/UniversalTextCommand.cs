@@ -116,33 +116,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<UniversalTextCommand> verifier
-                = new Verifier<UniversalTextCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .NotNullNorEmpty(CommandCode, "CommandCode")
-                .NotNull(TextLines, "TextLines")
-                .Assert(TextLines.Count > 0, "TextLines.Count")
-                .Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

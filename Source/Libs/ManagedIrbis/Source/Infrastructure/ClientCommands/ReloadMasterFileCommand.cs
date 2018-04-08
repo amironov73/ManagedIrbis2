@@ -82,18 +82,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             return result;
         }
 
-        /// <inheritdoc cref="ClientCommand.Verify" />
-        public override bool Verify(bool throwOnError)
-        {
-            Verifier<ReloadMasterFileCommand> verifier
-                = new Verifier<ReloadMasterFileCommand>(this, throwOnError);
-
-            verifier
-                .NotNullNorEmpty(Database, "Database");
-
-            return verifier.Result;
-        }
-
         #endregion
     }
 }

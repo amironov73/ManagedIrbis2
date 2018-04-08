@@ -133,28 +133,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             return result;
         }
 
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<ReadFileCommand> verifier
-                = new Verifier<ReadFileCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .Assert(Files.Count != 0, "Files.Count")
-                .Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
         #endregion
     }
 }

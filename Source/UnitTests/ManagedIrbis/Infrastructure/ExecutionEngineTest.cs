@@ -80,7 +80,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             ExecutionEngine engine = _GetEngine();
             engine.BeforeExecution += (sender, args) => { before = true; };
             engine.AfterExecution += (sender, args) => { after = true; };
-            ClientCommand command = new NopCommand(engine.Connection);
+            ClientCommand command = new NopCommand();
             command.RelaxResponse = true;
             ClientContext context = new ClientContext(engine.Connection)
             {
@@ -100,7 +100,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
 
             ExecutionEngine engine = _GetEngine();
             engine.ExceptionOccurs += (sender, args) => { exceptionSeen = true; };
-            DynamicCommand command = new DynamicCommand(engine.Connection)
+            DynamicCommand command = new DynamicCommand
             {
                 ExecuteHandler = dynamicCommand => throw new IrbisNetworkException()
             };
@@ -126,7 +126,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ExecutionEngine_ExecuteCommand_3()
         {
             ExecutionEngine engine = _GetEngine2();
-            ClientCommand command = new NopCommand(engine.Connection);
+            ClientCommand command = new NopCommand();
             ClientContext context = new ClientContext(engine.Connection)
             {
                 Command = command

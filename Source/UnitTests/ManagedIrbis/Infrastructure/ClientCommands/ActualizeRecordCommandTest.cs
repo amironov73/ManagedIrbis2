@@ -21,26 +21,26 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
     public class ActualizeRecordCommandTest
         : CommandTest
     {
-        [TestMethod]
-        public void ActualizeRecordCommand_Construciton_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection);
-            Assert.AreSame(connection, command.Connection);
-        }
+        //[TestMethod]
+        //public void ActualizeRecordCommand_Construciton_1()
+        //{
+        //    Mock<IIrbisConnection> mock = GetConnectionMock();
+        //    IIrbisConnection connection = mock.Object;
+        //    ActualizeRecordCommand command = new ActualizeRecordCommand(connection);
+        //    Assert.AreSame(connection, command.Connection);
+        //}
 
         [TestMethod]
         public void ActualizeRecordCommand_CreateQuery_2()
         {
             Mock<IIrbisConnection> mock = GetConnectionMock();
             IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection)
+            ActualizeRecordCommand command = new ActualizeRecordCommand
             {
                 Database = "IBIS",
                 Mfn = 123
             };
-            ClientQuery query = command.CreateQuery();
+            ClientQuery query = command.CreateQuery(connection);
             Assert.IsNotNull(query);
         }
 
@@ -65,27 +65,5 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
         //    ServerResponse response = command.Execute();
         //    Assert.AreEqual(returnCode, response.ReturnCode);
         //}
-
-        [TestMethod]
-        public void ActualizeRecordCommand_Verify_1()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection);
-            Assert.IsFalse(command.Verify(false));
-        }
-
-        [TestMethod]
-        public void ActualizeRecordCommand_Verify_2()
-        {
-            Mock<IIrbisConnection> mock = GetConnectionMock();
-            IIrbisConnection connection = mock.Object;
-            ActualizeRecordCommand command = new ActualizeRecordCommand(connection)
-            {
-                Database = "IBIS",
-                Mfn = 123
-            };
-            Assert.IsTrue(command.Verify(false));
-        }
     }
 }

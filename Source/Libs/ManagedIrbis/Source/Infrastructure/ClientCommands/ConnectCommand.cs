@@ -216,25 +216,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="ClientCommand.Verify" />
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<ConnectCommand> verifier
-                = new Verifier<ConnectCommand>(this, throwOnError);
-
-            verifier
-                .NotNullNorEmpty(Username, nameof(Username))
-                .NotNullNorEmpty(Password, nameof(Password));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

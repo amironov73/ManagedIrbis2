@@ -293,30 +293,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<ReadPostingsCommand> verifier
-                = new Verifier<ReadPostingsCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .Assert(FirstPosting >= 0, "FirstPosting")
-                .Assert(NumberOfPostings >= 0, "NumberOfPostings")
-                .Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

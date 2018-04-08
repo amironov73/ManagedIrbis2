@@ -145,29 +145,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify" />
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<WriteRecordCommand> verifier
-                = new Verifier<WriteRecordCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .NotNull(Record, "Record")
-                .Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

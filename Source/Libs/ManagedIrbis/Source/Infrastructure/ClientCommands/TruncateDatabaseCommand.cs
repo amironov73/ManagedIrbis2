@@ -82,28 +82,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="ClientCommand.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<TruncateDatabaseCommand> verifier
-                = new Verifier<TruncateDatabaseCommand>
-                (
-                    this,
-                    throwOnError
-                );
-
-            verifier
-                .NotNullNorEmpty(Database, "Database");
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

@@ -59,7 +59,7 @@ namespace UnitTests.ManagedIrbis.Search
         {
             TermParameters parameters = _GetParameters();
             IrbisConnection connection = new IrbisConnection();
-            ReadTermsCommand command = new ReadTermsCommand(connection);
+            ReadTermsCommand command = new ReadTermsCommand();
             command.ApplyParameters(parameters);
 
             Assert.AreEqual(parameters.Database, command.Database);
@@ -73,7 +73,7 @@ namespace UnitTests.ManagedIrbis.Search
         public void TestTermParameters_GatherFromCommand()
         {
             IrbisConnection connection = new IrbisConnection();
-            ReadTermsCommand command = new ReadTermsCommand(connection)
+            ReadTermsCommand command = new ReadTermsCommand
             {
                 Database = "IBIS",
                 Format = "@brief",

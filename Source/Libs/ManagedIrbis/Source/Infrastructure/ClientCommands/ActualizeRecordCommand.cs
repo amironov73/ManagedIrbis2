@@ -97,29 +97,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="ClientCommand.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<ActualizeRecordCommand> verifier
-                = new Verifier<ActualizeRecordCommand>
-                (
-                    this,
-                    throwOnError
-                );
-
-            verifier
-                .NotNullNorEmpty(Database, "Database")
-                .Assert(Mfn >= 0, "Mfn >= 0");
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

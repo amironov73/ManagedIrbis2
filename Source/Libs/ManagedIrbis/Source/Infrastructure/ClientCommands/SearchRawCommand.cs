@@ -294,30 +294,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<SearchRawCommand> verifier
-                = new Verifier<SearchRawCommand>(this, throwOnError);
-
-            //if (!string.IsNullOrEmpty(SequentialSpecification))
-            //{
-            //    verifier
-            //        .NotNullNorEmpty(SearchExpression, "SearchExpression");
-            //}
-
-            verifier.
-                Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

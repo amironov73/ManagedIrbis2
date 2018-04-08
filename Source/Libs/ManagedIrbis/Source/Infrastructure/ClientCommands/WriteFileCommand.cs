@@ -82,37 +82,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             return result;
         }
 
-        /// <summary>
-        /// Verify object state.
-        /// </summary>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<WriteFileCommand> verifier
-                = new Verifier<WriteFileCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .Assert(Files.Count != 0, "Files.Count")
-                .Assert(base.Verify(throwOnError));
-
-            foreach (FileSpecification file in Files)
-            {
-                verifier.NotNull
-                    (
-                        file.Content,
-                        "file.Contents"
-                    );
-            }
-
-            return verifier.Result;
-        }
-
         #endregion
     }
 }

@@ -101,19 +101,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             return result;
         }
 
-        /// <summary>
-        /// Basic implementation of <see cref="ClientCommand.Verify"/>.
-        /// </summary>
-        public bool BaseVerify
-            (
-                bool throwOnError
-            )
-        {
-            bool result = base.Verify(throwOnError);
-
-            return result;
-        }
-
         #endregion
 
         #region ClientCommand members
@@ -171,23 +158,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             ServerResponse result = !ReferenceEquals(handler, null)
                 ? handler(this)
                 : BaseExecute(connection, query);
-
-            return result;
-        }
-
-        #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="ClientCommand.Verify" />
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Func<DynamicCommand, bool, bool> handler = VerifyHandler;
-
-            bool result = handler?.Invoke(this, throwOnError) ?? BaseVerify(throwOnError);
 
             return result;
         }

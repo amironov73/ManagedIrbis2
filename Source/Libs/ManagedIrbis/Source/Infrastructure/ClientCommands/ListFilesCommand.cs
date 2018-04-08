@@ -117,40 +117,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            // ReSharper disable AssignNullToNotNullAttribute
-            Verifier<ListFilesCommand> verifier
-                = new Verifier<ListFilesCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            foreach (FileSpecification specification in Specifications)
-            {
-                verifier.VerifySubObject
-                    (
-                        specification,
-                        "specification"
-                    );
-            }
-
-            return verifier.Result;
-            // ReSharper restore AssignNullToNotNullAttribute
-        }
-
-        #endregion
-
-        #region Object members
-
-        #endregion
     }
 }

@@ -183,40 +183,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify" />
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            bool result = !string.IsNullOrEmpty(Database)
-                && Mfn > 0;
-
-            if (result)
-            {
-                result = base.Verify(throwOnError);
-            }
-
-            if (!result)
-            {
-                Log.Error
-                    (
-                        "ReadRecordCommand::Verify: "
-                        + "verification failed"
-                    );
-
-                if (throwOnError)
-                {
-                    throw new VerificationException();
-                }
-            }
-
-            return result;
-        }
-
-        #endregion
     }
 }

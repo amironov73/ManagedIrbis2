@@ -161,38 +161,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify" />
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<WriteRecordsCommand> verifier
-                = new Verifier<WriteRecordsCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier.Assert
-                    (
-                        References.Count < IrbisConstants.MaxPostings,
-                        "References.Count"
-                    );
-
-            foreach (RecordReference reference in References)
-            {
-                // TODO fix reference.Verify for WriteRecordCommand
-                // reference.Verify(throwOnError);
-                verifier.NotNull(reference.Record, "record");
-            }
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

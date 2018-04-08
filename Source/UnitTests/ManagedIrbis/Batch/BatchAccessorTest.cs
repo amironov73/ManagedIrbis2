@@ -81,11 +81,11 @@ namespace UnitTests.ManagedIrbis.Batch
         [NotNull]
         private ServerResponse ExecuteFormatCommand
             (
+                [NotNull] IIrbisConnection connection,
                 [NotNull] FormatCommand command,
                 bool emptyRecords
             )
         {
-            IIrbisConnection connection = command.Connection;
             List<int> list = command.MfnList;
             int count = list.Count;
             command.FormatResult = new string[count];
@@ -134,7 +134,7 @@ namespace UnitTests.ManagedIrbis.Batch
             // ExecuteCommand
             result.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
-                => ExecuteFormatCommand(command, false));
+                => ExecuteFormatCommand(connection, command, false));
 
             // ReadRecord
             result.Setup(c => c.ReadRecord(It.IsAny<string>(),
@@ -285,7 +285,7 @@ namespace UnitTests.ManagedIrbis.Batch
                 .Returns(new CommandFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
-                => ExecuteFormatCommand(command, true));
+                => ExecuteFormatCommand(connection, command, true));
             BatchAccessor batch = new BatchAccessor(connection);
             int[] mfnList = { 1, 2, 3 };
             batch.ReadRecords("IBIS", mfnList);

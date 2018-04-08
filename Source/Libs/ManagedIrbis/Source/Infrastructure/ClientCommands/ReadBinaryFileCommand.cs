@@ -167,28 +167,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<ReadBinaryFileCommand> verifier
-                = new Verifier<ReadBinaryFileCommand>
-                    (
-                        this,
-                        throwOnError
-                    );
-
-            verifier
-                .NotNull(File, "File");
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

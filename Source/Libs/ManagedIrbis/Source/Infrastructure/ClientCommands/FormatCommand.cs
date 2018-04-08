@@ -249,32 +249,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="IVerifiable.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<FormatCommand> verifier
-                = new Verifier<FormatCommand>(this, throwOnError);
-
-            verifier
-                //.NotNullNorEmpty(FormatSpecification, "FormatSpecification")
-                .Assert
-                    (
-                        MfnList.Count < IrbisConstants.MaxPostings,
-                        "MfnList.Count"
-                    )
-                .Assert(!ReferenceEquals(VirtualRecord, null)
-                        || MfnList.Count > 0)
-                .Assert(base.Verify(throwOnError));
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }

@@ -28,7 +28,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ClientContext_Construction_2()
         {
             IIrbisConnection connection = new IrbisConnection();
-            ClientCommand command = new NopCommand(connection);
+            ClientCommand command = new NopCommand();
             ClientContext context = new ClientContext(connection)
             {
                 Command = command
@@ -45,7 +45,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ClientContext_Properties_1()
         {
             IIrbisConnection connection = new IrbisConnection();
-            ClientCommand command = new NopCommand(connection);
+            ClientCommand command = new NopCommand();
             ClientContext context = new ClientContext(connection);
 
             Exception exception = new Exception();

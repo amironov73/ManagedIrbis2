@@ -84,28 +84,5 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         #endregion
-
-        #region IVerifiable members
-
-        /// <inheritdoc cref="ClientCommand.Verify"/>
-        public override bool Verify
-            (
-                bool throwOnError
-            )
-        {
-            Verifier<MaxMfnCommand> verifier
-                = new Verifier<MaxMfnCommand>
-                (
-                    this,
-                    throwOnError
-                );
-
-            verifier
-                .NotNullNorEmpty(Database, "Database");
-
-            return verifier.Result;
-        }
-
-        #endregion
     }
 }
