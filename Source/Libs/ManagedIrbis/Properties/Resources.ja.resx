@@ -98,267 +98,231 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BrokenNetworkEvent" xml:space="preserve">
-    <value>Broken network event</value>
+    <value>壊れたネットワーク通信</value>
   </data>
   <data name="CantResolveHost" xml:space="preserve">
-    <value>Can't resolve host </value>
+    <value>ホストを解決できません</value>
   </data>
   <data name="EmptyResponse" xml:space="preserve">
-    <value>Empty response</value>
+    <value>空のサーバー応答</value>
   </data>
   <data name="SmartRead_Expected" xml:space="preserve">
-    <value>: expected=</value>
+    <value>：期待=</value>
   </data>
   <data name="SmartRead_Readed" xml:space="preserve">
-    <value>, readed=</value>
+    <value>、しかし読まれた=</value>
   </data>
   <data name="CantReadFirstLineOfTheResponse" xml:space="preserve">
-    <value>: can't read first line of the response</value>
+    <value>：応答の最初の行を読み取ることができません</value>
   </data>
   <data name="SmartRead_EmptyResponse" xml:space="preserve">
-    <value>: empty response</value>
+    <value>: 空のサーバー応答</value>
   </data>
   <data name="ConnectionCreatorNotSet" xml:space="preserve">
-    <value>ConnectionCreator not set</value>
+    <value>ConnectionCreatorが設定されていません</value>
   </data>
   <data name="FieldTag_Verify_BadTag1" xml:space="preserve">
-    <value>: bad tag=</value>
+    <value>：悪いタグ=</value>
   </data>
   <data name="FieldTag_Verify_BadTag2" xml:space="preserve">
-    <value>bad tag=</value>
+    <value>悪いタグ=</value>
   </data>
   <data name="FieldValue_Verify_BadValue" xml:space="preserve">
-    <value>: bad value=</value>
+    <value>：悪い値=</value>
   </data>
   <data name="FieldValue_Verify_BadFieldValue" xml:space="preserve">
-    <value>Bad Field.Value: </value>
-  </data>
-  <data name="IrbisEncoding_NotSingleByteEncoding" xml:space="preserve">
-    <value>: not single-byte encoding</value>
-  </data>
-  <data name="ErrorDescription_UnknownError" xml:space="preserve">
-    <value>Unknown error</value>
-  </data>
-  <data name="ErrorDescription_NoError" xml:space="preserve">
-    <value>No error</value>
-  </data>
-  <data name="ErrorDescription_NormalReturn" xml:space="preserve">
-    <value>Normal return</value>
-  </data>
-  <data name="ErrorDescription_GivenMfnOutsideTheDatabaseRange" xml:space="preserve">
-    <value>Given MFN is outside the database range</value>
-  </data>
-  <data name="ErrorDescription_GeneralError" xml:space="preserve">
-    <value>General error</value>
-  </data>
-  <data name="ErrorDescription_FileNotExist" xml:space="preserve">
-    <value>File not exist</value>
-  </data>
-  <data name="ErrorDescription_BadPassword" xml:space="preserve">
-    <value>Bad password</value>
-  </data>
-  <data name="ErrorDescription_ClientAlreadyRegistered" xml:space="preserve">
-    <value>The client is already registered</value>
-  </data>
-  <data name="ErrorDescription_WorkstationAccesDenied" xml:space="preserve">
-    <value>Workstation access denied</value>
-  </data>
-  <data name="ErrorDescription_ClientNotAllowed" xml:space="preserve">
-    <value>Client not allowed</value>
-  </data>
-  <data name="ErrorDescription_WriteError" xml:space="preserve">
-    <value>Write error</value>
-  </data>
-  <data name="ErrorDescription_ActualizationError" xml:space="preserve">
-    <value>Error during actualization</value>
-  </data>
-  <data name="ErrorDescription_NoPreviousVersionOfTheRecord" xml:space="preserve">
-    <value>No previous version of the record</value>
-  </data>
-  <data name="ErrorDescription_FieldIsAbsent" xml:space="preserve">
-    <value>The field is absent</value>
-  </data>
-  <data name="ErrorDescription_MfnOutsideTheDatabaseRange" xml:space="preserve">
-    <value>MFN outside the database range</value>
-  </data>
-  <data name="ErrorDescription_BadShelfNumber" xml:space="preserve">
-    <value>Bad shelf number</value>
-  </data>
-  <data name="ErrorDescription_BadShelfSize" xml:space="preserve">
-    <value>Bad shelf size</value>
-  </data>
-  <data name="ErrorDescription_ReadError" xml:space="preserve">
-    <value>Read error</value>
-  </data>
-  <data name="ErrorDescription_RecordIsLogicallyDeleted" xml:space="preserve">
-    <value>The record is logically deleted</value>
-  </data>
-  <data name="ErrorDescription_RecordIsPhysicallyDeleted" xml:space="preserve">
-    <value>The record is physically deleted</value>
-  </data>
-  <data name="ErrorDescription_RecordIsBlocked" xml:space="preserve">
-    <value>The record is blocked</value>
-  </data>
-  <data name="ErrorDescription_ProtocolError" xml:space="preserve">
-    <value>Protocol error</value>
-  </data>
-  <data name="ErrorDescription_ClientNotRegistered" xml:space="preserve">
-    <value>Client not registered</value>
-  </data>
-  <data name="ErrorDescription_ClientNotInUse" xml:space="preserve">
-    <value>Client doesn't in use</value>
-  </data>
-  <data name="ErrorDescription_BadClientIdentifier" xml:space="preserve">
-    <value>Bad client identifier</value>
-  </data>
-  <data name="ErrorDescription_ProcessError" xml:space="preserve">
-    <value>Administrator thread error</value>
-  </data>
-  <data name="ErrorDescription_ServerOverloaded" xml:space="preserve">
-    <value>Server is overloaded</value>
-  </data>
-  <data name="ErrorDescription_AutoinGblError" xml:space="preserve">
-    <value>Error during autoin.gbl processing</value>
-  </data>
-  <data name="ErrorDescription_RecordVersionError" xml:space="preserve">
-    <value>Record version mismatch</value>
-  </data>
-  <data name="ErrorDescription_BackupCreationError" xml:space="preserve">
-    <value>Backup creation error</value>
-  </data>
-  <data name="ErrorDescription_BackupRestoreError" xml:space="preserve">
-    <value>Backup restore error</value>
-  </data>
-  <data name="ErrorDescription_SortingError" xml:space="preserve">
-    <value>Error during sorting</value>
-  </data>
-  <data name="ErrorDescription_BadTerm" xml:space="preserve">
-    <value>Bad term</value>
-  </data>
-  <data name="ErrorDescription_DictionaryCreationError" xml:space="preserve">
-    <value>Dictionary creation error</value>
-  </data>
-  <data name="ErrorDescription_ServerExecutionError" xml:space="preserve">
-    <value>Server execution error</value>
-  </data>
-  <data name="ErrorDescription_DictionaryLoadingError" xml:space="preserve">
-    <value>Dictionary loading error</value>
-  </data>
-  <data name="ErrorDescription_GlobalCorrectionParameterError" xml:space="preserve">
-    <value>Global correction parameter error</value>
-  </data>
-  <data name="ErrorDescription_ERR_GBL_REP" xml:space="preserve">
-    <value>Global correction: bad rep tag</value>
-  </data>
-  <data name="ErrorDescription_ERR_GBL_MET" xml:space="preserve">
-    <value>Global correction: bad tag</value>
-  </data>
-  <data name="ErrorDescription_TermNotExist" xml:space="preserve">
-    <value>Term doesn't exist</value>
-  </data>
-  <data name="ErrorDescription_LastTerm" xml:space="preserve">
-    <value>Last term in the list</value>
-  </data>
-  <data name="ErrorDescription_FirstTerm" xml:space="preserve">
-    <value>First term in the list</value>
-  </data>
-  <data name="ErrorDescription_DatabaseIsLocked" xml:space="preserve">
-    <value>Database is exclusively locked</value>
-  </data>
-  <data name="ErrorDescription_MstError" xml:space="preserve">
-    <value>Master file error</value>
-  </data>
-  <data name="ErrorDescription_IfpError" xml:space="preserve">
-    <value>Index file error</value>
-  </data>
-  <data name="VerifyFormat_TextIsAbsent" xml:space="preserve">
-    <value>Text is absent</value>
-  </data>
-  <data name="VerifyFormat_TextIsAbsent2" xml:space="preserve">
-    <value>: text is absent</value>
-  </data>
-  <data name="DatabaseNotSet" xml:space="preserve">
-    <value>Database not set</value>
-  </data>
-  <data name="IrbisProvider_NonOverriden" xml:space="preserve">
-    <value>: non overriden</value>
-  </data>
-  <data name="ProviderManager_ProviderNameNotSpecified" xml:space="preserve">
-    <value>: provider name not specified</value>
-  </data>
-  <data name="ProviderManager_ProviderNotFound" xml:space="preserve">
-    <value>: provider not found: </value>
-  </data>
-  <data name="ProviderManager_ProviderNotFound2" xml:space="preserve">
-    <value>Provider not found: </value>
-  </data>
-  <data name="ProviderManager_CanTFindType" xml:space="preserve">
-    <value>: can't find type: </value>
-  </data>
-  <data name="ProviderManager_CantFindType2" xml:space="preserve">
-    <value>Can't find type: </value>
-  </data>
-  <data name="ProviderManager_IrbisProviderConfigurationKeyNotSpecified" xml:space="preserve">
-    <value>IrbisProvider configuration key not specified</value>
-  </data>
-  <data name="ServerResponse_BadFormat" xml:space="preserve">
-    <value>: bad format=</value>
-  </data>
-  <data name="AbstractEngine_NotConnected" xml:space="preserve">
-    <value>Not connected</value>
-  </data>
-  <data name="AbstractEngine_NotConnected2" xml:space="preserve">
-    <value>: not connected</value>
-  </data>
-  <data name="AbstractEngine_StandardExecution_Failed" xml:space="preserve">
-    <value> failed</value>
-  </data>
-  <data name="BatchAccessor_SomeRecordsNotRetrieved" xml:space="preserve">
-    <value>some records not retrieved</value>
-  </data>
-  <data name="BatchAccessor_EmptyRecordDetected" xml:space="preserve">
-    <value>: empty record detected</value>
-  </data>
-  <data name="IrbisConnection_CantSetSocketWhileConnected" xml:space="preserve">
-    <value>Can't set socket while connected</value>
-  </data>
-  <data name="IrbisConnection_DecryptedStateIsNull" xml:space="preserve">
-    <value>Decrypted state is null</value>
-  </data>
-  <data name="IrbisConnection_NoRecordRetrieved" xml:space="preserve">
-    <value>no record retrieved</value>
-  </data>
-  <data name="IrbisConnection_ResultRecordIsNull" xml:space="preserve">
-    <value>result record is null</value>
-  </data>
-  <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
-    <value>Already connected</value>
-  </data>
-  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
-    <value>username not specified</value>
-  </data>
-  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
-    <value>password not specified</value>
-  </data>
-  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
-    <value>already connected</value>
-  </data>
-  <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
-    <value>database not specified</value>
-  </data>
-  <data name="IrbisNetworkUtility_EmptyRecordDetected" xml:space="preserve">
-    <value>empty record detected</value>
-  </data>
-  <data name="IrbisNetworkUtility_RecordIsNull" xml:space="preserve">
-    <value>record is null</value>
-  </data>
-  <data name="WriteRecordsCommand_NoRecordsGiven" xml:space="preserve">
-    <value>no records given</value>
-  </data>
-  <data name="WriteRecordsCommand_TooManyRecords" xml:space="preserve">
-    <value>too many records</value>
+    <value>悪いField.Value：</value>
   </data>
   <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
-    <value>database not set</value>
+    <value>データベースが指定されていない</value>
+  </data>
+  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+    <value>パスワードが指定されていない</value>
+  </data>
+  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+    <value>ユーザー名が指定されていません</value>
+  </data>
+  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
+    <value>すでに接続されている</value>
+  </data>
+  <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
+    <value>データベースが指定されていない</value>
+  </data>
+  <data name="IrbisNetworkUtility_EmptyRecordDetected" xml:space="preserve">
+    <value>空レコードが検出されました</value>
+  </data>
+  <data name="IrbisNetworkUtility_RecordIsNull" xml:space="preserve">
+    <value>記録がない</value>
+  </data>
+  <data name="WriteRecordsCommand_NoRecordsGiven" xml:space="preserve">
+    <value>レコードがありません</value>
+  </data>
+  <data name="WriteRecordsCommand_TooManyRecords" xml:space="preserve">
+    <value>あまりにも多くのレコード</value>
+  </data>
+  <data name="ErrorDescription_DatabaseIsLocked" xml:space="preserve">
+    <value>データベースが排他的にロックされている</value>
+  </data>
+  <data name="ErrorDescription_MstError" xml:space="preserve">
+    <value>ドキュメントファイルエラー</value>
+  </data>
+  <data name="ErrorDescription_IfpError" xml:space="preserve">
+    <value>インデックスファイルエラー</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent" xml:space="preserve">
+    <value>テキストが欠けている</value>
+  </data>
+  <data name="VerifyFormat_TextIsAbsent2" xml:space="preserve">
+    <value>: テキストが欠けている</value>
+  </data>
+  <data name="DatabaseNotSet" xml:space="preserve">
+    <value>データベースが指定されていない</value>
+  </data>
+  <data name="IrbisProvider_NonOverriden" xml:space="preserve">
+    <value>：メソッドがオーバーライドされない</value>
+  </data>
+  <data name="ProviderManager_ProviderNameNotSpecified" xml:space="preserve">
+    <value>: プロバイダ名が指定されていません</value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound" xml:space="preserve">
+    <value>：プロバイダが見つかりません</value>
+  </data>
+  <data name="ProviderManager_ProviderNotFound2" xml:space="preserve">
+    <value>プロバイダが見つかりません</value>
+  </data>
+  <data name="ProviderManager_CanTFindType" xml:space="preserve">
+    <value>：タイプが見つかりません :</value>
+  </data>
+  <data name="ProviderManager_CantFindType2" xml:space="preserve">
+    <value>タイプが見つかりません</value>
+  </data>
+  <data name="IrbisEncoding_NotSingleByteEncoding" xml:space="preserve">
+    <value>：シングルバイトエンコーディングではない</value>
+  </data>
+  <data name="ErrorDescription_UnknownError" xml:space="preserve">
+    <value>不明なエラー</value>
+  </data>
+  <data name="ErrorDescription_NoError" xml:space="preserve">
+    <value>エラーなし</value>
+  </data>
+  <data name="ErrorDescription_NormalReturn" xml:space="preserve">
+    <value>通常の結果</value>
+  </data>
+  <data name="ErrorDescription_FileNotExist" xml:space="preserve">
+    <value>ファイルが存在しません</value>
+  </data>
+  <data name="ErrorDescription_GeneralError" xml:space="preserve">
+    <value>一般的なエラー</value>
+  </data>
+  <data name="ErrorDescription_GivenMfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>MFNがデータベースの範囲外である</value>
+  </data>
+  <data name="ErrorDescription_RecordIsBlocked" xml:space="preserve">
+    <value>レコードがブロックされています</value>
+  </data>
+  <data name="ErrorDescription_ProtocolError" xml:space="preserve">
+    <value>プロトコルのエラー</value>
+  </data>
+  <data name="ErrorDescription_BadPassword" xml:space="preserve">
+    <value>悪いパスワード</value>
+  </data>
+  <data name="ErrorDescription_ClientAlreadyRegistered" xml:space="preserve">
+    <value>クライアントは既に登録されています</value>
+  </data>
+  <data name="ErrorDescription_WorkstationAccesDenied" xml:space="preserve">
+    <value>ワークステーションアクセスが拒否されました</value>
+  </data>
+  <data name="ErrorDescription_ClientNotAllowed" xml:space="preserve">
+    <value>クライアントは許可されていません</value>
+  </data>
+  <data name="ErrorDescription_WriteError" xml:space="preserve">
+    <value>書き込み中のエラー</value>
+  </data>
+  <data name="ErrorDescription_ActualizationError" xml:space="preserve">
+    <value>実現中のエラー</value>
+  </data>
+  <data name="ErrorDescription_NoPreviousVersionOfTheRecord" xml:space="preserve">
+    <value>以前のバージョンのレコードはありません</value>
+  </data>
+  <data name="ErrorDescription_FieldIsAbsent" xml:space="preserve">
+    <value>フィールドは欠けている</value>
+  </data>
+  <data name="ErrorDescription_MfnOutsideTheDatabaseRange" xml:space="preserve">
+    <value>MFNがデータベースの範囲外である</value>
+  </data>
+  <data name="ErrorDescription_BadShelfNumber" xml:space="preserve">
+    <value>不良品番</value>
+  </data>
+  <data name="ErrorDescription_BadShelfSize" xml:space="preserve">
+    <value>不正なシェルフサイズ</value>
+  </data>
+  <data name="ErrorDescription_RecordIsLogicallyDeleted" xml:space="preserve">
+    <value>レコードは論理的に削除されます</value>
+  </data>
+  <data name="ErrorDescription_ReadError" xml:space="preserve">
+    <value>読み取り中のエラー</value>
+  </data>
+  <data name="ErrorDescription_RecordIsPhysicallyDeleted" xml:space="preserve">
+    <value>レコードが物理的に削除された</value>
+  </data>
+  <data name="ErrorDescription_ClientNotRegistered" xml:space="preserve">
+    <value>登録されていないクライアント</value>
+  </data>
+  <data name="ErrorDescription_ClientNotInUse" xml:space="preserve">
+    <value>クライアントが入力されていません</value>
+  </data>
+  <data name="ErrorDescription_BadClientIdentifier" xml:space="preserve">
+    <value>不正なクライアント識別子</value>
+  </data>
+  <data name="ErrorDescription_ProcessError" xml:space="preserve">
+    <value>管理者スレッドを開始できません</value>
+  </data>
+  <data name="ErrorDescription_ServerOverloaded" xml:space="preserve">
+    <value>サーバが過負荷になっている</value>
+  </data>
+  <data name="ErrorDescription_AutoinGblError" xml:space="preserve">
+    <value>autoin.gbl処理中のエラー</value>
+  </data>
+  <data name="ErrorDescription_RecordVersionError" xml:space="preserve">
+    <value>レコードバージョンの不一致</value>
+  </data>
+  <data name="ErrorDescription_BackupCreationError" xml:space="preserve">
+    <value>バックアップ作成エラー</value>
+  </data>
+  <data name="ErrorDescription_BackupRestoreError" xml:space="preserve">
+    <value>バックアップの復元エラー</value>
+  </data>
+  <data name="ErrorDescription_SortingError" xml:space="preserve">
+    <value>並べ替え中のエラー</value>
+  </data>
+  <data name="ErrorDescription_BadTerm" xml:space="preserve">
+    <value>悪い言葉</value>
+  </data>
+  <data name="ErrorDescription_DictionaryCreationError" xml:space="preserve">
+    <value>辞書作成エラー</value>
+  </data>
+  <data name="ErrorDescription_ServerExecutionError" xml:space="preserve">
+    <value>サーバー実行エラー</value>
+  </data>
+  <data name="ErrorDescription_GlobalCorrectionParameterError" xml:space="preserve">
+    <value>グローバル補正パラメータエラー</value>
+  </data>
+  <data name="ErrorDescription_DictionaryLoadingError" xml:space="preserve">
+    <value>辞書読み込みエラー</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_REP" xml:space="preserve">
+    <value>グローバル訂正：不良タグ</value>
+  </data>
+  <data name="ErrorDescription_ERR_GBL_MET" xml:space="preserve">
+    <value>グローバル訂正：不良タグ</value>
+  </data>
+  <data name="ErrorDescription_TermNotExist" xml:space="preserve">
+    <value>用語が存在しない</value>
+  </data>
+  <data name="ErrorDescription_LastTerm" xml:space="preserve">
+    <value>リストの最後の単語</value>
+  </data>
+  <data name="ErrorDescription_FirstTerm" xml:space="preserve">
+    <value>リストの最初の用語</value>
   </data>
 </root>

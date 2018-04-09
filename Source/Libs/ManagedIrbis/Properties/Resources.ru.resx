@@ -340,4 +340,25 @@
   <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
     <value>не задан пароль</value>
   </data>
+  <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
+    <value>Не задана база данных</value>
+  </data>
+  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
+    <value>подключение к серверу уже установлено</value>
+  </data>
+  <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
+    <value>не задана база данных</value>
+  </data>
+  <data name="IrbisNetworkUtility_EmptyRecordDetected" xml:space="preserve">
+    <value>обнаружена пустая запись</value>
+  </data>
+  <data name="IrbisNetworkUtility_RecordIsNull" xml:space="preserve">
+    <value>запись отсутствует</value>
+  </data>
+  <data name="WriteRecordsCommand_NoRecordsGiven" xml:space="preserve">
+    <value>записи не заданы</value>
+  </data>
+  <data name="WriteRecordsCommand_TooManyRecords" xml:space="preserve">
+    <value>слишком много записей</value>
+  </data>
 </root>

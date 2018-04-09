@@ -268,7 +268,7 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The client already registered.
+        ///   Looks up a localized string similar to The client is already registered.
         /// </summary>
         internal static string ErrorDescription_ClientAlreadyRegistered {
             get {
@@ -349,7 +349,7 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Field is absent.
+        ///   Looks up a localized string similar to The field is absent.
         /// </summary>
         internal static string ErrorDescription_FieldIsAbsent {
             get {
@@ -385,7 +385,7 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Given MFN outside the database range.
+        ///   Looks up a localized string similar to Given MFN is outside the database range.
         /// </summary>
         internal static string ErrorDescription_GivenMfnOutsideTheDatabaseRange {
             get {
@@ -520,7 +520,7 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ошибка версии записи.
+        ///   Looks up a localized string similar to Record version mismatch.
         /// </summary>
         internal static string ErrorDescription_RecordVersionError {
             get {
