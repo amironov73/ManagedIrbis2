@@ -240,8 +240,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery(context.Connection);
-            query.CommandCode = CommandCode.ReadPostings;
+            ClientQuery query = CreateQuery(context.Connection, CommandCode.ReadPostings);
 
             string database = Database ?? context.Connection.Database;
             if (string.IsNullOrEmpty(database))

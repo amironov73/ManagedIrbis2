@@ -234,7 +234,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         );
                     subCommand._subCommand = true;
 
-                    ClientQuery clientQuery = subCommand.CreateQuery(connection);
+                    ClientQuery clientQuery = subCommand.CreateQuery(connection, CommandCode.Search);
                     ServerResponse subResponse = subCommand.Execute(connection, clientQuery);
                     subCommand.CheckResponse(subResponse);
 
@@ -334,8 +334,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.Search;
+            ClientQuery query = CreateQuery(connection, CommandCode.Search);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

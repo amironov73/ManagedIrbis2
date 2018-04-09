@@ -76,8 +76,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.SaveRecordGroup;
+            ClientQuery query = CreateQuery(connection, CommandCode.SaveRecordGroup);
 
             if (References.Count == 0)
             {

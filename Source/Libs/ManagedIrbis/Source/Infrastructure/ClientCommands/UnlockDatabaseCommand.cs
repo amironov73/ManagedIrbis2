@@ -59,8 +59,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = base.CreateQuery(connection);
-            query.CommandCode = CommandCode.UnlockDatabase;
+            ClientQuery query = base.CreateQuery(connection, CommandCode.UnlockDatabase);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

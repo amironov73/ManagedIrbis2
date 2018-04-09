@@ -50,12 +50,6 @@ namespace ManagedIrbis.Infrastructure
         [CanBeNull]
         public string CommandCode { get; set; }
 
-        ///// <summary>
-        ///// Connection.
-        ///// </summary>
-        //[NotNull]
-        //public IIrbisConnection Connection { get; }
-
         /// <summary>
         /// Код АРМ.
         /// </summary>
@@ -99,14 +93,14 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ClientQuery()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
+        public ClientQuery
+            (
+                [NotNull] string commandCode
+            )
         {
-            //Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            //Connection = connection;
+            CommandCode = commandCode;
             Arguments = new List<object>();
         }
 
@@ -203,8 +197,6 @@ namespace ManagedIrbis.Infrastructure
         public byte[] EncodePacket()
         {
             MemoryStream stream = new MemoryStream();
-            //MemoryStream stream = Connection.Executive
-            //    .GetMemoryStream(GetType());
 
             // Query header: 7 lines
             stream
@@ -240,7 +232,7 @@ namespace ManagedIrbis.Infrastructure
             }
 
             byte[] preResult = stream.ToArray();
-            stream = new MemoryStream(); //-V3114
+            stream = new MemoryStream();
             int length = preResult.Length;
             stream
                 .EncodeInt32(length)
@@ -267,7 +259,11 @@ namespace ManagedIrbis.Infrastructure
                 = new Verifier<ClientQuery>(this, throwOnError);
 
             verifier
-                .NotNullNorEmpty(CommandCode, nameof(CommandCode))
+                .NotNullNorEmpty
+                    (
+                        CommandCode,
+                        nameof(CommandCode)
+                    )
                 .Assert
                     (
                         Workstation != IrbisWorkstation.None,

@@ -59,8 +59,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.SetUserList;
+            ClientQuery query = CreateQuery(connection, CommandCode.SetUserList);
 
             if (ReferenceEquals(UserList, null))
             {

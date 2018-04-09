@@ -78,8 +78,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = base.CreateQuery(connection);
-            query.CommandCode = CommandCode.CreateDatabase;
+            ClientQuery query = base.CreateQuery(connection, CommandCode.CreateDatabase);
 
             // Layout is:
             // NEWDB          // database name

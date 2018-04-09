@@ -183,8 +183,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.FormatRecord;
+            ClientQuery query = CreateQuery(connection, CommandCode.FormatRecord);
 
             string database = Database ?? connection.Database;
             query.Add(database);

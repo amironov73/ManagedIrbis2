@@ -126,8 +126,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.CorrectVirtualRecord;
+            ClientQuery query = CreateQuery(connection, CommandCode.CorrectVirtualRecord);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

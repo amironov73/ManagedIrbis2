@@ -199,11 +199,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query =  CreateQuery(connection);
-            query.CommandCode = ReverseOrder
+            string commandCode = ReverseOrder
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
-
+            ClientQuery query = CreateQuery(connection, commandCode);
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
@@ -216,10 +215,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisException("database not specified");
             }
 
-            string preparedFormat = IrbisFormat.PrepareFormat
-            (
-                Format
-            );
+            string preparedFormat = IrbisFormat.PrepareFormat(Format);
 
             query
                 .AddAnsi(database)

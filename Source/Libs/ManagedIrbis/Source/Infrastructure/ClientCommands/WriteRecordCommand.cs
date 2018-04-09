@@ -91,8 +91,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.UpdateRecord;
+            ClientQuery query = CreateQuery(connection, CommandCode.UpdateRecord);
 
             if (ReferenceEquals(Record, null))
             {

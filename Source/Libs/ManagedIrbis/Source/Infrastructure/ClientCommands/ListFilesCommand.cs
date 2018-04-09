@@ -83,8 +83,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.ListFiles;
+            ClientQuery query = CreateQuery(connection, CommandCode.ListFiles);
 
             if (Specifications.Count == 0)
             {

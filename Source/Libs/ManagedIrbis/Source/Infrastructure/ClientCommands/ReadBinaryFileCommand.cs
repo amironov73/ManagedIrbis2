@@ -125,8 +125,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.ReadDocument;
+            ClientQuery query = CreateQuery(connection, CommandCode.ReadDocument);
 
             if (ReferenceEquals(File, null))
             {

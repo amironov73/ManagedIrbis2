@@ -29,50 +29,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     {
         #region Properties
 
-        ///// <summary>
-        ///// Connection.
-        ///// </summary>
-        //[NotNull]
-        //public IIrbisConnection Connection { get; private set; }
-
-        ///// <summary>
-        ///// Good return codes.
-        ///// </summary>
-        //public virtual int[] GoodReturnCodes => Array.Empty<int>();
-
         /// <summary>
         /// Relax (may be malformed) server response.
         /// </summary>
         public bool RelaxResponse { get; set; }
-
-        ///// <summary>
-        ///// Does the command require established connection?
-        ///// </summary>
-        //public virtual bool RequireConnection => true;
-
-        ///// <summary>
-        ///// Kind of the command.
-        ///// </summary>
-        //public virtual CommandKind Kind => CommandKind.None;
-
-        #endregion
-
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //protected ClientCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //{
-        //    Sure.NotNull(connection, nameof(connection));
-
-        //    Log.Trace(nameof(ClientCommand) + "::Constructor");
-
-        //    Connection = connection;
-        //}
 
         #endregion
 
@@ -110,11 +70,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Create client query.
         /// </summary>
-        public ClientQuery CreateQuery(IIrbisConnection connection)
+        public ClientQuery CreateQuery
+            (
+                [NotNull] IIrbisConnection connection,
+                [NotNull] string commandCode
+            )
         {
+            Sure.NotNull(connection, nameof(connection));
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
+
             Log.Trace(nameof(ClientCommand) + "::" + nameof(CreateQuery));
 
-            ClientQuery result = new ClientQuery
+            ClientQuery result = new ClientQuery(commandCode)
             {
                 Workstation = connection.Workstation,
                 ClientID = connection.ClientID,
@@ -159,7 +126,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 (
                     nameof(ClientCommand) + "::" + nameof(Execute)
                     + ": answer.Length="
-                    + answer.Length
+                    + answer.Length.ToInvariantString()
                 );
 
             ServerResponse result = new ServerResponse

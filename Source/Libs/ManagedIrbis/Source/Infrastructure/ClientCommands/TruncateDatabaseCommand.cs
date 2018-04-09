@@ -59,17 +59,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.EmptyDatabase;
+            ClientQuery query = CreateQuery(connection, CommandCode.EmptyDatabase);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))
             {
                 Log.Error
-                (
-                    "TruncateDatabaseCommand::CreateQuery: "
-                    + "database not specified"
-                );
+                    (
+                        "TruncateDatabaseCommand::CreateQuery: "
+                        + "database not specified"
+                    );
 
                 throw new IrbisException("database not specified");
             }

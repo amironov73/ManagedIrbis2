@@ -62,8 +62,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.GetMaxMfn;
+            ClientQuery query = CreateQuery(connection, CommandCode.GetMaxMfn);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

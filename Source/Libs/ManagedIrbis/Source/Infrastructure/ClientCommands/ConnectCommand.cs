@@ -143,8 +143,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
             }
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.RegisterClient;
+            ClientQuery query = CreateQuery(connection, CommandCode.RegisterClient);
 
             string username = Username ?? connection.Username;
             if (string.IsNullOrEmpty(username))

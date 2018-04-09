@@ -218,8 +218,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.Search;
+            ClientQuery query = CreateQuery(connection, CommandCode.Search);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

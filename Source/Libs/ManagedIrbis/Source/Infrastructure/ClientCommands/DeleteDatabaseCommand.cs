@@ -60,8 +60,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.DeleteDatabase;
+            ClientQuery query = CreateQuery(connection, CommandCode.DeleteDatabase);
 
             string database = Database ?? connection.Database;
             if (string.IsNullOrEmpty(database))

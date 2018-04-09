@@ -148,8 +148,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.UnregisterClient;
+            ClientQuery query = CreateQuery(connection, CommandCode.UnregisterClient);
 
             query.AddAnsi(context.Connection.Username);
 

@@ -47,22 +47,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        ///// <param name="connection"></param>
-        //public ActualizeRecordCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
@@ -73,8 +57,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.ActualizeRecord;
+            ClientQuery query = CreateQuery(connection, CommandCode.ActualizeRecord);
 
             string database = Database ?? context.Connection.Database;
             if (string.IsNullOrEmpty(database))

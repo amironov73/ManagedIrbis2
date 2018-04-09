@@ -57,8 +57,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.GetUserList;
+            ClientQuery query = CreateQuery(connection, CommandCode.GetUserList);
 
             ServerResponse response = Execute(connection, query);
             response.GetReturnCode();

@@ -85,8 +85,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.DatabaseStat;
+            ClientQuery query = CreateQuery(connection, CommandCode.DatabaseStat);
 
             // "2"               STAT
             // "IBIS"            database

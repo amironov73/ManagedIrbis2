@@ -52,8 +52,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             Log.Trace("DisconnectCommand::Execute");
 
-            ClientQuery query = base.CreateQuery(connection);
-            query.CommandCode = CommandCode.UnregisterClient;
+            ClientQuery query = base.CreateQuery(connection, CommandCode.UnregisterClient);
 
             query.AddAnsi(connection.Username);
 

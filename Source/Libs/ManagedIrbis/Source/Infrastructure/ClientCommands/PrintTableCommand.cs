@@ -93,8 +93,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisException("Definition == null");
             }
 
-            ClientQuery query = CreateQuery(connection);
-            query.CommandCode = CommandCode.Print;
+            ClientQuery query = CreateQuery(connection, CommandCode.Print);
 
             // "7"         PRINT
             // "IBIS"      database
