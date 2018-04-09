@@ -37,21 +37,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public CreateDictionaryCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -62,20 +47,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = base.CreateQuery(connection, CommandCode.CreateDictionary);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "CreateDictionaryCommand::CreateQuery: "
-                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
-                    );
-
-                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
-            }
-            query.AddAnsi(database);
+            ClientQuery query = CreateQuery(connection, CommandCode.CreateDictionary);
+            query.AddAnsi(context.GetDatabase(Database));
 
             ServerResponse result = Execute(connection, query);
 

@@ -63,17 +63,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        /// <inheritdoc cref="ClientCommand.CheckResponse"/>
-        public override void CheckResponse
-            (
-                ServerResponse response
-            )
-        {
-            Sure.NotNull(response, nameof(response));
+        ///// <inheritdoc cref="ClientCommand.CheckResponse"/>
+        //public override void CheckResponse
+        //    (
+        //        ServerResponse response
+        //    )
+        //{
+        //    Sure.NotNull(response, nameof(response));
 
-            // Don't check: there's no return code
-            response.RefuseAnReturnCode();
-        }
+        //    // Don't check: there's no return code
+        //    response.RefuseAnReturnCode();
+        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
         public override ServerResponse Execute

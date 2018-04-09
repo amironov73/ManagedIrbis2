@@ -121,6 +121,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
+            string database = context.GetDatabase(Database);
             IIrbisConnection connection = context.Connection;
             ServerResponse result = base.Execute(context);
 
@@ -132,11 +133,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         (
                             Found.ThrowIfNull(nameof(Found))
                         );
-                    Records = connection.ReadRecords
-                        (
-                            Database ?? connection.Database,
-                            mfns
-                        );
+                    Records = connection.ReadRecords(database, mfns);
                 }
                 else
                 {

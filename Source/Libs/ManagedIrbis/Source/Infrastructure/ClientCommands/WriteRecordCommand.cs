@@ -59,21 +59,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public WriteRecordCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region Private members
 
         #endregion
@@ -104,18 +89,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisNetworkException(Resources.IrbisNetworkUtility_RecordIsNull);
             }
 
-            string database = Record.Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                (
-                    "WriteRecordCommand::CreateQuery: "
-                    + Resources.WriteRecordsCommand_DatabaseNotSet
-                );
-
-                throw new IrbisNetworkException(Resources.WriteRecordsCommand_DatabaseNotSet);
-            }
-
+            string database = context.GetDatabase(Record.Database);
             query
                 .Add(database)
                 .Add(Lock)

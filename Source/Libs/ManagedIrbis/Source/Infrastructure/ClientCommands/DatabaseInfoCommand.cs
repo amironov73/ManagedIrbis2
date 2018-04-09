@@ -67,23 +67,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             IIrbisConnection connection = context.Connection;
 
             ClientQuery query = CreateQuery(connection, CommandCode.RecordList);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                (
-                    "DatabaseInfoCommand::CreateQuery: "
-                    + "database not specified"
-                );
-
-                throw new IrbisException("database not specified");
-            }
+            string database = context.GetDatabase(Database);
             query.AddAnsi(database);
 
-            ServerResponse response = base.Execute(connection, query);
+            ServerResponse response = Execute(connection, query);
             Result = DatabaseInfo.ParseServerResponse(response);
-            Result.Name = Database;
+            Result.Name = database;
 
             return response;
         }

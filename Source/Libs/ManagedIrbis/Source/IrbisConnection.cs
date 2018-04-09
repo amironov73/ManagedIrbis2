@@ -430,8 +430,7 @@ namespace ManagedIrbis
 
                 ConnectCommand command = CommandFactory.CreateCommand<ConnectCommand>();
                 ClientContext context = new ClientContext(this);
-                ServerResponse response = command.Execute(context);
-                command.CheckResponse(response);
+                command.Execute(context);
                 _connected = true;
 
                 string iniText = command.Configuration

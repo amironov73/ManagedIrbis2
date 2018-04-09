@@ -29,6 +29,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     {
         #region Properties
 
+        // TODO remove RelaxResponse
+
         /// <summary>
         /// Relax (may be malformed) server response.
         /// </summary>
@@ -41,30 +43,29 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Check the server response.
         /// </summary>
-        public virtual void CheckResponse
+        protected void CheckResponse
             (
-                [NotNull] ServerResponse response
+                [NotNull] ServerResponse response,
+                params int[] goodCodes
             )
         {
-            //Sure.NotNull(response, nameof(response));
+            Sure.NotNull(response, nameof(response));
 
-            //int returnCode = response.ReturnCode;
-            //if (returnCode < 0)
-            //{
-            //    int[] goodCodes = GoodReturnCodes;
+            int returnCode = response.ReturnCode;
+            if (returnCode < 0)
+            {
+                if (!goodCodes.Contains(returnCode))
+                {
+                    Log.Error
+                        (
+                            nameof(ClientCommand) + "::" + nameof(CheckResponse)
+                            + ": code="
+                            + returnCode
+                        );
 
-            //    if (!goodCodes.Contains(returnCode))
-            //    {
-            //        Log.Error
-            //            (
-            //                nameof(ClientCommand) + "::" + nameof(CheckResponse)
-            //                + ": code="
-            //                + returnCode
-            //            );
-
-            //        throw new IrbisException(returnCode);
-            //    }
-            //}
+                    throw new IrbisException(returnCode);
+                }
+            }
         }
 
         /// <summary>

@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
@@ -24,22 +25,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     public class DisconnectCommand
         : ClientCommand
     {
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public DisconnectCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //    Log.Trace("DisconnectCommand::Constructor");
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -60,8 +45,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             Log.Trace
                 (
-                    "DisconnectCommand::Execute: returnCode="
-                    + result.ReturnCode
+                    nameof(DisconnectCommand) + "::" + nameof(Execute)
+                    + ": returnCode="
+                    + result.ReturnCode.ToInvariantString()
                 );
 
             if (connection is IrbisConnection iconnection)
@@ -70,15 +56,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
 
             return result;
-        }
-
-        /// <inheritdoc cref="ClientCommand.CheckResponse" />
-        public override void CheckResponse
-            (
-                ServerResponse response
-            )
-        {
-            // Ignore the result
         }
 
         #endregion

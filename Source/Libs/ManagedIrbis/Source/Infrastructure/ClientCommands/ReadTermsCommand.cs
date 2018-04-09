@@ -117,28 +117,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ReadTermsCommand()
-        //    //(
-        //    //    [NotNull] IIrbisConnection connection
-        //    //)
-        //    //: base(connection)
-        //{
-        //    //_terms = new List<TermInfo>();
-        //}
-
-        #endregion
-
-        #region Private members
-
-        //private readonly List<TermInfo> _terms;
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -203,22 +181,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
             ClientQuery query = CreateQuery(connection, commandCode);
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "ReadTermsCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-
             string preparedFormat = IrbisFormat.PrepareFormat(Format);
-
             query
-                .AddAnsi(database)
+                .AddAnsi(context.GetDatabase(Database))
                 .AddUtf8(StartTerm)
                 .Add(NumberOfTerms)
                 .AddAnsi(preparedFormat);
@@ -226,11 +191,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             ServerResponse result = Execute(connection, query);
             CheckResponse(result);
 
-            // ReSharper disable CoVariantArrayConversion
             Terms = string.IsNullOrEmpty(Format)
                 ? TermInfo.Parse(result)
                 : TermInfoEx.ParseEx(result);
-            // ReSharper restore CoVariantArrayConversion
 
             return result;
         }

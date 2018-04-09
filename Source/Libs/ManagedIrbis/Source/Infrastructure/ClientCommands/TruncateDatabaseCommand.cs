@@ -35,21 +35,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public TruncateDatabaseCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -60,22 +45,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
             ClientQuery query = CreateQuery(connection, CommandCode.EmptyDatabase);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "TruncateDatabaseCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-            query.AddAnsi(database);
+            query.AddAnsi(context.GetDatabase(Database));
 
             ServerResponse result = Execute(connection, query);
-            result.GetReturnCode();
+            CheckResponse(result);
 
             return result;
         }

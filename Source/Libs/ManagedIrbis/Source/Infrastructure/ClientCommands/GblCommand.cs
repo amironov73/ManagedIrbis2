@@ -102,7 +102,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Update index?
         /// </summary>
-        public bool Actualize { get; set; }
+        public bool Actualize { get; set; } = true;
 
         /// <summary>
         /// Apply formal check?
@@ -162,19 +162,19 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public GblCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
-        {
-            Actualize = true;
-            FormalControl = false;
-            AutoIn = false;
-        }
+        ///// <summary>
+        ///// Constructor.
+        ///// </summary>
+        //public GblCommand()
+        //    //(
+        //    //    [NotNull] IIrbisConnection connection
+        //    //)
+        //    //: base(connection)
+        //{
+        //    Actualize = true;
+        //    FormalControl = false;
+        //    AutoIn = false;
+        //}
 
         /// <summary>
         /// Constructor.
@@ -223,20 +223,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             IIrbisConnection connection = context.Connection;
 
             ClientQuery query = base.CreateQuery(connection, CommandCode.GlobalCorrection);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "GblCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-            query.AddAnsi(database);
-
+            query.AddAnsi(context.GetDatabase(Database));
             query.Add(Actualize);
 
             if (!string.IsNullOrEmpty(FileName))
@@ -248,15 +235,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             {
                 string statements = GblUtility.EncodeStatements
                     (
-                        Statements.ThrowIfNull("Statements")
+                        Statements.ThrowIfNull(nameof(Statements))
                     );
                 query.AddUtf8(statements);
             }
 
-            string preparedSearch = IrbisSearchQuery.PrepareQuery
-                (
-                    SearchExpression
-                );
+            string preparedSearch = IrbisSearchQuery.PrepareQuery(SearchExpression);
             query.AddUtf8(preparedSearch);
 
             query.Add(FirstRecord);

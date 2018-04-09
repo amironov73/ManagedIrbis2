@@ -61,19 +61,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             IIrbisConnection connection = context.Connection;
 
             ClientQuery query = CreateQuery(connection, CommandCode.DeleteDatabase);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "DeleteDatabaseCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-            query.AddAnsi(database);
+            query.AddAnsi(context.GetDatabase(Database));
 
             ServerResponse result = Execute(connection, query);
 

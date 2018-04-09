@@ -9,12 +9,7 @@
 
 #region Using directives
 
-using AM;
-using AM.Logging;
-
 using JetBrains.Annotations;
-
-using ManagedIrbis.Properties;
 
 #endregion
 
@@ -37,21 +32,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public MaxMfnCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -63,21 +43,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             IIrbisConnection connection = context.Connection;
 
             ClientQuery query = CreateQuery(connection, CommandCode.GetMaxMfn);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "MaxMfnCommand::CreateQuery: "
-                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
-                    );
-
-                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
-            }
-            query.AddAnsi(database);
+            query.AddAnsi(context.GetDatabase(Database));
 
             ServerResponse result = Execute(connection, query);
+            CheckResponse(result);
 
             return result;
         }

@@ -136,13 +136,13 @@
   <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
     <value>データベースが指定されていない</value>
   </data>
-  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+  <data name="PasswordNotSpecified" xml:space="preserve">
     <value>パスワードが指定されていない</value>
   </data>
-  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+  <data name="UsernameNotSpecified" xml:space="preserve">
     <value>ユーザー名が指定されていません</value>
   </data>
-  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
+  <data name="AlreadyConnected" xml:space="preserve">
     <value>すでに接続されている</value>
   </data>
   <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">

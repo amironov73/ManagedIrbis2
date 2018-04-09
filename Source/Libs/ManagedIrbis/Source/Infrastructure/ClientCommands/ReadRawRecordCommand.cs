@@ -86,17 +86,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.ReadRecord);
-
-            string database = Database ?? connection.Database;
-
-            if (string.IsNullOrEmpty(database))
-            {
-                throw new IrbisNetworkException("database not specified");
-            }
-
-            query.Arguments.Add(database);
+            query.Arguments.Add(context.GetDatabase(Database));
             query.Arguments.Add(Mfn);
             if (VersionNumber != 0)
             {

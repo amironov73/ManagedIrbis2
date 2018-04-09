@@ -33,13 +33,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Throw <see cref="IrbisNetworkException"/>
         /// when empty record received/decoded.
         /// </summary>
-        public static bool ThrowOnEmptyRecord { get; set; }
+        public static bool ThrowOnEmptyRecord { get; set; } = true;
 
         /// <summary>
         /// Throw <see cref="VerificationException"/>
         /// when bad record received/decoded.
         /// </summary>
-        public static bool ThrowOnVerify { get; set; }
+        public static bool ThrowOnVerify { get; set; } = true;
 
         /// <summary>
         /// Database name.
@@ -76,30 +76,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        /// <summary>
-        /// Static constructor.
-        /// </summary>
-        static ReadRecordCommand()
-        {
-            ThrowOnEmptyRecord = true;
-            ThrowOnVerify = true;
-        }
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ReadRecordCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -109,23 +85,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.ReadRecord);
-
-            string database = Database ?? connection.Database;
-
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                (
-                    "ReadRecordCommand::CreateQuery: "
-                    + "database not specified"
-                );
-
-                throw new IrbisNetworkException("database not specified");
-            }
-
-            query.Arguments.Add(database);
+            query.Arguments.Add(context.GetDatabase(Database));
             query.Arguments.Add(Mfn);
             if (VersionNumber != 0)
             {

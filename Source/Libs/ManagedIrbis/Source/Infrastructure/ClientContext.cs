@@ -12,10 +12,11 @@
 using System;
 
 using AM;
-
+using AM.Logging;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure.ClientCommands;
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -98,6 +99,99 @@ namespace ManagedIrbis.Infrastructure
             Sure.NotNull(connection, nameof(connection));
 
             Connection = connection;
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Whether the connection already established.
+        /// </summary>
+        public void CheckAlreadyConnected()
+        {
+            if (Connection.Connected)
+            {
+                Log.Error
+                    (
+                        nameof(ClientContext) + "::" + nameof(CheckAlreadyConnected)
+                        + ": " + Resources.AlreadyConnected
+                    );
+
+                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
+            }
+        }
+
+        /// <summary>
+        /// Get database setting for the context.
+        /// </summary>
+        [NotNull]
+        public string GetDatabase
+            (
+                [CanBeNull] string database
+            )
+        {
+            string result = database.IfEmpty(Connection.Database);
+            if (ReferenceEquals(result, null) || result.Length == 0)
+            {
+                Log.Error
+                    (
+                        nameof(ClientContext) + "::" + nameof(GetDatabase)
+                        + ": " + Resources.DatabaseNotSet
+                    );
+
+                throw new IrbisException(Resources.DatabaseNotSet);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get database setting for the context.
+        /// </summary>
+        [NotNull]
+        public string GetUsername
+            (
+                [CanBeNull] string username
+            )
+        {
+            string result = username.IfEmpty(Connection.Username);
+            if (ReferenceEquals(result, null) || result.Length == 0)
+            {
+                Log.Error
+                    (
+                        nameof(ClientContext) + "::" + nameof(GetUsername)
+                        + ": " + Resources.UsernameNotSpecified
+                    );
+
+                throw new IrbisException(Resources.UsernameNotSpecified);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get password setting for the context.
+        /// </summary>
+        [NotNull]
+        public string GetPassword
+            (
+                [CanBeNull] string password
+            )
+        {
+            string result = password.IfEmpty(Connection.Password);
+            if (ReferenceEquals(result, null) || result.Length == 0)
+            {
+                Log.Error
+                    (
+                        nameof(ClientContext) + "::" + nameof(GetPassword)
+                        + ": " + Resources.UsernameNotSpecified
+                    );
+
+                throw new IrbisException(Resources.PasswordNotSpecified);
+            }
+
+            return result;
         }
 
         #endregion

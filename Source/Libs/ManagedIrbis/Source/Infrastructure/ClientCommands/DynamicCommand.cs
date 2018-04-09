@@ -76,16 +76,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //    return result;
         //}
 
-        /// <summary>
-        /// Basic implementation of <see cref="CheckResponse"/>.
-        /// </summary>
-        public void BaseCheckResponse
-            (
-                ServerResponse response
-            )
-        {
-            base.CheckResponse(response);
-        }
+        ///// <summary>
+        ///// Basic implementation of <see cref="CheckResponse"/>.
+        ///// </summary>
+        //public void BaseCheckResponse
+        //    (
+        //        ServerResponse response
+        //    )
+        //{
+        //    base.CheckResponse(response);
+        //}
 
         /// <summary>
         /// Basic implementation of <see cref="Execute"/>.
@@ -120,23 +120,23 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //    }
         //}
 
-        /// <inheritdoc cref="ClientCommand.CheckResponse" />
-        public override void CheckResponse
-            (
-                ServerResponse response
-            )
-        {
-            Action<DynamicCommand, ServerResponse> handler = CheckResponseHandler;
+        ///// <inheritdoc cref="ClientCommand.CheckResponse" />
+        //public override void CheckResponse
+        //    (
+        //        ServerResponse response
+        //    )
+        //{
+        //    Action<DynamicCommand, ServerResponse> handler = CheckResponseHandler;
 
-            if (!ReferenceEquals(handler, null))
-            {
-                handler(this, response);
-            }
-            else
-            {
-                BaseCheckResponse(response);
-            }
-        }
+        //    if (!ReferenceEquals(handler, null))
+        //    {
+        //        handler(this, response);
+        //    }
+        //    else
+        //    {
+        //        BaseCheckResponse(response);
+        //    }
+        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
         public override ServerResponse Execute

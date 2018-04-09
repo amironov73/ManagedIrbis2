@@ -88,6 +88,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Already connected.
+        /// </summary>
+        internal static string AlreadyConnected {
+            get {
+                return ResourceManager.GetString("AlreadyConnected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : empty record detected.
         /// </summary>
         internal static string BatchAccessor_EmptyRecordDetected {
@@ -129,33 +138,6 @@ namespace ManagedIrbis.Properties {
         internal static string CantResolveHost {
             get {
                 return ResourceManager.GetString("CantResolveHost", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to already connected.
-        /// </summary>
-        internal static string ConnectCommand_Execute_AlreadyConnected {
-            get {
-                return ResourceManager.GetString("ConnectCommand_Execute_AlreadyConnected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to password not specified.
-        /// </summary>
-        internal static string ConnectCommand_PasswordNotSpecified {
-            get {
-                return ResourceManager.GetString("ConnectCommand_PasswordNotSpecified", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to username not specified.
-        /// </summary>
-        internal static string ConnectCommand_UsernameNotSpecified {
-            get {
-                return ResourceManager.GetString("ConnectCommand_UsernameNotSpecified", resourceCulture);
             }
         }
         
@@ -718,6 +700,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to password not specified.
+        /// </summary>
+        internal static string PasswordNotSpecified {
+            get {
+                return ResourceManager.GetString("PasswordNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : can&apos;t find type: .
         /// </summary>
         internal static string ProviderManager_CanTFindType {
@@ -804,6 +795,15 @@ namespace ManagedIrbis.Properties {
         internal static string SmartRead_Readed {
             get {
                 return ResourceManager.GetString("SmartRead_Readed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to username not specified.
+        /// </summary>
+        internal static string UsernameNotSpecified {
+            get {
+                return ResourceManager.GetString("UsernameNotSpecified", resourceCulture);
             }
         }
         

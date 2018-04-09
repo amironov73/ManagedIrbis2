@@ -331,20 +331,17 @@
   <data name="IrbisConnection_ResultRecordIsNull" xml:space="preserve">
     <value>результирующая запись пуста</value>
   </data>
-  <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
+  <data name="AlreadyConnected" xml:space="preserve">
     <value>Уже установлено подключение к серверу</value>
   </data>
-  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+  <data name="UsernameNotSpecified" xml:space="preserve">
     <value>не задано имя пользователя</value>
   </data>
-  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+  <data name="PasswordNotSpecified" xml:space="preserve">
     <value>не задан пароль</value>
   </data>
   <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
     <value>Не задана база данных</value>
-  </data>
-  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
-    <value>подключение к серверу уже установлено</value>
   </data>
   <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
     <value>не задана база данных</value>

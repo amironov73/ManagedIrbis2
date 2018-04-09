@@ -77,7 +77,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// List of MFNs to format.
         /// </summary>
         [NotNull]
-        public List<int> MfnList { get; private set; }
+        public List<int> MfnList { get; } = new List<int>();
 
         /// <summary>
         /// Virtual record to format.
@@ -95,22 +95,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         [CanBeNull]
         public string[] FormatResult { get; set; }
-
-        #endregion
-
-        #region Construction
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public FormatCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
-        {
-            MfnList = new List<int>();
-        }
 
         #endregion
 
@@ -185,8 +169,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             ClientQuery query = CreateQuery(connection, CommandCode.FormatRecord);
 
-            string database = Database ?? connection.Database;
-            query.Add(database);
+            query.Add(context.GetDatabase(Database));
 
             string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
 

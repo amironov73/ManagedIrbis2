@@ -80,19 +80,19 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        /// <summary>
-        /// Check the server response.
-        /// </summary>
-        public override void CheckResponse
-            (
-                ServerResponse response
-            )
-        {
-            if (!AcceptAnyResponse)
-            {
-                base.CheckResponse(response);
-            }
-        }
+        ///// <summary>
+        ///// Check the server response.
+        ///// </summary>
+        //public override void CheckResponse
+        //    (
+        //        ServerResponse response
+        //    )
+        //{
+        //    if (!AcceptAnyResponse)
+        //    {
+        //        base.CheckResponse(response);
+        //    }
+        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
         public override ServerResponse Execute

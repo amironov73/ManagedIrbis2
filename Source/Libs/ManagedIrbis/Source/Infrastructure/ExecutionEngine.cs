@@ -213,7 +213,7 @@ namespace ManagedIrbis.Infrastructure
                     ClientContext clientContext = new ClientContext(Connection);
                     result = command.Execute(clientContext);
 
-                    command.CheckResponse(result);
+                    // command.CheckResponse(result);
                 }
                 catch (Exception exception)
                 {

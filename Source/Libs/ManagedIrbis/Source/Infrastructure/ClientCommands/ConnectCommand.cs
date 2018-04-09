@@ -96,30 +96,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ConnectCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //    Log.Trace("ConnectCommand::Constructor");
-
-        //    // TODO fix it!
-        //    IrbisConnection nativeConnection = connection as IrbisConnection;
-        //    if (!ReferenceEquals(nativeConnection, null))
-        //    {
-        //        nativeConnection.GenerateClientId();
-        //        nativeConnection.ResetCommandNumber();
-        //    }
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -130,50 +106,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             Log.Trace(nameof(ConnectCommand) + "::" + nameof(Execute));
 
+            context.CheckAlreadyConnected();
+
             IIrbisConnection connection = context.Connection;
-
-            if (connection.Connected)
-            {
-                Log.Error
-                    (
-                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
-                        + Resources.ConnectCommand_Execute_AlreadyConnected
-                    );
-
-                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
-            }
-
             ClientQuery query = CreateQuery(connection, CommandCode.RegisterClient);
-
-            string username = Username ?? connection.Username;
-            if (string.IsNullOrEmpty(username))
-            {
-                Log.Error
-                    (
-                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
-                        + Resources.ConnectCommand_UsernameNotSpecified
-                    );
-
-                throw new IrbisException(Resources.ConnectCommand_UsernameNotSpecified);
-            }
-
-            string password = Password ?? connection.Password;
-            if (string.IsNullOrEmpty(password))
-            {
-                Log.Error
-                    (
-                        nameof(ConnectCommand) + "::" + nameof(Execute) + ": "
-                        + Resources.ConnectCommand_PasswordNotSpecified
-                    );
-
-                throw new IrbisException(Resources.ConnectCommand_PasswordNotSpecified);
-            }
-
-            query.UserLogin = username;
-            query.UserPassword = password;
-
-            query.Arguments.Add(username);
-            query.Arguments.Add(password);
+            query.UserLogin = context.GetUsername(Username);
+            query.UserPassword = context.GetPassword(Password);
+            query.Arguments.Add(query.UserLogin);
+            query.Arguments.Add(query.UserPassword);
 
             ServerResponse result;
 

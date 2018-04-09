@@ -334,14 +334,14 @@
   <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
     <value>Already connected</value>
   </data>
-  <data name="ConnectCommand_UsernameNotSpecified" xml:space="preserve">
+  <data name="UsernameNotSpecified" xml:space="preserve">
     <value>username not specified</value>
   </data>
-  <data name="ConnectCommand_PasswordNotSpecified" xml:space="preserve">
+  <data name="PasswordNotSpecified" xml:space="preserve">
     <value>password not specified</value>
   </data>
-  <data name="ConnectCommand_Execute_AlreadyConnected" xml:space="preserve">
-    <value>already connected</value>
+  <data name="AlreadyConnected" xml:space="preserve">
+    <value>Already connected</value>
   </data>
   <data name="IrbisNetworkUtility_DatabaseNotSpecified" xml:space="preserve">
     <value>database not specified</value>

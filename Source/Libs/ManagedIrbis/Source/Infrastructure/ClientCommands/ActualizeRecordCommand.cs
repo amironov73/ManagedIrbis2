@@ -59,19 +59,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             ClientQuery query = CreateQuery(connection, CommandCode.ActualizeRecord);
 
-            string database = Database ?? context.Connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "ActualizeRecordCommand::CreateQuery: "
-                        + Resources.IrbisNetworkUtility_DatabaseNotSpecified
-                    );
-
-                throw new IrbisException(Resources.IrbisNetworkUtility_DatabaseNotSpecified);
-            }
-
-            query.AddAnsi(database);
+            query.AddAnsi(context.GetDatabase(Database));
             query.Add(Mfn);
 
             ServerResponse result = Execute(connection, query);

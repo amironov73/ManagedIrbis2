@@ -35,21 +35,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public UnlockDatabaseCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -59,23 +44,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = base.CreateQuery(connection, CommandCode.UnlockDatabase);
+            ClientQuery query = CreateQuery(connection, CommandCode.UnlockDatabase);
+            query.AddAnsi(context.GetDatabase(Database));
 
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "UnlockDatabaseCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-            query.AddAnsi(database);
-
-            ServerResponse result = base.Execute(connection, query);
-            result.GetReturnCode();
+            ServerResponse result = Execute(connection, query);
+            CheckResponse(result);
 
             return result;
         }

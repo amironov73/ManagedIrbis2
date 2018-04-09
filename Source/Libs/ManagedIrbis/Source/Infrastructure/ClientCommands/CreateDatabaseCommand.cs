@@ -53,21 +53,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public CreateDatabaseCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -78,7 +63,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            ClientQuery query = base.CreateQuery(connection, CommandCode.CreateDatabase);
+            ClientQuery query = CreateQuery(connection, CommandCode.CreateDatabase);
 
             // Layout is:
             // NEWDB          // database name
@@ -86,7 +71,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             // 0              // reader access
 
             query
-                .Add(Database)
+                .Add(context.GetDatabase(Database))
                 .Add(Description)
                 .Add(ReaderAccess);
 
