@@ -202,12 +202,14 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
+            UniversalCommand command = new UniversalCommand
                 (
                     commandCode,
                     arguments
-                );
-            command.AcceptAnyResponse = true;
+                )
+            {
+                AcceptAnyResponse = true
+            };
 
             ServerResponse result = connection.ExecuteCommand(command);
 
@@ -234,8 +236,7 @@ namespace ManagedIrbis
                 parameters.FormatSpecification = IrbisFormat.All;
             }
 
-            SearchReadCommand command = connection.CommandFactory
-                .CreateCommand<SearchReadCommand>();
+            SearchReadCommand command = new SearchReadCommand();
             command.ApplyParameters(parameters);
 
             connection.ExecuteCommand(command);
@@ -299,11 +300,12 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.Positive(mfn, nameof(mfn));
 
-            FormatCommand command = connection.CommandFactory
-                .CreateCommand<FormatCommand>();
-            command.Database = database;
-            command.FormatSpecification = format;
-            command.UtfFormat = true;
+            FormatCommand command = new FormatCommand
+            {
+                Database = database,
+                FormatSpecification = format,
+                UtfFormat = true
+            };
             command.MfnList.Add(mfn);
 
             connection.ExecuteCommand(command);
@@ -331,10 +333,11 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.Positive(mfn, nameof(mfn));
 
-            FormatCommand command = connection.CommandFactory
-                    .CreateCommand<FormatCommand>();
-            command.FormatSpecification = format;
-            command.UtfFormat = true;
+            FormatCommand command = new FormatCommand
+            {
+                FormatSpecification = format,
+                UtfFormat = true
+            };
             command.MfnList.Add(mfn);
 
             connection.ExecuteCommand(command);
@@ -360,11 +363,12 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.NotNull(record, nameof(record));
 
-            FormatCommand command = connection.CommandFactory
-                    .CreateCommand<FormatCommand>();
-            command.FormatSpecification = format;
-            command.UtfFormat = true;
-            command.VirtualRecord = record;
+            FormatCommand command = new FormatCommand
+            {
+                FormatSpecification = format,
+                UtfFormat = true,
+                VirtualRecord = record
+            };
 
             connection.ExecuteCommand(command);
 
@@ -393,11 +397,12 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNull(format, nameof(format));
 
-            FormatCommand command = connection.CommandFactory
-                    .CreateCommand<FormatCommand>();
-            command.Database = database;
-            command.FormatSpecification = format;
-            command.UtfFormat = true;
+            FormatCommand command = new FormatCommand
+            {
+                Database = database,
+                FormatSpecification = format,
+                UtfFormat = true
+            };
             command.MfnList.AddRange(mfnList);
 
             if (command.MfnList.Count == 0)
@@ -785,10 +790,11 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            ReadRawRecordCommand command = connection.CommandFactory
-                    .CreateCommand<ReadRawRecordCommand>();
-            command.Database = database;
-            command.Mfn = mfn;
+            ReadRawRecordCommand command = new ReadRawRecordCommand
+            {
+                Database = database,
+                Mfn = mfn
+            };
 
             connection.ExecuteCommand(command);
 
@@ -813,12 +819,13 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            ReadRawRecordCommand command = connection.CommandFactory
-                .CreateCommand<ReadRawRecordCommand>();
-            command.Database = database;
-            command.Mfn = mfn;
-            command.Lock = lockFlag;
-            command.Format = format;
+            ReadRawRecordCommand command = new ReadRawRecordCommand
+            {
+                Database = database,
+                Mfn = mfn,
+                Lock = lockFlag,
+                Format = format
+            };
 
             connection.ExecuteCommand(command);
 
@@ -843,12 +850,13 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(database, nameof(database));
 
-            ReadRawRecordCommand command = connection.CommandFactory
-                    .CreateCommand<ReadRawRecordCommand>();
-            command.Database = database;
-            command.Mfn = mfn;
-            command.VersionNumber = version;
-            command.Format = format;
+            ReadRawRecordCommand command = new ReadRawRecordCommand
+            {
+                Database = database,
+                Mfn = mfn,
+                VersionNumber = version,
+                Format = format
+            };
 
             connection.ExecuteCommand(command);
 
@@ -903,12 +911,14 @@ namespace ManagedIrbis
                 arguments.Add(mfn);
             }
 
-            UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
-                    (
-                        CommandCode.FormatRecord,
-                        arguments.ToArray()
-                    );
-            command.AcceptAnyResponse = true;
+            UniversalCommand command = new UniversalCommand
+                (
+                    CommandCode.FormatRecord,
+                    arguments.ToArray()
+                )
+            {
+                AcceptAnyResponse = true
+            };
 
             ServerResponse response = connection.ExecuteCommand(command);
 
@@ -1212,11 +1222,12 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
 
-            SearchCommand command = connection.CommandFactory
-                    .CreateCommand<SearchCommand>();
-            command.Database = connection.Database;
-            command.SearchExpression = searchExpression;
-            command.FirstRecord = 0;
+            SearchCommand command = new SearchCommand
+            {
+                Database = connection.Database,
+                SearchExpression = searchExpression,
+                FirstRecord = 0
+            };
 
             connection.ExecuteCommand(command);
 
@@ -1244,11 +1255,12 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
             Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
-            SearchCommand command = connection.CommandFactory
-                .CreateCommand<SearchCommand>();
-            command.Database = connection.Database;
-            command.SearchExpression = searchExpression;
-            command.FormatSpecification = formatSpecification;
+            SearchCommand command = new SearchCommand
+            {
+                Database = connection.Database,
+                SearchExpression = searchExpression,
+                FormatSpecification = formatSpecification
+            };
 
             connection.ExecuteCommand(command);
 
@@ -1276,12 +1288,13 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(searchExpression, nameof(searchExpression));
             Sure.NotNullNorEmpty(formatSpecification, nameof(formatSpecification));
 
-            SearchCommand command = connection.CommandFactory
-                .CreateCommand<SearchCommand>();
-            command.Database = connection.Database;
-            command.SearchExpression = searchExpression;
-            command.FormatSpecification = formatSpecification;
-            command.UtfFormat = true;
+            SearchCommand command = new SearchCommand
+            {
+                Database = connection.Database,
+                SearchExpression = searchExpression,
+                FormatSpecification = formatSpecification,
+                UtfFormat = true
+            };
 
             connection.ExecuteCommand(command);
 
@@ -1307,8 +1320,7 @@ namespace ManagedIrbis
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNull(parameters, nameof(parameters));
 
-            SearchRawCommand command = connection.CommandFactory
-                .CreateCommand<SearchRawCommand>();
+            SearchRawCommand command = new SearchRawCommand();
             command.ApplyParameters(parameters);
 
             connection.ExecuteCommand(command);
@@ -1338,10 +1350,11 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(format, nameof(format));
 
             string expression = string.Format(format, args);
-            SearchReadCommand command = connection.CommandFactory
-                .CreateCommand<SearchReadCommand>();
-            command.Database = connection.Database;
-            command.SearchExpression = expression;
+            SearchReadCommand command = new SearchReadCommand
+            {
+                Database = connection.Database,
+                SearchExpression = expression
+            };
 
             connection.ExecuteCommand(command);
 
@@ -1368,11 +1381,12 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(format, nameof(format));
 
             string expression = string.Format(format, args);
-            SearchReadCommand command = connection.CommandFactory
-                .CreateCommand<SearchReadCommand>();
-            command.Database = connection.Database;
-            command.SearchExpression = expression;
-            command.NumberOfRecords = 1;
+            SearchReadCommand command = new SearchReadCommand
+            {
+                Database = connection.Database,
+                SearchExpression = expression,
+                NumberOfRecords = 1
+            };
 
             connection.ExecuteCommand(command);
 
@@ -1407,24 +1421,26 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(expression, nameof(expression));
             Sure.NotNullNorEmpty(sequential, nameof(sequential));
 
-            UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
-                (
-                    CommandCode.Search,
-                    database,
-                    new TextWithEncoding(expression, IrbisEncoding.Utf8),
-                    numberOfRecords,
-                    firstRecord,
-                    new TextWithEncoding(format, IrbisEncoding.Ansi),
-                    minMfn,
-                    maxMfn,
-                    new TextWithEncoding(sequential, IrbisEncoding.Utf8)
-                );
+            throw new NotImplementedException();
 
-            ServerResponse response = connection.ExecuteCommand(command);
+            //UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
+            //    (
+            //        CommandCode.Search,
+            //        database,
+            //        new TextWithEncoding(expression, IrbisEncoding.Utf8),
+            //        numberOfRecords,
+            //        firstRecord,
+            //        new TextWithEncoding(format, IrbisEncoding.Ansi),
+            //        minMfn,
+            //        maxMfn,
+            //        new TextWithEncoding(sequential, IrbisEncoding.Utf8)
+            //    );
 
-            List<string> result = response.RemainingUtfStrings();
+            //ServerResponse response = connection.ExecuteCommand(command);
 
-            return result.ToArray();
+            //List<string> result = response.RemainingUtfStrings();
+
+            //return result.ToArray();
         }
 
         // ========================================================
@@ -1531,23 +1547,25 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNullNorEmpty(record, nameof(record));
 
-            UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
-                (
-                    CommandCode.UpdateRecord,
-                    database,
-                    lockFlag,
-                    actualize,
-                    new TextWithEncoding
-                        (
-                            record,
-                            IrbisEncoding.Utf8
-                        )
-                );
-            ServerResponse response = connection.ExecuteCommand(command);
+            throw new NotImplementedException();
 
-            string result = response.RemainingUtfText();
+            //UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
+            //    (
+            //        CommandCode.UpdateRecord,
+            //        database,
+            //        lockFlag,
+            //        actualize,
+            //        new TextWithEncoding
+            //            (
+            //                record,
+            //                IrbisEncoding.Utf8
+            //            )
+            //    );
+            //ServerResponse response = connection.ExecuteCommand(command);
 
-            return result;
+            //string result = response.RemainingUtfText();
+
+            //return result;
         }
 
         // ========================================================
@@ -1569,45 +1587,47 @@ namespace ManagedIrbis
             Sure.NotNullNorEmpty(database, nameof(database));
             Sure.NotNull(records, nameof(records));
 
-            if (records.Length == 0)
-            {
-                return StringUtility.EmptyArray;
-            }
+            throw new NotImplementedException();
 
-            List<object> arguments = new List<object>
-                (
-                    records.Length + 2
-                )
-            {
-                lockFlag,
-                actualize
-            };
-            foreach (string record in records)
-            {
-                string reference = database
-                    + IrbisText.IrbisDelimiter
-                    + record;
-                arguments.Add
-                    (
-                        new TextWithEncoding
-                            (
-                                reference,
-                                IrbisEncoding.Utf8
-                            )
-                    );
-            }
+            //if (records.Length == 0)
+            //{
+            //    return StringUtility.EmptyArray;
+            //}
 
-            UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
-                (
-                    CommandCode.SaveRecordGroup,
-                    arguments.ToArray()
-                );
+            //List<object> arguments = new List<object>
+            //    (
+            //        records.Length + 2
+            //    )
+            //{
+            //    lockFlag,
+            //    actualize
+            //};
+            //foreach (string record in records)
+            //{
+            //    string reference = database
+            //        + IrbisText.IrbisDelimiter
+            //        + record;
+            //    arguments.Add
+            //        (
+            //            new TextWithEncoding
+            //                (
+            //                    reference,
+            //                    IrbisEncoding.Utf8
+            //                )
+            //        );
+            //}
 
-            ServerResponse response = connection.ExecuteCommand(command);
+            //UniversalCommand command = connection.CommandFactory.CreateUniversalCommand
+            //    (
+            //        CommandCode.SaveRecordGroup,
+            //        arguments.ToArray()
+            //    );
 
-            List<string> result = response.RemainingUtfStrings();
+            //ServerResponse response = connection.ExecuteCommand(command);
 
-            return result.ToArray();
+            //List<string> result = response.RemainingUtfStrings();
+
+            //return result.ToArray();
         }
 
         // ========================================================

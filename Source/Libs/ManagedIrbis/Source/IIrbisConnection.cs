@@ -101,11 +101,6 @@ namespace ManagedIrbis
         ExecutionEngine Executive { get; }
 
         /// <summary>
-        /// Command factory.
-        /// </summary>
-        CommandFactory CommandFactory { get; }
-
-        /// <summary>
         /// Remote INI-file for the client.
         /// </summary>
         IniFile IniFile { get; }
@@ -519,26 +514,6 @@ namespace ManagedIrbis
         int[] SequentialSearch
             (
                 [NotNull] SearchParameters parameters
-            );
-
-        /// <summary>
-        /// Set new <see cref="IrbisConnection.CommandFactory"/>.
-        /// </summary>
-        /// <returns>Previous <see cref="IrbisConnection.CommandFactory"/>.
-        /// </returns>
-        CommandFactory SetCommandFactory
-            (
-                [NotNull] CommandFactory newFactory
-            );
-
-        /// <summary>
-        /// Set new <see cref="IrbisConnection.CommandFactory"/>.
-        /// </summary>
-        /// <returns>Previous <see cref="IrbisConnection.CommandFactory"/>.
-        /// </returns>
-        CommandFactory SetCommandFactory
-            (
-                [NotNull] string typeName
             );
 
         /// <summary>

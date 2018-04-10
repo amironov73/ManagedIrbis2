@@ -146,14 +146,6 @@ namespace ManagedIrbis
         public string SocketTypeName { get; set; }
 
         /// <summary>
-        /// Type name for CommandFactory.
-        /// </summary>
-        [CanBeNull]
-        [XmlAttribute("factory")]
-        [JsonProperty("factory")]
-        public string FactoryTypeName { get; set; }
-
-        /// <summary>
         /// Type name for execution engine.
         /// </summary>
         [CanBeNull]
@@ -317,11 +309,6 @@ namespace ManagedIrbis
                 connection.SetNetworkLogging(NetworkLogging);
             }
 
-            if (!ReferenceEquals(FactoryTypeName, null) && FactoryTypeName.Length != 0)
-            {
-                connection.SetCommandFactory(FactoryTypeName);
-            }
-
             if (!string.IsNullOrEmpty(Smart))
             {
                 SmartClientSocket smartSocket = new SmartClientSocket(connection);
@@ -429,7 +416,6 @@ namespace ManagedIrbis
                 );
             _Add(parameters, "socket", SocketTypeName);
             _Add(parameters, "engine", EngineTypeName);
-            _Add(parameters, "factory", FactoryTypeName);
             _Add(parameters, "log", NetworkLogging);
             _Add
                 (
@@ -504,12 +490,6 @@ namespace ManagedIrbis
                 )
             {
                 result.SocketTypeName = connection.Socket
-                    .GetType().AssemblyQualifiedName;
-            }
-
-            if (connection.CommandFactory.GetType() != typeof(CommandFactory))
-            {
-                result.FactoryTypeName = connection.CommandFactory
                     .GetType().AssemblyQualifiedName;
             }
 
@@ -628,10 +608,6 @@ namespace ManagedIrbis
                         EngineTypeName = value;
                         break;
 
-                    case "factory":
-                        FactoryTypeName = value;
-                        break;
-
                     case "log":
                         NetworkLogging = value;
                         break;
@@ -705,7 +681,6 @@ namespace ManagedIrbis
             Workstation = (IrbisWorkstation)reader.ReadPackedInt32();
             NetworkLogging = reader.ReadNullableString();
             SocketTypeName = reader.ReadNullableString();
-            FactoryTypeName = reader.ReadNullableString();
             EngineTypeName = reader.ReadNullableString();
             RetryLimit = reader.ReadPackedInt32();
             WebCgi = reader.ReadNullableString();
@@ -733,7 +708,6 @@ namespace ManagedIrbis
                 .WritePackedInt32((int)Workstation)
                 .WriteNullable(NetworkLogging)
                 .WriteNullable(SocketTypeName)
-                .WriteNullable(FactoryTypeName)
                 .WriteNullable(EngineTypeName)
                 .WritePackedInt32(RetryLimit)
                 .WriteNullable(WebCgi)

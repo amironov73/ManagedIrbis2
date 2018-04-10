@@ -45,18 +45,6 @@ namespace UnitTests.ManagedIrbis
         }
     }
 
-    class MyFactory
-        : CommandFactory
-    {
-        public MyFactory
-            (
-                [NotNull] IrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
-    }
-
     [TestClass]
     public class ConnectionSettingsTest
     {
@@ -450,27 +438,6 @@ namespace UnitTests.ManagedIrbis
         }
 
         [TestMethod]
-        public void ConnectionSettings_FactoryTypeName_1()
-        {
-            string connectionString = string.Format
-                (
-                    "factory={0};",
-                    typeof(MyFactory).AssemblyQualifiedName
-            );
-
-            ConnectionSettings settings = new ConnectionSettings()
-                .ParseConnectionString(connectionString);
-            IrbisConnection connection = new IrbisConnection();
-            settings.ApplyToConnection(connection);
-
-            Assert.AreEqual
-                (
-                    typeof(MyFactory),
-                    connection.CommandFactory.GetType()
-                );
-        }
-
-        [TestMethod]
         public void ConnectionSettings_UserData_1()
         {
             string connectionString = "userdata=hello;";
@@ -545,7 +512,6 @@ namespace UnitTests.ManagedIrbis
                 + "database=NODB;username=john galt;password=who is;"
                 + "workstation=A;"
                 + "engine=" + typeof(MyEngine).AssemblyQualifiedName + ";"
-                + "factory=" + typeof(MyFactory).AssemblyQualifiedName + ";"
                 + "retry=3;data=hello;";
 
             ConnectionSettings expected = new ConnectionSettings()

@@ -109,8 +109,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = new CommandFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns(response);
@@ -123,7 +121,6 @@ namespace UnitTests.ManagedIrbis
                     "argument2"
                 );
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), Times.Once);
 
         }
@@ -134,7 +131,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
                 .Returns((SearchReadCommand command) =>
                 {
@@ -155,8 +151,6 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ResponseBuilder builder = new ResponseBuilder()
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
@@ -175,7 +169,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected, actual);
 
             mock.VerifyGet(c => c.Executive);
-            mock.VerifyGet(c => c.CommandFactory);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
@@ -187,8 +180,6 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ResponseBuilder builder = new ResponseBuilder()
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
@@ -207,7 +198,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected, actual);
 
             mock.VerifyGet(c => c.Executive);
-            mock.VerifyGet(c => c.CommandFactory);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
@@ -219,8 +209,6 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ResponseBuilder builder = new ResponseBuilder()
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
@@ -240,7 +228,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected, actual);
 
             mock.VerifyGet(c => c.Executive);
-            mock.VerifyGet(c => c.CommandFactory);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
@@ -252,8 +239,6 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ResponseBuilder builder = new ResponseBuilder()
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine();
@@ -276,7 +261,6 @@ namespace UnitTests.ManagedIrbis
             CollectionAssert.AreEqual(expected, actual);
 
             mock.VerifyGet(c => c.Executive);
-            mock.VerifyGet(c => c.CommandFactory);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<FormatCommand>()));
         }
 
@@ -321,13 +305,10 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()));
 
             IrbisConnectionUtility.LockRecord(connection, "IBIS", 1);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), Times.Once);
         }
 
@@ -336,15 +317,12 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = CommandFactory.GetDefaultFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()));
 
             int[] records = { 1, 2 };
             IrbisConnectionUtility.LockRecords(connection, "IBIS", records);
 
             Times twice = Times.Exactly(2);
-            mock.VerifyGet(c => c.CommandFactory, twice);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), twice);
         }
 
@@ -482,7 +460,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             RawRecord expected = new RawRecord
             {
                 Database = "IBIS",
@@ -498,7 +475,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Mfn, actual.Mfn);
             Assert.AreEqual(expected.Status, actual.Status);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
@@ -507,7 +483,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             RawRecord expected = new RawRecord
             {
                 Database = "IBIS",
@@ -523,7 +498,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Mfn, actual.Mfn);
             Assert.AreEqual(expected.Status, actual.Status);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
@@ -532,7 +506,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             RawRecord expected = new RawRecord
             {
                 Database = "IBIS",
@@ -548,7 +521,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Mfn, actual.Mfn);
             Assert.AreEqual(expected.Status, actual.Status);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ReadRawRecordCommand>()), Times.Once);
         }
 
@@ -707,7 +679,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
                 .Returns((SearchCommand command) =>
                 {
@@ -725,7 +696,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
                 .Returns((SearchCommand command) =>
                 {
@@ -755,7 +725,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchCommand>()))
                 .Returns((SearchCommand command) =>
                 {
@@ -785,7 +754,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchRawCommand>()))
                 .Returns((SearchRawCommand command) =>
                 {
@@ -809,7 +777,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
                 .Returns((SearchReadCommand command) =>
                 {
@@ -836,7 +803,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
                 .Returns((SearchReadCommand command) =>
                 {
@@ -862,7 +828,6 @@ namespace UnitTests.ManagedIrbis
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
             mock.SetupGet(c => c.Executive).Returns(new ExecutionEngine(connection));
-            mock.SetupGet(c => c.CommandFactory).Returns(CommandFactory.GetDefaultFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()))
                 .Returns((UniversalCommand command) =>
                 {
@@ -897,7 +862,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual("Третья", found[2]);
 
             mock.VerifyGet(c => c.Executive, Times.AtLeastOnce);
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<UniversalCommand>()), Times.Once);
         }
 
@@ -930,15 +894,12 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = new CommandFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns(response);
 
             IrbisConnectionUtility.UnlockRecordAlternative(connection, "IBIS", 1);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), Times.Once);
         }
 
@@ -947,8 +908,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = new CommandFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns(response);
@@ -962,7 +921,6 @@ namespace UnitTests.ManagedIrbis
                     true
                 );
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), Times.Once);
         }
 
@@ -971,8 +929,6 @@ namespace UnitTests.ManagedIrbis
         {
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
-            CommandFactory factory = new CommandFactory(connection);
-            mock.SetupGet(c => c.CommandFactory).Returns(factory);
             ExecutionEngine engine = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(engine);
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
@@ -988,7 +944,6 @@ namespace UnitTests.ManagedIrbis
                     true
                 );
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.VerifyGet(c => c.Executive, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<ClientCommand>()), Times.Once);
         }

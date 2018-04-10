@@ -252,10 +252,11 @@ namespace ManagedIrbis.Batch
                     }
                     else
                     {
-                        FormatCommand command = Connection.CommandFactory
-                            .CreateCommand<FormatCommand>();
-                        command.Database = database;
-                        command.FormatSpecification = IrbisFormat.All;
+                        FormatCommand command = new FormatCommand
+                        {
+                            Database = database,
+                            FormatSpecification = IrbisFormat.All
+                        };
                         command.MfnList.AddRange(slice);
 
                         Connection.ExecuteCommand(command);
@@ -345,10 +346,11 @@ namespace ManagedIrbis.Batch
                     }
                     else
                     {
-                        FormatCommand command = Connection.CommandFactory
-                            .CreateCommand<FormatCommand>();
-                        command.Database = database;
-                        command.FormatSpecification = IrbisFormat.All;
+                        FormatCommand command = new FormatCommand
+                        {
+                            Database = database,
+                            FormatSpecification = IrbisFormat.All
+                        };
                         command.MfnList.AddRange(slice);
 
                         Connection.ExecuteCommand(command);

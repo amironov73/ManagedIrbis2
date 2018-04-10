@@ -127,10 +127,6 @@ namespace UnitTests.ManagedIrbis.Batch
             Mock<IIrbisConnection> result = new Mock<IIrbisConnection>();
             IIrbisConnection connection = result.Object;
 
-            // CommandFactory
-            result.SetupGet(c => c.CommandFactory)
-                .Returns(new CommandFactory(connection));
-
             // ExecuteCommand
             result.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
@@ -281,8 +277,6 @@ namespace UnitTests.ManagedIrbis.Batch
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             IIrbisConnection connection = mock.Object;
 
-            mock.SetupGet(c => c.CommandFactory)
-                .Returns(new CommandFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<ClientCommand>()))
                 .Returns((FormatCommand command)
                 => ExecuteFormatCommand(connection, command, true));

@@ -35,9 +35,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             IIrbisConnection connection = context.Connection;
 
-            Log.Trace("DisconnectCommand::Execute");
+            Log.Trace(nameof(DisconnectCommand) + "::" + nameof(Execute));
 
-            ClientQuery query = base.CreateQuery(connection, CommandCode.UnregisterClient);
+            ClientQuery query = CreateQuery(connection, CommandCode.UnregisterClient);
 
             query.AddAnsi(connection.Username);
 
@@ -49,11 +49,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     + ": returnCode="
                     + result.ReturnCode.ToInvariantString()
                 );
-
-            if (connection is IrbisConnection iconnection)
-            {
-                iconnection._connected = false;
-            }
 
             return result;
         }

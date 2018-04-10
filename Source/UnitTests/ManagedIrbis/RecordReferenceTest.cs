@@ -217,13 +217,11 @@ namespace UnitTests.ManagedIrbis
             IIrbisConnection connection = mock.Object;
             ServerResponse response = new ServerResponse
                 (
-                    connection, 
+                    connection,
                     rawAnswer,
                     rawRequest,
                     true
                 );
-            mock.SetupGet(c => c.CommandFactory)
-                .Returns(new CommandFactory(connection));
             mock.Setup(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()))
                 .Returns(response)
                 .Callback(callback);
@@ -240,7 +238,6 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual("db", record.Database);
             Assert.AreEqual("Index", record.Index);
 
-            mock.VerifyGet(c => c.CommandFactory, Times.Once);
             mock.Verify(c => c.ExecuteCommand(It.IsAny<SearchReadCommand>()),
                 Times.Once);
         }
@@ -254,7 +251,7 @@ namespace UnitTests.ManagedIrbis
                 .Returns(_GetRecord());
 
             IIrbisConnection connection = mock.Object;
-            RecordReference[] references = 
+            RecordReference[] references =
             {
                 new RecordReference
                 {
@@ -289,7 +286,7 @@ namespace UnitTests.ManagedIrbis
                 .Returns((MarcRecord)null);
 
             IIrbisConnection connection = mock.Object;
-            RecordReference[] references = 
+            RecordReference[] references =
             {
                 new RecordReference
                 {
@@ -315,7 +312,7 @@ namespace UnitTests.ManagedIrbis
                 .Returns((MarcRecord)null);
 
             IIrbisConnection connection = mock.Object;
-            RecordReference[] references = 
+            RecordReference[] references =
             {
                 new RecordReference
                 {
