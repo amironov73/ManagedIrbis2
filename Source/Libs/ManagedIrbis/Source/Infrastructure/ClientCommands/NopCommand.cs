@@ -22,21 +22,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     public class NopCommand
         : ClientCommand
     {
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public NopCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -45,10 +30,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.Nop);
-            ServerResponse result = BaseExecute(context);
-            result.GetReturnCode();
+            CreateQuery(context, CommandCode.Nop);
+            BaseExecute(context);
         }
 
         #endregion

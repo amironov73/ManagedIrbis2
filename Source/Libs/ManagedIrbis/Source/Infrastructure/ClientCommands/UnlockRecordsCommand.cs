@@ -17,6 +17,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.ClientCommands
@@ -50,12 +52,24 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public UnlockRecordsCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
             Records = new List<int>();
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public UnlockRecordsCommand
+            (
+                [NotNull] string database,
+                [NotNull] IEnumerable<int> records
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NotNull(records, nameof(records));
+
+            Database = database;
+            Records = new List<int>(records);
         }
 
         #endregion
@@ -68,24 +82,23 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.UnlockRecords);
+            ClientQuery query = CreateQuery(context, CommandCode.UnlockRecords);
             query.AddAnsi(context.GetDatabase(Database));
 
             if (Records.Count == 0)
             {
                 Log.Error
                     (
-                        "UnlockRecordsCommand::CreateQuery: "
-                        + "record list is empty"
+                        nameof(UnlockRecordsCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.UnlockRecordsCommand_RecordListIsEmpty
                     );
 
-                throw new IrbisException("record list is empty");
+                throw new IrbisException(Resources.UnlockRecordsCommand_RecordListIsEmpty);
             }
             query.Arguments.AddRange(Records.Cast<object>());
 
-            ServerResponse result = BaseExecute(context);
-            result.GetReturnCode();
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

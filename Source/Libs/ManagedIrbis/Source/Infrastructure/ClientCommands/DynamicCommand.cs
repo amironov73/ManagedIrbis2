@@ -145,12 +145,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             // TODO Fix this
 
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.UnregisterClient);
-
-            query.AddAnsi(context.Connection.Username);
-
+            CreateQuery(context, CommandCode.UnregisterClient);
             Func<DynamicCommand, ServerResponse> handler = ExecuteHandler;
 
             ServerResponse result = !ReferenceEquals(handler, null)

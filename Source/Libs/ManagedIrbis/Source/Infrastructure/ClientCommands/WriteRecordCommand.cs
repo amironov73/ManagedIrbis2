@@ -59,14 +59,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -75,15 +67,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.UpdateRecord);
+            ClientQuery query = CreateQuery(context, CommandCode.UpdateRecord);
 
             if (ReferenceEquals(Record, null))
             {
                 Log.Error
                     (
-                        "WriteRecordCommand::CreateQuery: "
-                        + Resources.IrbisNetworkUtility_RecordIsNull
+                        nameof(WriteRecordCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.IrbisNetworkUtility_RecordIsNull
                     );
 
                 throw new IrbisNetworkException(Resources.IrbisNetworkUtility_RecordIsNull);
@@ -103,7 +94,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             MarcRecord record = Record.ThrowIfNull("Record");
 
             record.Database = database;
-            record.HostName = connection.Host;
+            record.HostName = context.Connection.Host;
 
             if (!DontParseResponse)
             {

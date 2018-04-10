@@ -364,4 +364,10 @@
   <data name="DirectoryNotExist" xml:space="preserve">
     <value>directory not exist: </value>
   </data>
+  <data name="UnlockRecordsCommand_RecordListIsEmpty" xml:space="preserve">
+    <value>record list is empty</value>
+  </data>
+  <data name="ListFilesCommand_SpecificationListIsEmpty" xml:space="preserve">
+    <value>specification list is empty</value>
+  </data>
 </root>

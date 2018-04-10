@@ -116,8 +116,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.ReadDocument);
+            ClientQuery query = CreateQuery(context, CommandCode.ReadDocument);
 
             foreach (FileSpecification fileName in Files)
             {

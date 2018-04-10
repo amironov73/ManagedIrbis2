@@ -40,7 +40,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
                 Database = "IBIS",
                 Mfn = 123
             };
-            ClientQuery query = command.CreateQuery(connection, CommandCode.ActualizeRecord);
+            ClientContext context = new ClientContext(connection);
+            ClientQuery query = command.CreateQuery(context, CommandCode.ActualizeRecord);
             Assert.IsNotNull(query);
         }
 

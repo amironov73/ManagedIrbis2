@@ -12,11 +12,8 @@
 using System.Diagnostics;
 
 using AM;
-using AM.Logging;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Properties;
 
 #endregion
 
@@ -47,6 +44,32 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ActualizeRecordCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ActualizeRecordCommand
+            (
+                [CanBeNull] string database,
+                int mfn
+            )
+        {
+            Sure.NonNegative(mfn, nameof(mfn));
+
+            Database = database;
+            Mfn = mfn;
+        }
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
@@ -55,14 +78,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.ActualizeRecord);
-
+            ClientQuery query = CreateQuery(context, CommandCode.ActualizeRecord);
             query.AddAnsi(context.GetDatabase(Database));
             query.Add(Mfn);
-
-            BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

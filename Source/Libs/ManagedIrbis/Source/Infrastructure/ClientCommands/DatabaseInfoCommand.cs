@@ -10,7 +10,6 @@
 #region Using directives
 
 using AM;
-using AM.Logging;
 
 using JetBrains.Annotations;
 
@@ -43,16 +42,25 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public DatabaseInfoCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DatabaseInfoCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DatabaseInfoCommand
+            (
+                [NotNull] string database
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+
+            Database = database;
+        }
 
         #endregion
 
@@ -64,9 +72,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.RecordList);
+            ClientQuery query = CreateQuery(context, CommandCode.RecordList);
             string database = context.GetDatabase(Database);
             query.AddAnsi(database);
 

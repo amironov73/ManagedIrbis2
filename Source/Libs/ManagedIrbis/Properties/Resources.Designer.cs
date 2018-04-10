@@ -709,6 +709,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to specification list is empty.
+        /// </summary>
+        internal static string ListFilesCommand_SpecificationListIsEmpty {
+            get {
+                return ResourceManager.GetString("ListFilesCommand_SpecificationListIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to password not specified.
         /// </summary>
         internal static string PasswordNotSpecified {
@@ -804,6 +813,15 @@ namespace ManagedIrbis.Properties {
         internal static string SmartRead_Readed {
             get {
                 return ResourceManager.GetString("SmartRead_Readed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to record list is empty.
+        /// </summary>
+        internal static string UnlockRecordsCommand_RecordListIsEmpty {
+            get {
+                return ResourceManager.GetString("UnlockRecordsCommand_RecordListIsEmpty", resourceCulture);
             }
         }
         

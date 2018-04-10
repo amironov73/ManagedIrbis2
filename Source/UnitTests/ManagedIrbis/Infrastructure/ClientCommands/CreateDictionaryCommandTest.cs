@@ -39,7 +39,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             {
                 Database = "IBIS"
             };
-            ClientQuery query = command.CreateQuery(connection, CommandCode.CreateDictionary);
+            ClientContext context = new ClientContext(connection);
+            ClientQuery query = command.CreateQuery(context, CommandCode.CreateDictionary);
             Assert.IsNotNull(query);
         }
 
@@ -61,7 +62,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             TestingSocket socket = (TestingSocket) connection.Socket;
             socket.Response = builder.Encode();
             ClientContext context = new ClientContext(connection);
-            ServerResponse response = command.Execute(context);
+            command.Execute(context);
+            ServerResponse response = context.Response;
             Assert.AreEqual(returnCode, response.ReturnCode);
         }
 

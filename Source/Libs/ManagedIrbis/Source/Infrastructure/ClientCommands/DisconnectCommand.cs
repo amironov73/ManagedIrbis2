@@ -33,21 +33,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
             Log.Trace(nameof(DisconnectCommand) + "::" + nameof(Execute));
 
-            ClientQuery query = CreateQuery(connection, CommandCode.UnregisterClient);
+            ClientQuery query = CreateQuery(context, CommandCode.UnregisterClient);
+            query.AddAnsi(context.GetUsername(null));
 
-            query.AddAnsi(connection.Username);
-
-            ServerResponse result = BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
 
             Log.Trace
                 (
                     nameof(DisconnectCommand) + "::" + nameof(Execute)
                     + ": returnCode="
-                    + result.ReturnCode.ToInvariantString()
+                    + response.ReturnCode.ToInvariantString()
                 );
         }
 

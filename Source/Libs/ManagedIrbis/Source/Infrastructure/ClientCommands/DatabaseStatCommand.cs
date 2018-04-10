@@ -42,40 +42,29 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public DatabaseStatCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DatabaseStatCommand()
+        {
+        }
 
-        #endregion
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public DatabaseStatCommand
+            (
+                [NotNull] StatDefinition definition
+            )
+        {
+            Sure.NotNull(definition, nameof(definition));
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
+            Definition = definition;
+        }
 
         #endregion
 
         #region ClientCommand members
-
-        ///// <inheritdoc cref="ClientCommand.CheckResponse" />
-        //public override void CheckResponse
-        //    (
-        //        ServerResponse response
-        //    )
-        //{
-        //    Sure.NotNull(response, nameof(response));
-
-        //    // Ignore the result
-        //    response.RefuseAnReturnCode();
-        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
         public override void Execute
@@ -83,9 +72,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.DatabaseStat);
+            ClientQuery query = CreateQuery(context, CommandCode.DatabaseStat);
 
             // "2"               STAT
             // "IBIS"            database
@@ -99,9 +86,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             string items = string.Join
                 (
                     IrbisText.IrbisDelimiter,
-                    Definition.Items
-                        .Select(item => item.ToString())
-                        .ToArray()
+                    Definition.Items.Select(item => item.ToString()).ToArray()
                 );
 
             query

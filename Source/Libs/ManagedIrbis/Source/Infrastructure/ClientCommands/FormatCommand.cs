@@ -17,8 +17,6 @@ using AM.Text;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Properties;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure.ClientCommands
@@ -165,8 +163,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.FormatRecord);
+            ClientQuery query = CreateQuery(context, CommandCode.FormatRecord);
             query.Add(context.GetDatabase(Database));
             string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
             query.Add
@@ -209,10 +206,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
             if (!string.IsNullOrEmpty(FormatSpecification))
             {
-                result.GetReturnCode();
+                response.GetReturnCode();
             }
 
             int count = 1;
@@ -221,7 +218,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 count = MfnList.Count;
             }
 
-            FormatResult = GetFormatResult(result, count);
+            FormatResult = GetFormatResult(response, count);
         }
 
         #endregion

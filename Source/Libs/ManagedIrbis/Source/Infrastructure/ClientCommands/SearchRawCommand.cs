@@ -10,7 +10,6 @@
 #region Using directives
 
 using AM;
-using AM.Logging;
 using AM.Text;
 
 using JetBrains.Annotations;
@@ -129,12 +128,22 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public SearchRawCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
             FirstRecord = 1;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SearchRawCommand
+            (
+                [NotNull] string expression
+            )
+        {
+            Sure.NotNullNorEmpty(expression, nameof(expression));
+
+            FirstRecord = 1;
+            SearchExpression = expression;
         }
 
         #endregion
@@ -217,8 +226,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.Search);
+            ClientQuery query = CreateQuery(context, CommandCode.Search);
             query.AddAnsi(context.GetDatabase(Database));
 
             string preparedQuery = IrbisSearchQuery.PrepareQuery(SearchExpression);
@@ -235,6 +243,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                             UtfFormat
                             ? "!" + preparedFormat
                             : preparedFormat,
+
                             UtfFormat
                             ? IrbisEncoding.Utf8
                             : IrbisEncoding.Ansi
@@ -263,10 +272,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = BaseExecute(context);
-            result.GetReturnCode();
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
 
-            Found = result.RemainingUtfStrings()
+            Found = response.RemainingUtfStrings()
                 .ToArray();
         }
 

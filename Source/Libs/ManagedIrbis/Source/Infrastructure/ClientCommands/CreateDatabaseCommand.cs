@@ -59,9 +59,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.CreateDatabase);
+            ClientQuery query = CreateQuery(context, CommandCode.CreateDatabase);
 
             // Layout is:
             // NEWDB          // database name
@@ -73,7 +71,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(Description)
                 .Add(ReaderAccess);
 
-            BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
 
             // Response is (ANSI):
             // 0

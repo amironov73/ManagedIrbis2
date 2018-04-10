@@ -18,6 +18,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.ClientCommands
@@ -51,29 +53,27 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public ListFilesCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
             Specifications = new NonNullCollection<FileSpecification>();
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ListFilesCommand
+            (
+                [NotNull] IEnumerable<FileSpecification> specifications
+            )
+        {
+            Sure.NotNull(specifications, nameof(specifications));
+
+            Specifications = new NonNullCollection<FileSpecification>();
+            Specifications.AddRange(specifications);
         }
 
         #endregion
 
         #region ClientCommand members
-
-        ///// <inheritdoc cref="ClientCommand.CheckResponse"/>
-        //public override void CheckResponse
-        //    (
-        //        ServerResponse response
-        //    )
-        //{
-        //    Sure.NotNull(response, nameof(response));
-
-        //    // Don't check: there's no return code
-        //    response.RefuseAnReturnCode();
-        //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
         public override void Execute
@@ -81,18 +81,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.ListFiles);
+            ClientQuery query = CreateQuery(context, CommandCode.ListFiles);
 
             if (Specifications.Count == 0)
             {
                 Log.Error
                     (
-                        "ListFilesCommand::CreateQuery: "
-                        + "specification list is empty"
+                        nameof(ListFilesCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.ListFilesCommand_SpecificationListIsEmpty
                     );
 
-                throw new IrbisException("specification list is empty");
+                throw new IrbisException(Resources.ListFilesCommand_SpecificationListIsEmpty);
             }
 
             foreach (FileSpecification specification in Specifications)

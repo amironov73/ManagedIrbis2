@@ -41,7 +41,8 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
                 Username = "user",
                 Password = "pass"
             };
-            ClientQuery query = command.CreateQuery(connection, CommandCode.RegisterClient);
+            ClientContext context = new ClientContext(connection);
+            ClientQuery query = command.CreateQuery(context, CommandCode.RegisterClient);
             Assert.IsNotNull(query);
         }
 

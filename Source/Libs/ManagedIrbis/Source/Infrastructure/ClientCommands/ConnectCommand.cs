@@ -9,12 +9,9 @@
 
 #region Using directives
 
-using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Properties;
 
 #endregion
 
@@ -109,7 +106,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             context.CheckAlreadyConnected();
 
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.RegisterClient);
+            ClientQuery query = CreateQuery(context, CommandCode.RegisterClient);
             query.UserLogin = context.GetUsername(Username);
             query.UserPassword = context.GetPassword(Password);
             query.Arguments.Add(query.UserLogin);

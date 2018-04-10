@@ -35,6 +35,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReloadDictionaryCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReloadDictionaryCommand
+            (
+                [NotNull] string database
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+
+            Database = database;
+        }
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -43,12 +67,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.ReloadDictionary);
+            ClientQuery query = CreateQuery(context, CommandCode.ReloadDictionary);
             query.AddAnsi(context.GetDatabase(Database));
-
-            ServerResponse result = BaseExecute(context);
-            result.GetReturnCode();
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

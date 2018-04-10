@@ -85,20 +85,20 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.ReadRecord);
-            query.Arguments.Add(context.GetDatabase(Database));
-            query.Arguments.Add(Mfn);
+            ClientQuery query = CreateQuery(context, CommandCode.ReadRecord);
+            query.AddAnsi(context.GetDatabase(Database));
+            query.Add(Mfn);
             if (VersionNumber != 0)
             {
-                query.Arguments.Add(VersionNumber);
+                query.Add(VersionNumber);
             }
             else
             {
-                query.Arguments.Add(Lock);
+                query.Add(Lock);
             }
             if (!string.IsNullOrEmpty(Format))
             {
-                query.Arguments.Add(Format);
+                query.Add(Format);
             }
 
             ServerResponse result = BaseExecute(context);

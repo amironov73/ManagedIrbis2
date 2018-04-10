@@ -191,12 +191,35 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public SearchCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
             FirstRecord = 1;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SearchCommand
+            (
+                [NotNull] string expression
+            )
+        {
+            Sure.NotNullNorEmpty(expression, nameof(expression));
+
+            FirstRecord = 1;
+            SearchExpression = expression;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SearchCommand
+            (
+                [NotNull] SearchParameters parameters
+            )
+        {
+            Sure.NotNull(parameters, nameof(parameters));
+
+            ApplyParameters(parameters);
         }
 
         #endregion
@@ -335,7 +358,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.Search);
+            ClientQuery query = CreateQuery(context, CommandCode.Search);
             query.AddAnsi(context.GetDatabase(Database));
             string preparedQuery = IrbisSearchQuery.PrepareQuery(SearchExpression);
             query.AddUtf8(preparedQuery);

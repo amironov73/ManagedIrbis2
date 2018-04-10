@@ -9,6 +9,8 @@
 
 #region Using directives
 
+using AM;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -32,6 +34,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public MaxMfnCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public MaxMfnCommand
+            (
+                [NotNull] string database
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+
+            Database = database;
+        }
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -40,8 +66,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.GetMaxMfn);
+            ClientQuery query = CreateQuery(context, CommandCode.GetMaxMfn);
             query.AddAnsi(context.GetDatabase(Database));
             ServerResponse result = BaseExecute(context);
             CheckResponse(result);

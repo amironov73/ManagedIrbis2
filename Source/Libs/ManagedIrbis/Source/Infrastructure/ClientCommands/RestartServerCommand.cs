@@ -9,8 +9,6 @@
 
 #region Using directives
 
-using AM;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -18,27 +16,12 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Infrastructure.ClientCommands
 {
     /// <summary>
-    /// Reload database dictionary.
+    /// Restart the IRBIS64 server (save and restore the server state).
     /// </summary>
     [PublicAPI]
     public sealed class RestartServerCommand
         : ClientCommand
     {
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public RestartServerCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -47,10 +30,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.RestartServer);
-            ServerResponse result = BaseExecute(context);
-            result.GetReturnCode();
+            CreateQuery(context, CommandCode.RestartServer);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

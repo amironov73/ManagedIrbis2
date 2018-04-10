@@ -175,11 +175,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
             string commandCode = ReverseOrder
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
-            ClientQuery query = CreateQuery(connection, commandCode);
+            ClientQuery query = CreateQuery(context, commandCode);
             string preparedFormat = IrbisFormat.PrepareFormat(Format);
             query
                 .AddAnsi(context.GetDatabase(Database))

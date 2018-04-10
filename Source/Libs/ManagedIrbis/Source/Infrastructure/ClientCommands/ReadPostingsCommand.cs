@@ -240,7 +240,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery(context.Connection, CommandCode.ReadPostings);
+            ClientQuery query = CreateQuery(context, CommandCode.ReadPostings);
             query
                 .AddAnsi(context.GetDatabase(Database))
                 .Add(NumberOfPostings)

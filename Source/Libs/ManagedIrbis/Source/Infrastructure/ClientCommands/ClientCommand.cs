@@ -68,36 +68,36 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
         }
 
-        /// <summary>
-        /// Create client query.
-        /// </summary>
-        public ClientQuery CreateQuery
-            (
-                [NotNull] IIrbisConnection connection,
-                [NotNull] string commandCode
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
-            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
+        ///// <summary>
+        ///// Create client query.
+        ///// </summary>
+        //public ClientQuery CreateQuery
+        //    (
+        //        [NotNull] IIrbisConnection connection,
+        //        [NotNull] string commandCode
+        //    )
+        //{
+        //    Sure.NotNull(connection, nameof(connection));
+        //    Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            Log.Trace(nameof(ClientCommand) + "::" + nameof(CreateQuery));
+        //    Log.Trace(nameof(ClientCommand) + "::" + nameof(CreateQuery));
 
-            ClientQuery result = new ClientQuery(commandCode)
-            {
-                Workstation = connection.Workstation,
-                ClientID = connection.ClientID,
-                CommandNumber = 1,
-                UserLogin = connection.Username,
-                UserPassword = connection.Password
-            };
+        //    ClientQuery result = new ClientQuery(commandCode)
+        //    {
+        //        Workstation = connection.Workstation,
+        //        ClientID = connection.ClientID,
+        //        CommandNumber = 1,
+        //        UserLogin = connection.Username,
+        //        UserPassword = connection.Password
+        //    };
 
-            //if (Connection is IrbisConnection connection)
-            //{
-            //    result.CommandNumber = connection.IncrementCommandNumber();
-            //}
+        //    //if (Connection is IrbisConnection connection)
+        //    //{
+        //    //    result.CommandNumber = connection.IncrementCommandNumber();
+        //    //}
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Create client query.

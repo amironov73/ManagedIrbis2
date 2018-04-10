@@ -10,11 +10,8 @@
 #region Using directives
 
 using AM;
-using AM.Logging;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Properties;
 
 #endregion
 
@@ -37,6 +34,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public CreateDictionaryCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public CreateDictionaryCommand
+            (
+                [NotNull] string database
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+
+            Database = database;
+        }
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -45,12 +66,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.CreateDictionary);
+            ClientQuery query = CreateQuery(context, CommandCode.CreateDictionary);
             query.AddAnsi(context.GetDatabase(Database));
-
-            BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

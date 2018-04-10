@@ -32,21 +32,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ListProcessesCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -55,10 +40,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.GetProcessList);
+            CreateQuery(context, CommandCode.GetProcessList);
             ServerResponse response = BaseExecute(context);
-            response.GetReturnCode();
+            CheckResponse(response);
             Result = IrbisProcessInfo.Parse(response);
         }
 

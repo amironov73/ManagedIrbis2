@@ -33,7 +33,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             mock.SetupGet(c => c.ClientID).Returns(123456);
             ExecutionEngine result = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(result);
-            TestingSocket socket = new TestingSocket(connection);
+            TestingSocket socket = new TestingSocket();
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             socket.Response = response.GetDump();
             mock.SetupGet(c => c.Socket).Returns(socket);
@@ -54,7 +54,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             mock.SetupGet(c => c.ClientID).Returns(123456);
             ExecutionEngine result = new ExecutionEngine(connection);
             mock.SetupGet(c => c.Executive).Returns(result);
-            SimpleClientSocket socket = new SimpleClientSocket(connection);
+            SimpleClientSocket socket = new SimpleClientSocket();
             mock.SetupGet(c => c.Socket).Returns(socket);
             result.Services = services;
 

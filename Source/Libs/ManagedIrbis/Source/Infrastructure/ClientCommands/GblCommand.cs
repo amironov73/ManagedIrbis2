@@ -216,8 +216,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.GlobalCorrection);
+            ClientQuery query = CreateQuery(context, CommandCode.GlobalCorrection);
             query.AddAnsi(context.GetDatabase(Database));
             query.Add(Actualize);
 
