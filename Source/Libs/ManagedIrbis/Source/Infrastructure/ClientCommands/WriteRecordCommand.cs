@@ -5,7 +5,6 @@
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: moderate
- * TODO read raw record
  */
 
 #region Using directives
@@ -59,6 +58,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public WriteRecordCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public WriteRecordCommand
+            (
+                [NotNull] MarcRecord record
+            )
+        {
+            Sure.NotNull(record, nameof(record));
+
+            Record = record;
+        }
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -69,7 +92,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         {
             ClientQuery query = CreateQuery(context, CommandCode.UpdateRecord);
 
-            if (ReferenceEquals(Record, null))
+            MarcRecord record = Record;
+            if (ReferenceEquals(record, null))
             {
                 Log.Error
                     (
@@ -80,7 +104,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisNetworkException(Resources.IrbisNetworkUtility_RecordIsNull);
             }
 
-            string database = context.GetDatabase(Record.Database);
+            string database = context.GetDatabase(record.Database);
             query
                 .Add(database)
                 .Add(Lock)
@@ -90,8 +114,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             ServerResponse response = BaseExecute(context);
             CheckResponse(response);
             MaxMfn = response.ReturnCode;
-
-            MarcRecord record = Record.ThrowIfNull("Record");
 
             record.Database = database;
             record.HostName = context.Connection.Host;

@@ -10,7 +10,6 @@
 #region Using directives
 
 using AM;
-using AM.Logging;
 
 using JetBrains.Annotations;
 
@@ -76,6 +75,57 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadRecordCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadRecordCommand
+            (
+                [NotNull] string database,
+                int mfn
+            )
+        {
+            Sure.NotNull(database, nameof(database));
+            Sure.Positive(mfn, nameof(mfn));
+
+            Mfn = mfn;
+            Database = database;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadRecordCommand
+            (
+                int mfn
+            )
+        {
+            Sure.Positive(mfn, nameof(mfn));
+
+            Mfn = mfn;
+        }
+
+        #endregion
+
+        #region Private members
+
+        // Good codes for CheckResponse():
+        // ERR_OLDREC_ABSENT = -201;
+        // ERR_RECLOCKED = -602;
+        // REC_DELETE = -603, -600;
+        // REC_PHYS_DELETE = -605;
+        private static int[] _goodCodes = { -201, -600, -602, -603, -605 };
+
+        #endregion
+
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
@@ -101,10 +151,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(Format);
             }
 
-            ServerResponse result = BaseExecute(context);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response, _goodCodes);
 
-            // Check whether no records read
-            if (result.GetReturnCode() != -201)
+            if (response.GetReturnCode() != -201)
             {
                 MarcRecord record = new MarcRecord
                 {
@@ -114,31 +164,26 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
                 record = ProtocolText.ParseResponseForReadRecord
                     (
-                        result,
+                        response,
                         record
                     );
-                record.Verify(ThrowOnVerify);
+                if (ThrowOnVerify)
+                {
+                    record.Verify(ThrowOnVerify);
+                }
 
                 if (ThrowOnEmptyRecord)
                 {
                     IrbisNetworkUtility.ThrowIfEmptyRecord
                         (
                             record,
-                            result
+                            response
                         );
                 }
 
                 Record = record;
             }
         }
-
-        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
-        //public override int[] GoodReturnCodes
-        //{
-        //    // Record can be logically deleted
-        //    // or blocked. It's normal.
-        //    get { return new[] { -201, -600, -602, -603 }; }
-        //}
 
         #endregion
     }

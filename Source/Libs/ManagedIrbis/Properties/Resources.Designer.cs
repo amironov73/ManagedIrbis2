@@ -718,6 +718,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to no files specified.
+        /// </summary>
+        internal static string NoFilesSpecified {
+            get {
+                return ResourceManager.GetString("NoFilesSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to password not specified.
         /// </summary>
         internal static string PasswordNotSpecified {
@@ -781,6 +790,33 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to file name not specified.
+        /// </summary>
+        internal static string ReadBinaryFileCommand_FileNameNotSpecified {
+            get {
+                return ResourceManager.GetString("ReadBinaryFileCommand_FileNameNotSpecified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to no binary data received.
+        /// </summary>
+        internal static string ReadBinaryFileCommand_NoBinaryDataReceived {
+            get {
+                return ResourceManager.GetString("ReadBinaryFileCommand_NoBinaryDataReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to list of terms == null.
+        /// </summary>
+        internal static string ReadPostingsCommand_ListOfTermsNull {
+            get {
+                return ResourceManager.GetString("ReadPostingsCommand_ListOfTermsNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : bad format=.
         /// </summary>
         internal static string ServerResponse_BadFormat {
@@ -822,6 +858,15 @@ namespace ManagedIrbis.Properties {
         internal static string UnlockRecordsCommand_RecordListIsEmpty {
             get {
                 return ResourceManager.GetString("UnlockRecordsCommand_RecordListIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UserList not set.
+        /// </summary>
+        internal static string UserListNotSet {
+            get {
+                return ResourceManager.GetString("UserListNotSet", resourceCulture);
             }
         }
         

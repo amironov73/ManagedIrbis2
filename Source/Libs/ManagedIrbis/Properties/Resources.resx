@@ -370,4 +370,19 @@
   <data name="ListFilesCommand_SpecificationListIsEmpty" xml:space="preserve">
     <value>specification list is empty</value>
   </data>
+  <data name="ReadBinaryFileCommand_FileNameNotSpecified" xml:space="preserve">
+    <value>file name not specified</value>
+  </data>
+  <data name="ReadBinaryFileCommand_NoBinaryDataReceived" xml:space="preserve">
+    <value>no binary data received</value>
+  </data>
+  <data name="NoFilesSpecified" xml:space="preserve">
+    <value>no files specified</value>
+  </data>
+  <data name="ReadPostingsCommand_ListOfTermsNull" xml:space="preserve">
+    <value>list of terms == null</value>
+  </data>
+  <data name="UserListNotSet" xml:space="preserve">
+    <value>UserList not set</value>
+  </data>
 </root>

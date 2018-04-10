@@ -9,10 +9,11 @@
 
 #region Using directives
 
-using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
+
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -43,20 +44,20 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery(context, CommandCode.SetUserList);
-
-            if (ReferenceEquals(UserList, null))
+            UserInfo[] userList = UserList;
+            if (ReferenceEquals(userList, null))
             {
                 Log.Error
                     (
-                        "UpdateUserListCommand::CreateQuery: "
-                        + "UserList not set"
+                        nameof(UpdateUserListCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.UserListNotSet
                     );
 
-                throw new IrbisException("UserList not set");
+                throw new IrbisException(Resources.UserListNotSet);
             }
 
-            foreach (UserInfo userInfo in UserList)
+            ClientQuery query = CreateQuery(context, CommandCode.SetUserList);
+            foreach (UserInfo userInfo in userList)
             {
                 string line = userInfo.Encode();
                 query.AddAnsi(line);

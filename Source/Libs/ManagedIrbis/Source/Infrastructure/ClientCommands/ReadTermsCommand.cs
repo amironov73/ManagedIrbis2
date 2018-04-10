@@ -74,8 +74,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     /// Read terms from the search index.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{Database} {NumberOfTerms} "
-        + "{ReverseOrder} {StartTerm}")]
+    [DebuggerDisplay("{" + nameof(Database) + "} {" + nameof(NumberOfTerms) + "} "
+        + "{" + nameof(ReverseOrder) + "} {" + nameof(StartTerm) + "}")]
     public sealed class ReadTermsCommand
         : ClientCommand
     {
@@ -114,6 +114,62 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         [CanBeNull]
         public TermInfo[] Terms { get; set; }
+
+        #endregion
+
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadTermsCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadTermsCommand
+            (
+                [NotNull] string database,
+                int numberOfTerms,
+                [NotNull] string startTerm
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+            Sure.NonNegative(numberOfTerms, nameof(numberOfTerms));
+            Sure.NotNullNorEmpty(startTerm, nameof(startTerm));
+
+            Database = database;
+            NumberOfTerms = numberOfTerms;
+            StartTerm = startTerm;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadTermsCommand
+            (
+                int numberOfTerms,
+                [NotNull] string startTerm
+            )
+        {
+            Sure.NonNegative(numberOfTerms, nameof(numberOfTerms));
+            Sure.NotNullNorEmpty(startTerm, nameof(startTerm));
+
+            NumberOfTerms = numberOfTerms;
+            StartTerm = startTerm;
+        }
+
+        #endregion
+
+        #region Private members
+
+        // Good codes for CheckResponse():
+        // TERM_NOT_EXISTS = -202;
+        // TERM_LAST_IN_LIST = -203;
+        // TERM_FIRST_IN_LIST = -204;
+        private static int[] _goodCodes = { -202, -203, -204 };
 
         #endregion
 
@@ -160,15 +216,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes" />
-        //public override int[] GoodReturnCodes
-        //{
-        //    // TERM_NOT_EXISTS = -202;
-        //    // TERM_LAST_IN_LIST = -203;
-        //    // TERM_FIRST_IN_LIST = -204;
-        //    get { return new[] { -202, -203, -204 }; }
-        //}
-
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
         public override void Execute
             (
@@ -187,7 +234,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .AddAnsi(preparedFormat);
 
             ServerResponse result = BaseExecute(context);
-            CheckResponse(result);
+            CheckResponse(result, _goodCodes);
 
             Terms = string.IsNullOrEmpty(Format)
                 ? TermInfo.Parse(result)

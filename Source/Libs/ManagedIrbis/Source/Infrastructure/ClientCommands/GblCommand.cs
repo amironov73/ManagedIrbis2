@@ -200,14 +200,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
-        #region Public methods
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
@@ -285,7 +277,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             {
                 query.Add("&");
             }
-
 
             GblResult gblResult = new GblResult
             {

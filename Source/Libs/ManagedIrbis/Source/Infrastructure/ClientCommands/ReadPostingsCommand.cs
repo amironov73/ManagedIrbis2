@@ -11,12 +11,14 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 using AM;
 using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
 using ManagedIrbis.Search;
 
 #endregion
@@ -108,7 +110,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
     /// Read postings for given term.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("{Database} {NumberOfPostings} {FirstPosting}")]
+    [DebuggerDisplay("{" + nameof(Database) + "} {" +nameof(NumberOfPostings)
+        + "} {" + nameof(FirstPosting) + "}")]
     public sealed class ReadPostingsCommand
         : ClientCommand
     {
@@ -162,13 +165,35 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public ReadPostingsCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
-            // _postings = new List<TermPosting>();
+            FirstPosting = 1;
+        }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadPostingsCommand
+            (
+                [NotNull] string term
+            )
+        {
+            Sure.NotNullNorEmpty(term, nameof(term));
+
+            Term = term;
+            FirstPosting = 1;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadPostingsCommand
+            (
+                [NotNull][ItemNotNull] IEnumerable<string> terms
+            )
+        {
+            Sure.NotNull(terms, nameof(terms));
+
+            ListOfTerms = terms.ToArray();
             FirstPosting = 1;
         }
 
@@ -176,7 +201,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Private members
 
-        //private readonly List<TermPosting> _postings;
+        // Good codes for CheckResponse():
+        // TERM_NOT_EXISTS = -202;
+        // TERM_LAST_IN_LIST = -203;
+        // TERM_FIRST_IN_LIST = -204;
+        private static int[] _goodCodes = { -202, -203, -204 };
 
         #endregion
 
@@ -225,15 +254,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        ///// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>
-        //public override int[] GoodReturnCodes
-        //{
-        //    // TERM_NOT_EXISTS = -202;
-        //    // TERM_LAST_IN_LIST = -203;
-        //    // TERM_FIRST_IN_LIST = -204;
-        //    get { return new[] { -202, -203, -204 }; }
-        //}
-
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
         public override void Execute
             (
@@ -253,11 +273,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 {
                     Log.Error
                         (
-                            "ReadPostingsCommand::CreateQuery: "
-                            + "list of terms == null"
+                            nameof(ReadPostingsCommand) + "::" + nameof(Execute)
+                            + ": " + Resources.ReadPostingsCommand_ListOfTermsNull
                         );
 
-                    throw new IrbisException("list of terms == null");
+                    throw new IrbisException(Resources.ReadPostingsCommand_ListOfTermsNull);
                 }
 
                 foreach (string term in ListOfTerms)
@@ -271,7 +291,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
 
             ServerResponse result = BaseExecute(context);
-            CheckResponse(result);
+            CheckResponse(result, _goodCodes);
             Postings = TermPosting.Parse(result);
         }
 

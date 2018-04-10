@@ -16,6 +16,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.ClientCommands
@@ -54,16 +56,25 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ReadBinaryFileCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadBinaryFileCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadBinaryFileCommand
+            (
+                [NotNull] FileSpecification file
+            )
+        {
+            Sure.NotNull(file, nameof(file));
+
+            File = file;
+        }
 
         #endregion
 
@@ -103,20 +114,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        ///// <summary>
-        ///// Check the server response.
-        ///// </summary>
-        //public override void CheckResponse
-        //    (
-        //        ServerResponse response
-        //    )
-        //{
-        //    Sure.NotNull(response, nameof(response));
-
-        //    // Don't check: there's no return code
-        //    response.RefuseAnReturnCode();
-        //}
-
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
         public override void Execute
             (
@@ -129,11 +126,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             {
                 Log.Error
                     (
-                        "ReadBinaryFileCommand::CreateQuery: "
-                        + "file name not specified"
+                        nameof(ReadBinaryFileCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.ReadBinaryFileCommand_FileNameNotSpecified
                     );
 
-                throw new IrbisException("File name not specified");
+                throw new IrbisException(Resources.ReadBinaryFileCommand_FileNameNotSpecified);
             }
             File.BinaryFile = true;
             query.AddAnsi(File.ToString());
@@ -148,11 +145,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             {
                 Log.Error
                     (
-                        "ReadBinaryFileCommand::Execute: "
-                        + "no binary data received"
+                        nameof(ReadBinaryFileCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.ReadBinaryFileCommand_NoBinaryDataReceived
                     );
 
-                throw new IrbisNetworkException("No binary data received");
+                throw new IrbisNetworkException(Resources.ReadBinaryFileCommand_NoBinaryDataReceived);
             }
             offset += preamble.Length;
             Content = result.RawAnswer.GetSpan(offset);

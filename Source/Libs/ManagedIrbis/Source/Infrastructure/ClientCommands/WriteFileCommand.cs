@@ -9,11 +9,13 @@
 
 #region Using directives
 
-using AM;
 using AM.Collections;
+using AM.Logging;
 using AM.Text;
 
 using JetBrains.Annotations;
+
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -32,9 +34,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// File list.
         /// </summary>
         [NotNull]
-        public NonNullCollection<FileSpecification> Files
-        {
-            get; private set; }
+        public NonNullCollection<FileSpecification> Files { get; }
 
         #endregion
 
@@ -44,10 +44,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public WriteFileCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
             Files = new NonNullCollection<FileSpecification>();
         }
@@ -62,14 +58,25 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
+            if (Files.Count == 0)
+            {
+                Log.Error
+                    (
+                        nameof(WriteFileCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.NoFilesSpecified
+                    );
+
+                throw new IrbisNetworkException(Resources.NoFilesSpecified);
+            }
+
             ClientQuery query = CreateQuery(context, CommandCode.ReadDocument);
             foreach (FileSpecification fileName in Files)
             {
                 TextWithEncoding text = new TextWithEncoding
-                (
-                    fileName.ToString(),
-                    IrbisEncoding.Ansi
-                );
+                    (
+                        fileName.ToString(),
+                        IrbisEncoding.Ansi
+                    );
                 query.Arguments.Add(text);
             }
 

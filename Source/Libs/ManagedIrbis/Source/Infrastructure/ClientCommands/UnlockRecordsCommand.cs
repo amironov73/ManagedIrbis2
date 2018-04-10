@@ -42,7 +42,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Record list.
         /// </summary>
         [NotNull]
-        public List<int> Records { get; private set; }
+        public List<int> Records { get; }
 
         #endregion
 
@@ -82,9 +82,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 ClientContext context
             )
         {
-            ClientQuery query = CreateQuery(context, CommandCode.UnlockRecords);
-            query.AddAnsi(context.GetDatabase(Database));
-
             if (Records.Count == 0)
             {
                 Log.Error
@@ -95,6 +92,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
                 throw new IrbisException(Resources.UnlockRecordsCommand_RecordListIsEmpty);
             }
+
+            ClientQuery query = CreateQuery(context, CommandCode.UnlockRecords);
+            query.AddAnsi(context.GetDatabase(Database));
             query.Arguments.AddRange(Records.Cast<object>());
 
             ServerResponse response = BaseExecute(context);

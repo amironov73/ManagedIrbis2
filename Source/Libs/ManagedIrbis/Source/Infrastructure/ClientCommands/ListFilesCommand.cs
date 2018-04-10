@@ -62,6 +62,22 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         public ListFilesCommand
             (
+                [NotNull] FileSpecification specification
+            )
+        {
+            Sure.NotNull(specification, nameof(specification));
+
+            Specifications = new NonNullCollection<FileSpecification>
+            {
+                specification
+            };
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ListFilesCommand
+            (
                 [NotNull] IEnumerable<FileSpecification> specifications
             )
         {

@@ -10,7 +10,6 @@
 #region Using directives
 
 using AM;
-using AM.Logging;
 
 using JetBrains.Annotations;
 

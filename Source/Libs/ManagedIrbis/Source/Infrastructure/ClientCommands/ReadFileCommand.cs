@@ -9,10 +9,15 @@
 
 #region Using directives
 
+using System.Collections.Generic;
+
 using AM;
 using AM.Collections;
+using AM.Logging;
 
 using JetBrains.Annotations;
+
+using ManagedIrbis.Properties;
 
 #endregion
 
@@ -31,10 +36,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// File list.
         /// </summary>
         [NotNull]
-        public NonNullCollection<FileSpecification> Files
-        {
-            get { return _files; }
-        }
+        public NonNullCollection<FileSpecification> Files { get; }
 
         /// <summary>
         /// Retrieved text files.
@@ -50,19 +52,39 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// Constructor.
         /// </summary>
         public ReadFileCommand()
-            //(
-            //    [NotNull] IIrbisConnection connection
-            //)
-            //: base(connection)
         {
-            _files = new NonNullCollection<FileSpecification>();
+            Files = new NonNullCollection<FileSpecification>();
         }
 
-        #endregion
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadFileCommand
+            (
+                [NotNull] FileSpecification file
+            )
+        {
+            Sure.NotNull(file, nameof(file));
 
-        #region Private members
+            Files = new NonNullCollection<FileSpecification>
+            {
+                file
+            };
+        }
 
-        private readonly NonNullCollection<FileSpecification> _files;
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ReadFileCommand
+            (
+                [NotNull][ItemNotNull] IEnumerable<FileSpecification> files
+            )
+        {
+            Sure.NotNull(files, nameof(files));
+
+            Files = new NonNullCollection<FileSpecification>();
+            Files.AddRange(files);
+        }
 
         #endregion
 
@@ -96,20 +118,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region ClientCommand members
 
-        ///// <summary>
-        ///// Check the server response.
-        ///// </summary>
-        //public override void CheckResponse
-        //    (
-        //        ServerResponse response
-        //    )
-        //{
-        //    Sure.NotNull(response, nameof(response));
-
-        //    // Don't check: there's no return code
-        //    response.RefuseAnReturnCode();
-        //}
-
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext) "/>
         public override void Execute
             (
@@ -117,6 +125,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             ClientQuery query = CreateQuery(context, CommandCode.ReadDocument);
+
+            if (Files.Count == 0)
+            {
+                Log.Error
+                    (
+                        nameof(ReadFileCommand) + "::" + nameof(Execute)
+                        + ": " + Resources.NoFilesSpecified
+                    );
+
+                throw new IrbisNetworkException(Resources.NoFilesSpecified);
+            }
 
             foreach (FileSpecification fileName in Files)
             {

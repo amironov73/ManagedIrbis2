@@ -9,6 +9,8 @@
 
 #region Using directives
 
+using AM;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -29,6 +31,30 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// </summary>
         [CanBeNull]
         public string Database { get; set; }
+
+        #endregion
+
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public TruncateDatabaseCommand()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public TruncateDatabaseCommand
+            (
+                [NotNull] string database
+            )
+        {
+            Sure.NotNullNorEmpty(database, nameof(database));
+
+            Database = database;
+        }
 
         #endregion
 
