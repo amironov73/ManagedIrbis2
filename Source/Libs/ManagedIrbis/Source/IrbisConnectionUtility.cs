@@ -1005,7 +1005,7 @@ namespace ManagedIrbis
 
             if (connection.Socket is LoggingClientSocket oldSocket)
             {
-                AbstractClientSocket newSocket = oldSocket.InnerSocket
+                ClientSocket newSocket = oldSocket.InnerSocket
                     .ThrowIfNull(nameof(oldSocket.InnerSocket));
                 connection.SetSocket(newSocket);
             }

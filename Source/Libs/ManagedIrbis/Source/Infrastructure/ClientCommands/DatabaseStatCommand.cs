@@ -78,7 +78,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -114,13 +114,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(string.Empty) // instead of MFN list
                 ;
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
 
             Result = "{\\rtf1 "
                 + result.RemainingUtfText()
                 + "}";
-
-            return result;
         }
 
         #endregion

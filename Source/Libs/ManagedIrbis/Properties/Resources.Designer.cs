@@ -160,6 +160,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to directory not exist: .
+        /// </summary>
+        internal static string DirectoryNotExist {
+            get {
+                return ResourceManager.GetString("DirectoryNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Empty response.
         /// </summary>
         internal static string EmptyResponse {

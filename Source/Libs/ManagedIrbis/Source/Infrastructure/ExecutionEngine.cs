@@ -205,15 +205,14 @@ namespace ManagedIrbis.Infrastructure
 
             using (new BusyGuard(connection.Busy))
             {
+                ClientContext clientContext = new ClientContext(Connection);
                 ServerResponse result = ServerResponse.GetEmptyResponse(connection);
                 connection.Interrupted = false;
 
                 try
                 {
-                    ClientContext clientContext = new ClientContext(Connection);
-                    result = command.Execute(clientContext);
-
-                    // command.CheckResponse(result);
+                    command.Execute(clientContext);
+                    result = clientContext.Response;
                 }
                 catch (Exception exception)
                 {

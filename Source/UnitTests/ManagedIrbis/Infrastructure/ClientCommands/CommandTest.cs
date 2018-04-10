@@ -30,7 +30,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure.ClientCommands
             result.SetupGet(c => c.Executive)
                 .Returns(new ExecutionEngine(connection));
             result.SetupGet(c => c.Socket)
-                .Returns(new TestingSocket(connection));
+                .Returns(new TestingSocket());
 
 
             return result;

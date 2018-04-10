@@ -99,7 +99,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -115,18 +115,16 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             query.Arguments.Add(query.UserLogin);
             query.Arguments.Add(query.UserPassword);
 
-            ServerResponse result;
+            //while (true)
+            //{
+                BaseExecute(context);
 
-            while (true)
-            {
-                result = Execute(connection, query);
-
-                Log.Trace
-                    (
-                        nameof(ConnectCommand) + "::" + nameof(Execute)
-                        + ": returnCode="
-                        + result.ReturnCode
-                    );
+                //Log.Trace
+                //    (
+                //        nameof(ConnectCommand) + "::" + nameof(Execute)
+                //        + ": returnCode="
+                //        + context.Response.ReturnCode
+                //    );
 
                 //// CLIENT_ALREADY_EXISTS
                 //if (result.ReturnCode == -3337)
@@ -139,19 +137,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 //}
                 //else
                 //{
-                    break;
+                   // break;
                 //}
-            }
+            //}
 
-            if (result.ReturnCode == 0)
-            {
-                ConfirmationInterval = result.RequireInt32();
-                Configuration = result.RemainingAnsiText();
-            }
+            //if (result.ReturnCode == 0)
+            //{
+            //    ConfirmationInterval = result.RequireInt32();
+            //    Configuration = result.RemainingAnsiText();
+            //}
 
-            ServerVersion = result.ServerVersion;
-
-            return result;
+            //ServerVersion = result.ServerVersion;
         }
 
         #endregion

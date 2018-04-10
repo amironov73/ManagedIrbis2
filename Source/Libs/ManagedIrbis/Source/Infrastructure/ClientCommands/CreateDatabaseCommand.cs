@@ -10,8 +10,6 @@
 
 #region Using directives
 
-using AM;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -56,7 +54,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -75,15 +73,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(Description)
                 .Add(ReaderAccess);
 
-            ServerResponse result = Execute(connection, query);
+            BaseExecute(context);
 
             // Response is (ANSI):
             // 0
             // NewDB NEWDB,New database,0 - Создана новая БД NEWDB
             // CloseDB -
             // Exit C:\IRBIS64_2015\workdir\1126_0.ibf
-
-            return result;
         }
 
         #endregion

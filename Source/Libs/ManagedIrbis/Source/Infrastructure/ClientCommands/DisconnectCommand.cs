@@ -28,7 +28,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -41,7 +41,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             query.AddAnsi(connection.Username);
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
 
             Log.Trace
                 (
@@ -49,8 +49,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     + ": returnCode="
                     + result.ReturnCode.ToInvariantString()
                 );
-
-            return result;
         }
 
         #endregion

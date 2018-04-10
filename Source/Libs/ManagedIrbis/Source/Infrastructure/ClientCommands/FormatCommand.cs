@@ -160,19 +160,15 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.FormatRecord);
-
             query.Add(context.GetDatabase(Database));
-
             string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
-
             query.Add
                 (
                     new TextWithEncoding
@@ -190,11 +186,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             if (MfnList.Count >= IrbisConstants.MaxPostings)
             {
                 Log.Error
-                (
-                    nameof(FormatCommand) + "::" + nameof(CreateQuery)
-                    + ": too many MFNs: "
-                    + MfnList.Count
-                );
+                    (
+                        nameof(FormatCommand) + "::" + nameof(CreateQuery)
+                        + ": too many MFNs: "
+                        + MfnList.Count
+                    );
 
                 throw new IrbisNetworkException("too many MFNs");
             }
@@ -213,7 +209,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             if (!string.IsNullOrEmpty(FormatSpecification))
             {
                 result.GetReturnCode();
@@ -226,8 +222,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
 
             FormatResult = GetFormatResult(result, count);
-
-            return result;
         }
 
         #endregion

@@ -118,13 +118,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.ReadDocument);
 
             if (ReferenceEquals(File, null))
@@ -140,7 +139,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             File.BinaryFile = true;
             query.AddAnsi(File.ToString());
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
 
             byte[] buffer = result.RawAnswer;
             Encoding encoding = IrbisEncoding.Ansi;
@@ -154,15 +153,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         + "no binary data received"
                     );
 
-                throw new IrbisNetworkException
-                    (
-                        "No binary data received"
-                    );
+                throw new IrbisNetworkException("No binary data received");
             }
             offset += preamble.Length;
             Content = result.RawAnswer.GetSpan(offset);
-
-            return result;
         }
 
         #endregion

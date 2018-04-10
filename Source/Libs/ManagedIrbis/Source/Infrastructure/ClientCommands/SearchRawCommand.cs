@@ -212,42 +212,22 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
             ClientQuery query = CreateQuery(connection, CommandCode.Search);
+            query.AddAnsi(context.GetDatabase(Database));
 
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "SearchRawCommand::CreateQuery: "
-                        + "database not set"
-                    );
-
-                throw new IrbisException("database not set");
-            }
-
-            query.Add(database);
-
-            string preparedQuery = IrbisSearchQuery.PrepareQuery
-                    (
-                        SearchExpression
-                    );
+            string preparedQuery = IrbisSearchQuery.PrepareQuery(SearchExpression);
             query.AddUtf8(preparedQuery);
 
             query.Add(NumberOfRecords);
             query.Add(FirstRecord);
 
-            string preparedFormat = IrbisFormat.PrepareFormat
-                (
-                    FormatSpecification
-                );
-
+            string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
             query.Add
                 (
                     new TextWithEncoding
@@ -283,13 +263,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             result.GetReturnCode();
 
             Found = result.RemainingUtfStrings()
                 .ToArray();
-
-            return result;
         }
 
         #endregion

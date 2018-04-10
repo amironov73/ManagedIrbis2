@@ -311,17 +311,13 @@ namespace ManagedIrbis
 
             if (!string.IsNullOrEmpty(Smart))
             {
-                SmartClientSocket smartSocket = new SmartClientSocket(connection);
+                SmartClientSocket smartSocket = new SmartClientSocket();
                 connection.SetSocket(smartSocket);
             }
 
             if (!string.IsNullOrEmpty(Slow))
             {
-                SlowSocket slowSocket = new SlowSocket
-                    (
-                        connection: connection,
-                        innerSocket: connection.Socket
-                    );
+                SlowSocket slowSocket = new SlowSocket(connection.Socket);
                 if (NumericUtility.TryParseInt32(Slow, out int delay) && delay > 0)
                 {
                     slowSocket.Delay = delay;
@@ -331,11 +327,7 @@ namespace ManagedIrbis
 
             if (!string.IsNullOrEmpty(Broken))
             {
-                BrokenSocket brokenSocket = new BrokenSocket
-                    (
-                        connection: connection,
-                        innerSocket: connection.Socket
-                    );
+                BrokenSocket brokenSocket = new BrokenSocket(connection.Socket);
 
                 if (NumericUtility.TryParseDouble(Broken, out double probability)
                     && probability > 0.0

@@ -235,27 +235,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             ClientQuery query = CreateQuery(context.Connection, CommandCode.ReadPostings);
-
-            string database = Database ?? context.Connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                (
-                    "ReadPostingsCommand::CreateQuery: "
-                    + "database not specified"
-                );
-
-                throw new IrbisException("database not specified");
-            }
-
             query
-                .Add(database)
+                .AddAnsi(context.GetDatabase(Database))
                 .Add(NumberOfPostings)
                 .Add(FirstPosting)
                 .Add(Format);
@@ -265,10 +252,10 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 if (ReferenceEquals(ListOfTerms, null))
                 {
                     Log.Error
-                    (
-                        "ReadPostingsCommand::CreateQuery: "
-                        + "list of terms == null"
-                    );
+                        (
+                            "ReadPostingsCommand::CreateQuery: "
+                            + "list of terms == null"
+                        );
 
                     throw new IrbisException("list of terms == null");
                 }
@@ -283,12 +270,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddUtf8(Term);
             }
 
-            ServerResponse result = Execute(context.Connection, query);
+            ServerResponse result = BaseExecute(context);
             CheckResponse(result);
-
             Postings = TermPosting.Parse(result);
-
-            return result;
         }
 
         #endregion

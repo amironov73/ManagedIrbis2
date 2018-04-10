@@ -241,7 +241,7 @@ namespace ManagedIrbis
         /// Socket.
         /// </summary>
         [NotNull]
-        public AbstractClientSocket Socket { get; private set; }
+        public ClientSocket Socket { get; private set; }
 
         /// <summary>
         /// Extension point.
@@ -277,7 +277,7 @@ namespace ManagedIrbis
             Workstation = ConnectionSettings.DefaultWorkstation;
 
             Executive = new ExecutionEngine(this);
-            Socket = new SimpleClientSocket(this);
+            Socket = new SimpleClientSocket();
         }
 
         /// <summary>
@@ -299,12 +299,10 @@ namespace ManagedIrbis
 
         #region Private members
 
-        // ReSharper disable InconsistentNaming
         internal bool _connected;
         internal bool _disposed;
         private int _clientID;
         private int _queryID;
-        // ReSharper restore InconsistentNaming
 
         private static Random _random = new Random();
 
@@ -318,18 +316,6 @@ namespace ManagedIrbis
         private IrbisWorkstation _workstation;
 
         private IniFile _iniFile;
-
-        ///// <summary>
-        ///// Raw last client query.
-        ///// </summary>
-        //[CanBeNull]
-        //internal byte[] RawClientRequest { get; set; }
-
-        ///// <summary>
-        ///// Raw last server response.
-        ///// </summary>
-        //[CanBeNull]
-        //internal byte[] RawServerResponse { get; set; }
 
         internal void ThrowIfConnected()
         {
@@ -1367,7 +1353,7 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(loggingPath, nameof(loggingPath));
 
-            AbstractClientSocket oldSocket = Socket;
+            ClientSocket oldSocket = Socket;
             if (oldSocket is LoggingClientSocket)
             {
                 return;
@@ -1375,7 +1361,6 @@ namespace ManagedIrbis
 
             LoggingClientSocket newSocket = new LoggingClientSocket
                 (
-                    this,
                     Socket,
                     loggingPath
                 );
@@ -1411,7 +1396,6 @@ namespace ManagedIrbis
             {
                 RetryClientSocket newSocket = new RetryClientSocket
                     (
-                        this,
                         Socket,
                         new RetryManager(retryCount, resolver)
                     );
@@ -1431,7 +1415,7 @@ namespace ManagedIrbis
         /// </summary>
         public virtual void SetSocket
             (
-                AbstractClientSocket socket
+                ClientSocket socket
             )
         {
             Sure.NotNull(socket, nameof(socket));
@@ -1441,7 +1425,6 @@ namespace ManagedIrbis
                 throw new IrbisException(Resources.IrbisConnection_CantSetSocketWhileConnected);
             }
 
-            socket.Connection = this;
             Socket = socket;
         }
 

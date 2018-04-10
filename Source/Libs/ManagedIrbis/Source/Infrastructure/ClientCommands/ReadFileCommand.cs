@@ -111,13 +111,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext) "/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.ReadDocument);
 
             foreach (FileSpecification fileName in Files)
@@ -126,10 +125,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddAnsi(item);
             }
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             Result = GetFileText(result);
-
-            return result;
         }
 
         #endregion

@@ -33,7 +33,7 @@ namespace ManagedIrbis.Infrastructure
         /// of the connection.
         /// </summary>
         [NotNull]
-        public static AbstractClientSocket CreateSocket
+        public static ClientSocket CreateSocket
             (
                 [NotNull] IrbisConnection connection,
                 [NotNull] string typeName
@@ -44,8 +44,8 @@ namespace ManagedIrbis.Infrastructure
 
             Type socketType = Type.GetType(typeName, true)
                 .ThrowIfNull(nameof(Type.GetType));
-            AbstractClientSocket result
-                = (AbstractClientSocket)Activator.CreateInstance
+            ClientSocket result
+                = (ClientSocket)Activator.CreateInstance
                 (
                     type: socketType,
                     args: connection
@@ -65,7 +65,7 @@ namespace ManagedIrbis.Infrastructure
             (
                 [NotNull] IrbisConnection connection
             )
-            where T: AbstractClientSocket
+            where T: ClientSocket
         {
             Sure.NotNull(connection, nameof(connection));
 
@@ -88,13 +88,13 @@ namespace ManagedIrbis.Infrastructure
             (
                 [NotNull] IrbisConnection connection
             )
-            where T: AbstractClientSocket
+            where T: ClientSocket
         {
             Sure.NotNull(connection, nameof(connection));
 
             T result = null;
             for (
-                    AbstractClientSocket socket = connection.Socket;
+                    ClientSocket socket = connection.Socket;
                     !ReferenceEquals(socket, null);
                     socket = socket.InnerSocket
                 )
@@ -118,7 +118,7 @@ namespace ManagedIrbis.Infrastructure
             (
                 [NotNull] IrbisConnection connection
             )
-            where T: AbstractClientSocket
+            where T: ClientSocket
         {
             Sure.NotNull(connection, nameof(connection));
 
@@ -134,13 +134,13 @@ namespace ManagedIrbis.Infrastructure
         public static void RemoveSocket
             (
                 [NotNull] IrbisConnection connection,
-                [NotNull] AbstractClientSocket socket
+                [NotNull] ClientSocket socket
             )
         {
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNull(socket, nameof(socket));
 
-            AbstractClientSocket inner = socket.InnerSocket;
+            ClientSocket inner = socket.InnerSocket;
 
             if (ReferenceEquals(connection.Socket, socket))
             {
@@ -150,7 +150,7 @@ namespace ManagedIrbis.Infrastructure
             else
             {
                 for (
-                        AbstractClientSocket current = connection.Socket;
+                        ClientSocket current = connection.Socket;
                         !ReferenceEquals(current, null);
                     )
                 {

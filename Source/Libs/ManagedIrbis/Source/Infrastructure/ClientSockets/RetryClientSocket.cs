@@ -24,7 +24,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class RetryClientSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
         #region Properties
 
@@ -41,10 +41,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// Retry manager.
         /// </summary>
         [NotNull]
-        public RetryManager RetryManager
-        {
-            get; private set;
-        }
+        public RetryManager RetryManager { get; }
 
         #endregion
 
@@ -55,11 +52,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public RetryClientSocket
             (
-                [NotNull] IrbisConnection connection,
-                [NotNull] AbstractClientSocket innerSocket,
+                [NotNull] ClientSocket innerSocket,
                 [NotNull] RetryManager retryManager
             )
-            : base(connection)
         {
             Sure.NotNull(innerSocket, nameof(innerSocket));
             Sure.NotNull(retryManager, nameof(retryManager));
@@ -70,34 +65,24 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region AbstractClientSocket members
+        #region ClientSocket members
 
-        /// <summary>
-        /// Abort the request.
-        /// </summary>
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Send request to server and receive answer.
-        /// </summary>
-        public override byte[] ExecuteRequest
+        /// <inheritdoc cref="ClientSocket.ExecuteRequest" />
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Func<byte[], byte[]> func = InnerSocket.ThrowIfNull().ExecuteRequest;
+            ClientSocket innerSocket = InnerSocket.ThrowIfNull(nameof(InnerSocket));
+            Action<ClientContext> action = innerSocket.ExecuteRequest;
 
-
-            byte[] result = RetryManager.Try
-                (
-                    function: func,
-                    argument: request
-                );
-
-            return result;
+            RetryManager.Try(action, context);
         }
 
         #endregion

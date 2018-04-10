@@ -70,14 +70,11 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.SaveRecordGroup);
-
             if (References.Count == 0)
             {
                 Log.Error
@@ -100,6 +97,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 throw new IrbisNetworkException(Resources.WriteRecordsCommand_TooManyRecords);
             }
 
+            ClientQuery query = CreateQuery(context, CommandCode.SaveRecordGroup);
             query
                 .Add(Lock)
                 .Add(Actualize);
@@ -141,22 +139,19 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(reference);
             }
 
-            ServerResponse result = Execute(connection, query);
-
-            result.GetReturnCode();
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
 
             for (int i = 0; i < References.Count; i++)
             {
                 ProtocolText.ParseResponseForWriteRecords
                     (
-                        result,
+                        response,
                         References[i].Record
                     );
 
                 References[i].Mfn = References[i].Record.Mfn;
             }
-
-            return result;
         }
 
         #endregion

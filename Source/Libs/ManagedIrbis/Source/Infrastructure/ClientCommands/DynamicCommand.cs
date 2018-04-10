@@ -90,13 +90,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Basic implementation of <see cref="Execute"/>.
         /// </summary>
-        public ServerResponse BaseExecute
+        public ServerResponse BaseExecute2
             (
-                IIrbisConnection connection,
-                ClientQuery query
+                ClientContext context
             )
         {
-            ServerResponse result = base.Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
 
             return result;
         }
@@ -139,7 +138,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -156,9 +155,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             ServerResponse result = !ReferenceEquals(handler, null)
                 ? handler(this)
-                : BaseExecute(connection, query);
-
-            return result;
+                : BaseExecute(context);
         }
 
         #endregion

@@ -25,7 +25,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class SlowSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
         #region Constants
 
@@ -52,12 +52,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public SlowSocket
             (
-                [NotNull] IrbisConnection connection,
-                [NotNull] AbstractClientSocket innerSocket
+                [NotNull] ClientSocket innerSocket
             )
-            : base(connection)
         {
-            Sure.NotNull(connection, nameof(connection));
             Sure.NotNull(innerSocket, nameof(innerSocket));
 
             Delay = DefaultDelay;
@@ -68,19 +65,19 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #region AbstractClientSocket members
 
-        /// <inheritdoc cref="AbstractClientSocket.AbortRequest" />
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
-            InnerSocket.ThrowIfNull().AbortRequest();
+            InnerSocket.ThrowIfNull(nameof(InnerSocket)).AbortRequest();
         }
 
-        /// <inheritdoc cref="AbstractClientSocket.ExecuteRequest" />
-        public override byte[] ExecuteRequest
+        /// <inheritdoc cref="ClientSocket.ExecuteRequest" />
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Sure.NotNull(request, nameof(request));
+            Sure.NotNull(context, nameof(context));
 
             int delay = Delay;
             if (delay > 0)
@@ -88,10 +85,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 Thread.Sleep(delay);
             }
 
-            byte[] result = InnerSocket.ThrowIfNull(nameof(InnerSocket))
-                .ExecuteRequest(request);
-
-            return result;
+            InnerSocket
+                .ThrowIfNull(nameof(InnerSocket))
+                .ExecuteRequest(context);
         }
 
         #endregion

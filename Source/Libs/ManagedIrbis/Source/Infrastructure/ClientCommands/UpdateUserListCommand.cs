@@ -35,31 +35,15 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public UpdateUserListCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.SetUserList);
+            ClientQuery query = CreateQuery(context, CommandCode.SetUserList);
 
             if (ReferenceEquals(UserList, null))
             {
@@ -78,56 +62,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.AddAnsi(line);
             }
 
-            ServerResponse result = Execute(connection, query);
-
-            return result;
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
-
-        #endregion
-
-        #region IVerifiable members
-
-        // TODO Fix this
-
-        ///// <inheritdoc cref="ClientCommand.Verify" />
-        //public override bool Verify
-        //    (
-        //        bool throwOnError
-        //    )
-        //{
-        //    Verifier<UpdateUserListCommand> verifier
-        //        = new Verifier<UpdateUserListCommand>
-        //            (
-        //                this,
-        //                throwOnError
-        //            );
-
-        //    verifier
-        //        .NotNull(UserList, "UserList");
-
-        //    UserInfo[] userList = UserList.ThrowIfNull();
-
-        //    verifier.Assert
-        //        (
-        //            userList.Length != 0,
-        //            "UserList.Length == 0"
-        //        );
-        //    foreach (UserInfo userInfo in userList)
-        //    {
-        //        verifier.NotNull
-        //            (
-        //                userInfo,
-        //                "userInfo"
-        //            )
-        //            .VerifySubObject
-        //            (
-        //                userInfo,
-        //                "userInfo"
-        //            );
-        //    }
-
-        //    return verifier.Result;
-        //}
 
         #endregion
     }

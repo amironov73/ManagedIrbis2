@@ -63,26 +63,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
             ClientQuery query = CreateQuery(connection, CommandCode.UnlockRecords);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "UnlockRecordsCommand::CreateQuery: "
-                        + "database not specified"
-                    );
-
-                throw new IrbisException("database not specified");
-            }
-            query.AddAnsi(database);
+            query.AddAnsi(context.GetDatabase(Database));
 
             if (Records.Count == 0)
             {
@@ -96,10 +84,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             }
             query.Arguments.AddRange(Records.Cast<object>());
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             result.GetReturnCode();
-
-            return result;
         }
 
         #endregion

@@ -76,13 +76,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.ListFiles);
 
             if (Specifications.Count == 0)
@@ -102,8 +101,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Add(specification);
             }
 
-            ServerResponse result = base.Execute(connection, query);
-
+            ServerResponse result = BaseExecute(context);
             List<string> files = result.RemainingAnsiStrings();
             Files = files.SelectMany
                 (
@@ -111,8 +109,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         .ThrowIfNull(nameof(line)).SplitLines()
                 )
                 .ToArray();
-
-            return result;
         }
 
         #endregion

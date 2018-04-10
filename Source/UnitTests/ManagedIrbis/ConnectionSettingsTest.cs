@@ -15,19 +15,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace UnitTests.ManagedIrbis
 {
     class MySocket
-        : AbstractClientSocket
+        : ClientSocket
     {
-        public MySocket([NotNull] IrbisConnection connection)
-            : base(connection)
-        {
-        }
-
         public override void AbortRequest()
         {
             throw new NotImplementedException();
         }
 
-        public override byte[] ExecuteRequest(byte[] request)
+        public override void ExecuteRequest(ClientContext context)
         {
             throw new NotImplementedException();
         }

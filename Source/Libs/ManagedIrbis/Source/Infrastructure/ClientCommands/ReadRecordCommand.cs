@@ -79,7 +79,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -101,7 +101,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Arguments.Add(Format);
             }
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
 
             // Check whether no records read
             if (result.GetReturnCode() != -201)
@@ -130,8 +130,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
                 Record = record;
             }
-
-            return result;
         }
 
         ///// <inheritdoc cref="ClientCommand.GoodReturnCodes"/>

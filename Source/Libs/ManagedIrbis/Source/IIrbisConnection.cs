@@ -138,7 +138,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Socket.
         /// </summary>
-        AbstractClientSocket Socket { get; }
+        ClientSocket Socket { get; }
 
         /// <summary>
         /// Arbitrary user data.
@@ -557,7 +557,7 @@ namespace ManagedIrbis
         /// </summary>
         void SetSocket
             (
-                [NotNull] AbstractClientSocket socket
+                [NotNull] ClientSocket socket
             );
 
         /// <summary>

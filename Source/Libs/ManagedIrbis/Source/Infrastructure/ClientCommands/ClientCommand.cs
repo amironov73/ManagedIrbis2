@@ -100,10 +100,43 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         }
 
         /// <summary>
+        /// Create client query.
+        /// </summary>
+        public ClientQuery CreateQuery
+            (
+                [NotNull] ClientContext context,
+                [NotNull] string commandCode
+            )
+        {
+            Sure.NotNull(context, nameof(context));
+            Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
+
+            Log.Trace(nameof(ClientCommand) + "::" + nameof(CreateQuery));
+
+            IIrbisConnection connection = context.Connection;
+            ClientQuery result = new ClientQuery(commandCode)
+            {
+                Workstation = connection.Workstation,
+                ClientID = connection.ClientID,
+                CommandNumber = 1,
+                UserLogin = connection.Username,
+                UserPassword = connection.Password
+            };
+
+            //if (Connection is IrbisConnection connection)
+            //{
+            //    result.CommandNumber = connection.IncrementCommandNumber();
+            //}
+
+            context.Query = result;
+
+            return result;
+        }
+
+        /// <summary>
         /// Execute the command.
         /// </summary>
-        [NotNull]
-        public abstract ServerResponse Execute
+        public abstract void Execute
             (
                 [NotNull] ClientContext context
             );
@@ -111,17 +144,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         /// <summary>
         /// Execute the query.
         /// </summary>
-        [NotNull]
-        protected ServerResponse Execute
+        protected ServerResponse BaseExecute
             (
-                [NotNull] IIrbisConnection connection,
-                [NotNull] ClientQuery query
+                [NotNull] ClientContext context
             )
         {
-            query.Verify(true);
-
+            ClientQuery query = context.Query.ThrowIfNull(nameof(context.Query));
             byte[] request = query.EncodePacket();
-            byte[] answer = connection.Socket.ExecuteRequest(request);
+            context.RawQuery = request;
+            IIrbisConnection connection = context.Connection;
+            connection.Socket.ExecuteRequest(context);
+            byte[] answer = context.RawResponse.ThrowIfNull(nameof(context.RawResponse));
 
             Log.Trace
                 (
@@ -137,6 +170,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     request,
                     RelaxResponse
                 );
+            context.Response = result;
 
             return result;
         }

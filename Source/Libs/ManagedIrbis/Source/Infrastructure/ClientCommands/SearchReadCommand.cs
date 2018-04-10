@@ -69,21 +69,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public SearchReadCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region Private members
 
         private MarcRecord _ConvertRecord
@@ -116,16 +101,17 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             string database = context.GetDatabase(Database);
             IIrbisConnection connection = context.Connection;
-            ServerResponse result = base.Execute(context);
+            base.Execute(context);
+            ServerResponse response = context.Response.ThrowIfNull(nameof(context.Response));
 
-            if (result.ReturnCode == 0)
+            if (response.ReturnCode == 0)
             {
                 if (UseReadInsteadOfFormat)
                 {
@@ -145,8 +131,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         .ToArray();
                 }
             }
-
-            return result;
         }
 
         #endregion

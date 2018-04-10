@@ -170,13 +170,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             string commandCode = ReverseOrder
                 ? CommandCode.ReadTermsReverse
                 : CommandCode.ReadTerms;
@@ -188,14 +187,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(NumberOfTerms)
                 .AddAnsi(preparedFormat);
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             CheckResponse(result);
 
             Terms = string.IsNullOrEmpty(Format)
                 ? TermInfo.Parse(result)
                 : TermInfoEx.ParseEx(result);
-
-            return result;
         }
 
         #endregion

@@ -20,6 +20,8 @@ using AM.Logging;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 namespace ManagedIrbis.Infrastructure.Sockets
@@ -29,7 +31,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class LoggingClientSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
         #region Properties
 
@@ -37,7 +39,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// Path to store debug data.
         /// </summary>
         [NotNull]
-        public string DebugPath { get; private set; }
+        public string DebugPath { get; }
 
         #endregion
 
@@ -48,21 +50,16 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public LoggingClientSocket
             (
-                [NotNull] IrbisConnection connection,
-                [NotNull] AbstractClientSocket innerSocket,
+                [NotNull] ClientSocket innerSocket,
                 [NotNull] string debugPath
             )
-            : base(connection)
         {
             Sure.NotNull(innerSocket, nameof(innerSocket));
             Sure.NotNullNorEmpty(debugPath, nameof(debugPath));
 
             if (!Directory.Exists(debugPath))
             {
-                throw new IrbisNetworkException
-                    (
-                        "directory not exist: " + debugPath
-                    );
+                throw new IrbisNetworkException(Resources.DirectoryNotExist + debugPath);
             }
 
             DebugPath = debugPath;
@@ -171,36 +168,30 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region AbstractClientSocket members
+        #region ClientSocket members
 
-        /// <summary>
-        /// Abort the request.
-        /// </summary>
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
-            AbstractClientSocket innerSocket = InnerSocket
-                .ThrowIfNull(nameof(InnerSocket));
-
-            innerSocket.AbortRequest();
+            InnerSocket
+                .ThrowIfNull(nameof(InnerSocket))
+                .AbortRequest();
         }
 
-        /// <summary>
-        /// Send request to server and receive answer.
-        /// </summary>
-        public override byte[] ExecuteRequest
+        /// <inheritdoc cref="ClientSocket.ExecuteRequest" />
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Sure.NotNull(request, nameof(request));
+            Sure.NotNull(context, nameof(context));
 
-            AbstractClientSocket innerSocket = InnerSocket
+            ClientSocket innerSocket = InnerSocket
                 .ThrowIfNull(nameof(InnerSocket));
 
-            byte[] result;
             try
             {
-                result = innerSocket.ExecuteRequest(request);
+                innerSocket.ExecuteRequest(context);
             }
             catch (Exception exception)
             {
@@ -210,19 +201,14 @@ namespace ManagedIrbis.Infrastructure.Sockets
                         exception
                     );
 
-                Task.Factory.StartNew
-                    (
-                        () => _DumpException(exception)
-                    );
+                Task.Factory.StartNew(() => _DumpException(exception));
                 throw;
             }
 
             Task.Factory.StartNew
                 (
-                    () => _DumpPackets(request, result)
+                    () => _DumpPackets(context.RawQuery, context.RawResponse)
                 );
-
-            return result;
         }
 
         #endregion

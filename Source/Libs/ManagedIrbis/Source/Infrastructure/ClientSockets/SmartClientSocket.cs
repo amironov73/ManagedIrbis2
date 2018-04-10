@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -31,23 +32,8 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class SmartClientSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
-        #region Construction
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public SmartClientSocket
-            (
-                [NotNull] IrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
-
-        #endregion
-
         #region Private members
 
         private IPAddress _address;
@@ -73,13 +59,16 @@ namespace ManagedIrbis.Infrastructure.Sockets
             }
         }
 
-        private TcpClient _GetTcpClient()
+        private TcpClient _GetTcpClient
+            (
+                int port
+            )
         {
             TcpClient result = new TcpClient();
 
             // TODO some setup?
 
-            result.Connect(_address, Connection.Port);
+            result.Connect(_address, port);
 
             return result;
         }
@@ -171,39 +160,36 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region AbstractClientSocket members
+        #region ClientSocket members
 
-        /// <summary>
-        /// Abort the request.
-        /// </summary>
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
-            // TODO implement
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Send request to server and receive answer.
         /// </summary>
-        public override byte[] ExecuteRequest
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Sure.NotNull(request, nameof(request));
+            Sure.NotNull(context, nameof(context));
 
-            _ResolveHostAddress(Connection.Host);
+            IIrbisConnection connection = context.Connection;
+            _ResolveHostAddress(connection.Host);
 
             using (new BusyGuard(Busy))
             {
-                using (TcpClient client = _GetTcpClient())
+                using (TcpClient tcp = _GetTcpClient(connection.Port))
                 {
-                    Socket socket = client.Client;
-                    socket.Send(request);
+                    Socket socket = tcp.Client;
+                    socket.Send(context.RawQuery);
 
-                    NetworkStream stream = client.GetStream();
-                    byte[] result = _SmartRead(stream);
-
-                    return result;
+                    NetworkStream stream = tcp.GetStream();
+                    context.RawResponse = _SmartRead(stream);
                 }
             }
         }

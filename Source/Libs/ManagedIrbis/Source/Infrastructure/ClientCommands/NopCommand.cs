@@ -40,19 +40,15 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
             ClientQuery query = CreateQuery(connection, CommandCode.Nop);
-
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             result.GetReturnCode();
-
-            return result;
         }
 
         #endregion

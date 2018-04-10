@@ -27,7 +27,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class BrokenSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
         #region Constants
 
@@ -54,12 +54,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public BrokenSocket
             (
-                [NotNull] IrbisConnection connection,
-                [NotNull] AbstractClientSocket innerSocket
+                [NotNull] ClientSocket innerSocket
             )
-            : base(connection)
         {
-            Sure.NotNull(connection, nameof(connection));
             Sure.NotNull(innerSocket, nameof(innerSocket));
 
             Probability = DefaultProbability;
@@ -76,21 +73,21 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #endregion
 
-        #region AbstractClientSocket members
+        #region ClientSocket members
 
-        /// <inheritdoc cref="AbstractClientSocket.AbortRequest"/>
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
-            InnerSocket.ThrowIfNull().AbortRequest();
+            InnerSocket.ThrowIfNull(nameof(InnerSocket)).AbortRequest();
         }
 
-        /// <inheritdoc cref="AbstractClientSocket.ExecuteRequest"/>
-        public override byte[] ExecuteRequest
+        /// <inheritdoc cref="ClientSocket.ExecuteRequest" />
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Sure.NotNull(request, nameof(request));
+            Sure.NotNull(context, nameof(context));
 
             double probability = Probability;
             if (probability > 0.0
@@ -103,9 +100,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 }
             }
 
-            byte[] result = InnerSocket.ThrowIfNull().ExecuteRequest(request);
-
-            return result;
+            InnerSocket
+                .ThrowIfNull(nameof(InnerSocket))
+                .ExecuteRequest(context);
         }
 
         #endregion

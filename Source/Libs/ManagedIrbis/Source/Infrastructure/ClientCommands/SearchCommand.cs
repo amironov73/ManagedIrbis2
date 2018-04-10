@@ -234,8 +234,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         );
                     subCommand._subCommand = true;
 
-                    ClientQuery clientQuery = subCommand.CreateQuery(connection, CommandCode.Search);
-                    ServerResponse subResponse = subCommand.Execute(connection, clientQuery);
+                    ClientContext subContext = new ClientContext(context.Connection);
+                    subCommand.CreateQuery(subContext, CommandCode.Search);
+                    ServerResponse subResponse = subCommand.BaseExecute(subContext);
                     subCommand.CheckResponse(subResponse);
 
                     List<FoundItem> found = subCommand.Found
@@ -328,39 +329,20 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
             ClientQuery query = CreateQuery(connection, CommandCode.Search);
-
-            string database = Database ?? connection.Database;
-            if (string.IsNullOrEmpty(database))
-            {
-                Log.Error
-                    (
-                        "SearchCommand::CreateQuery: "
-                        + "database not set"
-                    );
-
-                throw new IrbisException("database not set");
-            }
-
-            query.Add(database);
-
-            string preparedQuery = IrbisSearchQuery.PrepareQuery
-                    (
-                        SearchExpression
-                    );
+            query.AddAnsi(context.GetDatabase(Database));
+            string preparedQuery = IrbisSearchQuery.PrepareQuery(SearchExpression);
             query.AddUtf8(preparedQuery);
-
             query.Add(NumberOfRecords);
             query.Add(FirstRecord);
 
             string preparedFormat = IrbisFormat.PrepareFormat(FormatSpecification);
-
             query.Add
                 (
                     new TextWithEncoding
@@ -408,7 +390,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = Execute(connection, query);
+            ServerResponse result = BaseExecute(context);
             result.GetReturnCode();
             if (result.ReturnCode == 0)
             {
@@ -432,8 +414,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                         );
                 }
             }
-
-            return result;
         }
 
         #endregion

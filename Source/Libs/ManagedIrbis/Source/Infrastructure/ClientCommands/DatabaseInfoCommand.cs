@@ -59,7 +59,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -70,11 +70,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             string database = context.GetDatabase(Database);
             query.AddAnsi(database);
 
-            ServerResponse response = Execute(connection, query);
+            ServerResponse response = BaseExecute(context);
             Result = DatabaseInfo.ParseServerResponse(response);
             Result.Name = database;
-
-            return response;
         }
 
         #endregion

@@ -104,7 +104,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -131,7 +131,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             query.Add(Record.ThrowIfNull(nameof(Record)));
 
-            ServerResponse response = Execute(connection, query);
+            ServerResponse response = BaseExecute(context);
             CheckResponse(response);
 
             string line = response.RequireUtfString();
@@ -141,8 +141,6 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                     line,
                     Result
                 );
-
-            return response;
         }
 
         #endregion

@@ -95,21 +95,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         //}
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode);
+            ClientQuery query = CreateQuery(context, CommandCode);
             if (!ReferenceEquals(Arguments, null))
             {
                 query.Arguments.AddRange(Arguments);
             }
 
-            ServerResponse result = Execute(connection, query);
-
-            return result;
+            BaseExecute(context);
         }
 
         #endregion

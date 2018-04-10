@@ -24,7 +24,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
     /// </summary>
     [PublicAPI]
     public sealed class TestingSocket
-        : AbstractClientSocket
+        : ClientSocket
     {
         #region Properties
 
@@ -46,43 +46,26 @@ namespace ManagedIrbis.Infrastructure.Sockets
         [CanBeNull]
         public byte[] ExpectedRequest { get; set; }
 
-        /// <inheritdoc cref="AbstractClientSocket.RequireConnection" />
-        public override bool RequireConnection => false;
-
         #endregion
 
-        #region Construction
+        #region ClientSocket members
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public TestingSocket
-            (
-                [NotNull] IIrbisConnection connection
-            )
-            : base(connection)
-        {
-        }
-
-        #endregion
-
-        #region AbstractClientSocket members
-
-        /// <inheritdoc cref="AbstractClientSocket.AbortRequest" />
+        /// <inheritdoc cref="ClientSocket.AbortRequest" />
         public override void AbortRequest()
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc cref="AbstractClientSocket.ExecuteRequest" />
-        public override byte[] ExecuteRequest
+        /// <inheritdoc cref="ClientSocket.ExecuteRequest" />
+        public override void ExecuteRequest
             (
-                byte[] request
+                ClientContext context
             )
         {
-            Sure.NotNull(request, nameof(request));
+            Sure.NotNull(context, nameof(context));
 
-            ActualRequest = request;
+            byte[] query = context.RawQuery.ThrowIfNull(nameof(context.RawQuery));
+            ActualRequest = query;
 
             if (!ReferenceEquals(ExpectedRequest, null))
             {
@@ -90,22 +73,17 @@ namespace ManagedIrbis.Infrastructure.Sockets
                     (
                         firstArray: ExpectedRequest,
                         firstOffset: 0,
-                        secondArray: request,
+                        secondArray: query,
                         secondOffset: 0,
-                        length: request.Length
+                        length: query.Length
                     ))
                 {
                     throw new IrbisNetworkException();
                 }
             }
 
-            byte[] answer = Response;
-            if (ReferenceEquals(answer, null))
-            {
-                throw new IrbisNetworkException();
-            }
-
-            return answer;
+            byte[] answer = Response ?? throw new IrbisNetworkException();
+            context.RawResponse = answer;
         }
 
         #endregion

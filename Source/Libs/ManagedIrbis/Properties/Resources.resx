@@ -361,4 +361,7 @@
   <data name="WriteRecordsCommand_DatabaseNotSet" xml:space="preserve">
     <value>database not set</value>
   </data>
+  <data name="DirectoryNotExist" xml:space="preserve">
+    <value>directory not exist: </value>
+  </data>
 </root>

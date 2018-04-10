@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using AM;
 using AM.Threading;
 
 using JetBrains.Annotations;
@@ -22,50 +21,21 @@ namespace ManagedIrbis.Infrastructure
     ///
     /// </summary>
     [PublicAPI]
-    public abstract class AbstractClientSocket
+    public abstract class ClientSocket
     {
         #region Properties
-
-        /// <summary>
-        /// Connection.
-        /// </summary>
-        [NotNull]
-        public IIrbisConnection Connection { get; internal set; }
 
         /// <summary>
         /// Busy state flag.
         /// </summary>
         [NotNull]
-        public BusyState Busy { get; private set; }
+        public BusyState Busy { get; } = new BusyState(false);
 
         /// <summary>
         /// Inner socket.
         /// </summary>
         [CanBeNull]
-        public AbstractClientSocket InnerSocket { get; internal set; }
-
-        /// <summary>
-        /// Requires connection?
-        /// </summary>
-        public virtual bool RequireConnection => true;
-
-        #endregion
-
-        #region Construction
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        protected AbstractClientSocket
-            (
-                [NotNull] IIrbisConnection connection
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
-
-            Connection = connection;
-            Busy = new BusyState(false);
-        }
+        public ClientSocket InnerSocket { get; internal set; }
 
         #endregion
 
@@ -80,10 +50,9 @@ namespace ManagedIrbis.Infrastructure
         /// Send request to server and receive answer.
         /// </summary>
         /// <exception cref="IrbisNetworkException"></exception>
-        [NotNull]
-        public abstract byte[] ExecuteRequest
+        public abstract void ExecuteRequest
             (
-                [NotNull] byte[] request
+                [NotNull] ClientContext context
             );
 
         #endregion

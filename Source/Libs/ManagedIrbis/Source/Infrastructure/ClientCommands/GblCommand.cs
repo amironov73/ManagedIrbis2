@@ -162,19 +162,15 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #region Construction
 
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public GblCommand()
-        //    //(
-        //    //    [NotNull] IIrbisConnection connection
-        //    //)
-        //    //: base(connection)
-        //{
-        //    Actualize = true;
-        //    FormalControl = false;
-        //    AutoIn = false;
-        //}
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public GblCommand()
+        {
+            Actualize = true;
+            FormalControl = false;
+            AutoIn = false;
+        }
 
         /// <summary>
         /// Constructor.
@@ -215,14 +211,13 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)"/>
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
             IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = base.CreateQuery(connection, CommandCode.GlobalCorrection);
+            ClientQuery query = CreateQuery(connection, CommandCode.GlobalCorrection);
             query.AddAnsi(context.GetDatabase(Database));
             query.Add(Actualize);
 
@@ -298,55 +293,14 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 TimeStarted = DateTime.Now
             };
 
-            ServerResponse response = base.Execute(connection, query);
+            ServerResponse response = BaseExecute(context);
             CheckResponse(response);
 
             gblResult.TimeElapsed = DateTime.Now - gblResult.TimeStarted;
             gblResult.Parse(response);
 
             Result = gblResult;
-
-            return response;
         }
-
-        #endregion
-
-        #region IVerifiable members
-
-        ///// <inheritdoc cref="ClientCommand.Verify"/>
-        //public override bool Verify
-        //    (
-        //        bool throwOnError
-        //    )
-        //{
-        //    Verifier<GblCommand> verifier = new Verifier<GblCommand>
-        //        (
-        //            this,
-        //            throwOnError
-        //        );
-
-        //    // TODO Fix this
-
-        //    if (string.IsNullOrEmpty(FileName))
-        //    {
-        //        // ReSharper disable PossibleNullReferenceException
-        //        verifier
-        //            .NotNull(Statements, "Statements")
-        //            .Assert
-        //                (
-        //                    Statements.Length > 0,
-        //                    "Statements.Length > 0"
-        //                );
-        //        // ReSharper restore PossibleNullReferenceException
-
-        //        foreach (GblStatement statement in Statements)
-        //        {
-        //            verifier.VerifySubObject(statement, "statement");
-        //        }
-        //    }
-
-        //    return verifier.Result;
-        //}
 
         #endregion
     }

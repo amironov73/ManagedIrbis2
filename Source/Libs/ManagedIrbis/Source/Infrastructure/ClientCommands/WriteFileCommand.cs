@@ -57,15 +57,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-
-            ClientQuery query = CreateQuery(connection, CommandCode.ReadDocument);
-
+            ClientQuery query = CreateQuery(context, CommandCode.ReadDocument);
             foreach (FileSpecification fileName in Files)
             {
                 TextWithEncoding text = new TextWithEncoding
@@ -76,9 +73,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 query.Arguments.Add(text);
             }
 
-            ServerResponse result = Execute(connection, query);
-
-            return result;
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

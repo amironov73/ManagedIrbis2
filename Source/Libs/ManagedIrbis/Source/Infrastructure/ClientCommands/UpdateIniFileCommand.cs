@@ -50,14 +50,12 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.UpdateIniFile);
-
+            ClientQuery query = CreateQuery(context, CommandCode.UpdateIniFile);
             if (!ReferenceEquals(Lines, null))
             {
                 foreach (string line in Lines)
@@ -66,10 +64,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 }
             }
 
-            ServerResponse result = Execute(connection, query);
-            result.GetReturnCode();
-
-            return result;
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
         }
 
         #endregion

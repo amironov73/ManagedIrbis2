@@ -70,7 +70,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
@@ -96,9 +96,9 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
                 .Add(Actualize)
                 .Add(Record);
 
-            ServerResponse result = Execute(connection, query);
-
-            MaxMfn = result.GetReturnCode();
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
+            MaxMfn = response.ReturnCode;
 
             MarcRecord record = Record.ThrowIfNull("Record");
 
@@ -107,14 +107,8 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
             if (!DontParseResponse)
             {
-                ProtocolText.ParseResponseForWriteRecord
-                    (
-                        result,
-                        record
-                    );
+                ProtocolText.ParseResponseForWriteRecord(response, record);
             }
-
-            return result;
         }
 
         #endregion

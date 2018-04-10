@@ -32,37 +32,18 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
 
         #endregion
 
-        #region Construction
-
-        ///// <summary>
-        ///// Constructor.
-        ///// </summary>
-        //public ServerVersionCommand
-        //    (
-        //        [NotNull] IIrbisConnection connection
-        //    )
-        //    : base(connection)
-        //{
-        //}
-
-        #endregion
-
         #region ClientCommand members
 
         /// <inheritdoc cref="ClientCommand.Execute(ClientContext)" />
-        public override ServerResponse Execute
+        public override void Execute
             (
                 ClientContext context
             )
         {
-            IIrbisConnection connection = context.Connection;
-            ClientQuery query = CreateQuery(connection, CommandCode.ServerInfo);
-
-            ServerResponse response = Execute(connection, query);
-            response.GetReturnCode();
+            CreateQuery(context, CommandCode.ServerInfo);
+            ServerResponse response = BaseExecute(context);
+            CheckResponse(response);
             Result = IrbisVersion.ParseServerResponse(response);
-
-            return response;
         }
 
         #endregion
