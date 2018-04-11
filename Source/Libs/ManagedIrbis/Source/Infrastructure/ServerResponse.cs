@@ -31,7 +31,7 @@ namespace ManagedIrbis.Infrastructure
     /// Server response network packet.
     /// </summary>
     [PublicAPI]
-    public sealed class ServerResponse
+    public sealed class ServerResponse //-V3072
         : IVerifiable
     {
         #region Constants

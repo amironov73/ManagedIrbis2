@@ -262,13 +262,14 @@ namespace ManagedIrbis
         /// <summary>
         /// Constructor.
         /// </summary>
-        public IrbisConnection ()
+        public IrbisConnection()
         {
             Log.Trace(nameof(IrbisConnection) + "::Constructor");
 
             Busy = new BusyState();
 
             Services = new ServiceContainer();
+
             Host = ConnectionSettings.DefaultHost;
             Port = ConnectionSettings.DefaultPort;
             Database = ConnectionSettings.DefaultDatabase;
@@ -281,15 +282,35 @@ namespace ManagedIrbis
         }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public IrbisConnection
+            (
+                [NotNull] IServiceProvider services
+            )
+            : this()
+        {
+            Sure.NotNull(services, nameof(services));
+
+            Services = services;
+        }
+
+        /// <summary>
         /// Конструктор с подключением.
         /// </summary>
         public IrbisConnection
             (
-                [NotNull] string connectionString
+                [NotNull] string connectionString,
+                [CanBeNull] IServiceProvider services = null
             )
             : this()
         {
             Sure.NotNullNorEmpty(connectionString, nameof(connectionString));
+
+            if (!ReferenceEquals(services, null))
+            {
+                Services = services;
+            }
 
             ParseConnectionString(connectionString);
             Connect();
@@ -615,7 +636,7 @@ namespace ManagedIrbis
             Sure.NotNull(format, nameof(format));
             Sure.Positive(mfn, nameof(mfn));
 
-            FormatCommand command = new FormatCommand {FormatSpecification = format};
+            FormatCommand command = new FormatCommand { FormatSpecification = format };
             command.MfnList.Add(mfn);
 
             ExecuteCommand(command);
