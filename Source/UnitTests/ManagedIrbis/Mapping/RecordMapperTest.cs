@@ -369,14 +369,14 @@ namespace UnitTests.ManagedIrbis.Mapping
             Assert.IsNull(RecordMapper.ToString(record, 100));
         }
 
-        [TestMethod]
-        public void RecordMapper_ToString_2()
-        {
-            MarcRecord record = _GetRecord();
-            Assert.AreEqual("Заглавие", RecordMapper.ToString(record, 200, 'a'));
-            Assert.IsNull(RecordMapper.ToString(record, 300, 'a'));
-            Assert.IsNull(RecordMapper.ToString(record, 100, 'a'));
-        }
+        //[TestMethod]
+        //public void RecordMapper_ToString_2()
+        //{
+        //    MarcRecord record = _GetRecord();
+        //    Assert.AreEqual("Заглавие", RecordMapper.ToString(record, 200, 'a'));
+        //    Assert.IsNull(RecordMapper.ToString(record, 300, 'a'));
+        //    Assert.IsNull(RecordMapper.ToString(record, 100, 'a'));
+        //}
 
         [TestMethod]
         public void RecordMapper_ToStringArray_1()
@@ -396,22 +396,22 @@ namespace UnitTests.ManagedIrbis.Mapping
             Assert.AreEqual(0, array.Length);
         }
 
-        [TestMethod]
-        public void RecordMapper_ToStringArray_2()
-        {
-            MarcRecord record = _GetRecord();
-            string[] array = RecordMapper.ToStringArray(record, 200, 'a');
-            Assert.AreEqual(1, array.Length);
-            Assert.AreEqual("Заглавие", array[0]);
+        //[TestMethod]
+        //public void RecordMapper_ToStringArray_2()
+        //{
+        //    MarcRecord record = _GetRecord();
+        //    string[] array = RecordMapper.ToStringArray(record, 200, 'a');
+        //    Assert.AreEqual(1, array.Length);
+        //    Assert.AreEqual("Заглавие", array[0]);
 
-            array = RecordMapper.ToStringArray(record, 200, 'b');
-            Assert.AreEqual(0, array.Length);
+        //    array = RecordMapper.ToStringArray(record, 200, 'b');
+        //    Assert.AreEqual(0, array.Length);
 
-            array = RecordMapper.ToStringArray(record, 300, 'a');
-            Assert.AreEqual(0, array.Length);
+        //    array = RecordMapper.ToStringArray(record, 300, 'a');
+        //    Assert.AreEqual(0, array.Length);
 
-            array = RecordMapper.ToStringArray(record, 100, 'a');
-            Assert.AreEqual(0, array.Length);
-        }
+        //    array = RecordMapper.ToStringArray(record, 100, 'a');
+        //    Assert.AreEqual(0, array.Length);
+        //}
     }
 }

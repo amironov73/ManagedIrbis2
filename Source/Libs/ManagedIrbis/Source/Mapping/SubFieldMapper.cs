@@ -309,24 +309,24 @@ namespace ManagedIrbis.Mapping
             return result;
         }
 
-        ///// <summary>
-        ///// Преобразование в 32-битное целое со знаком.
-        ///// </summary>
-        //public static int? ToInt32
-        //    (
-        //        [NotNull] RecordField field,
-        //        char code
-        //    )
-        //{
-        //    SubField subField = field.GetFirstSubField(code);
-        //    int? result = null;
-        //    if (!ReferenceEquals(subField, null))
-        //    {
-        //        result = ToInt32(subField);
-        //    }
+        /// <summary>
+        /// Преобразование в 32-битное целое со знаком.
+        /// </summary>
+        public static int ToInt32
+            (
+                [NotNull] RecordField field,
+                char code
+            )
+        {
+            SubField subField = field.GetFirstSubField(code);
+            int result = 0;
+            if (!ReferenceEquals(subField, null))
+            {
+                result = ToInt32(subField);
+            }
 
-        //    return result;
-        //}
+            return result;
+        }
 
         /// <summary>
         /// Преобразование в 64-битное целое со знаком.
@@ -360,16 +360,32 @@ namespace ManagedIrbis.Mapping
         //    return result;
         //}
 
+        ///// <summary>
+        ///// Преобразование в строку (тривиальное).
+        ///// </summary>
+        //[CanBeNull]
+        //public static string ToString
+        //    (
+        //        [NotNull] SubField subField
+        //    )
+        //{
+        //    return subField.Value;
+        //}
+
         /// <summary>
         /// Преобразование в строку (тривиальное).
         /// </summary>
         [CanBeNull]
         public static string ToString
             (
-                [NotNull] SubField subField
+                [NotNull] RecordField field,
+                char code
             )
         {
-            return subField.Value;
+            SubField subField = field.GetFirstSubField(code);
+            string result = subField?.Value;
+
+            return result;
         }
 
         #endregion

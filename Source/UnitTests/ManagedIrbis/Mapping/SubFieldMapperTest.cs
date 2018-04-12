@@ -152,16 +152,16 @@ namespace UnitTests.ManagedIrbis.Mapping
         //    Assert.AreEqual(expected, SubFieldMapper.ToInt64(field, 'b'));
         //}
 
-        [TestMethod]
-        public void SubFieldMapper_ToString_1()
-        {
-            string value = "Some value";
-            SubField subField = new SubField('a', value);
-            Assert.AreSame(value, SubFieldMapper.ToString(subField));
+        //[TestMethod]
+        //public void SubFieldMapper_ToString_1()
+        //{
+        //    string value = "Some value";
+        //    SubField subField = new SubField('a', value);
+        //    Assert.AreSame(value, SubFieldMapper.ToString(subField));
 
-            value = null;
-            subField = new SubField('a', value);
-            Assert.AreSame(value, SubFieldMapper.ToString(subField));
-        }
+        //    value = null;
+        //    subField = new SubField('a', value);
+        //    Assert.AreSame(value, SubFieldMapper.ToString(subField));
+        //}
     }
 }

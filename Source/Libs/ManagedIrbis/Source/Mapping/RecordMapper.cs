@@ -536,24 +536,24 @@ namespace ManagedIrbis.Mapping
             return result;
         }
 
-        /// <summary>
-        /// Преобразование в строку (тривиальное).
-        /// </summary>
-        [CanBeNull]
-        public static string ToString
-            (
-                [NotNull] MarcRecord record,
-                int tag,
-                char code
-            )
-        {
-            SubField subField = record.Fields.GetFirstSubField(tag, code);
-            string result = ReferenceEquals(subField, null)
-                ? null
-                : SubFieldMapper.ToString(subField);
+        ///// <summary>
+        ///// Преобразование в строку (тривиальное).
+        ///// </summary>
+        //[CanBeNull]
+        //public static string ToString
+        //    (
+        //        [NotNull] MarcRecord record,
+        //        int tag,
+        //        char code
+        //    )
+        //{
+        //    SubField subField = record.Fields.GetFirstSubField(tag, code);
+        //    string result = ReferenceEquals(subField, null)
+        //        ? null
+        //        : SubFieldMapper.ToString(subField);
 
-            return result;
-        }
+        //    return result;
+        //}
 
         /// <summary>
         /// Преобразование в массив строк.
@@ -571,22 +571,22 @@ namespace ManagedIrbis.Mapping
                 .ToArray();
         }
 
-        /// <summary>
-        /// Преобразование в массив строк.
-        /// </summary>
-        [NotNull]
-        [ItemCanBeNull]
-        public static string[] ToStringArray
-            (
-                [NotNull] MarcRecord record,
-                int tag,
-                char code
-            )
-        {
-            return record.Fields.GetSubField(tag, code)
-                .Select(SubFieldMapper.ToString)
-                .ToArray();
-        }
+        ///// <summary>
+        ///// Преобразование в массив строк.
+        ///// </summary>
+        //[NotNull]
+        //[ItemCanBeNull]
+        //public static string[] ToStringArray
+        //    (
+        //        [NotNull] MarcRecord record,
+        //        int tag,
+        //        char code
+        //    )
+        //{
+        //    return record.Fields.GetSubField(tag, code)
+        //        .Select(SubFieldMapper.ToString)
+        //        .ToArray();
+        //}
 
         #endregion
     }

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TestClassAttribute.cs -- attribute for class(es) with test(s)
+/* IrbisTestClassAttribute.cs -- attribute for test method(s)
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -18,10 +18,10 @@ using JetBrains.Annotations;
 namespace ManagedIrbis.Testing
 {
     /// <summary>
-    /// Attribute for class(es) with test(s).
+    /// Attribute for test method(s).
     /// </summary>
     [PublicAPI]
-    public sealed class TestClassAttribute
+    public sealed class IrbisTestMethodAttribute
         : Attribute
     {
     }

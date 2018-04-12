@@ -36,7 +36,7 @@ namespace ManagedIrbis.Mapping
         /// Mappings.
         /// </summary>
         [NotNull]
-        public List<SubFieldMapping> Mappings { get; }
+        public List<SubFieldMapping<T>> Mappings { get; }
 
         #endregion
 
@@ -47,7 +47,7 @@ namespace ManagedIrbis.Mapping
         /// </summary>
         public FieldConverter()
         {
-            Mappings = new List<SubFieldMapping>();
+            Mappings = new List<SubFieldMapping<T>>();
         }
 
         #endregion
@@ -55,12 +55,12 @@ namespace ManagedIrbis.Mapping
         #region Private members
 
         [NotNull]
-        private SubFieldMapping _BuildMapping
+        private SubFieldMapping<T> _BuildMapping
             (
                 [NotNull] PropertyInfo property
             )
         {
-            SubFieldMapping result = new SubFieldMapping
+            SubFieldMapping<T> result = new SubFieldMapping<T>
             {
                 Property = property
             };
@@ -111,15 +111,15 @@ namespace ManagedIrbis.Mapping
                     getter = sf => SubFieldMapper.ToSingle(sf);
                     break;
 
-                case TypeCode.String:
-                    getter = SubFieldMapper.ToString;
-                    break;
+                //case TypeCode.String:
+                //    getter = SubFieldMapper.ToString;
+                //    break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            result.Getter = getter;
+            //result.Getter = getter;
 
             return result;
         }
@@ -156,12 +156,12 @@ namespace ManagedIrbis.Mapping
             Sure.NotNull(field, nameof(field));
             Sure.NotNull(output, nameof(output));
 
-            foreach (SubFieldMapping mapping in Mappings)
+            foreach (SubFieldMapping<T> mapping in Mappings)
             {
                 SubField subField = field.GetFirstSubField(mapping.Code);
                 if (!ReferenceEquals(subField, null))
                 {
-                    object value = mapping.Getter(subField);
+                    object value = null;//mapping.Getter(subField);
                     mapping.Property.SetValue(output, value);
                 }
             }
@@ -179,7 +179,7 @@ namespace ManagedIrbis.Mapping
             Sure.NotNull(input, nameof(input));
             Sure.NotNull(field, nameof(field));
 
-            foreach (SubFieldMapping mapping in Mappings)
+            foreach (SubFieldMapping<T> mapping in Mappings)
             {
                 object value = mapping.Property.GetValue(field);
                 if (ReferenceEquals(value, null))
