@@ -119,7 +119,7 @@ namespace ManagedIrbis.Infrastructure
                         + ": " + Resources.AlreadyConnected
                     );
 
-                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
+                throw new IrbisException(Resources.AlreadyConnected);
             }
         }
 

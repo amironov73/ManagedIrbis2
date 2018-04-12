@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class TimeSpanUtility
@@ -59,35 +59,20 @@ namespace AM
         /// <summary>
         /// Is zero-length time span?
         /// </summary>
-        public static bool IsZero
-            (
-                this TimeSpan timeSpan
-            )
-        {
-            return TimeSpan.Compare(timeSpan, TimeSpan.Zero) == 0;
-        }
+        public static bool IsZero(this TimeSpan timeSpan)
+            => TimeSpan.Compare(timeSpan, TimeSpan.Zero) == 0;
 
         /// <summary>
         /// Is zero-length or less?
         /// </summary>
-        public static bool IsZeroOrLess
-            (
-                this TimeSpan timeSpan
-            )
-        {
-            return TimeSpan.Compare(timeSpan, TimeSpan.Zero) <= 0;
-        }
+        public static bool IsZeroOrLess(this TimeSpan timeSpan)
+            => TimeSpan.Compare(timeSpan, TimeSpan.Zero) <= 0;
 
         /// <summary>
         /// Is length of the time span less than zero?
         /// </summary>
-        public static bool LessThanZero
-            (
-                this TimeSpan timeSpan
-            )
-        {
-            return TimeSpan.Compare(timeSpan, TimeSpan.Zero) < 0;
-        }
+        public static bool LessThanZero(this TimeSpan timeSpan)
+            => TimeSpan.Compare(timeSpan, TimeSpan.Zero) < 0;
 
         /// <summary>
         /// Converts time span to string

@@ -619,15 +619,6 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Already connected.
-        /// </summary>
-        internal static string IrbisConnection_AlreadyConnected {
-            get {
-                return ResourceManager.GetString("IrbisConnection_AlreadyConnected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t set socket while connected.
         /// </summary>
         internal static string IrbisConnection_CantSetSocketWhileConnected {

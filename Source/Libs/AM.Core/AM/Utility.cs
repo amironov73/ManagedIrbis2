@@ -427,6 +427,21 @@ namespace AM
         // =========================================================
 
         /// <summary>
+        /// Safe access value, when the value is null,
+        /// does not throw an exception.
+        /// </summary>
+        public static T SafeValue<T>
+            (
+                this T? value
+            )
+            where T : struct
+        {
+            return value ?? default(T);
+        }
+
+        // =========================================================
+
+        /// <summary>
         /// Throw <see cref="ArgumentNullException"/>
         /// if given value is <c>null</c>.
         /// </summary>

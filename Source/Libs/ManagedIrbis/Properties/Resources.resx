@@ -331,9 +331,6 @@
   <data name="IrbisConnection_ResultRecordIsNull" xml:space="preserve">
     <value>result record is null</value>
   </data>
-  <data name="IrbisConnection_AlreadyConnected" xml:space="preserve">
-    <value>Already connected</value>
-  </data>
   <data name="UsernameNotSpecified" xml:space="preserve">
     <value>username not specified</value>
   </data>

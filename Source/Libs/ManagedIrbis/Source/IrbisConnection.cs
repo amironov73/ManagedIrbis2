@@ -342,7 +342,7 @@ namespace ManagedIrbis
         {
             if (Connected)
             {
-                throw new IrbisException(Resources.IrbisConnection_AlreadyConnected);
+                throw new IrbisException(Resources.AlreadyConnected);
             }
         }
 

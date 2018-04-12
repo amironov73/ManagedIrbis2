@@ -31,53 +31,25 @@ namespace AM
         /// Gets the date of next month first day.
         /// </summary>
         /// <value>Next month first day.</value>
-        public static DateTime NextMonth
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return ThisMonth.AddMonths(1);
-            }
-        }
+        public static DateTime NextMonth => ThisMonth.AddMonths(1);
 
         /// <summary>
         /// Gets the date of next year first day.
         /// </summary>
         /// <value>Next year first day.</value>
-        public static DateTime NextYear
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return ThisYear.AddYears(1);
-            }
-        }
+        public static DateTime NextYear => ThisYear.AddYears(1);
 
         /// <summary>
         /// Gets the date of previous month first day.
         /// </summary>
         /// <value>Previous month first day.</value>
-        public static DateTime PreviousMonth
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return ThisMonth.AddMonths(-1);
-            }
-        }
+        public static DateTime PreviousMonth => ThisMonth.AddMonths(-1);
 
         /// <summary>
         /// Gets the date of previous year first day.
         /// </summary>
         /// <value>Previous year first day.</value>
-        public static DateTime PreviousYear
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return ThisYear.AddYears(-1);
-            }
-        }
+        public static DateTime PreviousYear => ThisYear.AddYears(-1);
 
         /// <summary>
         /// Gets the date of current month first day.
@@ -89,6 +61,7 @@ namespace AM
             get
             {
                 DateTime today = DateTime.Today;
+
                 return new DateTime(today.Year, today.Month, 1);
             }
         }
@@ -97,47 +70,25 @@ namespace AM
         /// Gets the date of current year first day.
         /// </summary>
         /// <value>Current year first day.</value>
-        public static DateTime ThisYear
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return new DateTime(DateTime.Today.Year, 1, 1);
-            }
-        }
+        public static DateTime ThisYear => new DateTime(DateTime.Today.Year, 1, 1);
 
         /// <summary>
         /// Gets the date for tomorrow.
         /// </summary>
         /// <value>Tomorrow date.</value>
-        public static DateTime Tomorrow
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return DateTime.Today.AddDays(1.0);
-            }
-        }
+        public static DateTime Tomorrow => DateTime.Today.AddDays(1.0);
 
         /// <summary>
         /// Gets the for yesterday.
         /// </summary>
         /// <value>Yesterday date.</value>
-        public static DateTime Yesterday
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return DateTime.Today.AddDays(-1.0);
-            }
-        }
+        public static DateTime Yesterday => DateTime.Today.AddDays(-1.0);
 
         #endregion
 
         #region Private members
 
-        private static readonly DateTime UnixStart
-            = new DateTime(1970, 1, 1);
+        private static readonly DateTime UnixStart = new DateTime(1970, 1, 1);
 
         #endregion
 
