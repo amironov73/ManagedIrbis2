@@ -228,15 +228,15 @@ namespace UnitTests.AM
         public void NumericUtility_TryParseFloat_1()
         {
             float value;
-            Assert.IsTrue(NumericUtility.TryParseFloat("1.23", out value));
+            Assert.IsTrue(NumericUtility.TryParseSingle("1.23", out value));
             Assert.AreEqual(1.23f, value);
 
-            Assert.IsTrue(NumericUtility.TryParseFloat("1,23", out value));
+            Assert.IsTrue(NumericUtility.TryParseSingle("1,23", out value));
             Assert.AreEqual(1.23f, value);
 
-            Assert.IsFalse(NumericUtility.TryParseFloat("hello", out value));
-            Assert.IsFalse(NumericUtility.TryParseFloat(string.Empty, out value));
-            Assert.IsFalse(NumericUtility.TryParseFloat(null, out value));
+            Assert.IsFalse(NumericUtility.TryParseSingle("hello", out value));
+            Assert.IsFalse(NumericUtility.TryParseSingle(string.Empty, out value));
+            Assert.IsFalse(NumericUtility.TryParseSingle(null, out value));
         }
 
         [TestMethod]

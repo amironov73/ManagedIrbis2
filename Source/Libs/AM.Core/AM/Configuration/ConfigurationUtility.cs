@@ -215,7 +215,7 @@ namespace AM.Configuration
             )
         {
             string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseFloat(setting, out float result))
+            if (!NumericUtility.TryParseSingle(setting, out float result))
             {
                 result = defaultValue;
             }

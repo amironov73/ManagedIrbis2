@@ -70,57 +70,6 @@ namespace ManagedIrbis.Mapping
                 .ThrowIfNull(nameof(attribute));
             result.Code = attribute.Code;
 
-            Type type = property.PropertyType;
-            TypeCode typeCode = Type.GetTypeCode(type);
-            Func<SubField, object> getter;
-            switch (typeCode)
-            {
-                case TypeCode.Boolean:
-                    getter = sf => SubFieldMapper.ToBoolean(sf);
-                    break;
-
-                case TypeCode.Char:
-                    getter = sf => SubFieldMapper.ToChar(sf);
-                    break;
-
-                case TypeCode.DateTime:
-                    getter = sf => SubFieldMapper.ToDateTime(sf);
-                    break;
-
-                case TypeCode.Decimal:
-                    getter = sf => SubFieldMapper.ToDecimal(sf);
-                    break;
-
-                case TypeCode.Double:
-                    getter = sf => SubFieldMapper.ToDouble(sf);
-                    break;
-
-                case TypeCode.Int16:
-                    getter = sf => SubFieldMapper.ToInt16(sf);
-                    break;
-
-                case TypeCode.Int32:
-                    getter = sf => SubFieldMapper.ToInt32(sf);
-                    break;
-
-                case TypeCode.Int64:
-                    getter = sf => SubFieldMapper.ToInt64(sf);
-                    break;
-
-                case TypeCode.Single:
-                    getter = sf => SubFieldMapper.ToSingle(sf);
-                    break;
-
-                //case TypeCode.String:
-                //    getter = SubFieldMapper.ToString;
-                //    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            //result.Getter = getter;
-
             return result;
         }
 

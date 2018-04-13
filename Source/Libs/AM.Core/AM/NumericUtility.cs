@@ -662,7 +662,7 @@ namespace AM
         /// <summary>
         /// Try parse single precision value in standard manner.
         /// </summary>
-        public static bool TryParseFloat
+        public static bool TryParseSingle
             (
                 [CanBeNull] string text,
                 out float value

@@ -38,7 +38,8 @@ namespace UnitTests.ManagedIrbis.Mapping
                 Name = expected,
                 Age = 8942
             };
-            Action<Person, RecordField> converter = mapping.CreateBackwardConverter();
+            Action<Person, RecordField> converter
+                = MappingUtility.CreateBackwardConverter(mapping);
             converter(source, field);
             Assert.AreEqual(expected, field.GetFirstSubFieldValue('a'));
         }
@@ -62,7 +63,8 @@ namespace UnitTests.ManagedIrbis.Mapping
                 Name = "Старик Хоттабыч",
                 Age = 8942
             };
-            Action<Person, RecordField> converter = mapping.CreateBackwardConverter();
+            Action<Person, RecordField> converter
+                = MappingUtility.CreateBackwardConverter(mapping);
             converter(source, field);
             Assert.AreEqual(expected, field.GetFirstSubFieldValue('z'));
         }
@@ -84,7 +86,8 @@ namespace UnitTests.ManagedIrbis.Mapping
                     new SubField('z', "8942")
                 );
             Person target = new Person { Name = "Not set" };
-            Action<RecordField, Person> converter = mapping.CreateForwardConverter();
+            Action<RecordField, Person> converter
+                = MappingUtility.CreateForwardConverter(mapping);
             converter(field, target);
             Assert.AreEqual(expected, target.Name);
         }
@@ -105,7 +108,8 @@ namespace UnitTests.ManagedIrbis.Mapping
                     new SubField('z', "8942")
                 );
             Person target = new Person { Age = -1 };
-            Action<RecordField, Person> action = mapping.CreateForwardConverter();
+            Action<RecordField, Person> action
+                = MappingUtility.CreateForwardConverter(mapping);
             action(field, target);
             Assert.AreEqual(8942, target.Age);
         }
