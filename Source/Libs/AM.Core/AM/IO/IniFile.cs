@@ -1065,10 +1065,13 @@ namespace AM.IO
                     string[] parts = line.Split(separators, 2);
 
                     string key = parts[0];
-                    string value = parts.Length == 2
-                        ? parts[1]
-                        : null;
-                    section.SetValue(key, value);
+                    if (!string.IsNullOrEmpty(key))
+                    {
+                        string value = parts.Length == 2
+                            ? parts[1]
+                            : null;
+                        section.SetValue(key, value);
+                    }
                 }
             }
 
