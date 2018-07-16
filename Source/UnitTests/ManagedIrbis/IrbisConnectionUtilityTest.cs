@@ -155,7 +155,7 @@ namespace UnitTests.ManagedIrbis
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
                 .AppendUtf(expected).NewLine();
-            byte[] request = Array.Empty<byte>();
+            byte[][] request = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse(connection, answer, request, false);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
@@ -184,7 +184,7 @@ namespace UnitTests.ManagedIrbis
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
                 .AppendUtf(expected).NewLine();
-            byte[] request = Array.Empty<byte>();
+            byte[][] request = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse(connection, answer, request, false);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
@@ -213,7 +213,7 @@ namespace UnitTests.ManagedIrbis
                 .StandardHeader(CommandCode.FormatRecord, 123456, 123)
                 .Append(0).NewLine()
                 .AppendUtf(expected).NewLine();
-            byte[] request = Array.Empty<byte>();
+            byte[][] request = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse(connection, answer, request, false);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
@@ -246,7 +246,7 @@ namespace UnitTests.ManagedIrbis
             {
                 builder.AppendUtf(s).NewLine();
             }
-            byte[] request = Array.Empty<byte>();
+            byte[][] request = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse(connection, answer, request, false);
             mock.Setup(c => c.ExecuteCommand(It.IsAny<FormatCommand>()))
@@ -837,7 +837,7 @@ namespace UnitTests.ManagedIrbis
                         .AppendUtf("Первая").NewLine()
                         .AppendUtf("Вторая").NewLine()
                         .AppendUtf("Третья").NewLine();
-                    byte[] request = Array.Empty<byte>();
+                    byte[][] request = { new byte[0], new byte[0] };
                     byte[] answer = builder.Encode();
                     ServerResponse result = new ServerResponse(connection, answer, request, false);
 

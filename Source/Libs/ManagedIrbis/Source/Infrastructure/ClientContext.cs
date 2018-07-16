@@ -54,7 +54,7 @@ namespace ManagedIrbis.Infrastructure
         /// Raw client request content.
         /// </summary>
         [CanBeNull]
-        public byte[] RawQuery { get; set; }
+        public byte[][] RawQuery { get; set; }
 
         /// <summary>
         /// Server response.

@@ -52,10 +52,10 @@ namespace UnitTests.ManagedIrbis
         public void DatabaseInfo_Describe_2()
         {
             DatabaseInfo database = _GetDatabase();
-            database.LogicallyDeletedRecords = new[] {1, 2, 3};
-            database.PhysicallyDeletedRecords = new[] {4, 5, 6};
-            database.LockedRecords = new[] {7, 8, 9};
-            database.NonActualizedRecords = new[] {10, 11, 12};
+            database.LogicallyDeletedRecords = new[] { 1, 2, 3 };
+            database.PhysicallyDeletedRecords = new[] { 4, 5, 6 };
+            database.LockedRecords = new[] { 7, 8, 9 };
+            database.NonActualizedRecords = new[] { 10, 11, 12 };
             database.MaxMfn = 1000;
 
             string expected = "Name: IBIS\nDescription: Электронный каталог\nLogically deleted records: 1-3\nPhysically deleted records: 4-6\nNon-actualized records: 10-12\nLocked records: 7-9\nMax MFN: 1000\nRead-only: False\nDatabase locked: False\n";
@@ -71,7 +71,7 @@ namespace UnitTests.ManagedIrbis
         {
             byte[] bytes = source.SaveToMemory();
 
-            DatabaseInfo target 
+            DatabaseInfo target
                 = bytes.RestoreObjectFromMemory<DatabaseInfo>();
 
             Assert.AreEqual(source.Name, target.Name);
@@ -88,10 +88,10 @@ namespace UnitTests.ManagedIrbis
             _TestSerialization(database);
 
             database = new DatabaseInfo
-                {
-                    Name = "IBIS",
-                    Description = "Catalog"
-                };
+            {
+                Name = "IBIS",
+                Description = "Catalog"
+            };
             _TestSerialization(database);
         }
 
@@ -175,7 +175,7 @@ namespace UnitTests.ManagedIrbis
             .AppendUtf("0").NewLine();
 
             IrbisConnection connection = new IrbisConnection();
-            byte[] query = new byte[0];
+            byte[][] query = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse
                 (
@@ -217,7 +217,7 @@ namespace UnitTests.ManagedIrbis
                 .AppendUtf("0").NewLine();
 
             IrbisConnection connection = new IrbisConnection();
-            byte[] query = new byte[0];
+            byte[][] query = { new byte[0], new byte[0] };
             byte[] answer = builder.Encode();
             ServerResponse response = new ServerResponse
                 (

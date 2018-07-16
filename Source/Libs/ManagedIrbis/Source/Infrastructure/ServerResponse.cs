@@ -103,7 +103,7 @@ namespace ManagedIrbis.Infrastructure
         /// Raw client request.
         /// </summary>
         [NotNull]
-        public byte[] RawRequest { get; private set; }
+        public byte[][] RawRequest { get; private set; }
 
         /// <summary>
         /// Relax return code check.
@@ -121,7 +121,7 @@ namespace ManagedIrbis.Infrastructure
             (
                 [NotNull] IIrbisConnection connection,
                 [NotNull] byte[] rawAnswer,
-                [NotNull] byte[] rawRequest,
+                [NotNull] byte[][] rawRequest,
                 bool relax
             )
         {
@@ -359,7 +359,7 @@ namespace ManagedIrbis.Infrastructure
                 (
                     connection,
                     empty,
-                    empty,
+                    new[] { empty, empty },
                     true
                 );
 

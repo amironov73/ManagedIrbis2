@@ -186,7 +186,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 using (TcpClient tcp = _GetTcpClient(connection.Port))
                 {
                     Socket socket = tcp.Client;
-                    socket.Send(context.RawQuery);
+                    foreach (byte[] bytes in context.RawQuery)
+                    {
+                        socket.Send(bytes);
+                    }
 
                     NetworkStream stream = tcp.GetStream();
                     context.RawResponse = _SmartRead(stream);

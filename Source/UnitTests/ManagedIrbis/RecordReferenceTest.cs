@@ -207,7 +207,8 @@ namespace UnitTests.ManagedIrbis
         [TestMethod]
         public void RecordReference_ReadRecord_2()
         {
-            byte[] rawAnswer = new byte[0], rawRequest = new byte[0];
+            byte[] rawAnswer = new byte[0];
+            byte[][] rawRequest = { new byte[0], new byte[0] };
             Mock<IIrbisConnection> mock = new Mock<IIrbisConnection>();
             Action<SearchReadCommand> callback = command =>
             {

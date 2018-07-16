@@ -150,7 +150,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             )
         {
             ClientQuery query = context.Query.ThrowIfNull(nameof(context.Query));
-            byte[] request = query.EncodePacket();
+            byte[][] request = query.EncodePacket();
             context.RawQuery = request;
             IIrbisConnection connection = context.Connection;
             connection.Socket.ExecuteRequest(context);

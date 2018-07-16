@@ -32,7 +32,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// Actual request.
         /// </summary>
         [CanBeNull]
-        public byte[] ActualRequest { get; set; }
+        public byte[][] ActualRequest { get; set; }
 
         /// <summary>
         /// Answer.
@@ -44,7 +44,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// Expected request.
         /// </summary>
         [CanBeNull]
-        public byte[] ExpectedRequest { get; set; }
+        public byte[][] ExpectedRequest { get; set; }
 
         #endregion
 
@@ -64,21 +64,21 @@ namespace ManagedIrbis.Infrastructure.Sockets
         {
             Sure.NotNull(context, nameof(context));
 
-            byte[] query = context.RawQuery.ThrowIfNull(nameof(context.RawQuery));
+            byte[][] query = context.RawQuery.ThrowIfNull(nameof(context.RawQuery));
             ActualRequest = query;
+
+            // TODO FIX ME
 
             if (!ReferenceEquals(ExpectedRequest, null))
             {
-                if (!ArrayUtility.Coincide
-                    (
-                        firstArray: ExpectedRequest,
-                        firstOffset: 0,
-                        secondArray: query,
-                        secondOffset: 0,
-                        length: query.Length
-                    ))
+                for (int i = 0; i < ExpectedRequest.Length; i++)
                 {
-                    throw new IrbisNetworkException();
+                    byte[] expected = ExpectedRequest[i];
+                    byte[] actual = query[i];
+                    if (!ArrayUtility.Coincide(expected, 0, actual, 0, actual.Length))
+                    {
+                        throw new Exception();
+                    }
                 }
             }
 

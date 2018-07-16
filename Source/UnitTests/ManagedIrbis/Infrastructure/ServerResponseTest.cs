@@ -156,7 +156,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = _GetAnswer();
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse result = new ServerResponse(connection, answer, request, false);
 
             return result;
@@ -183,7 +183,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = _GetAnswer();
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, true);
             Assert.IsNull(response.CommandCode);
             Assert.IsNotNull(response.Connection);
@@ -202,7 +202,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = _GetAnswer();
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, true);
             response.ReturnCode = 100500;
             Assert.AreEqual(100500, response.ReturnCode);
@@ -223,7 +223,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = { 72, 101, 108, 108, 111, 0x0D, 119, 111, 114, 108, 100, 0x0D, 0x0A };
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, true);
             string expected = "Hello\rworld";
             string actual = response.GetAnsiString();
@@ -435,7 +435,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
                 0x35, 0x36, 0x5E, 0x43, 0x32, 0x30, 0x31, 0x31, 0x30, 0x39,
                 0x30, 0x31, 0x5E, 0x44, 0xD0, 0xA5, 0xD0, 0xA0, 0x0D, 0x0A
             };
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, false);
             Assert.AreEqual(0, response.ReturnCode);
             MarcRecord record = new MarcRecord();
@@ -466,7 +466,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = { 0xC1, 0xC1, 0xC1, 0xC1, 0x0D, 0x0A };
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, true);
             response.GetUtfString();
         }
@@ -476,7 +476,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         {
             IIrbisConnection connection = new IrbisConnection();
             byte[] answer = { 72, 101, 108, 108, 111, 0x0D, 119, 111, 114, 108, 100, 0x0D, 0x0A };
-            byte[] request = _GetRequest();
+            byte[][] request = { _GetRequest() };
             ServerResponse response = new ServerResponse(connection, answer, request, true);
             string expected = "Hello\rworld";
             string actual = response.GetUtfString();

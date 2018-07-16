@@ -102,7 +102,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         private void _DumpPackets
             (
-                [NotNull] byte[] request,
+                [NotNull] byte[][] request,
                 [NotNull] byte[] answer
             )
         {
@@ -113,7 +113,13 @@ namespace ManagedIrbis.Infrastructure.Sockets
                     DebugPath,
                     $"{counter:00000000}up.packet"
                 );
-            File.WriteAllBytes(upPath, request);
+            using (FileStream stream = new FileStream(upPath, FileMode.CreateNew))
+            {
+                foreach (byte[] bytes in request)
+                {
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+            }
 
             string downPath = Path.Combine
                 (

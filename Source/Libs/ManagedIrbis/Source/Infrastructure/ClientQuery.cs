@@ -194,7 +194,7 @@ namespace ManagedIrbis.Infrastructure
         /// Build the packet.
         /// </summary>
         [NotNull]
-        public byte[] EncodePacket()
+        public byte[][] EncodePacket()
         {
             MemoryStream stream = new MemoryStream();
 
@@ -231,16 +231,12 @@ namespace ManagedIrbis.Infrastructure
                 }
             }
 
-            byte[] preResult = stream.ToArray();
-            stream = new MemoryStream();
-            int length = preResult.Length;
-            stream
-                .EncodeInt32(length)
-                .EncodeDelimiter()
-                .Write(preResult, 0, preResult.Length);
-
-            byte[] result = stream.ToArray();
-
+            byte[] body = stream.ToArray();
+            MemoryStream prefix = new MemoryStream();
+            prefix
+                .EncodeInt32(body.Length)
+                .EncodeDelimiter();
+            byte[][] result = { prefix.ToArray(), body };
 
             return result;
         }
