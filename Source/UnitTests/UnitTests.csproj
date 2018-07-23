@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Libs\ManagedIrbis\ManagedIrbis.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="NetworkDebugging\" />
+  </ItemGroup>
+
 </Project>

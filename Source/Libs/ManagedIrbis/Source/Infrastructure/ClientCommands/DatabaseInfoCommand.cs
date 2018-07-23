@@ -77,6 +77,7 @@ namespace ManagedIrbis.Infrastructure.ClientCommands
             query.AddAnsi(database);
 
             ServerResponse response = BaseExecute(context);
+            response.GetReturnCode();
             Result = DatabaseInfo.ParseServerResponse(response);
             Result.Name = database;
         }

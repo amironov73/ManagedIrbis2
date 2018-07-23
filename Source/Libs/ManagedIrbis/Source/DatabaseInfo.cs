@@ -142,7 +142,11 @@ namespace ManagedIrbis
             }
 
             string[] items = text.Split(ItemDelimiter);
-            int[] result = items.Select(FastNumber.ParseInt32).ToArray();
+            int[] result = new int[items.Length];
+            for (int i = 0; i < items.Length; i++)
+            {
+                result[i] = FastNumber.ParseInt32(items[i]);
+            }
             Array.Sort(result);
 
             return result;
@@ -159,54 +163,39 @@ namespace ManagedIrbis
         {
             StringBuilder result = new StringBuilder();
 
-            result.AppendFormat
-                (
-                    "Name: {0}",
-                    Name.ToVisibleString()
-                );
+            result.AppendFormat("Name: {0}", Name.ToVisibleString());
             result.AppendLine();
 
-            result.AppendFormat
-                (
-                    "Description: {0}",
-                    Description.ToVisibleString()
-                );
+            result.AppendFormat("Description: {0}",
+                Description.ToVisibleString());
             result.AppendLine();
 
             if (!ReferenceEquals(LogicallyDeletedRecords, null))
             {
                 result.Append("Logically deleted records: ");
-                result.AppendLine(NumericUtility.CompressRange
-                    (
-                        LogicallyDeletedRecords
-                    ));
+                result.AppendLine(
+                    NumericUtility.CompressRange(LogicallyDeletedRecords));
             }
 
             if (!ReferenceEquals(PhysicallyDeletedRecords, null))
             {
                 result.Append("Physically deleted records: ");
-                result.AppendLine(NumericUtility.CompressRange
-                    (
-                        PhysicallyDeletedRecords
-                    ));
+                result.AppendLine(
+                    NumericUtility.CompressRange(PhysicallyDeletedRecords));
             }
 
             if (!ReferenceEquals(NonActualizedRecords, null))
             {
                 result.Append("Non-actualized records: ");
-                result.AppendLine(NumericUtility.CompressRange
-                    (
-                        NonActualizedRecords
-                    ));
+                result.AppendLine(
+                    NumericUtility.CompressRange(NonActualizedRecords));
             }
 
             if (!ReferenceEquals(LockedRecords, null))
             {
                 result.Append("Locked records: ");
-                result.AppendLine(NumericUtility.CompressRange
-                    (
-                        LockedRecords
-                    ));
+                result.AppendLine(
+                    NumericUtility.CompressRange(LockedRecords));
             }
 
             result.AppendFormat("Max MFN: {0}", MaxMfn);
@@ -215,11 +204,7 @@ namespace ManagedIrbis
             result.AppendFormat("Read-only: {0}", ReadOnly);
             result.AppendLine();
 
-            result.AppendFormat
-                (
-                    "Database locked: {0}",
-                    DatabaseLocked
-                );
+            result.AppendFormat("Database locked: {0}", DatabaseLocked);
             result.AppendLine();
 
             return result.ToString();
@@ -238,8 +223,8 @@ namespace ManagedIrbis
 
             DatabaseInfo result = new DatabaseInfo
             {
-                PhysicallyDeletedRecords = _ParseLine(response.GetAnsiString()),
                 LogicallyDeletedRecords = _ParseLine(response.GetAnsiString()),
+                PhysicallyDeletedRecords = _ParseLine(response.GetAnsiString()),
                 NonActualizedRecords = _ParseLine(response.GetAnsiString()),
                 LockedRecords = _ParseLine(response.GetAnsiString()),
                 MaxMfn = _ParseLine(response.GetAnsiString()).GetItem(0, 0),

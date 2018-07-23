@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* ArrayUtility.cs -- array manipulation helpers
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -145,7 +145,7 @@ namespace AM
         /// </returns>
         /// <typeparam name="T">Array element type.</typeparam>
         /// <exception cref="ArgumentNullException">
-        /// <paramref name="firstArray"/> or 
+        /// <paramref name="firstArray"/> or
         /// <paramref name="secondArray"/> is <c>null</c>.
         /// </exception>
         /// <exception cref="ArgumentException">Length of
@@ -427,6 +427,17 @@ namespace AM
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Безопасное вычисление длины массива.
+        /// </summary>
+        public static int SafeLength<T>
+            (
+                [CanBeNull] this T[] array
+            )
+        {
+            return array?.Length ?? 0;
         }
 
         /// <summary>
