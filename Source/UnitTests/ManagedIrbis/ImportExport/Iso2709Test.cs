@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 using JetBrains.Annotations;
 
@@ -136,6 +133,26 @@ namespace UnitTests.ManagedIrbis.ImportExport
                 MarcRecord record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
                 Assert.IsNotNull(record);
                 Assert.AreEqual(16, record.Fields.Count);
+                Assert.AreEqual("Вып. 13.", record.FM(200, 'a'));
+
+                record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
+                Assert.IsNotNull(record);
+                Assert.AreEqual(15, record.Fields.Count);
+                Assert.AreEqual("Задачи и этюды", record.FM(200, 'a'));
+
+                int count = 0;
+                while (true)
+                {
+                    record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
+                    if (ReferenceEquals(record, null))
+                    {
+                        break;
+                    }
+
+                    count++;
+                }
+
+                Assert.AreEqual(79, count);
             }
         }
 
@@ -147,7 +164,7 @@ namespace UnitTests.ManagedIrbis.ImportExport
             using (Stream stream = File.OpenWrite(fileName))
             {
                 MarcRecord record = GetRecord();
-                Iso2709.WriteIso(record, stream, IrbisEncoding.Ansi);
+                Iso2709.WriteRecord(record, stream, IrbisEncoding.Ansi);
             }
 
             FileInfo info = new FileInfo(fileName);
