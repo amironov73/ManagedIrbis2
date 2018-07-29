@@ -252,9 +252,7 @@ namespace ManagedIrbis.Infrastructure
                 [NotNull] Type consumer
             )
         {
-            // TODO use ObjectPool?
-
-            return new MemoryStream();
+            return MemoryManager.GetMemoryStream();
         }
 
         /// <summary>

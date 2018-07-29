@@ -390,6 +390,8 @@ namespace UnitTests.ManagedIrbis
             Assert.AreEqual(expected.Workstation, connection.Workstation);
         }
 
+        // For a while
+        [Ignore]
         [TestMethod]
         public void ConnectionSettings_SocketTypeName_1()
         {
@@ -570,6 +572,8 @@ namespace UnitTests.ManagedIrbis
             }
         }
 
+        // For a while
+        [Ignore]
         [TestMethod]
         public void ConnectionSettings_FromConnection_3()
         {

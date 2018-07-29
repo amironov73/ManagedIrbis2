@@ -348,7 +348,9 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             IIrbisConnection connection = new IrbisConnection();
             ServerResponse response = ServerResponse.GetEmptyResponse(connection);
             Assert.AreSame(connection, response.Connection);
-            Assert.AreEqual(0, response.RawRequest.Length);
+            Assert.AreEqual(2, response.RawRequest.Length);
+            Assert.AreEqual(0, response.RawRequest[0].Length);
+            Assert.AreEqual(0, response.RawRequest[1].Length);
             Assert.AreEqual(0, response.RawAnswer.Length);
         }
 

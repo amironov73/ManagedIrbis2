@@ -196,7 +196,7 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public byte[][] EncodePacket()
         {
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = MemoryManager.GetMemoryStream();
 
             // Query header: 7 lines
             stream
@@ -232,6 +232,7 @@ namespace ManagedIrbis.Infrastructure
             }
 
             byte[] body = stream.ToArray();
+            // TODO Get rid of the MemoryStream
             MemoryStream prefix = new MemoryStream();
             prefix
                 .EncodeInt32(body.Length)

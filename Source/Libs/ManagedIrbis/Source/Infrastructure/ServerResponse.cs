@@ -550,11 +550,6 @@ namespace ManagedIrbis.Infrastructure
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(length, nameof(length));
 
-            //if (ReferenceEquals(RawAnswer, null))
-            //{
-            //    throw new IrbisException("packet is null");
-            //}
-
             MemoryStream result = new MemoryStream
                 (
                     RawAnswer,

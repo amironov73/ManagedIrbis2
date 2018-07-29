@@ -122,7 +122,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        [ExpectedException(typeof(IrbisException))]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void ExecutionEngine_ExecuteCommand_3()
         {
             ExecutionEngine engine = _GetEngine2();

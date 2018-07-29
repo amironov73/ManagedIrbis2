@@ -129,11 +129,13 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public string GetDatabase
             (
-                [CanBeNull] string database
+                [CanBeNull] string database,
+                bool relax = false
             )
         {
             string result = database.IfEmpty(Connection.Database);
-            if (ReferenceEquals(result, null) || result.Length == 0)
+            if ((ReferenceEquals(result, null) || result.Length == 0)
+                && !relax)
             {
                 Log.Error
                     (
@@ -150,14 +152,15 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Get database setting for the context.
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         public string GetUsername
             (
-                [CanBeNull] string username
+                [CanBeNull] string username,
+                bool relax = false
             )
         {
             string result = username.IfEmpty(Connection.Username);
-            if (ReferenceEquals(result, null) || result.Length == 0)
+            if ((ReferenceEquals(result, null) || result.Length == 0) && !relax)
             {
                 Log.Error
                     (
@@ -174,14 +177,16 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Get password setting for the context.
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         public string GetPassword
             (
-                [CanBeNull] string password
+                [CanBeNull] string password,
+                bool relax=false
             )
         {
             string result = password.IfEmpty(Connection.Password);
-            if (ReferenceEquals(result, null) || result.Length == 0)
+            if ((ReferenceEquals(result, null) || result.Length == 0)
+                && !relax)
             {
                 Log.Error
                     (
