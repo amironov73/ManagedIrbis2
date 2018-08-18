@@ -358,4 +358,7 @@
   <data name="WriteRecordsCommand_TooManyRecords" xml:space="preserve">
     <value>слишком много записей</value>
   </data>
+  <data name="RecordTooLong" xml:space="preserve">
+    <value>Запись слишком длинная</value>
+  </data>
 </root>

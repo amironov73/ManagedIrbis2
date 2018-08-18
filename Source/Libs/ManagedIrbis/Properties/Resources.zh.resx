@@ -145,4 +145,7 @@
   <data name="ErrorDescription_MfnOutsideTheDatabaseRange" xml:space="preserve">
     <value>MFN记录数据库范围外的数字</value>
   </data>
+  <data name="RecordTooLong" xml:space="preserve">
+    <value>记录太久了</value>
+  </data>
 </root>

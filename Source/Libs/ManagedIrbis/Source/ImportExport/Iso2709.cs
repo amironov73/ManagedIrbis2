@@ -16,6 +16,8 @@ using AM;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Properties;
+
 #endregion
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -230,10 +232,6 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] Encoding encoding
             )
         {
-            Sure.NotNull(record, nameof(record));
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(encoding, nameof(encoding));
-
             int recordLength = IsoMarker.MarkerLength;
             int dictionaryLength = 1; // С учетом ограничителя справочника
             int[] fieldLength = new int[record.Fields.Count]; // Длины полей
@@ -243,6 +241,13 @@ namespace ManagedIrbis.ImportExport
             {
                 dictionaryLength += 12; // Одна статья справочника
                 RecordField field = record.Fields[i];
+                if (field.Tag <= 0 || field.Tag >= 1000)
+                {
+                    throw new IrbisException
+                        (
+                            "Wrong field: " + field.Tag.ToInvariantString()
+                        );
+                }
                 int fldlen = 0;
                 if (field.IsFixed)
                 {
@@ -263,44 +268,53 @@ namespace ManagedIrbis.ImportExport
                             );
                     }
                 }
-                fldlen += 1; // Разделитель полей
+
+                fldlen++; // Разделитель полей
+                if (fldlen >= 10000)
+                {
+                    throw new IrbisException(Resources.RecordTooLong);
+                }
+
                 fieldLength[i] = fldlen;
                 recordLength += fldlen;
             }
             recordLength += dictionaryLength; // Справочник
             recordLength++; // Разделитель записей
 
+            if (recordLength >= 100000)
+            {
+                // Слишком длинная запись
+                throw new IrbisException(Resources.RecordTooLong);
+            }
+
             // Приступаем к кодированию
             int dictionaryPosition = IsoMarker.MarkerLength;
             int baseAddress = IsoMarker.MarkerLength + dictionaryLength;
             int currentAddress = baseAddress;
-            //char[] chars = new char[recordLength];
             byte[] bytes = new byte[recordLength];
 
             // Кодируем маркер
-            for (int i = 0; i < baseAddress; i++)
+            for (int i = 0; i <= baseAddress; i++)
             {
                 bytes[i] = (byte)' ';
             }
             _Encode(bytes, 0, 5, recordLength);
             _Encode(bytes, 12, 5, baseAddress);
 
-            IsoRecordHeader hdr = IsoRecordHeader.GetDefault();
-            bytes[5] = (byte)hdr.RecordStatus;
-            bytes[6] = (byte)hdr.RecordType;
-            bytes[7] = (byte)hdr.BibliographicalIndex;
+            bytes[5]  = (byte)'n';
+            bytes[6]  = (byte)'a';
+            bytes[7]  = (byte)'m';
+            bytes[8]  = (byte)'2';
             bytes[10] = (byte)'2';
             bytes[11] = (byte)'2';
-            bytes[17] = (byte)hdr.BibliographicalLevel;
-            bytes[18] = (byte)hdr.CatalogingRules;
-            bytes[19] = (byte)hdr.RelatedRecord;
+            bytes[18] = (byte)'i';
             bytes[20] = (byte)'4';
             bytes[21] = (byte)'5';
             bytes[22] = (byte)'0';
-            bytes[23] = (byte)'0';
 
             // Кодируем конец справочника
             bytes[baseAddress - 1] = FieldDelimiter;
+
             // Проходим по полям
             for (int i = 0; i < record.Fields.Count; i++, dictionaryPosition += 12)
             {
@@ -359,7 +373,9 @@ namespace ManagedIrbis.ImportExport
                 }
                 bytes[currentAddress++] = FieldDelimiter;
             }
+
             // Ограничитель записи
+            bytes[recordLength - 2] = FieldDelimiter;
             bytes[recordLength - 1] = RecordDelimiter;
 
             // Собственно записываем

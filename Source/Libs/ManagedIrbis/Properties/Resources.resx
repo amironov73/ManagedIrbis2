@@ -382,4 +382,7 @@
   <data name="UserListNotSet" xml:space="preserve">
     <value>UserList not set</value>
   </data>
+  <data name="RecordTooLong" xml:space="preserve">
+    <value>Record too long</value>
+  </data>
 </root>

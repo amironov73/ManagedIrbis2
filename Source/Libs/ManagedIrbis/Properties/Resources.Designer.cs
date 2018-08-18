@@ -808,6 +808,15 @@ namespace ManagedIrbis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Record too long.
+        /// </summary>
+        internal static string RecordTooLong {
+            get {
+                return ResourceManager.GetString("RecordTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to : bad format=.
         /// </summary>
         internal static string ServerResponse_BadFormat {

@@ -325,4 +325,7 @@
   <data name="ErrorDescription_FirstTerm" xml:space="preserve">
     <value>リストの最初の用語</value>
   </data>
+  <data name="RecordTooLong" xml:space="preserve">
+    <value>長すぎるレコード</value>
+  </data>
 </root>
