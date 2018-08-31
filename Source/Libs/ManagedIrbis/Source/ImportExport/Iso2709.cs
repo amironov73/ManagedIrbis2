@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -25,7 +26,7 @@ using ManagedIrbis.Properties;
 namespace ManagedIrbis.ImportExport
 {
     /// <summary>
-    ///
+    /// ISO 2709 format record import and export.
     /// </summary>
     [PublicAPI]
     public static class Iso2709
@@ -132,8 +133,6 @@ namespace ManagedIrbis.ImportExport
             int directoryLength = 3 + lengthOfLength + lengthOfOffset
                                   + additionalData;
 
-            // Превращаем запись в Unicode
-            char[] chars = encoding.GetChars(record);
             int indicatorLength = FastNumber.ParseInt32(record, 10, 1);
             int baseAddress = FastNumber.ParseInt32(record, 12, 5);
 
@@ -166,7 +165,12 @@ namespace ManagedIrbis.ImportExport
                 {
                     // Фиксированное поле
                     // не может содержать подполей и индикаторов
-                    field.Value = new string(chars, fieldOffset, fieldLength - 1);
+                    field.Value = encoding.GetString
+                        (
+                            record,
+                            fieldOffset,
+                            fieldLength - 1
+                        );
                 }
                 else
                 {
@@ -192,7 +196,12 @@ namespace ManagedIrbis.ImportExport
                     // Если есть текст до первого разделителя, запоминаем его
                     if (position != start)
                     {
-                        field.Value = new string(chars, start, position - start);
+                        field.Value = encoding.GetString
+                            (
+                                record,
+                                start,
+                                position - start
+                            );
                     }
 
                     // Просматриваем подполя
@@ -210,8 +219,13 @@ namespace ManagedIrbis.ImportExport
                         }
                         SubField subField = new SubField
                             (
-                                chars[start + 1],
-                                new string(chars, start + 2, position - start - 2)
+                                (char)record[start + 1],
+                                encoding.GetString
+                                    (
+                                        record,
+                                        start + 2,
+                                        position - start - 2
+                                    )
                             );
                         field.SubFields.Add(subField);
                         start = position;
@@ -232,7 +246,7 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] Encoding encoding
             )
         {
-            int recordLength = IsoMarker.MarkerLength;
+            int recordLength = MarkerLength;
             int dictionaryLength = 1; // С учетом ограничителя справочника
             int[] fieldLength = new int[record.Fields.Count]; // Длины полей
 
@@ -248,6 +262,7 @@ namespace ManagedIrbis.ImportExport
                             "Wrong field: " + field.Tag.ToInvariantString()
                         );
                 }
+
                 int fldlen = 0;
                 if (field.IsFixed)
                 {
@@ -260,12 +275,17 @@ namespace ManagedIrbis.ImportExport
                     fldlen += encoding.GetByteCount(field.Value ?? string.Empty);
                     for (int j = 0; j < field.SubFields.Count; j++)
                     {
+                        SubField subField = field.SubFields[j];
+                        if (!SubFieldCode.IsValidCode(subField.Code))
+                        {
+                            throw new IrbisException
+                                (
+                                    "bad subfield code: " + subField.Code
+                                );
+                        }
+
                         fldlen += 2; // Признак подполя и его код
-                        fldlen += encoding.GetByteCount
-                            (
-                                field.SubFields[j].Value
-                                ?? string.Empty
-                            );
+                        fldlen += encoding.GetByteCount(subField.Value ?? string.Empty);
                     }
                 }
 
@@ -301,18 +321,20 @@ namespace ManagedIrbis.ImportExport
             _Encode(bytes, 0, 5, recordLength);
             _Encode(bytes, 12, 5, baseAddress);
 
-            bytes[5]  = (byte)'n';
-            bytes[6]  = (byte)'a';
-            bytes[7]  = (byte)'m';
-            bytes[8]  = (byte)'2';
+            bytes[5] = (byte)'n';  // Record status
+            bytes[6] = (byte)'a';  // Record type
+            bytes[7] = (byte)'m';  // Bibligraphical index
+            bytes[8] = (byte)'2';
             bytes[10] = (byte)'2';
             bytes[11] = (byte)'2';
-            bytes[18] = (byte)'i';
-            bytes[20] = (byte)'4';
-            bytes[21] = (byte)'5';
+            bytes[17] = (byte)' '; // Bibliographical level
+            bytes[18] = (byte)'i'; // Cataloging rules
+            bytes[19] = (byte)' '; // Related record
+            bytes[20] = (byte)'4'; // Field length
+            bytes[21] = (byte)'5'; // Field offset
             bytes[22] = (byte)'0';
 
-            // Кодируем конец справочника
+            // Конец справочника
             bytes[baseAddress - 1] = FieldDelimiter;
 
             // Проходим по полям
@@ -320,7 +342,7 @@ namespace ManagedIrbis.ImportExport
             {
                 // Кодируем справочник
                 RecordField field = record.Fields[i];
-                _Encode(bytes, dictionaryPosition,     3, field.Tag);
+                _Encode(bytes, dictionaryPosition, 3, field.Tag);
                 _Encode(bytes, dictionaryPosition + 3, 4, fieldLength[i]);
                 _Encode(bytes, dictionaryPosition + 7, 5, currentAddress - baseAddress);
 
@@ -371,11 +393,14 @@ namespace ManagedIrbis.ImportExport
                             );
                     }
                 }
+
+                // Ограничитель поля
                 bytes[currentAddress++] = FieldDelimiter;
             }
 
-            // Ограничитель записи
-            bytes[recordLength - 2] = FieldDelimiter;
+            Debug.Assert(currentAddress == recordLength - 1);
+
+            // Конец записи
             bytes[recordLength - 1] = RecordDelimiter;
 
             // Собственно записываем
