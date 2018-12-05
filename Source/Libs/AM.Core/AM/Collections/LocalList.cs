@@ -34,7 +34,10 @@ namespace AM.Collections
         private void _Extend(int newSize)
         {
             T[] newArray = new T[newSize];
-            _array?.CopyTo(newArray, 0);
+            if (!ReferenceEquals(_array, null))
+            {
+                _array.CopyTo(newArray, 0);
+            }
 
             _array = newArray;
         }
@@ -165,10 +168,16 @@ namespace AM.Collections
         }
 
         /// <inheritdoc cref="ICollection{T}.Count" />
-        public int Count => _size;
+        public int Count
+        {
+            get { return _size; }
+        }
 
         /// <inheritdoc cref="ICollection{T}.IsReadOnly" />
-        public bool IsReadOnly => false;
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
 
         /// <inheritdoc cref="IList{T}.IndexOf" />
         public int IndexOf
@@ -260,6 +269,25 @@ namespace AM.Collections
 
             T[] result = new T[_size];
             Array.Copy(_array, result, _size);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Convert the list to <see cref="List{T}"/>.
+        /// </summary>
+        public List<T> ToList()
+        {
+            if (ReferenceEquals(_array, null) || _size == 0)
+            {
+                return new List<T>();
+            }
+
+            List<T> result = new List<T>(_size);
+            for (int i = 0; i < _size; i++)
+            {
+                result.Add(_array[i]);
+            }
 
             return result;
         }
