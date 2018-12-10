@@ -11,6 +11,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <SignAssembly Condition="'$(OS)' == 'Windows_NT'">true</SignAssembly>
     <ApplicationIcon>BlueBook.ico</ApplicationIcon>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>2.0.0</Version>
@@ -18,11 +19,11 @@
     <Company />
     <Product>Ars Magna</Product>
     <Description>Fully managed framework for popular russian library automation system IRBIS64.</Description>
-    <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>http://arsmagna.ru</PackageProjectUrl>
     <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
-    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
-    <PackageProjectUrl>https://arsmagna.ru</PackageProjectUrl>
-    <SignAssembly Condition="'$(OS)' == 'Windows_NT'">true</SignAssembly>
+    <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 

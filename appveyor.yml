@@ -19,6 +19,8 @@ nuget:
   project_feed: false
 
 before_build:
+- ps:  Utils\dotnet-install.ps1 -Version 3.0.100-preview-009812
+- cmd: dotnet --info
 - cmd: nuget restore Source\ManagedIrbis.sln
 - cmd: choco install opencover.portable
 - cmd: choco install codecov
