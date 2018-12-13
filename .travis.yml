@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.0.0
+dotnet: SDK 3.0.100-preview-009812
 script:
   - dotnet restore ./Source/
   - dotnet build ./Source/

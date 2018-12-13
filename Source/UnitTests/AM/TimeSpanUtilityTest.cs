@@ -106,7 +106,7 @@ namespace UnitTests.AM
             Assert.AreEqual("0.00", span.ToAutoString());
 
             span = new TimeSpan(-10000);
-            Assert.AreEqual("0.00", span.ToAutoString());
+            Assert.AreEqual("-0.00", span.ToAutoString());
         }
     }
 }

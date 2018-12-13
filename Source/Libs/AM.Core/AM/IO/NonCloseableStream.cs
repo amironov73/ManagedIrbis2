@@ -142,7 +142,7 @@ namespace AM.IO
             }
         }
 
-        /// <inheritdoc cref="Stream.Read" />
+        /// <inheritdoc cref="Stream.Read(byte[],int,int)" />
         [DebuggerStepThrough]
         public override int Read
             (
@@ -175,7 +175,7 @@ namespace AM.IO
             _innerStream.SetLength(value);
         }
 
-        /// <inheritdoc cref="Stream.Write" />
+        /// <inheritdoc cref="Stream.Write(byte[],int,int)" />
         [DebuggerStepThrough]
         public override void Write
             (

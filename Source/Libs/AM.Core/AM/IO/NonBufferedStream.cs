@@ -78,7 +78,7 @@ namespace AM.IO
             InnerStream.SetLength(value);
         }
 
-        /// <inheritdoc cref="Stream.Read" />
+        /// <inheritdoc cref="Stream.Read(byte[],int,int)" />
         public override int Read
             (
                 byte[] buffer,
@@ -91,7 +91,7 @@ namespace AM.IO
             return InnerStream.Read(buffer, offset, count);
         }
 
-        /// <inheritdoc cref="Stream.Write" />
+        /// <inheritdoc cref="Stream.Write(byte[],int,int)" />
         public override void Write
             (
                 byte[] buffer,

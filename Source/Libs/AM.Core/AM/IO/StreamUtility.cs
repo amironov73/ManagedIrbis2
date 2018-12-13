@@ -10,11 +10,11 @@
 #region Using directives
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 
+using AM.Core;
 using AM.Logging;
 
 using JetBrains.Annotations;
@@ -29,12 +29,6 @@ namespace AM.IO
     [PublicAPI]
     public static class StreamUtility
     {
-        #region Private members
-
-        private const MethodImplOptions Aggressive = MethodImplOptions.AggressiveInlining;
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -65,6 +59,7 @@ namespace AM.IO
                 {
                     break;
                 }
+
                 destinationStream.Write(buffer, 0, readed);
             }
         }
@@ -72,7 +67,7 @@ namespace AM.IO
         /// <summary>
         /// Compares two <see cref="Stream"/>'s from current position.
         /// </summary>
-        public static int CompareTo
+        public static unsafe int CompareTo
             (
                 [NotNull] Stream firstStream,
                 [NotNull] Stream secondStream
@@ -82,12 +77,14 @@ namespace AM.IO
             Sure.NotNull(secondStream, nameof(secondStream));
 
             const int bufferSize = 1024;
+            byte* firstArray = stackalloc byte[bufferSize];
+            Span<byte> firstBuffer = MemoryMarshal.CreateSpan(ref firstArray[0], bufferSize);
+            byte* secondArray = stackalloc byte[bufferSize];
+            Span<byte> secondBuffer = MemoryMarshal.CreateSpan(ref secondArray[0], bufferSize);
             while (true)
             {
-                byte[] firstBuffer = new byte[bufferSize];
-                int firstReaded = firstStream.Read(firstBuffer, 0, bufferSize);
-                byte[] secondBuffer = new byte[bufferSize];
-                int secondReaded = secondStream.Read(secondBuffer, 0, bufferSize);
+                int firstReaded = firstStream.Read(firstBuffer);
+                int secondReaded = secondStream.Read(secondBuffer);
                 int difference = firstReaded - secondReaded;
                 if (difference != 0)
                 {
@@ -131,7 +128,7 @@ namespace AM.IO
                         + maximum
                     );
 
-                throw new ArgumentOutOfRangeException("maximum");
+                throw new ArgumentOutOfRangeException(nameof(maximum));
             }
 
             byte[] result = new byte[maximum];
@@ -188,6 +185,7 @@ namespace AM.IO
             {
                 return null;
             }
+
             if (read != count)
             {
                 Array.Resize(ref result, read);
@@ -204,9 +202,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            short value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToInt16(ReadExact(stream, sizeof(short)), 0);
+            return value;
         }
 
         /// <summary>
@@ -218,7 +218,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            return BitConverter.ToUInt16(ReadExact(stream, sizeof(ushort)), 0);
+            ushort value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
+
+            return value;
         }
 
         /// <summary>
@@ -229,9 +233,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            int value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToInt32(ReadExact(stream, sizeof(int)), 0);
+            return value;
         }
 
         /// <summary>
@@ -243,9 +249,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            uint value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToUInt32(ReadExact(stream, sizeof(uint)), 0);
+            return value;
         }
 
         /// <summary>
@@ -256,9 +264,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            long value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToInt64(ReadExact(stream, sizeof(long)), 0);
+            return value;
         }
 
         /// <summary>
@@ -270,9 +280,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            ulong value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToUInt64(ReadExact(stream, sizeof(ulong)), 0);
+            return value;
         }
 
         /// <summary>
@@ -283,9 +295,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            float value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToSingle(ReadExact(stream, sizeof(float)), 0);
+            return value;
         }
 
         /// <summary>
@@ -296,9 +310,11 @@ namespace AM.IO
                 [NotNull] Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
+            double value = 0;
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            ReadExact(stream, buffer);
 
-            return BitConverter.ToDouble(ReadExact(stream, sizeof(double)), 0);
+            return value;
         }
 
         /// <summary>
@@ -520,6 +536,27 @@ namespace AM.IO
         }
 
         /// <summary>
+        /// Чтение точного числа байт.
+        /// </summary>
+        public static unsafe void ReadExact
+            (
+                [NotNull] Stream stream,
+                Span<byte> span
+            )
+        {
+            if (stream.Read(span) != span.Length)
+            {
+                Log.Error
+                    (
+                        "StreamUtility::_Read: "
+                        + "unexpected end of stream"
+                    );
+
+                throw new IOException();
+            }
+        }
+
+        /// <summary>
         /// Writes the <see cref="Boolean"/> value to the <see cref="Stream"/>.
         /// </summary>
         public static void Write
@@ -547,10 +584,8 @@ namespace AM.IO
                 short value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -563,10 +598,8 @@ namespace AM.IO
                 ushort value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -578,10 +611,8 @@ namespace AM.IO
                 int value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -594,10 +625,8 @@ namespace AM.IO
                 uint value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -609,10 +638,8 @@ namespace AM.IO
                 long value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -625,10 +652,8 @@ namespace AM.IO
                 ulong value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -640,10 +665,8 @@ namespace AM.IO
                 float value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -655,10 +678,8 @@ namespace AM.IO
                 double value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] bytes = BitConverter.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
+            var buffer = UnsafeUtility.AsSpan(ref value);
+            stream.Write(buffer);
         }
 
         /// <summary>
@@ -1115,38 +1136,6 @@ namespace AM.IO
             }
 
             return result.ToArray();
-        }
-
-        /// <summary>
-        /// Lock the file.
-        /// </summary>
-        /// <remarks>For WinMobile compatibility.</remarks>
-        [MethodImpl(Aggressive)]
-        [ExcludeFromCodeCoverage]
-        public static void Lock
-            (
-                [NotNull] FileStream stream,
-                long position,
-                long length
-            )
-        {
-            stream.Lock(position, length);
-        }
-
-        /// <summary>
-        /// Unlock the file.
-        /// </summary>
-        /// <remarks>For WinMobile compatibility.</remarks>
-        [MethodImpl(Aggressive)]
-        [ExcludeFromCodeCoverage]
-        public static void Unlock
-            (
-                [NotNull] FileStream stream,
-                long position,
-                long length
-            )
-        {
-            stream.Unlock(position, length);
         }
 
         /// <summary>

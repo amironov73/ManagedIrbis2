@@ -110,7 +110,7 @@ namespace AM.IO
             return _innerReader.Read(buffer, index, count);
         }
 
-        /// <inheritdoc cref="TextReader.ReadBlock" />
+        /// <inheritdoc cref="TextReader.ReadBlock(char[],int,int)" />
         [DebuggerStepThrough]
         public override int ReadBlock
             (
