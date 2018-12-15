@@ -26,7 +26,7 @@ before_build:
 - cmd: choco install codecov
 
 build_script:
-- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.sln" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.sln" /m /verbosity:minimal
 
 after_build:
 - cmd: compile.cmd
