@@ -25,20 +25,17 @@ before_build:
 - cmd: choco install opencover.portable
 - cmd: choco install codecov
 
-build:
-  project: Source\ManagedIrbis.sln
-  publish_nuget: false
-  parallel: true
-  verbosity: minimal
+build_script:
+- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.sln" /m /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 after_build:
 - cmd: compile.cmd
 
 test_script:
-- OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --no-build --logger:trx;LogFileName=Source/UnitTests/results.trx /p:DebugType=full Source/UnitTests/UnitTests.csproj" -filter:"+[AM.Core]AM.* -[*]AM.Core.Properties.* +[ManagedIrbis]* -[*]ManagedIrbis.Biblio.* -[*]ManagedIrbis.Properties.*" -excludebyattribute:"*.ExcludeFromCodeCoverage*" -output:"%TEMP%\coverage.xml" -oldStyle
+- OpenCover.Console.exe -register:user -target:"C:/Users/appveyor/AppData/Local/Microsoft/dotnet/dotnet.exe" -targetargs:"test --no-build --logger:trx;LogFileName=Source/UnitTests/results.trx /p:DebugType=full Source/UnitTests/UnitTests.csproj" -filter:"+[AM.Core]AM.* -[*]AM.Core.Properties.* +[ManagedIrbis]* -[*]ManagedIrbis.Biblio.* -[*]ManagedIrbis.Properties.*" -excludebyattribute:"*.ExcludeFromCodeCoverage*" -output:"%TEMP%\coverage.xml" -oldStyle
 - codecov -f "%TEMP%\coverage.xml" -t b086eb50-83b2-419f-a1e2-47cc7750b482
-- dotnet build -c Release --verbosity=minimal Source\Benchmarks
-- dotnet run -c Release -p Source\Benchmarks
+- C:/Users/appveyor/AppData/Local/Microsoft/dotnet/dotnet.exe build -c Release --verbosity=minimal Source\Benchmarks
+- C:/Users/appveyor/AppData/Local/Microsoft/dotnet/dotnet.exe run -c Release -p Source\Benchmarks
 
 artifacts:
   - path: Binaries
