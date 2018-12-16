@@ -1,7 +1,7 @@
 language: csharp
 mono: none
-dotnet: SDK 3.0.100-preview-009812
 script:
+  - ./Utils/dotnet-install.sh -v 3.0.100-preview-009812
   - dotnet restore ./Source/
   - dotnet build ./Source/
   - dotnet test --no-build ./Source/UnitTests/
