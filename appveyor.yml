@@ -24,11 +24,8 @@ before_build:
 - cmd: choco install opencover.portable
 - cmd: choco install codecov
 
-build:
-  project: Source\ManagedIrbis.sln
-  publish_nuget: false
-  parallel: true
-  verbosity: minimal
+build_script:
+- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.sln" /m /verbosity:minimal
 
 after_build:
 - cmd: compile.cmd
