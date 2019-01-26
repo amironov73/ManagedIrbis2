@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyCompany("Ars Magna Project")]
-[assembly: AssemblyCopyright("Copyright © Alexey Mironov, 2006-2018")]
+[assembly: AssemblyCopyright("Copyright © Alexey Mironov, 2006-2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
