@@ -8,6 +8,8 @@ using System.Text;
 
 using JetBrains.Annotations;
 
+using static System.Console;
+
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable MemberCanBePrivate.Global
@@ -924,12 +926,29 @@ namespace AsyncIrbis
     {
         public char Code { get; set; }
         public string Value { get; set; }
+
+        public void Decode(string text)
+        {
+            Code = text[0];
+            Value = text.Substring(1);
+        }
     }
 
     public sealed class RecordField
     {
+        /// <summary>
+        /// Метка поля.
+        /// </summary>
         public int Tag { get; set; }
+
+        /// <summary>
+        /// Значение поля до первого разделителя.
+        /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Список подполей.
+        /// </summary>
         public List<SubField> Subfields { get; } = new List<SubField>();
 
         public RecordField Add(char code, string value)
@@ -947,16 +966,85 @@ namespace AsyncIrbis
 
             return this;
         }
+
+        public void Decode(string line)
+        {
+            var parts = line.Split('#', 2, StringSplitOptions.None);
+            Tag = Utility.StringToInt(parts[0]);
+            string body = parts[1];
+            if (body[0] != '^')
+            {
+                int index = body.IndexOf('^');
+                if (index < 0)
+                {
+                    Value = body;
+                    return;
+                }
+
+                Value = body.Substring(0, index);
+                body = body.Substring(index);
+            }
+
+            int offset = 1;
+            bool flag = true;
+            while (flag)
+            {
+                string one;
+                int index = body.IndexOf('^', offset);
+                if (index < 0)
+                {
+                    one = body.Substring(offset);
+                    flag = false;
+                }
+                else
+                {
+                    one = body.Substring(offset, index - offset);
+                    offset = index + 1;
+                }
+
+                var subfield = new SubField();
+                subfield.Decode(one);
+                Subfields.Add(subfield);
+            }
+        }
     }
 
+    /// <summary>
+    /// Библиографическая запись. Состоит из произвольного количества полей.
+    /// </summary>
     public sealed class MarcRecord
     {
+        /// <summary>
+        /// Имя базы данных, в которой хранится запись.
+        /// </summary>
         public string Database { get; set; }
+
+        /// <summary>
+        /// MFN записи.
+        /// </summary>
         public int Mfn { get; set; }
+
+        /// <summary>
+        /// Версия записи.
+        /// </summary>
         public int Version { get; set; }
+
+        /// <summary>
+        /// Статус записи.
+        /// </summary>
         public RecordStatus Status { get; set; }
+
+        /// <summary>
+        /// Список полей.
+        /// </summary>
         public List<RecordField> Fields { get; } = new List<RecordField>();
 
+        /// <summary>
+        /// Добавление поля в запись.
+        /// </summary>
+        /// <returns>
+        /// Свежедобавленное поле.
+        /// </returns>
         public RecordField Add(int tag, string value = null)
         {
             var result = new RecordField{Tag = tag, Value = value};
@@ -965,16 +1053,85 @@ namespace AsyncIrbis
             return result;
         }
 
+        /// <summary>
+        /// Очистка записи (удаление всех полей).
+        /// </summary>
+        /// <returns>
+        /// Очищенную запись.
+        /// </returns>
         public MarcRecord Clear()
         {
             Fields.Clear();
 
             return this;
         }
+
+        /// <summary>
+        /// Декодирование ответа сервера.
+        /// </summary>
+        public void Decode(string[] lines)
+        {
+            var first = lines[0].Split('#');
+            Mfn = Utility.StringToInt(first[0]);
+            Status = (RecordStatus) Utility.StringToInt(first[1]);
+
+            var second = lines[1].Split('#');
+            Version = Utility.StringToInt(second[1]);
+
+            for (int i = 2; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                if (!string.IsNullOrEmpty(line))
+                {
+                    var field = new RecordField();
+                    field.Decode(line);
+                    Fields.Add(field);
+                }
+            }
+        }
     }
 
     public static class Utility
     {
+        private const string IrbisDelimiter = "\x001F\x001E";
+        private const string ShortDelimiter = "\x001E";
+
+        public static bool SameString
+            (
+                [CanBeNull] this string left,
+                [CanBeNull] string right
+            )
+        {
+            return string.Compare(left, right, StringComparison.OrdinalIgnoreCase) == 0;
+        }
+
+        [CanBeNull]
+        public static string IrbisToDos
+            (
+                [CanBeNull] this string text
+            )
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            return text.Replace(IrbisDelimiter, "\n");
+        }
+
+        public static string[] SplitIrbis
+            (
+                [CanBeNull] this string text
+            )
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return Array.Empty<string>();
+            }
+
+            return text.Split(IrbisDelimiter);
+        }
+
         public static Encoding AnsiEncoding()
         {
             return Encoding.GetEncoding(1251);
@@ -998,6 +1155,217 @@ namespace AsyncIrbis
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Remove comments from the format.
+        /// </summary>
+        [CanBeNull]
+        public static string RemoveComments
+            (
+                [CanBeNull] string text
+            )
+        {
+            const char zero = '\0';
+
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            if (!text.Contains("/*"))
+            {
+                return text;
+            }
+
+            int index = 0, length = text.Length;
+            StringBuilder result = new StringBuilder(length);
+            char state = zero;
+
+            while (index < length)
+            {
+                char c = text[index];
+
+                switch (state)
+                {
+                    case '\'':
+                    case '"':
+                    case '|':
+                        if (c == state)
+                        {
+                            state = zero;
+                        }
+                        result.Append(c);
+                        break;
+
+                    default:
+                        if (c == '/')
+                        {
+                            if (index + 1 < length && text[index + 1] == '*')
+                            {
+                                while (index < length)
+                                {
+                                    c = text[index];
+                                    if (c == '\r' || c == '\n')
+                                    {
+                                        result.Append(c);
+                                        break;
+                                    }
+
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                result.Append(c);
+                            }
+                        }
+                        else if (c == '\'' || c == '"' || c == '|')
+                        {
+                            state = c;
+                            result.Append(c);
+                        }
+                        else
+                        {
+                            result.Append(c);
+                        }
+                        break;
+                }
+
+                index++;
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Prepare the dynamic format string.
+        /// </summary>
+        /// <remarks>Dynamic format string
+        /// mustn't contains comments and
+        /// string delimiters (no matter
+        /// real or IRBIS).
+        /// </remarks>
+        [CanBeNull]
+        public static string PrepareFormat
+            (
+                [CanBeNull] string text
+            )
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            text = RemoveComments(text);
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            int length = text.Length;
+            bool flag = false;
+            for (int i = 0; i < length; i++)
+            {
+                if (text[i] < ' ')
+                {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag)
+            {
+                return text;
+            }
+
+            StringBuilder result = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+            {
+                char c = text[i];
+                if (c >= ' ')
+                {
+                    result.Append(c);
+                }
+            }
+
+            return result.ToString();
+        }
+    }
+
+    public sealed class ProcessInfo
+    {
+        public string Number { get; set; }
+        public string IpAddress { get; set; }
+        public string Name { get; set; }
+        public string ClienId { get; set; }
+        public string Workstation { get; set; }
+        public string Started { get; set; }
+        public string LastCommand { get; set; }
+        public string CommandNumber { get; set; }
+        public string ProcessId { get; set; }
+        public string State { get; set; }
+
+        public static ProcessInfo[] Parse(string[] lines)
+        {
+            var result = new LocalList<ProcessInfo>();
+            var processCount = Utility.StringToInt(lines[0]);
+            var linesPerProcess = Utility.StringToInt(lines[1]);
+            if (processCount == 0 || linesPerProcess == 0)
+            {
+                return result.ToArray();
+            }
+
+            for (int i = 2; i < lines.Length; i += linesPerProcess + 1)
+            {
+                var process = new ProcessInfo
+                {
+                    Number        = lines[i + 0],
+                    IpAddress     = lines[i + 1],
+                    Name          = lines[i + 2],
+                    ClienId       = lines[i + 3],
+                    Workstation   = lines[i + 4],
+                    Started       = lines[i + 5],
+                    LastCommand   = lines[i + 6],
+                    CommandNumber = lines[i + 7],
+                    ProcessId     = lines[i + 8],
+                    State         = lines[i + 9]
+                };
+                result.Add(process);
+
+            }
+
+            return result.ToArray();
+        }
+
+        public override string ToString()
+        {
+            return $"{Number} {IpAddress} {Name}";
+        }
+    }
+
+    public sealed class ServerVersion
+    {
+        public string Organization { get; set; }
+        public string Version { get; set; }
+        public int MaxClients { get; set; }
+        public int ConnectedClient { get; set; }
+
+        public void Parse(string[] lines)
+        {
+            if (lines.Length == 4)
+            {
+                Organization = lines[0];
+                Version = lines[1];
+                ConnectedClient = Utility.StringToInt(lines[2]);
+                MaxClients = Utility.StringToInt(lines[3]);
+            }
+            else
+            {
+                Version = lines[0];
+                ConnectedClient = Utility.StringToInt(lines[1]);
+                MaxClients = Utility.StringToInt(lines[2]);
+            }
         }
     }
 
@@ -1212,12 +1580,12 @@ namespace AsyncIrbis
         public object IniFile { get; private set; }
         public int Interval { get; private set; }
 
-        private bool _connected = false;
+        public bool Connected { get; private set; }
         private bool _debug = false;
 
         public bool ActualizeRecord(string database, int mfn)
         {
-            if (!_connected)
+            if (!Connected)
             {
                 return false;
             }
@@ -1233,7 +1601,7 @@ namespace AsyncIrbis
 
         public bool Connect()
         {
-            if (_connected)
+            if (Connected)
             {
                 return true;
             }
@@ -1256,7 +1624,7 @@ namespace AsyncIrbis
                 return false;
             }
 
-            _connected = true;
+            Connected = true;
             ServerVersion = response.ServerVersion;
             Interval = response.ReadInteger();
             // TODO Read INI-file
@@ -1266,7 +1634,7 @@ namespace AsyncIrbis
 
         public bool Disconnect()
         {
-            if (!_connected)
+            if (!Connected)
             {
                 return true;
             }
@@ -1274,7 +1642,7 @@ namespace AsyncIrbis
             var query = new ClientQuery(this, "B");
             query.AddAnsi(Username);
             Execute(query);
-            _connected = false;
+            Connected = false;
 
             return true;
         }
@@ -1297,15 +1665,15 @@ namespace AsyncIrbis
 
         public string FormatRecord(string format, int mfn)
         {
-            if (!_connected)
+            if (!Connected)
             {
                 return null;
             }
 
             var query = new ClientQuery(this, "G");
             query.AddAnsi(Database).NewLine();
-            // TODO Prepare format
-            query.AddAnsi(format).NewLine();
+            string prepared = Utility.PrepareFormat(format);
+            query.AddAnsi(prepared).NewLine();
             query.Add(1).NewLine();
             query.Add(mfn).NewLine();
             var response = Execute(query);
@@ -1317,7 +1685,7 @@ namespace AsyncIrbis
 
         public int GetMaxMfn(string database = null)
         {
-            if (!_connected)
+            if (!Connected)
             {
                 return 0;
             }
@@ -1331,17 +1699,195 @@ namespace AsyncIrbis
             return response.ReturnCode;
         }
 
+        public ServerVersion GetServerVersion()
+        {
+            if (!Connected)
+            {
+                return new ServerVersion();
+            }
+
+            var query = new ClientQuery(this, "1");
+            var response = Execute(query);
+            response.CheckReturnCode();
+            ServerVersion result = new ServerVersion();
+            var lines = response.ReadRemainingAnsiLines();
+            result.Parse(lines);
+
+            return result;
+        }
+
+        public string[] ListFiles(string specification)
+        {
+            if (!Connected || string.IsNullOrEmpty(specification))
+            {
+                return Array.Empty<string>();
+            }
+
+            var query = new ClientQuery(this, "!");
+            query.AddAnsi(specification).NewLine();
+            var response = Execute(query);
+            var lines = response.ReadRemainingAnsiLines();
+            var result = new LocalList<string>();
+            foreach (var line in lines)
+            {
+                var files = line.SplitIrbis();
+                foreach (var file in files)
+                {
+                    if (!string.IsNullOrEmpty(file))
+                    {
+                        result.Add(file);
+                    }
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        public ProcessInfo[] ListProcesses()
+        {
+            if (!Connected)
+            {
+                return Array.Empty<ProcessInfo>();
+            }
+
+            var query = new ClientQuery(this, "+3");
+            var response = Execute(query);
+            response.CheckReturnCode();
+            var lines = response.ReadRemainingAnsiLines();
+            var result = ProcessInfo.Parse(lines);
+
+            return result;
+        }
+
+        public void ParseConnectionString
+            (
+                [CanBeNull] string connectionString
+            )
+        {
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                return;
+            }
+
+            var pairs = connectionString.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var pair in pairs)
+            {
+                if (!pair.Contains('='))
+                {
+                    continue;
+                }
+
+                var parts = pair.Split('=', 2);
+                var name = parts[0].Trim().ToLowerInvariant();
+                if (string.IsNullOrEmpty(name))
+                {
+                    continue;
+                }
+
+                var value = parts[1].Trim();
+
+                switch (name)
+                {
+                    case "host":
+                    case "server":
+                    case "address":
+                        Host = value;
+                        break;
+
+                    case "port":
+                        Port = Utility.StringToInt(value);
+                        break;
+
+                    case "user":
+                    case "username":
+                    case "name":
+                    case "login":
+                    case "account":
+                        Username = value;
+                        break;
+
+                    case "password":
+                    case "pwd":
+                    case "secret":
+                        Password = value;
+                        break;
+
+                    case "db":
+                    case "database":
+                    case "base":
+                    case "catalog":
+                        Database = value;
+                        break;
+
+                    case "arm":
+                    case "workstation":
+                        Workstation = value;
+                        break;
+
+                    case "debug":
+                        _debug = true;
+                        break;
+
+                    default:
+                        throw new IrbisException($"Unknown key {name}");
+                }
+            }
+        }
+
+        [CanBeNull]
+        public MarcRecord ReadRecord(int mfn)
+        {
+            if (!Connected)
+            {
+                return null;
+            }
+
+            var query = new ClientQuery(this, "C");
+            query.AddAnsi(Database).NewLine();
+            query.Add(mfn).NewLine();
+            var response = Execute(query);
+            var code = response.GetReturnCode();
+            if (code < 0)
+            {
+                // TODO add good codes
+                return null;
+            }
+
+            var result = new MarcRecord();
+            result.Database = Database;
+            var lines = response.ReadRemainingUtfLines();
+            result.Decode(lines);
+
+            return result;
+        }
+
+        [CanBeNull]
+        public string ReadTextFile(string specification)
+        {
+            if (!Connected)
+            {
+                return null;
+            }
+
+            var query = new ClientQuery(this, "L");
+            query.AddAnsi(specification).NewLine();
+            var response = Execute(query);
+            var result = response.ReadAnsi().IrbisToDos();
+
+            return result;
+        }
+
         public void Dispose()
         {
             Disconnect();
         }
     }
 
-
     class Program
     {
         static void Main(string[] args)
         {
+
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
             using (var connection = new IrbisConnection())
@@ -1351,12 +1897,30 @@ namespace AsyncIrbis
 
                 if (!connection.Connect())
                 {
-                    Console.WriteLine("Не удалось подключиться!");
+                    WriteLine("Не удалось подключиться!");
                     return;
                 }
 
-                int maxMfn = connection.GetMaxMfn();
-                Console.WriteLine($"Max MFN: {maxMfn}");
+                var maxMfn = connection.GetMaxMfn();
+                WriteLine($"Max MFN: {maxMfn}");
+
+                var version = connection.GetServerVersion();
+                WriteLine($"{version.Organization} : {version.MaxClients}");
+
+                var record = connection.ReadRecord(123);
+                WriteLine($"{record.Fields.Count}");
+
+                var text = connection.ReadTextFile("3.IBIS.WS.OPT");
+                WriteLine(text);
+
+                var files = connection.ListFiles("3.IBIS.*.pft");
+                WriteLine(string.Join(", ", files));
+
+                var processes = connection.ListProcesses();
+                foreach (var process in processes)
+                {
+                    WriteLine(process);
+                }
             }
         }
     }
