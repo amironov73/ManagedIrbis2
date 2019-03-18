@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -89,9 +91,9 @@ namespace AsyncIrbis
         /// Add some items.
         /// </summary>
         public void AddRange
-            (
-                [NotNull] IEnumerable<T> items
-            )
+        (
+            [NotNull] IEnumerable<T> items
+        )
         {
             if (ReferenceEquals(_array, null))
             {
@@ -113,9 +115,9 @@ namespace AsyncIrbis
 
         /// <inheritdoc cref="ICollection{T}.Contains" />
         public bool Contains
-            (
-                T item
-            )
+        (
+            T item
+        )
         {
             if (ReferenceEquals(_array, null))
             {
@@ -128,10 +130,10 @@ namespace AsyncIrbis
 
         /// <inheritdoc cref="ICollection{T}.CopyTo" />
         public void CopyTo
-            (
-                T[] array,
-                int arrayIndex
-            )
+        (
+            T[] array,
+            int arrayIndex
+        )
         {
             if (!ReferenceEquals(_array, null))
             {
@@ -168,7 +170,7 @@ namespace AsyncIrbis
         }
 
         /// <inheritdoc cref="IList{T}.Insert" />
-        public void Insert(int index,T item)
+        public void Insert(int index, T item)
         {
             if (ReferenceEquals(_array, null))
             {
@@ -304,88 +306,24 @@ namespace AsyncIrbis
     }
 
     /// <summary>
-    /// Analog for <see cref="System.IO.MemoryStream"/> that uses
-    /// small chunks to hold the data.
+    /// Простейший сборщик данных в виде байтовых чанков.
     /// </summary>
-    [PublicAPI]
-    public sealed class ChunkedBuffer
+    public sealed class ChunkCollector
     {
-        #region Constants
-
-        /// <summary>
-        /// Default chunk size.
-        /// </summary>
-        public const int DefaultChunkSize = 2048;
-
-        #endregion
-
-        #region Nested classes
-
-        /// <summary>
-        /// Chunk of bytes.
-        /// </summary>
-        class Chunk
-        {
-            public readonly byte[] Buffer;
-
-            public Chunk Next;
-
-            public Chunk (int size)
-            {
-                Buffer = new byte[size];
-            }
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>
-        /// Chunk size.
-        /// </summary>
-        public int ChunkSize => _chunkSize;
-
-        /// <summary>
-        /// End of data?
-        /// </summary>
-        public bool Eof
-        {
-            get
-            {
-                if (ReferenceEquals(_current, null))
-                {
-                    return true;
-                }
-
-                if (ReferenceEquals(_current, _last))
-                {
-                    return _read >= _position;
-                }
-
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Total length.
+        /// Total length of the data.
         /// </summary>
         public int Length
         {
             get
             {
-                int result = 0;
-
-                for (
-                        Chunk chunk = _first;
-                        !ReferenceEquals(chunk, null)
-                        && !ReferenceEquals(chunk, _last);
-                        chunk = chunk.Next
-                    )
+                var result = 0;
+                foreach (var memory in _accumulator)
                 {
-                    result += _chunkSize;
+                    result += memory.Count;
                 }
-
-                result += _position;
 
                 return result;
             }
@@ -398,493 +336,393 @@ namespace AsyncIrbis
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ChunkedBuffer()
-            : this(DefaultChunkSize)
+        public ChunkCollector()
         {
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ChunkedBuffer(int chunkSize)
-        {
-            _chunkSize = chunkSize;
+            _accumulator = new List<ArraySegment<byte>>();
         }
 
         #endregion
 
         #region Private members
 
-        private Chunk _first, _current, _last;
-        private readonly int _chunkSize;
-        private int _position, _read;
+        private readonly List<ArraySegment<byte>> _accumulator;
 
-        private bool _Advance()
-        {
-            if (ReferenceEquals(_current, _last))
-            {
-                return false;
-            }
-
-            _current = _current.Next;
-            _read = 0;
-
-            return true;
-        }
-
-        private void _AppendChunk()
-        {
-            Chunk newChunk = new Chunk(_chunkSize);
-            if (ReferenceEquals(_first, null))
-            {
-                _first = newChunk;
-                _current = newChunk;
-            }
-            else
-            {
-                _last.Next = newChunk;
-            }
-            _last = newChunk;
-            _position = 0;
-        }
+        private static readonly byte[] _newLine = {10};
 
         #endregion
 
         #region Public methods
 
         /// <summary>
+        /// Add the chunk.
+        /// </summary>
+        public ChunkCollector Add(ArraySegment<byte> chunk)
+        {
+            _accumulator.Add(chunk);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Add the array.
+        /// </summary>
+        public ChunkCollector Add(byte[] array)
+        {
+            return Add(new ArraySegment<byte>(array, 0, array.Length));
+        }
+
+        /// <summary>
         /// Copy data from the stream.
         /// </summary>
-        public void CopyFrom
-            (
-                [NotNull] Stream stream,
-                int bufferSize
-            )
+        public async Task CopyFromAsync(Stream stream, int bufferSize)
         {
-            byte[] buffer = new byte[bufferSize];
-            int read;
-            while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
+            while (true)
             {
-                Write(buffer, 0, read);
+                var buffer = new byte[bufferSize];
+                var read = await stream.ReadAsync(buffer, 0, bufferSize);
+                if (read <= 0)
+                {
+                    break;
+                }
+
+                var chunk = new ArraySegment<byte>(buffer, 0, read);
+                Add(chunk);
             }
         }
 
         /// <summary>
-        /// Peek one byte.
+        /// Debug print.
         /// </summary>
-        public int Peek()
+        public void Debug(TextWriter writer)
         {
-            if (ReferenceEquals(_current, null))
+            foreach (var memory in _accumulator)
             {
-                return -1;
-            }
-
-            if (ReferenceEquals(_current, _last))
-            {
-                if (_read >= _position)
+                foreach (var b in memory)
                 {
-                    return -1;
+                    writer.Write($" {b:X2}");
                 }
             }
-            else
-            {
-                if (_read >= _chunkSize)
-                {
-                    _Advance();
-                }
-            }
-
-            return _current.Buffer[_read];
         }
 
         /// <summary>
-        /// Read array of bytes.
+        /// Get collected data.
         /// </summary>
-        public int Read
-            (
-                [NotNull] byte[] buffer
-            )
+        public ArraySegment<byte>[] GetChunks(int prefixLength = 0)
         {
-            return Read(buffer, 0, buffer.Length);
-        }
-
-        /// <summary>
-        /// Read bytes.
-        /// </summary>
-        public int Read
-            (
-                byte[] buffer,
-                int offset,
-                int count
-            )
-        {
-            if (count <= 0)
+            var length = _accumulator.Count;
+            var result = new ArraySegment<byte>[length + prefixLength];
+            for (int i = 0; i < length; i++)
             {
-                return 0;
-            }
-
-            if (ReferenceEquals(_current, null))
-            {
-                return 0;
-            }
-
-            int total = 0;
-            do
-            {
-                int remaining = ReferenceEquals(_current, _last)
-                    ? _position - _read
-                    : _chunkSize - _read;
-
-                if (remaining <= 0)
-                {
-                    if (!_Advance())
-                    {
-                        break;
-                    }
-                }
-
-                int portion = Math.Min(count, remaining);
-                Array.Copy
-                    (
-                        _current.Buffer,
-                        _read,
-                        buffer,
-                        offset,
-                        portion
-                    );
-                _read += portion;
-                offset += portion;
-                count -= portion;
-                total += portion;
-            } while (count > 0);
-
-            return total;
-        }
-
-        /// <summary>
-        /// Read one byte.
-        /// </summary>
-        public int ReadByte()
-        {
-            if (ReferenceEquals(_current, null))
-            {
-                return -1;
-            }
-
-            if (ReferenceEquals(_current, _last))
-            {
-                if (_read >= _position)
-                {
-                    return -1;
-                }
-            }
-            else
-            {
-                if (_read >= _chunkSize)
-                {
-                    _Advance();
-                }
-            }
-
-            return _current.Buffer[_read++];
-        }
-
-        /// <summary>
-        /// Read one line from the current position.
-        /// </summary>
-        [CanBeNull]
-        public string ReadLine
-            (
-                [NotNull] Encoding encoding
-            )
-        {
-            if (Eof)
-            {
-                return null;
-            }
-
-            MemoryStream result = new MemoryStream();
-            byte found = 0;
-            while (found == 0)
-            {
-                byte[] buffer = _current.Buffer;
-                int stop = ReferenceEquals(_current, _last)
-                    ? _position
-                    : _chunkSize;
-                int head = _read;
-                for (; head < stop; head++)
-                {
-                    byte c = buffer[head];
-                    if (c == '\r' || c == '\n')
-                    {
-                        found = c;
-                        break;
-                    }
-                }
-                result.Write(buffer, _read, head - _read);
-                _read = head;
-                if (found != 0)
-                {
-                    _read++;
-                }
-                else
-                {
-                    if (!_Advance())
-                    {
-                        break;
-                    }
-                }
-            }
-            if (found == '\r')
-            {
-                if (Peek() == '\n')
-                {
-                    ReadByte();
-                }
-            }
-
-            return encoding.GetString(result.ToArray());
-        }
-
-        /**
-         * Получение непрочитанных байт одним большим куском. Позиция не сдвигается.
-         */
-        public byte[] ReadRemaining()
-        {
-            byte[] result = new byte[RemainingLength()];
-
-            if (!ReferenceEquals(_current, null))
-            {
-                int offset=0, length;
-
-                if (ReferenceEquals(_current, _last))
-                {
-                    length = _position - _read;
-                    Array.Copy(_current.Buffer, _read, result, 0, length);
-                }
-                else
-                {
-                    length = _chunkSize - _read;
-                    Array.Copy(_current.Buffer, _read, result, offset, length);
-
-                    for
-                        (
-                            Chunk chunk = _current.Next;
-                            !ReferenceEquals(chunk, _last);
-                            chunk = chunk.Next
-                        )
-                    {
-                        Array.Copy(chunk.Buffer, 0, result, offset, _chunkSize);
-                        offset += _chunkSize;
-                    }
-
-                    length = _chunkSize - _position;
-                    Array.Copy(_last.Buffer, 0, result, offset, length);
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * Количество непрочитанных байт.
-         */
-        public int RemainingLength()
-        {
-            int result = 0;
-
-            if (!ReferenceEquals(_current, null))
-            {
-                if (ReferenceEquals(_current, _last))
-                {
-                    result = _position - _read;
-                }
-                else
-                {
-                    result += _chunkSize - _read;
-
-                    for
-                        (
-                            Chunk chunk = _current.Next;
-                            !ReferenceEquals(chunk, _last);
-                            chunk = chunk.Next
-                        )
-                    {
-                        result += _chunkSize;
-                    }
-
-                    result += _position - _read;
-                }
+                result[prefixLength + i] = _accumulator[i];
             }
 
             return result;
         }
 
         /// <summary>
-        /// Rewind to the beginning.
+        /// Add new line symbol.
         /// </summary>
-        public void Rewind()
+        public ChunkCollector NewLine()
         {
-            _current = _first;
-            _read = 0;
+            return Add(_newLine);
         }
 
-        /// <summary>
-        /// Get internal buffers.
-        /// </summary>
-        [NotNull]
-        public byte[][] ToArrays
-            (
-                int prefix
-            )
+        #endregion
+
+        #region Object members
+
+        /// <inheritdoc />
+        public override string ToString()
         {
-            List<byte[]> result = new List<byte[]>();
-
-            for (int i = 0; i < prefix; i++)
+            var result = new StringBuilder(Length);
+            foreach (var memory in _accumulator)
             {
-                result.Add(Array.Empty<byte>());
+                result.Append(Encoding.Default.GetString(memory));
             }
 
-            for (
-                    Chunk chunk = _first;
-                    !ReferenceEquals(chunk, null)
-                    && !ReferenceEquals(chunk, _last);
-                    chunk = chunk.Next
-                )
+            return result.ToString();
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Чтение массива байтовых чанков.
+    /// </summary>
+    public sealed class ChunkReader
+    {
+        #region Properties
+
+        public ChunkCollector Chunks { get; }
+
+        public int Length { get; }
+
+        public bool EOT { get; private set; }
+
+        #endregion
+
+        #region Construction
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public ChunkReader(ChunkCollector chunks)
+        {
+            Chunks = chunks;
+            Length = chunks.Length;
+            _memory = chunks.GetChunks();
+            if (_memory.Length == 0)
             {
-                result.Add(chunk.Buffer);
+                EOT = true;
+            }
+            else
+            {
+                _currentChunk = _memory.FirstOrDefault();
+                _currentIndex = 0;
+                _currentOffset = 0;
+            }
+        }
+
+        #endregion
+
+        #region Private members
+
+        private readonly ArraySegment<byte>[] _memory;
+        private ArraySegment<byte> _currentChunk;
+        private int _currentIndex, _currentOffset;
+
+        #endregion
+
+        #region Public methods
+
+        public byte Peek()
+        {
+            if (EOT)
+            {
+                return 0;
             }
 
-            if (_position != 0)
+            return _currentChunk[_currentOffset];
+        }
+
+        public byte ReadByte()
+        {
+            if (EOT)
             {
-                byte[] chunk = new byte[_position];
-                Array.Copy(_last.Buffer, 0, chunk, 0, _position);
-                result.Add(chunk);
+                return 0;
+            }
+
+            if (_currentOffset >= _currentChunk.Count)
+            {
+                _currentOffset = 0;
+                _currentIndex++;
+                if (_currentIndex >= _memory.Length)
+                {
+                    EOT = true;
+                    return 0;
+                }
+
+                _currentChunk = _memory[_currentIndex];
+            }
+
+            byte result = _currentChunk[_currentOffset];
+            _currentOffset++;
+
+            if (_currentOffset > _currentChunk.Count)
+            {
+                _currentOffset = 0;
+                _currentIndex++;
+                if (_currentIndex >= _memory.Length)
+                {
+                    EOT = true;
+                }
+                else
+                {
+                    _currentChunk = _memory[_currentIndex];
+                }
+            }
+
+            return result;
+        }
+
+        public byte[] ReadLine()
+        {
+            var result = new MemoryStream();
+            while (true)
+            {
+                var one = ReadByte();
+                if (one == 0)
+                {
+                    break;
+                }
+
+                if (one == 13)
+                {
+                    if (Peek() == 10)
+                    {
+                        ReadByte();
+                    }
+
+                    break;
+                }
+
+                if (one == 10)
+                {
+                    break;
+                }
+
+                result.WriteByte(one);
             }
 
             return result.ToArray();
         }
 
-        /// <summary>
-        /// Get all data as one big array of bytes.
-        /// </summary>
-        [NotNull]
-        public byte[] ToBigArray()
+        public string ReadLine(Encoding encoding)
         {
-            int total = Length;
-            byte[] result = new byte[total];
-            int offset = 0;
-            for (
-                    Chunk chunk = _first;
-                    !ReferenceEquals(chunk, null)
-                    && !ReferenceEquals(chunk, _last);
-                    chunk = chunk.Next
-                )
+            byte[] bytes = ReadLine();
+            if (bytes.Length == 0)
             {
-                Array.Copy(chunk.Buffer, 0, result, offset, _chunkSize);
-                offset += _chunkSize;
+                return string.Empty;
             }
 
-            if (_position != 0)
+            return encoding.GetString(bytes);
+        }
+
+        public byte[] RemainingBytes()
+        {
+            if (EOT)
             {
-                Array.Copy(_last.Buffer, 0, result, offset, _position);
+                return Array.Empty<byte>();
+            }
+
+            var length = _currentChunk.Count - _currentOffset;
+
+            for (var i = _currentIndex + 1; i < _memory.Length; i++)
+            {
+                length += _memory[i].Count;
+            }
+
+            if (length == 0)
+            {
+                EOT = true;
+
+                return Array.Empty<byte>();
+            }
+
+            var result = new byte[length];
+            var offset = 0;
+            _currentChunk.Slice(_currentOffset).CopyTo(result);
+            offset += _currentChunk.Count - _currentOffset;
+            for (var i = _currentIndex + 1; i < _memory.Length; i++)
+            {
+                var chunk = _memory[i];
+                chunk.CopyTo(result, offset);
+                offset += chunk.Count;
             }
 
             return result;
         }
 
-        /// <summary>
-        /// Write a block of bytes to the current stream
-        /// using data read from a buffer.
-        /// </summary>
-        public void Write
-            (
-                [NotNull] byte[] buffer
-            )
+        public string RemainingText(Encoding encoding)
         {
-            Write(buffer, 0, buffer.Length);
+            var bytes = RemainingBytes();
+            if (bytes.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            return encoding.GetString(bytes);
         }
 
+        #endregion
+    }
+
+    /// <summary>
+    /// Асинхронно отрабатывает работу с TCP-сервером.
+    /// </summary>
+    public struct AsyncExecutor
+    {
+        #region Properties
+
+        public string Host { get; }
+
+        public int Port { get; }
+
+        #endregion
+
+        #region Construction
 
         /// <summary>
-        /// Write a block of bytes to the current stream
-        /// using data read from a buffer.
+        /// Constructor.
         /// </summary>
-        public void Write
-            (
-                [NotNull] byte[] buffer,
-                int offset,
-                int count
-            )
+        public AsyncExecutor(string host, int port)
         {
-            if (count <= 0)
-            {
-                return;
-            }
+            Host = host;
+            Port = port;
+        }
 
-            if (ReferenceEquals(_first, null))
-            {
-                _AppendChunk();
-            }
+        #endregion
 
-            do
+        #region Public methods
+
+        public async Task<ChunkCollector> Execute(ChunkCollector output)
+        {
+            // output.Debug(Out);
+
+            using (var client = new TcpClient())
             {
-                int free = _chunkSize - _position;
-                if (free == 0)
+                try
                 {
-                    _AppendChunk();
-                    free = _chunkSize;
+                    await client.ConnectAsync(Host, Port);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                    return null;
                 }
 
-                int portion = Math.Min(count, free);
-                Array.Copy
-                    (
-                        buffer,
-                        offset,
-                        _last.Buffer,
-                        _position,
-                        portion
-                    );
+                var socket = client.Client;
+                var stream = client.GetStream();
 
-                _position += portion;
-                count -= portion;
-                offset += portion;
-            } while (count > 0);
-        }
+                var length = output.Length;
+                var prefix = Encoding.ASCII.GetBytes($"{length}\n");
+                var chunks = output.GetChunks(1);
+                chunks[0] = new ArraySegment<byte>(prefix);
+                try
+                {
+                    await Task.Run(() => socket.Send(chunks));
 
-        /// <summary>
-        /// Write the text with encoding.
-        /// </summary>
-        public void Write
-            (
-                [NotNull] string text,
-                [NotNull] Encoding encoding
-            )
-        {
-            byte[] bytes = encoding.GetBytes(text);
+//                    foreach (var chunk in chunks)
+//                    {
+//                        await stream.WriteAsync(chunk);
+//                    }
 
-            Write(bytes);
-        }
+                    // await stream.FlushAsync();
+                    socket.Shutdown(SocketShutdown.Send);
+                }
+                catch (Exception exception)
+                {
+                    WriteLine(exception.Message);
+                    Debug.WriteLine(exception.Message);
+                    return null;
+                }
 
-        /// <summary>
-        /// Write a byte to the current stream at the current position.
-        /// </summary>
-        public void WriteByte
-            (
-                byte value
-            )
-        {
-            if (ReferenceEquals(_first, null))
-            {
-                _AppendChunk();
+                var result = new ChunkCollector();
+                try
+                {
+                    await result.CopyFromAsync(stream, 2048);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                    return null;
+                }
+
+            // result.Debug(Out);
+
+            return result;
+
             }
-
-            if (_position >= _chunkSize)
-            {
-                _AppendChunk();
-            }
-
-            _last.Buffer[_position++] = value;
         }
 
         #endregion
@@ -953,7 +791,7 @@ namespace AsyncIrbis
 
         public RecordField Add(char code, string value)
         {
-            var subfield = new SubField{Code = code, Value = value};
+            var subfield = new SubField {Code = code, Value = value};
             Subfields.Add(subfield);
 
             return this;
@@ -1047,7 +885,7 @@ namespace AsyncIrbis
         /// </returns>
         public RecordField Add(int tag, string value = null)
         {
-            var result = new RecordField{Tag = tag, Value = value};
+            var result = new RecordField {Tag = tag, Value = value};
             Fields.Add(result);
 
             return result;
@@ -1097,19 +935,19 @@ namespace AsyncIrbis
         private const string ShortDelimiter = "\x001E";
 
         public static bool SameString
-            (
-                [CanBeNull] this string left,
-                [CanBeNull] string right
-            )
+        (
+            [CanBeNull] this string left,
+            [CanBeNull] string right
+        )
         {
             return string.Compare(left, right, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         [CanBeNull]
         public static string IrbisToDos
-            (
-                [CanBeNull] this string text
-            )
+        (
+            [CanBeNull] this string text
+        )
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -1120,9 +958,9 @@ namespace AsyncIrbis
         }
 
         public static string[] SplitIrbis
-            (
-                [CanBeNull] this string text
-            )
+        (
+            [CanBeNull] this string text
+        )
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -1162,9 +1000,9 @@ namespace AsyncIrbis
         /// </summary>
         [CanBeNull]
         public static string RemoveComments
-            (
-                [CanBeNull] string text
-            )
+        (
+            [CanBeNull] string text
+        )
         {
             const char zero = '\0';
 
@@ -1195,6 +1033,7 @@ namespace AsyncIrbis
                         {
                             state = zero;
                         }
+
                         result.Append(c);
                         break;
 
@@ -1229,6 +1068,7 @@ namespace AsyncIrbis
                         {
                             result.Append(c);
                         }
+
                         break;
                 }
 
@@ -1248,9 +1088,9 @@ namespace AsyncIrbis
         /// </remarks>
         [CanBeNull]
         public static string PrepareFormat
-            (
-                [CanBeNull] string text
-            )
+        (
+            [CanBeNull] string text
+        )
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -1318,21 +1158,30 @@ namespace AsyncIrbis
 
             for (int i = 2; i < lines.Length; i += linesPerProcess + 1)
             {
+                if ((i + 9) > lines.Length)
+                {
+                    for (int j = i; j < lines.Length; j++)
+                    {
+                        WriteLine(lines[j]);
+                    }
+
+                    break;
+                }
+
                 var process = new ProcessInfo
                 {
-                    Number        = lines[i + 0],
-                    IpAddress     = lines[i + 1],
-                    Name          = lines[i + 2],
-                    ClienId       = lines[i + 3],
-                    Workstation   = lines[i + 4],
-                    Started       = lines[i + 5],
-                    LastCommand   = lines[i + 6],
+                    Number = lines[i + 0],
+                    IpAddress = lines[i + 1],
+                    Name = lines[i + 2],
+                    ClienId = lines[i + 3],
+                    Workstation = lines[i + 4],
+                    Started = lines[i + 5],
+                    LastCommand = lines[i + 6],
                     CommandNumber = lines[i + 7],
-                    ProcessId     = lines[i + 8],
-                    State         = lines[i + 9]
+                    ProcessId = lines[i + 8],
+                    State = lines[i + 9]
                 };
                 result.Add(process);
-
             }
 
             return result.ToArray();
@@ -1353,7 +1202,7 @@ namespace AsyncIrbis
 
         public void Parse(string[] lines)
         {
-            if (lines.Length == 4)
+            if (lines.Length >= 4)
             {
                 Organization = lines[0];
                 Version = lines[1];
@@ -1371,22 +1220,19 @@ namespace AsyncIrbis
 
     public sealed class ClientQuery
     {
-        [NotNull]
-        private readonly ChunkedBuffer _buffer;
+        [NotNull] public ChunkCollector Buffer { get; }
 
-        [NotNull]
-        private readonly Encoding _ansi;
+        [NotNull] private readonly Encoding _ansi;
 
-        [NotNull]
-        private readonly Encoding _utf;
+        [NotNull] private readonly Encoding _utf;
 
         public ClientQuery
-            (
-                [NotNull] IrbisConnection connection,
-                [NotNull] string command
-            )
+        (
+            [NotNull] IrbisConnection connection,
+            [NotNull] string command
+        )
         {
-            _buffer = new ChunkedBuffer();
+            Buffer = new ChunkCollector();
             _ansi = Utility.AnsiEncoding();
             _utf = Utility.UtfEncoding();
 
@@ -1410,7 +1256,7 @@ namespace AsyncIrbis
         public ClientQuery AddAnsi<T>(T value)
         {
             byte[] converted = _ansi.GetBytes(value.ToString());
-            _buffer.Write(converted);
+            Buffer.Add(converted);
 
             return this;
         }
@@ -1418,24 +1264,14 @@ namespace AsyncIrbis
         public ClientQuery AddUtf<T>(T value)
         {
             byte[] converted = _utf.GetBytes(value.ToString());
-            _buffer.Write(converted);
+            Buffer.Add(converted);
 
             return this;
         }
 
-        public byte[][] Encode()
-        {
-            int length = _buffer.Length;
-            byte[][] result = _buffer.ToArrays(1);
-            byte[] prefix = _ansi.GetBytes(Utility.IntToString(length) + "\n");
-            result[0] = prefix;
-
-            return result;
-        }
-
         public ClientQuery NewLine()
         {
-            _buffer.WriteByte(10);
+            Buffer.NewLine();
 
             return this;
         }
@@ -1450,22 +1286,17 @@ namespace AsyncIrbis
         public int AnswerSize { get; private set; }
         public string ServerVersion { get; private set; }
 
-        [NotNull]
-        private readonly ChunkedBuffer _buffer;
+        [NotNull] private readonly ChunkCollector _answer;
+        [NotNull] private readonly ChunkReader _reader;
 
-        [NotNull]
-        private readonly Encoding _ansi;
+        [NotNull] private readonly Encoding _ansi;
 
-        [NotNull]
-        private readonly Encoding _utf;
+        [NotNull] private readonly Encoding _utf;
 
-        public ServerResponse
-            (
-                [NotNull]Stream stream
-            )
+        public ServerResponse([NotNull] ChunkCollector answer)
         {
-            _buffer = new ChunkedBuffer();
-            _buffer.CopyFrom(stream, _buffer.ChunkSize);
+            _answer = answer;
+            _reader = new ChunkReader(_answer);
             _ansi = Utility.AnsiEncoding();
             _utf = Utility.UtfEncoding();
 
@@ -1481,7 +1312,7 @@ namespace AsyncIrbis
             ReadAnsi();
         }
 
-        public void CheckReturnCode(params int[] goodCodes)
+        public bool CheckReturnCode(params int[] goodCodes)
         {
             if (GetReturnCode() < 0)
             {
@@ -1490,15 +1321,14 @@ namespace AsyncIrbis
                     throw new IrbisException(ReturnCode);
                 }
             }
+
+            return true;
         }
 
-        public void Debug(bool debug)
-        {
-            // TODO implement
-        }
+        public void Debug() => _answer.Debug(Out);
 
         public string GetLine([NotNull] Encoding encoding) =>
-            _buffer.ReadLine(encoding);
+            _reader.ReadLine(encoding);
 
         public int GetReturnCode()
         {
@@ -1507,10 +1337,7 @@ namespace AsyncIrbis
             return ReturnCode;
         }
 
-        public string ReadAnsi()
-        {
-            return GetLine(_ansi);
-        }
+        public string ReadAnsi() => GetLine(_ansi);
 
         public int ReadInteger()
         {
@@ -1521,48 +1348,33 @@ namespace AsyncIrbis
         {
             LocalList<string> result = new LocalList<string>();
 
-            while (!_buffer.Eof)
+            while (!_reader.EOT)
             {
-                string line = _buffer.ReadLine(_ansi);
+                string line = _reader.ReadLine(_ansi);
                 result.Add(line);
             }
 
             return result.ToArray();
         }
 
-        public string ReadRemainingAnsiText()
-        {
-            byte[] bytes = _buffer.ReadRemaining();
-            string result = _ansi.GetString(bytes);
-
-            return result;
-        }
+        public string ReadRemainingAnsiText() => _reader.RemainingText(_ansi);
 
         public string[] ReadRemainingUtfLines()
         {
             LocalList<string> result = new LocalList<string>();
 
-            while (!_buffer.Eof)
+            while (!_reader.EOT)
             {
-                string line = _buffer.ReadLine(_utf);
+                string line = _reader.ReadLine(_utf);
                 result.Add(line);
             }
 
             return result.ToArray();
         }
 
-        public string ReadRemainingUtfText()
-        {
-            byte[] bytes = _buffer.ReadRemaining();
-            string result = _utf.GetString(bytes);
+        public string ReadRemainingUtfText() => _reader.RemainingText(_utf);
 
-            return result;
-        }
-
-        public string ReadUtf()
-        {
-            return GetLine(_utf);
-        }
+        public string ReadUtf() => GetLine(_utf);
     }
 
     public sealed class IrbisConnection
@@ -1583,7 +1395,7 @@ namespace AsyncIrbis
         public bool Connected { get; private set; }
         private bool _debug = false;
 
-        public bool ActualizeRecord(string database, int mfn)
+        public async Task<bool> ActualizeRecord(string database, int mfn)
         {
             if (!Connected)
             {
@@ -1593,27 +1405,37 @@ namespace AsyncIrbis
             var query = new ClientQuery(this, "F");
             query.AddAnsi(database).NewLine();
             query.Add(mfn).NewLine();
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
             response.CheckReturnCode();
 
             return true;
         }
 
-        public bool Connect()
+        public async Task<bool> Connect()
         {
             if (Connected)
             {
                 return true;
             }
 
-        AGAIN:
+            AGAIN:
             ClientId = new Random().Next(100000, 999999);
             QueryId = 1;
             var query = new ClientQuery(this, "A");
             query.AddAnsi(Username).NewLine();
             query.AddAnsi(Password);
 
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
             if (response.GetReturnCode() == -3337)
             {
                 goto AGAIN;
@@ -1632,7 +1454,7 @@ namespace AsyncIrbis
             return true;
         }
 
-        public bool Disconnect()
+        public async Task<bool> Disconnect()
         {
             if (!Connected)
             {
@@ -1641,29 +1463,56 @@ namespace AsyncIrbis
 
             var query = new ClientQuery(this, "B");
             query.AddAnsi(Username);
-            Execute(query);
+            try
+            {
+                await Execute(query);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+            }
+
             Connected = false;
 
             return true;
         }
 
-        public ServerResponse Execute(ClientQuery query)
+        public async Task<ServerResponse> Execute(ClientQuery query)
         {
-            TcpClient client = new TcpClient(Host, Port);
-            var stream = client.GetStream();
-            byte[][] packet = query.Encode();
-            foreach (var one in packet)
+            AsyncExecutor executor = new AsyncExecutor(Host, Port);
+            ChunkCollector answer;
+            try
             {
-                stream.Write(one, 0, one.Length);
+                if (_debug)
+                {
+                    query.Buffer.Debug(Out);
+                }
+
+                answer = await executor.Execute(query.Buffer);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
             }
 
-            ServerResponse response = new ServerResponse(stream);
+            if (ReferenceEquals(answer, null))
+            {
+                return null;
+            }
+
+            if (_debug)
+            {
+                answer.Debug(Out);
+            }
+
+            var result = new ServerResponse(answer);
             QueryId++;
 
-            return response;
+            return result;
         }
 
-        public string FormatRecord(string format, int mfn)
+        public async Task<string> FormatRecord(string format, int mfn)
         {
             if (!Connected)
             {
@@ -1676,14 +1525,23 @@ namespace AsyncIrbis
             query.AddAnsi(prepared).NewLine();
             query.Add(1).NewLine();
             query.Add(mfn).NewLine();
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return null;
+            }
+
             response.CheckReturnCode();
             string result = response.ReadRemainingUtfText();
+            if (!string.IsNullOrEmpty(result))
+            {
+                result = result.TrimEnd();
+            }
 
             return result;
         }
 
-        public int GetMaxMfn(string database = null)
+        public async Task<int> GetMaxMfn(string database = null)
         {
             if (!Connected)
             {
@@ -1692,14 +1550,19 @@ namespace AsyncIrbis
 
             database = database ?? Database;
             var query = new ClientQuery(this, "O");
-            query.AddAnsi(database);
-            var response = Execute(query);
+            query.AddAnsi(database).NewLine();
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return 0;
+            }
+
             response.CheckReturnCode();
 
             return response.ReturnCode;
         }
 
-        public ServerVersion GetServerVersion()
+        public async Task<ServerVersion> GetServerVersion()
         {
             if (!Connected)
             {
@@ -1707,7 +1570,12 @@ namespace AsyncIrbis
             }
 
             var query = new ClientQuery(this, "1");
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return null;
+            }
+
             response.CheckReturnCode();
             ServerVersion result = new ServerVersion();
             var lines = response.ReadRemainingAnsiLines();
@@ -1716,7 +1584,7 @@ namespace AsyncIrbis
             return result;
         }
 
-        public string[] ListFiles(string specification)
+        public async Task<string[]> ListFiles(string specification)
         {
             if (!Connected || string.IsNullOrEmpty(specification))
             {
@@ -1725,7 +1593,12 @@ namespace AsyncIrbis
 
             var query = new ClientQuery(this, "!");
             query.AddAnsi(specification).NewLine();
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<string>();
+            }
+
             var lines = response.ReadRemainingAnsiLines();
             var result = new LocalList<string>();
             foreach (var line in lines)
@@ -1743,7 +1616,7 @@ namespace AsyncIrbis
             return result.ToArray();
         }
 
-        public ProcessInfo[] ListProcesses()
+        public async Task<ProcessInfo[]> ListProcesses()
         {
             if (!Connected)
             {
@@ -1751,7 +1624,12 @@ namespace AsyncIrbis
             }
 
             var query = new ClientQuery(this, "+3");
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<ProcessInfo>();
+            }
+
             response.CheckReturnCode();
             var lines = response.ReadRemainingAnsiLines();
             var result = ProcessInfo.Parse(lines);
@@ -1759,10 +1637,7 @@ namespace AsyncIrbis
             return result;
         }
 
-        public void ParseConnectionString
-            (
-                [CanBeNull] string connectionString
-            )
+        public void ParseConnectionString([CanBeNull] string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
@@ -1835,7 +1710,7 @@ namespace AsyncIrbis
         }
 
         [CanBeNull]
-        public MarcRecord ReadRecord(int mfn)
+        public async Task<MarcRecord> ReadRecord(int mfn)
         {
             if (!Connected)
             {
@@ -1845,7 +1720,12 @@ namespace AsyncIrbis
             var query = new ClientQuery(this, "C");
             query.AddAnsi(Database).NewLine();
             query.Add(mfn).NewLine();
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return null;
+            }
+
             var code = response.GetReturnCode();
             if (code < 0)
             {
@@ -1862,7 +1742,7 @@ namespace AsyncIrbis
         }
 
         [CanBeNull]
-        public string ReadTextFile(string specification)
+        public async Task<string> ReadTextFile(string specification)
         {
             if (!Connected)
             {
@@ -1871,7 +1751,12 @@ namespace AsyncIrbis
 
             var query = new ClientQuery(this, "L");
             query.AddAnsi(specification).NewLine();
-            var response = Execute(query);
+            var response = await Execute(query);
+            if (ReferenceEquals(response, null))
+            {
+                return null;
+            }
+
             var result = response.ReadAnsi().IrbisToDos();
 
             return result;
@@ -1879,49 +1764,59 @@ namespace AsyncIrbis
 
         public void Dispose()
         {
-            Disconnect();
+            Disconnect().Wait();
         }
     }
 
     class Program
     {
-        static void Main(string[] args)
+        static async Task AsyncMain()
         {
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
             using (var connection = new IrbisConnection())
             {
                 connection.Username = "librarian";
                 connection.Password = "secret";
+                connection.Workstation = "A";
 
-                if (!connection.Connect())
+                if (!await connection.Connect())
                 {
                     WriteLine("Не удалось подключиться!");
                     return;
                 }
 
-                var maxMfn = connection.GetMaxMfn();
+                var maxMfn = await connection.GetMaxMfn();
                 WriteLine($"Max MFN: {maxMfn}");
 
-                var version = connection.GetServerVersion();
+                var formatted = await connection.FormatRecord("@brief", 123);
+                WriteLine($"FORMATTED: {formatted}");
+
+                var version = await connection.GetServerVersion();
                 WriteLine($"{version.Organization} : {version.MaxClients}");
 
-                var record = connection.ReadRecord(123);
+                var record = await connection.ReadRecord(123);
                 WriteLine($"{record.Fields.Count}");
 
-                var text = connection.ReadTextFile("3.IBIS.WS.OPT");
+                var text = await connection.ReadTextFile("3.IBIS.WS.OPT");
                 WriteLine(text);
 
-                var files = connection.ListFiles("3.IBIS.*.pft");
+                var files = await connection.ListFiles("3.IBIS.*.pft");
                 WriteLine(string.Join(", ", files));
 
-                var processes = connection.ListProcesses();
+                var processes = await connection.ListProcesses();
                 foreach (var process in processes)
                 {
                     WriteLine(process);
                 }
+
+                await connection.Disconnect();
             }
+        }
+
+        static void Main()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            AsyncMain().Wait();
         }
     }
 }
