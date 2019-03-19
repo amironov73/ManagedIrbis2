@@ -23,8 +23,6 @@ using JetBrains.Annotations;
 
 #endregion
 
-// ReSharper disable InvokeAsExtensionMethod
-
 namespace AM
 {
     /// <summary>
@@ -547,7 +545,9 @@ namespace AM
 
             string result = value.ToString();
 
+            // ReSharper disable InvokeAsExtensionMethod
             return StringUtility.ToVisibleString(result);
+            // ReSharper restore InvokeAsExtensionMethod
         }
 
         #endregion

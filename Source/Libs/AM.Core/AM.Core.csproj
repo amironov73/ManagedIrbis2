@@ -69,7 +69,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AM\Globalization\" />
+    <Folder Include="AM\Collections\" />
+    <Folder Include="AM\Logging\" />
+    <Folder Include="AM\Text\" />
   </ItemGroup>
 
 </Project>

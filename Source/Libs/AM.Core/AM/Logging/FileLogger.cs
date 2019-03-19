@@ -7,7 +7,6 @@
  * Status: poor
  */
 
-
 #region Using directives
 
 using System.IO;

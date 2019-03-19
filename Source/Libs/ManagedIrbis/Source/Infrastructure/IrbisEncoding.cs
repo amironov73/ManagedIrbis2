@@ -1,5 +1,31 @@
-﻿
-namespace ManagedIrbis
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+/* IrbisEncoding.cs -- encodings used by IRBIS
+ * Ars Magna project, http://arsmagna.ru
+ * -------------------------------------------------------
+ * State: moderate
+ */
+
+#region Using directives
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+
+using AM;
+using AM.Logging;
+using AM.Text;
+
+using JetBrains.Annotations;
+
+using ManagedIrbis.Properties;
+
+using CM=System.Configuration.ConfigurationManager;
+
+#endregion
+
+namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
     /// Encoding used by IRBIS

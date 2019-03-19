@@ -33,15 +33,6 @@ namespace ManagedIrbis.Infrastructure
     public sealed class ClientQuery
         : IVerifiable
     {
-        #region Constants
-
-        /// <summary>
-        /// Line delimiter in packet header.
-        /// </summary>
-        public const char Delimiter = '\x0A';
-
-        #endregion
-
         #region Properties
 
         /// <summary>

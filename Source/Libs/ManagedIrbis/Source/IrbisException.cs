@@ -17,7 +17,6 @@ using AM;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure;
 using ManagedIrbis.Properties;
 
 #endregion
@@ -105,18 +104,6 @@ namespace ManagedIrbis
             return string.IsNullOrEmpty(exception.Message)
                 ? GetErrorDescription(exception.ErrorCode)
                 : exception.Message;
-        }
-
-        /// <summary>
-        /// Текстовое описание ошибки.
-        /// </summary>
-        [NotNull]
-        public static string GetErrorDescription
-            (
-                IrbisReturnCode code
-            )
-        {
-            return GetErrorDescription((int)code);
         }
 
         /// <summary>
