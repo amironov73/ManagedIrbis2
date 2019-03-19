@@ -13,12 +13,8 @@ using System.IO;
 using System.Xml.Serialization;
 
 using AM;
-using AM.IO;
-using AM.Runtime;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Newtonsoft.Json;
 
@@ -27,12 +23,12 @@ using Newtonsoft.Json;
 namespace ManagedIrbis.Search
 {
     /// <summary>
-    /// Signature for <see cref="ReadTermsCommand"/>.
+    /// Signature for ReadTerms command.
     /// </summary>
     [PublicAPI]
     [XmlRoot("term")]
     public sealed class TermParameters
-        : IHandmadeSerializable,
+        : // IHandmadeSerializable,
         IVerifiable
     {
         #region Properties
@@ -90,40 +86,40 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region IHandmadeSerializable members
+        //#region IHandmadeSerializable members
 
-        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
-        public void RestoreFromStream
-            (
-                BinaryReader reader
-            )
-        {
-            Sure.NotNull(reader, nameof(reader));
+        ///// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
+        //public void RestoreFromStream
+        //    (
+        //        BinaryReader reader
+        //    )
+        //{
+        //    Sure.NotNull(reader, nameof(reader));
 
-            Database = reader.ReadNullableString();
-            NumberOfTerms = reader.ReadPackedInt32();
-            StartTerm = reader.ReadNullableString();
-            Format = reader.ReadNullableString();
-            ReverseOrder = reader.ReadBoolean();
-        }
+        //    Database = reader.ReadNullableString();
+        //    NumberOfTerms = reader.ReadPackedInt32();
+        //    StartTerm = reader.ReadNullableString();
+        //    Format = reader.ReadNullableString();
+        //    ReverseOrder = reader.ReadBoolean();
+        //}
 
-        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
-        public void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            Sure.NotNull(writer, nameof(writer));
+        ///// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
+        //public void SaveToStream
+        //    (
+        //        BinaryWriter writer
+        //    )
+        //{
+        //    Sure.NotNull(writer, nameof(writer));
 
-            writer
-                .WriteNullable(Database)
-                .WritePackedInt32(NumberOfTerms)
-                .WriteNullable(StartTerm)
-                .WriteNullable(Format)
-                .Write(ReverseOrder);
-        }
+        //    writer
+        //        .WriteNullable(Database)
+        //        .WritePackedInt32(NumberOfTerms)
+        //        .WriteNullable(StartTerm)
+        //        .WriteNullable(Format)
+        //        .Write(ReverseOrder);
+        //}
 
-        #endregion
+        //#endregion
 
         #region IVerifiable members
 

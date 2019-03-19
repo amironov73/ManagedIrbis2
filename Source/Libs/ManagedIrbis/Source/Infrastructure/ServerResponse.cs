@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 using AM;
@@ -98,7 +99,8 @@ namespace ManagedIrbis.Infrastructure
             {
                 if (Array.IndexOf(goodCodes, ReturnCode) < 0)
                 {
-                    throw new IrbisException(ReturnCode);
+                    // throw new IrbisException(ReturnCode);
+                    return false;
                 }
             }
 
@@ -106,14 +108,26 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// Copy data from the stream.
+        /// Pull the data from the stream.
         /// </summary>
-        public async Task CopyFromAsync(Stream stream, int bufferSize)
+        public async Task PullDataAsync
+            (
+                [NotNull] Stream stream,
+                int bufferSize,
+                CancellationToken token
+            )
         {
+            Sure.NotNull(stream, nameof(stream));
+
             while (true)
             {
+                if (token.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
                 var buffer = new byte[bufferSize];
-                var read = await stream.ReadAsync(buffer, 0, bufferSize);
+                var read = await stream.ReadAsync(buffer, 0, bufferSize, token);
                 if (read <= 0)
                 {
                     break;
@@ -212,6 +226,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// 
         /// </summary>
+        [NotNull]
         public byte[] ReadLine()
         {
             var result = new MemoryStream();
@@ -330,7 +345,6 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// 
         /// </summary>
-        /// <returns></returns>
         public int GetReturnCode()
         {
             ReturnCode = ReadInteger();
@@ -346,7 +360,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// 
         /// </summary>
-        public int ReadInteger() => NumericUtility.ParseInt32(ReadLine(IrbisEncoding.Ansi));
+        public int ReadInteger() => ReadLine(IrbisEncoding.Ansi).SafeToInt32();
 
         /// <summary>
         /// 

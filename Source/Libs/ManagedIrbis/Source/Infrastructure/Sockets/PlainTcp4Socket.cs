@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using AM;
+using JetBrains.Annotations;
 
 #endregion
 
@@ -25,29 +27,17 @@ namespace ManagedIrbis.Infrastructure.Sockets
     public sealed class PlainTcp4Socket
         : IrbisSocket
     {
-        #region Properties
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Host { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Port { get; set; }
-
-        #endregion
-
         #region Construction
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PlainTcp4Socket(string host, int port)
+        public PlainTcp4Socket
+            (
+                [NotNull] IrbisConnection connection
+            )
+            : base(connection)
         {
-            Host = host;
-            Port = port;
         }
 
         #endregion
@@ -57,13 +47,18 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// <summary>
         /// 
         /// </summary>
-        public async override Task<ServerResponse> Transact(ClientQuery query)
+        public override async Task<ServerResponse> Transact(ClientQuery query)
         {
+            if (Connection.Cancellation.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
+
             using (var client = new TcpClient())
             {
                 try
                 {
-                    await client.ConnectAsync(Host, Port);
+                    await client.ConnectAsync(Connection.Host, Connection.Port);
                 }
                 catch (Exception exception)
                 {
@@ -75,14 +70,19 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 var stream = client.GetStream();
 
                 var length = query.GetLength();
-                var prefix = Encoding.ASCII.GetBytes($"{length}\n");
+                var prefix = Encoding.ASCII.GetBytes(length.ToInvariantString() + "\n");
                 var chunks = query.GetChunks();
                 chunks[0] = prefix;
                 try
                 {
                     foreach (var chunk in chunks)
                     {
-                        await stream.WriteAsync(chunk);
+                        if (Connection.Cancellation.IsCancellationRequested)
+                        {
+                            throw new OperationCanceledException();
+                        }
+
+                        await stream.WriteAsync(chunk, Connection.Cancellation);
                     }
 
                     // await stream.FlushAsync();
@@ -97,15 +97,18 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 var result = new ServerResponse();
                 try
                 {
-                    await result.CopyFromAsync(stream, 2048);
+                    if (Connection.Cancellation.IsCancellationRequested)
+                    {
+                        throw new OperationCanceledException();
+                    }
+
+                    await result.PullDataAsync(stream, 2048, Connection.Cancellation);
                 }
                 catch (Exception exception)
                 {
                     Debug.WriteLine(exception.Message);
                     return null;
                 }
-
-                // result.Debug(Out);
 
                 return result;
             }

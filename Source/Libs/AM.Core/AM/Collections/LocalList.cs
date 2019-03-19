@@ -62,7 +62,10 @@ namespace AM.Collections
         {
             Sure.Positive(capacity, nameof(capacity));
 
-            _Extend(capacity);
+            if (capacity > 0)
+            {
+                _Extend(capacity);
+            }
         }
 
         #endregion

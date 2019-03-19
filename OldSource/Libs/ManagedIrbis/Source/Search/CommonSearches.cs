@@ -13,8 +13,6 @@ using AM;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.ClientCommands;
-
 #endregion
 
 namespace ManagedIrbis.Search
@@ -64,7 +62,7 @@ namespace ManagedIrbis.Search
         /// <returns></returns>
         public static MarcRecord ByInventory
             (
-                [NotNull] this IIrbisConnection connection,
+                [NotNull] this IrbisConnection connection,
                 [NotNull] string inventory
             )
         {
@@ -83,7 +81,7 @@ namespace ManagedIrbis.Search
         [CanBeNull]
         public static MarcRecord FirstOrDefault
             (
-                [NotNull] this IIrbisConnection connection,
+                [NotNull] this IrbisConnection connection,
                 [NotNull] string prefix,
                 [NotNull] string value
             )
@@ -145,7 +143,7 @@ namespace ManagedIrbis.Search
         /// либо вообще ничего не найдено.</exception>
         public static MarcRecord Required
             (
-                [NotNull] this IIrbisConnection connection,
+                [NotNull] this IrbisConnection connection,
                 [NotNull] string prefix,
                 [NotNull] string value
             )

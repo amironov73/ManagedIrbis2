@@ -192,19 +192,6 @@ namespace AM
             return result;
         }
 
-        /// <summary>
-        /// Converts empty string to <c>null</c>.
-        /// </summary>
-        [CanBeNull]
-        public static string EmptyToNull
-            (
-                [CanBeNull] this string value
-            )
-        {
-            return string.IsNullOrEmpty(value)
-                ? null
-                : value;
-        }
 
 
         /// <summary>

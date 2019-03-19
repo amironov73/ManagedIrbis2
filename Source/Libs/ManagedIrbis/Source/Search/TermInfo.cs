@@ -17,8 +17,6 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using AM;
-using AM.IO;
-using AM.Runtime;
 
 using JetBrains.Annotations;
 
@@ -37,7 +35,7 @@ namespace ManagedIrbis.Search
     [XmlRoot("term")]
     [DebuggerDisplay("[{Count}] {Text}")]
     public class TermInfo
-        : IHandmadeSerializable,
+        : //IHandmadeSerializable,
         IVerifiable
     {
         #region Properties
@@ -84,43 +82,43 @@ namespace ManagedIrbis.Search
             return (TermInfo) MemberwiseClone();
         }
 
-        /// <summary>
-        /// Разбор ответа сервера.
-        /// </summary>
-        [NotNull]
-        [ItemNotNull]
-        public static TermInfo[] Parse
-            (
-                [NotNull] ServerResponse response
-            )
-        {
-            Sure.NotNull(response, nameof(response));
+        ///// <summary>
+        ///// Разбор ответа сервера.
+        ///// </summary>
+        //[NotNull]
+        //[ItemNotNull]
+        //public static TermInfo[] Parse
+        //    (
+        //        [NotNull] ServerResponse response
+        //    )
+        //{
+        //    Sure.NotNull(response, nameof(response));
 
-            List<TermInfo> result = new List<TermInfo>();
+        //    List<TermInfo> result = new List<TermInfo>();
 
-            Regex regex = new Regex(@"^(\d+)\#(.+)$");
-            while (true)
-            {
-                string line = response.GetUtfString();
-                if (string.IsNullOrEmpty(line))
-                {
-                    break;
-                }
-                Match match = regex.Match(line);
-                if (match.Success)
-                {
-                    TermInfo item = new TermInfo
-                        {
-                            Count = int.Parse(match.Groups[1].Value),
-                            Text = match.Groups[2].Value
-                        };
-                    result.Add(item);
-                }
+        //    Regex regex = new Regex(@"^(\d+)\#(.+)$");
+        //    while (true)
+        //    {
+        //        string line = response.GetUtfString();
+        //        if (string.IsNullOrEmpty(line))
+        //        {
+        //            break;
+        //        }
+        //        Match match = regex.Match(line);
+        //        if (match.Success)
+        //        {
+        //            TermInfo item = new TermInfo
+        //                {
+        //                    Count = int.Parse(match.Groups[1].Value),
+        //                    Text = match.Groups[2].Value
+        //                };
+        //            result.Add(item);
+        //        }
 
-            }
+        //    }
 
-            return result.ToArray();
-        }
+        //    return result.ToArray();
+        //}
 
         /// <summary>
         /// Should serialize the <see cref="Text"/> field?
@@ -182,30 +180,30 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region IHandmadeSerializable members
+        //#region IHandmadeSerializable members
 
-        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
-        public virtual void RestoreFromStream
-            (
-                BinaryReader reader
-            )
-        {
-            Count = reader.ReadPackedInt32();
-            Text = reader.ReadNullableString();
-        }
+        ///// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
+        //public virtual void RestoreFromStream
+        //    (
+        //        BinaryReader reader
+        //    )
+        //{
+        //    Count = reader.ReadPackedInt32();
+        //    Text = reader.ReadNullableString();
+        //}
 
-        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
-        public virtual void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            writer
-                .WritePackedInt32(Count)
-                .WriteNullable(Text);
-        }
+        ///// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
+        //public virtual void SaveToStream
+        //    (
+        //        BinaryWriter writer
+        //    )
+        //{
+        //    writer
+        //        .WritePackedInt32(Count)
+        //        .WriteNullable(Text);
+        //}
 
-        #endregion
+        //#endregion
 
         #region IVerifiable members
 

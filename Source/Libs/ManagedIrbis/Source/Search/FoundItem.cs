@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,8 +17,7 @@ using System.IO;
 using System.Xml.Serialization;
 
 using AM;
-using AM.IO;
-using AM.Runtime;
+using AM.Collections;
 
 using JetBrains.Annotations;
 
@@ -36,7 +36,7 @@ namespace ManagedIrbis.Search
     [XmlRoot("item")]
     [DebuggerDisplay("{Mfn} {Text}")]
     public sealed class FoundItem
-        : IHandmadeSerializable,
+        : // IHandmadeSerializable,
         IVerifiable
     {
         #region Constants
@@ -98,10 +98,6 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region Construction
-
-        #endregion
-
         #region Private members
 
         private static readonly char[] _delimiters = { Delimiter };
@@ -116,13 +112,13 @@ namespace ManagedIrbis.Search
         [NotNull]
         public static int[] ConvertToMfn
             (
-                [NotNull][ItemNotNull] List<FoundItem> found
+                [NotNull][ItemNotNull] FoundItem[] found
             )
         {
-            Sure.NotNull(found, "found");
+            Sure.NotNull(found, nameof(found));
 
-            int[] result = new int[found.Count];
-            for (int i = 0; i < found.Count; i++)
+            int[] result = new int[found.Length];
+            for (int i = 0; i < found.Length; i++)
             {
                 result[i] = found[i].Mfn;
             }
@@ -140,7 +136,7 @@ namespace ManagedIrbis.Search
                 [NotNull][ItemNotNull] List<FoundItem> found
             )
         {
-            Sure.NotNull(found, "found");
+            Sure.NotNull(found, nameof(found));
 
             string[] result = new string[found.Count];
             for (int i = 0; i < found.Count; i++)
@@ -182,26 +178,34 @@ namespace ManagedIrbis.Search
         /// </summary>
         [NotNull]
         [ItemNotNull]
-        public static List<FoundItem> ParseServerResponse
+        public static FoundItem[] ParseServerResponse
             (
                 [NotNull] ServerResponse response,
                 int sizeHint
             )
         {
-            Sure.NotNull(response, "response");
+            Sure.NotNull(response, nameof(response));
 
-            List<FoundItem> result = sizeHint > 0
-                ? new List<FoundItem>(sizeHint)
-                : new List<FoundItem>();
+            LocalList<FoundItem> result = new LocalList<FoundItem>(sizeHint);
 
-            string line;
-            while ((line = response.GetUtfString()) != null)
+            try
             {
-                FoundItem item = ParseLine(line);
-                result.Add(item);
+                while (!response.EOT)
+                {
+                    string line = response.ReadUtf();
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        FoundItem item = ParseLine(line);
+                        result.Add(item);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
             }
 
-            return result;
+            return result.ToArray();
         }
 
         /// <summary>
@@ -222,38 +226,38 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region IHandmadeSerializable members
+        //#region IHandmadeSerializable members
 
-        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
-        public void RestoreFromStream
-            (
-                BinaryReader reader
-            )
-        {
-            Sure.NotNull(reader, "reader");
+        ///// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
+        //public void RestoreFromStream
+        //    (
+        //        BinaryReader reader
+        //    )
+        //{
+        //    Sure.NotNull(reader, "reader");
 
-            Mfn = reader.ReadPackedInt32();
-            Text = reader.ReadNullableString();
-            Record = reader.RestoreNullable<MarcRecord>();
-            Selected = reader.ReadBoolean();
-        }
+        //    Mfn = reader.ReadPackedInt32();
+        //    Text = reader.ReadNullableString();
+        //    Record = reader.RestoreNullable<MarcRecord>();
+        //    Selected = reader.ReadBoolean();
+        //}
 
-        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
-        public void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            Sure.NotNull(writer, "writer");
+        ///// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
+        //public void SaveToStream
+        //    (
+        //        BinaryWriter writer
+        //    )
+        //{
+        //    Sure.NotNull(writer, "writer");
 
-            writer
-                .WritePackedInt32(Mfn)
-                .WriteNullable(Text)
-                .WriteNullable(Record)
-                .Write(Selected);
-        }
+        //    writer
+        //        .WritePackedInt32(Mfn)
+        //        .WriteNullable(Text)
+        //        .WriteNullable(Record)
+        //        .Write(Selected);
+        //}
 
-        #endregion
+        //#endregion
 
         #region IVerifiable members
 

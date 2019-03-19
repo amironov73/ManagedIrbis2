@@ -73,6 +73,20 @@ namespace AM
         }
 
         /// <summary>
+        /// Converts empty string to <c>null</c>.
+        /// </summary>
+        [CanBeNull]
+        public static string EmptyToNull
+            (
+                [CanBeNull] this string value
+            )
+        {
+            return string.IsNullOrEmpty(value)
+                ? null
+                : value;
+        }
+
+        /// <summary>
         /// Gets the first char of the text.
         /// </summary>
         public static char FirstChar

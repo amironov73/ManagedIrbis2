@@ -13,12 +13,8 @@ using System.IO;
 using System.Xml.Serialization;
 
 using AM;
-using AM.IO;
-using AM.Runtime;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Newtonsoft.Json;
 
@@ -27,12 +23,12 @@ using Newtonsoft.Json;
 namespace ManagedIrbis.Search
 {
     /// <summary>
-    /// Signature for <see cref="SearchCommand"/>.
+    /// Signature for Search command.
     /// </summary>
     [PublicAPI]
     [XmlRoot("search")]
     public sealed class SearchParameters
-        : IHandmadeSerializable,
+        : //IHandmadeSerializable,
         IVerifiable
     {
         #region Properties
@@ -138,50 +134,50 @@ namespace ManagedIrbis.Search
 
         #endregion
 
-        #region IHandmadeSerializable members
+        //#region IHandmadeSerializable members
 
-        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
-        public void RestoreFromStream
-            (
-                BinaryReader reader
-            )
-        {
-            Sure.NotNull(reader, nameof(reader));
+        ///// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
+        //public void RestoreFromStream
+        //    (
+        //        BinaryReader reader
+        //    )
+        //{
+        //    Sure.NotNull(reader, nameof(reader));
 
-            Database = reader.ReadNullableString();
-            FirstRecord = reader.ReadPackedInt32();
-            FormatSpecification = reader.ReadNullableString();
-            MaxMfn = reader.ReadPackedInt32();
-            MinMfn = reader.ReadPackedInt32();
-            NumberOfRecords = reader.ReadPackedInt32();
-            SearchExpression = reader.ReadNullableString();
-            SequentialSpecification = reader.ReadNullableString();
-            FilterSpecification = reader.ReadNullableString();
-            UtfFormat = reader.ReadBoolean();
-        }
+        //    Database = reader.ReadNullableString();
+        //    FirstRecord = reader.ReadPackedInt32();
+        //    FormatSpecification = reader.ReadNullableString();
+        //    MaxMfn = reader.ReadPackedInt32();
+        //    MinMfn = reader.ReadPackedInt32();
+        //    NumberOfRecords = reader.ReadPackedInt32();
+        //    SearchExpression = reader.ReadNullableString();
+        //    SequentialSpecification = reader.ReadNullableString();
+        //    FilterSpecification = reader.ReadNullableString();
+        //    UtfFormat = reader.ReadBoolean();
+        //}
 
-        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
-        public void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            Sure.NotNull(writer, nameof(writer));
+        ///// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
+        //public void SaveToStream
+        //    (
+        //        BinaryWriter writer
+        //    )
+        //{
+        //    Sure.NotNull(writer, nameof(writer));
 
-            writer
-                .WriteNullable(Database)
-                .WritePackedInt32(FirstRecord)
-                .WriteNullable(FormatSpecification)
-                .WritePackedInt32(MaxMfn)
-                .WritePackedInt32(MinMfn)
-                .WritePackedInt32(NumberOfRecords)
-                .WriteNullable(SearchExpression)
-                .WriteNullable(SequentialSpecification)
-                .WriteNullable(FilterSpecification)
-                .Write(UtfFormat);
-        }
+        //    writer
+        //        .WriteNullable(Database)
+        //        .WritePackedInt32(FirstRecord)
+        //        .WriteNullable(FormatSpecification)
+        //        .WritePackedInt32(MaxMfn)
+        //        .WritePackedInt32(MinMfn)
+        //        .WritePackedInt32(NumberOfRecords)
+        //        .WriteNullable(SearchExpression)
+        //        .WriteNullable(SequentialSpecification)
+        //        .WriteNullable(FilterSpecification)
+        //        .Write(UtfFormat);
+        //}
 
-        #endregion
+        //#endregion
 
         #region IVerifiable members
 

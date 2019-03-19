@@ -15,8 +15,6 @@ using System.IO;
 using System.Xml.Serialization;
 
 using AM;
-using AM.IO;
-using AM.Runtime;
 using AM.Text;
 
 using JetBrains.Annotations;
@@ -36,7 +34,7 @@ namespace ManagedIrbis.Search
     [XmlRoot("term-link")]
     [DebuggerDisplay("[{Mfn}] {Tag} {Occurrence} {Count} {Text}")]
     public sealed class TermPosting
-        : IHandmadeSerializable,
+        : // IHandmadeSerializable,
         IVerifiable
     {
         #region Properties
@@ -101,86 +99,86 @@ namespace ManagedIrbis.Search
             return (TermPosting) MemberwiseClone();
         }
 
-        /// <summary>
-        /// Parse server response.
-        /// </summary>
-        [NotNull]
-        public static TermPosting[] Parse
-            (
-                [NotNull] ServerResponse response
-            )
-        {
-            Sure.NotNull(response, nameof(response));
+        ///// <summary>
+        ///// Parse server response.
+        ///// </summary>
+        //[NotNull]
+        //public static TermPosting[] Parse
+        //    (
+        //        [NotNull] ServerResponse response
+        //    )
+        //{
+        //    Sure.NotNull(response, nameof(response));
 
-            // Example return:
-            // 169#1510#1#2#Пожаровзрывобезопасность : Науч.- техн. журн. - Журнал
+        //    // Example return:
+        //    // 169#1510#1#2#Пожаровзрывобезопасность : Науч.- техн. журн. - Журнал
 
-            List<TermPosting> result = new List<TermPosting>();
+        //    List<TermPosting> result = new List<TermPosting>();
 
-            while (true)
-            {
-                string line = response.GetUtfString();
-                if (string.IsNullOrEmpty(line))
-                {
-                    break;
-                }
+        //    while (true)
+        //    {
+        //        string line = response.GetUtfString();
+        //        if (string.IsNullOrEmpty(line))
+        //        {
+        //            break;
+        //        }
 
-                string[] parts = line.Split(CommonSeparators.NumberSign, 5);
-                if (parts.Length < 4)
-                {
-                    break;
-                }
+        //        string[] parts = line.Split(CommonSeparators.NumberSign, 5);
+        //        if (parts.Length < 4)
+        //        {
+        //            break;
+        //        }
 
-                TermPosting item = new TermPosting
-                {
-                    Mfn = int.Parse(parts[0]),
-                    Tag = int.Parse(parts[1]),
-                    Occurrence = int.Parse(parts[2]),
-                    Count = int.Parse(parts[3]),
-                    Text = parts.GetItem(4)
-                };
-                result.Add(item);
-            }
+        //        TermPosting item = new TermPosting
+        //        {
+        //            Mfn = int.Parse(parts[0]),
+        //            Tag = int.Parse(parts[1]),
+        //            Occurrence = int.Parse(parts[2]),
+        //            Count = int.Parse(parts[3]),
+        //            Text = parts.GetItem(4)
+        //        };
+        //        result.Add(item);
+        //    }
 
-            return result.ToArray();
-        }
-
-        #endregion
-
-        #region IHandmadeSerializable members
-
-        /// <summary>
-        /// Просим объект восстановить свое состояние из потока.
-        /// </summary>
-        public void RestoreFromStream
-            (
-                BinaryReader reader
-            )
-        {
-            Mfn = reader.ReadPackedInt32();
-            Tag = reader.ReadPackedInt32();
-            Occurrence = reader.ReadPackedInt32();
-            Count = reader.ReadPackedInt32();
-            Text = reader.ReadNullableString();
-        }
-
-        /// <summary>
-        /// Save object state to the specified stream.
-        /// </summary>
-        public void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            writer
-                .WritePackedInt32(Mfn)
-                .WritePackedInt32(Tag)
-                .WritePackedInt32(Occurrence)
-                .WritePackedInt32(Count)
-                .WriteNullable(Text);
-        }
+        //    return result.ToArray();
+        //}
 
         #endregion
+
+        //#region IHandmadeSerializable members
+
+        ///// <summary>
+        ///// Просим объект восстановить свое состояние из потока.
+        ///// </summary>
+        //public void RestoreFromStream
+        //    (
+        //        BinaryReader reader
+        //    )
+        //{
+        //    Mfn = reader.ReadPackedInt32();
+        //    Tag = reader.ReadPackedInt32();
+        //    Occurrence = reader.ReadPackedInt32();
+        //    Count = reader.ReadPackedInt32();
+        //    Text = reader.ReadNullableString();
+        //}
+
+        ///// <summary>
+        ///// Save object state to the specified stream.
+        ///// </summary>
+        //public void SaveToStream
+        //    (
+        //        BinaryWriter writer
+        //    )
+        //{
+        //    writer
+        //        .WritePackedInt32(Mfn)
+        //        .WritePackedInt32(Tag)
+        //        .WritePackedInt32(Occurrence)
+        //        .WritePackedInt32(Count)
+        //        .WriteNullable(Text);
+        //}
+
+        //#endregion
 
         #region IVerifiable members
 

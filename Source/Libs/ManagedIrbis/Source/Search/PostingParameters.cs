@@ -9,18 +9,12 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using AM;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure.ClientCommands;
 
 using Newtonsoft.Json;
 
@@ -29,7 +23,7 @@ using Newtonsoft.Json;
 namespace ManagedIrbis.Search
 {
     /// <summary>
-    /// Signature for <see cref="ReadPostingsCommand"/>.
+    /// Signature for ReadPostings.
     /// </summary>
     [PublicAPI]
     [XmlRoot("postings")]

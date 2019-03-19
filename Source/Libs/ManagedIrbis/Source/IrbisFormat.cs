@@ -18,8 +18,6 @@ using JetBrains.Annotations;
 
 #endregion
 
-// ReSharper disable InconsistentNaming
-
 namespace ManagedIrbis
 {
     /// <summary>
@@ -150,9 +148,9 @@ namespace ManagedIrbis
         /// </remarks>
         [CanBeNull]
         public static string PrepareFormat
-        (
-            [CanBeNull] string text
-        )
+            (
+                [CanBeNull] string text
+            )
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -226,11 +224,11 @@ namespace ManagedIrbis
                     Log.Error
                         (
                             nameof(IrbisFormat) + "::" + nameof(VerifyFormat)
-                            + "containt forbidden symbols"
+                            + "contains forbidden symbols"
                         );
                     if (throwOnError)
                     {
-                        throw new VerificationException("containt forbidden symbols");
+                        throw new VerificationException("contains forbidden symbols");
                     }
 
                     return false;

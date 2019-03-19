@@ -39,10 +39,18 @@ namespace ManagedIrbis.Infrastructure
             Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
-            _chunks = new List<byte[]>
-            {
-                Array.Empty<byte>()
-            };
+            _chunks = new List<byte[]>();
+            AddAnsi(string.Empty);
+
+            var header = commandCode + "\n"
+                + connection.Workstation + "\n"
+                + commandCode + "\n"
+                + connection.ClientId.ToInvariantString() + "\n"
+                + connection.QueryId.ToInvariantString() + "\n"
+                + connection.Password + "\n"
+                + connection.Username + "\n"
+                + "\n\n\n";
+            AddAnsi(header);
         }
 
         #endregion
@@ -70,6 +78,11 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public ClientQuery AddAnsi<T>(T value)
         {
+            if (ReferenceEquals(value, null))
+            {
+                return this;
+            }
+
             byte[] converted = IrbisEncoding.Ansi.GetBytes(value.ToString());
             _chunks.Add(converted);
 
@@ -81,6 +94,11 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public ClientQuery AddUtf<T>(T value)
         {
+            if (ReferenceEquals(value, null))
+            {
+                return this;
+            }
+
             byte[] converted = IrbisEncoding.Utf8.GetBytes(value.ToString());
             _chunks.Add(converted);
 
