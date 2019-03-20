@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,6 +42,15 @@ namespace ManagedIrbis
     public sealed class IrbisConnection
         : IDisposable
     {
+        #region Events
+
+        /// <summary>
+        /// Fired when <see cref="Busy"/> changed.
+        /// </summary>
+        public event EventHandler BusyChanged;
+
+        #endregion
+
         #region Properties
 
         /// <summary>
@@ -110,6 +120,11 @@ namespace ManagedIrbis
         public IrbisSocket Socket { get; private set; }
 
         /// <summary>
+        /// Busy?
+        /// </summary>
+        public bool Busy { get; private set; }
+
+        /// <summary>
         /// 
         /// </summary>
         public CancellationToken Cancellation { get; }
@@ -132,9 +147,15 @@ namespace ManagedIrbis
 
         #region Private members
 
-        private readonly CancellationTokenSource _cancellation;
+        private CancellationTokenSource _cancellation;
 
         private bool _debug = false;
+
+        private void SetBusy(bool busy)
+        {
+            Busy = busy;
+            BusyChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         #endregion
 
@@ -145,23 +166,8 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> ActualizeRecord(string database, int mfn)
         {
-            if (!Connected)
-            {
-                return false;
-            }
-
-            var query = new ClientQuery(this, "F");
-            query.AddAnsi(database).NewLine();
-            query.Add(mfn).NewLine();
-            var response = await Execute(query);
-            if (ReferenceEquals(response, null))
-            {
-                return false;
-            }
-
-            response.CheckReturnCode();
-
-            return true;
+            var response = await Execute("F", database, mfn);
+            return !ReferenceEquals(response, null);
         }
 
         /// <summary>
@@ -249,34 +255,72 @@ namespace ManagedIrbis
         {
             Sure.NotNull(query, nameof(query));
 
-            ServerResponse result;
+            SetBusy(true);
             try
             {
-                if (_debug)
+                if (_cancellation.IsCancellationRequested)
                 {
-                    query.Debug(Console.Out);
+                    _cancellation = new CancellationTokenSource();
                 }
 
-                result = await Socket.Transact(query);
+                ServerResponse result;
+                try
+                {
+                    if (_debug)
+                    {
+                        query.Debug(Console.Out);
+                    }
+
+                    result = await Socket.Transact(query);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                    return null;
+                }
+
+                if (ReferenceEquals(result, null))
+                {
+                    return null;
+                }
+
+                if (_debug)
+                {
+                    result.Debug(Console.Out);
+                }
+
+                result.Parse();
+                QueryId++;
+
+                return result;
             }
-            catch (Exception exception)
+            finally
             {
-                Debug.WriteLine(exception.Message);
+                SetBusy(false);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<ServerResponse> Execute
+            (
+                [NotNull] string command,
+                params object[] args
+            )
+        {
+            if (!Connected)
+            {
                 return null;
             }
 
-            if (ReferenceEquals(result, null))
+            var query = new ClientQuery(this, command);
+            foreach (var arg in args)
             {
-                return null;
+                query.AddAnsi(arg).NewLine();
             }
 
-            if (_debug)
-            {
-                result.Debug(Console.Out);
-            }
-
-            result.Parse();
-            QueryId++;
+            var result = await Execute(query);
 
             return result;
         }
@@ -541,6 +585,121 @@ namespace ManagedIrbis
         /// <summary>
         /// 
         /// </summary>
+        public async Task<TermInfo[]> ReadAllTerms
+            (
+                [NotNull] string prefix
+            )
+        {
+            Sure.NotNullNorEmpty(prefix, nameof(prefix));
+
+            if (!Connected)
+            {
+                return Array.Empty<TermInfo>();
+            }
+
+            prefix = prefix.ToUpperInvariant();
+            var result = new LocalList<TermInfo>();
+            var startTerm = prefix;
+            var flag = true;
+            while (flag)
+            {
+                var terms = await ReadTerms(startTerm, 1024);
+                if (terms.Length == 0)
+                {
+                    break;
+                }
+
+                int startIndex = 0;
+                if (result.Count != 0)
+                {
+                    var lastTerm = result[result.Count - 1];
+                    var firstTerm = terms[0];
+                    if (firstTerm.Text == lastTerm.Text)
+                    {
+                        startIndex = 1;
+                    }
+                }
+                for (var i = startIndex; i < terms.Length; i++)
+                {
+                    var term = terms[i];
+                    var text = term.Text;
+                    if (string.IsNullOrEmpty(text))
+                    {
+                        break;
+                    }
+
+                    if (!text.StartsWith(prefix))
+                    {
+                        flag = false;
+                        break;
+                    }
+                    else
+                    {
+                        result.Add(term);
+                    }
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<TermInfo[]> ReadTerms
+            (
+                [NotNull] TermParameters parameters
+            )
+        {
+            Sure.NotNull(parameters, nameof(parameters));
+
+            if (!Connected)
+            {
+                return Array.Empty<TermInfo>();
+            }
+
+            var command = parameters.ReverseOrder ? "P" : "H";
+            var database = parameters.Database ?? Database;
+            var query = new ClientQuery(this, command);
+            query.AddAnsi(database).NewLine();
+            query.AddUtf(parameters.StartTerm).NewLine();
+            query.Add(parameters.NumberOfTerms).NewLine();
+            var prepared = IrbisFormat.PrepareFormat(parameters.Format);
+            query.AddAnsi(prepared).NewLine();
+            var response = await Execute(query);
+            if (!response.CheckReturnCode(-202, -203, -204))
+            {
+                return Array.Empty<TermInfo>();
+            }
+
+            var lines = response.EnumRemainingNonNullUtfLines();
+            var result = TermInfo.Parse(lines);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<TermInfo[]> ReadTerms
+            (
+                [CanBeNull] string startTerm,
+                int numberOfTerms = 100
+            )
+        {
+            TermParameters parameters = new TermParameters
+            {
+                StartTerm = startTerm,
+                NumberOfTerms = numberOfTerms
+            };
+            var result = await ReadTerms(parameters);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public async Task<string> ReadTextFile
             (
                 [CanBeNull] string specification
@@ -601,8 +760,9 @@ namespace ManagedIrbis
                 return Array.Empty<FoundItem>();
             }
 
-            int count = response.ReadInteger(); // Число найденных записей
-            var result = FoundItem.ParseServerResponse(response, count);
+            var count = response.ReadInteger(); // Число найденных записей
+            var lines = response.EnumRemainingUtfLines();
+            var result = FoundItem.ParseServerResponse(lines, count);
 
             return result;
         }
@@ -620,14 +780,198 @@ namespace ManagedIrbis
                 return Array.Empty<int>();
             }
 
-            var parameters = new SearchParameters
+            var query = new ClientQuery(this, "K");
+            query.AddAnsi(Database).NewLine();
+            query.AddUtf(expression).NewLine();
+            query.Add(0).NewLine();
+            query.Add(1).NewLine();
+            var response = await Execute(query);
+            if (!response.CheckReturnCode())
             {
-                SearchExpression = expression
-            };
-            FoundItem[] found = await Search(parameters);
-            var result = FoundItem.ConvertToMfn(found);
+                return Array.Empty<int>();
+            }
+
+            int count = response.ReadInteger(); // Число найденных записей
+            var result = new LocalList<int>(count);
+            foreach (var line in response.EnumRemainingBinaryLines())
+            {
+                int mfn = FastNumber.ParseInt32(line, 0, line.Length);
+                if (mfn != 0)
+                {
+                    result.Add(mfn);
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<int> SearchCount
+            (
+                [CanBeNull] string expression
+            )
+        {
+            if (string.IsNullOrEmpty(expression))
+            {
+                return 0;
+            }
+
+            var query = new ClientQuery(this, "K");
+            query.AddAnsi(Database).NewLine();
+            query.AddUtf(expression).NewLine();
+            query.Add(0).NewLine();
+            query.Add(1).NewLine();
+            var response = await Execute(query);
+            if (!response.CheckReturnCode())
+            {
+                return 0;
+            }
+
+            int result = response.ReadInteger(); // Число найденных записей
 
             return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<MarcRecord[]> SearchRead
+            (
+                [CanBeNull] string expression,
+                int limit = 0
+            )
+        {
+            if (string.IsNullOrEmpty(expression)
+                || limit < 0)
+            {
+                return Array.Empty<MarcRecord>();
+            }
+
+            if (!Connected)
+            {
+                return Array.Empty<MarcRecord>();
+            }
+
+            var query = new ClientQuery(this, "K");
+            query.AddAnsi(Database).NewLine();
+            query.AddUtf(expression).NewLine();
+            query.Add(limit).NewLine();
+            query.Add(1).NewLine();
+            query.AddAnsi(IrbisFormat.All).NewLine();
+            var response = await Execute(query);
+            if (!response.CheckReturnCode())
+            {
+                return Array.Empty<MarcRecord>();
+            }
+            int count = response.ReadInteger(); // Число найденных записей
+            if (count <= 0)
+            {
+                return Array.Empty<MarcRecord>();
+            }
+
+            var result = new LocalList<MarcRecord>(count);
+            foreach (var line in response.EnumRemainingUtfLines())
+            {
+                var parts = line.Split('#', 2);
+                if (parts.Length == 2)
+                {
+                    var lines = parts[1].Split('\x1F').Skip(1).ToArray();
+                    var record = new MarcRecord();
+                    record.Decode(lines);
+                    record.Database = Database;
+                    result.Add(record);
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<MarcRecord> SearchReadOneRecord
+            (
+                [CanBeNull] string expression
+            )
+        {
+            var found = await SearchRead(expression, 1);
+            var result = found.FirstOrDefault();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        public string ToConnectionString()
+        {
+            return $"host={Host};port={Port};username={Username};password={Password};database={Database};arm={Workstation};";
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<bool> TruncateDatabase
+            (
+                [CanBeNull] string database = null
+            )
+        {
+            database = database ?? Database;
+            var response = await Execute("S", database);
+
+            return !ReferenceEquals(response, null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<bool> UnlockDatabase
+            (
+                [CanBeNull] string database = null
+            )
+        {
+            database = database ?? Database;
+            var response = await Execute("U", database);
+
+            return !ReferenceEquals(response, null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<bool> UnlockRecords
+            (
+                [CanBeNull] string database,
+                [NotNull] IList<int> mfnList
+            )
+        {
+            database = database ?? Database;
+            var list = string.Join("\n", mfnList.Select(NumericUtility.ToInvariantString));
+            var response = await Execute("Q", database, list);
+
+            return !ReferenceEquals(response, null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<bool> UpdateIniFile
+            (
+                [CanBeNull] IList<string> lines
+            )
+        {
+            if (ReferenceEquals(lines, null))
+            {
+                return true;
+            }
+
+            var text = string.Join("\n", lines);
+            var response = await Execute("+7", text);
+
+            return !ReferenceEquals(response, null);
         }
 
         #endregion

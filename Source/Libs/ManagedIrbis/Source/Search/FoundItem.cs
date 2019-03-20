@@ -27,6 +27,8 @@ using Newtonsoft.Json;
 
 #endregion
 
+// ReSharper disable StringLiteralTypo
+
 namespace ManagedIrbis.Search
 {
     /// <summary>
@@ -180,7 +182,7 @@ namespace ManagedIrbis.Search
         [ItemNotNull]
         public static FoundItem[] ParseServerResponse
             (
-                [NotNull] ServerResponse response,
+                [NotNull] IEnumerable<string> response,
                 int sizeHint
             )
         {
@@ -190,9 +192,8 @@ namespace ManagedIrbis.Search
 
             try
             {
-                while (!response.EOT)
+                foreach (var line in response)
                 {
-                    string line = response.ReadUtf();
                     if (!string.IsNullOrEmpty(line))
                     {
                         FoundItem item = ParseLine(line);

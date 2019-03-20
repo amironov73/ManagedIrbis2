@@ -177,6 +177,19 @@ namespace ManagedIrbis.Infrastructure
                 return 0;
             }
 
+            if (_currentOffset >= _currentChunk.Count)
+            {
+                _currentOffset = 0;
+                _currentIndex++;
+                if (_currentIndex >= _memory.Count)
+                {
+                    EOT = true;
+                    return 0;
+                }
+
+                _currentChunk = _memory[_currentIndex];
+            }
+
             return _currentChunk[_currentOffset];
         }
 
@@ -365,6 +378,131 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// 
         /// </summary>
+        public IEnumerable<string> EnumRemainingAnsiLines()
+        {
+            while (!EOT)
+            {
+                string line = null;
+                try
+                {
+                    line = ReadAnsi();
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    continue;
+                }
+
+                if (!ReferenceEquals(line, null))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<string> EnumRemainingNonNullAnsiLines()
+        {
+            while (!EOT)
+            {
+                string line = null;
+                try
+                {
+                    line = ReadAnsi();
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(line))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<string> EnumRemainingUtfLines()
+        {
+            while (!EOT)
+            {
+                string line = null;
+                try
+                {
+                    line = ReadUtf();
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    continue;
+                }
+
+                if (!ReferenceEquals(line, null))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<string> EnumRemainingNonNullUtfLines()
+        {
+            while (!EOT)
+            {
+                string line = null;
+                try
+                {
+                    line = ReadUtf();
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(line))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<byte[]> EnumRemainingBinaryLines()
+        {
+            while (!EOT)
+            {
+                byte[] line = null;
+                try
+                {
+                    line = ReadLine();
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                    continue;
+                }
+
+                if (!ReferenceEquals(line, null))
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public string[] ReadRemainingAnsiLines()
         {
@@ -372,7 +510,7 @@ namespace ManagedIrbis.Infrastructure
 
             while (!EOT)
             {
-                string line = ReadLine(IrbisEncoding.Ansi);
+                var line = ReadAnsi();
                 result.Add(line);
             }
 

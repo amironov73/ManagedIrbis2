@@ -17,7 +17,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using AM;
-
+using AM.Collections;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
@@ -82,43 +82,42 @@ namespace ManagedIrbis.Search
             return (TermInfo) MemberwiseClone();
         }
 
-        ///// <summary>
-        ///// Разбор ответа сервера.
-        ///// </summary>
-        //[NotNull]
-        //[ItemNotNull]
-        //public static TermInfo[] Parse
-        //    (
-        //        [NotNull] ServerResponse response
-        //    )
-        //{
-        //    Sure.NotNull(response, nameof(response));
+        /// <summary>
+        /// Разбор ответа сервера.
+        /// </summary>
+        [NotNull]
+        [ItemNotNull]
+        public static TermInfo[] Parse
+            (
+                [NotNull] IEnumerable<string> response
+            )
+        {
+            Sure.NotNull(response, nameof(response));
 
-        //    List<TermInfo> result = new List<TermInfo>();
+            LocalList<TermInfo> result = new LocalList<TermInfo>();
 
-        //    Regex regex = new Regex(@"^(\d+)\#(.+)$");
-        //    while (true)
-        //    {
-        //        string line = response.GetUtfString();
-        //        if (string.IsNullOrEmpty(line))
-        //        {
-        //            break;
-        //        }
-        //        Match match = regex.Match(line);
-        //        if (match.Success)
-        //        {
-        //            TermInfo item = new TermInfo
-        //                {
-        //                    Count = int.Parse(match.Groups[1].Value),
-        //                    Text = match.Groups[2].Value
-        //                };
-        //            result.Add(item);
-        //        }
+            Regex regex = new Regex(@"^(\d+)\#(.+)$");
+            foreach (var line in response)
+            {
+                if (string.IsNullOrEmpty(line))
+                {
+                    break;
+                }
 
-        //    }
+                Match match = regex.Match(line);
+                if (match.Success)
+                {
+                    TermInfo item = new TermInfo
+                    {
+                        Count = int.Parse(match.Groups[1].Value),
+                        Text = match.Groups[2].Value
+                    };
+                    result.Add(item);
+                }
+            }
 
-        //    return result.ToArray();
-        //}
+            return result.ToArray();
+        }
 
         /// <summary>
         /// Should serialize the <see cref="Text"/> field?
@@ -230,12 +229,7 @@ namespace ManagedIrbis.Search
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format
-                (
-                    "{0}#{1}",
-                    Count,
-                    Text.ToVisibleString()
-                );
+            return $"{Count}#{Text.ToVisibleString()}";
         }
 
         #endregion

@@ -11,7 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using System.Text;
 using AM;
 
 using JetBrains.Annotations;
@@ -105,6 +106,23 @@ namespace ManagedIrbis
                 subfield.Decode(one);
                 Subfields.Add(subfield);
             }
+        }
+
+        /// <inheritdoc cref="object.ToString" />
+        public override string ToString()
+        {
+            int length = 4 + (Value?.Length ?? 0)
+                + Subfields.Sum(sf => (sf.Value?.Length ?? 0) + 2);
+            StringBuilder result = new StringBuilder(length);
+            result.Append(Tag.ToInvariantString())
+                .Append('#')
+                .Append(Value);
+            foreach (var subfield in Subfields)
+            {
+                result.Append(subfield);
+            }
+
+            return result.ToString();
         }
     }
 }

@@ -11,7 +11,7 @@
 
 using System;
 using System.Collections.Generic;
-
+using System.Text;
 using AM;
 
 using JetBrains.Annotations;
@@ -100,6 +100,38 @@ namespace ManagedIrbis
                     Fields.Add(field);
                 }
             }
+        }
+
+        /// <summary>
+        /// Encode the record.
+        /// </summary>
+        public string Encode
+            (
+                string delimiter = IrbisText.IrbisDelimiter
+            )
+        {
+            StringBuilder result = new StringBuilder(512);
+            result.Append(Mfn.ToInvariantString())
+                .Append('#')
+                .Append(((int) Status).ToInvariantString())
+                .Append(delimiter)
+                .Append("0#")
+                .Append(Version.ToInvariantString())
+                .Append(delimiter);
+
+            foreach (var field in Fields)
+            {
+                result.Append(field)
+                    .Append(delimiter);
+            }
+
+            return result.ToString();
+        }
+
+        /// <inheritdoc cref="object.ToString" />
+        public override string ToString()
+        {
+            return Encode("\n");
         }
     }
 }

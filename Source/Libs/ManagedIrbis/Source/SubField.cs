@@ -39,5 +39,11 @@ namespace ManagedIrbis
             Code = text[0];
             Value = text.Substring(1);
         }
+
+        /// <inheritdoc cref="object.ToString" />
+        public override string ToString()
+        {
+            return "^" + Code + Value;
+        }
     }
 }

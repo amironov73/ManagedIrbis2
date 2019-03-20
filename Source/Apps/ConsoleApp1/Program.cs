@@ -12,10 +12,18 @@ namespace ConsoleApp1
 {
     class Program
     {
+        static void HandleBusyChanged(object sender, EventArgs args)
+        {
+            IrbisConnection connection = (IrbisConnection) sender;
+            WriteLine($"BUSY: {connection.Busy}");
+        }
+
         static async Task AsyncMain()
         {
             using (var connection = new IrbisConnection())
             {
+                connection.BusyChanged += HandleBusyChanged;
+
                 connection.Username = "librarian";
                 connection.Password = "secret";
                 connection.Workstation = "A";
@@ -51,7 +59,22 @@ namespace ConsoleApp1
                 }
 
                 var found = await connection.Search("\"A=ПУШКИН$\"");
-                WriteLine(string.Join(", ", found));
+                var count = await connection.SearchCount("\"A=ПУШКИН$\"");
+                WriteLine($"COUNT {count}: " + string.Join(", ", found));
+
+                object[] terms = await connection.ReadTerms("J=");
+                WriteLine(string.Join("\n", terms));
+
+                terms = await connection.ReadAllTerms("J=");
+                WriteLine();
+                WriteLine(string.Join("\n", terms));
+                WriteLine();
+
+                var records = await connection.SearchRead("\"A=ПУШКИН$\"", 10);
+                WriteLine($"{records.Length}");
+
+                record = await connection.SearchReadOneRecord("\"A=ПУШКИН$\"");
+                WriteLine($"{record}");
 
                 await connection.Disconnect();
             }
