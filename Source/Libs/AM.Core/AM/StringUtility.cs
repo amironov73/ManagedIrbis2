@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-
+using AM.Collections;
 using JetBrains.Annotations;
 
 #endregion
@@ -252,6 +252,41 @@ namespace AM
                        two,
                        StringComparison.Ordinal
                    ) == 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static ReadOnlyMemory<char>[] SplitToSpan
+            (
+                string text,
+                char delimiter
+            )
+        {
+            var result = new LocalList<ReadOnlyMemory<char>>();
+            var start = 0;
+            var characters = text.ToCharArray();
+            var offset = 0;
+            for (; offset < characters.Length; offset++)
+            {
+                if (characters[offset] == delimiter)
+                {
+                    if (offset != start)
+                    {
+                        var item = new ReadOnlyMemory<char>(characters, start, offset - start);
+                        result.Add(item);
+                    }
+                    start = offset + 1;
+                }
+            }
+
+            if (start < characters.Length && offset != start)
+            {
+                var item = new ReadOnlyMemory<char>(characters, start, offset - start);
+                result.Add(item);
+            }
+
+            return result.ToArray();
         }
 
         /// <summary>

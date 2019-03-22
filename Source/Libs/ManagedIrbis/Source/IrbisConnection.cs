@@ -54,62 +54,62 @@ namespace ManagedIrbis
         #region Properties
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Host { get; set; } = "127.0.0.1";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Port { get; set; } = 6666;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Username { get; set; } = "";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Password { get; set; } = "";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Database { get; set; } = "IBIS";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Workstation { get; set; } = "C";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int ClientId { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int QueryId { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ServerVersion { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public object IniFile { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Interval { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public bool Connected { get; private set; }
 
@@ -125,7 +125,7 @@ namespace ManagedIrbis
         public bool Busy { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public CancellationToken Cancellation { get; }
 
@@ -147,6 +147,9 @@ namespace ManagedIrbis
 
         #region Private members
 
+        private static readonly int[] _goodCodesForReadRecord = { -201, -600, -602, -603 };
+        private static readonly int[] _goodCodesForReadTerms = { -202, -203, -204 };
+
         private CancellationTokenSource _cancellation;
 
         private bool _debug = false;
@@ -162,7 +165,7 @@ namespace ManagedIrbis
         #region Public methods
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> ActualizeRecord(string database, int mfn)
         {
@@ -179,7 +182,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> Connect()
         {
@@ -220,33 +223,31 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> Disconnect()
         {
-            if (!Connected)
+            if (Connected)
             {
-                return true;
-            }
+                var query = new ClientQuery(this, "B");
+                query.AddAnsi(Username);
+                try
+                {
+                    await Execute(query);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                }
 
-            var query = new ClientQuery(this, "B");
-            query.AddAnsi(Username);
-            try
-            {
-                await Execute(query);
+                Connected = false;
             }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception.Message);
-            }
-
-            Connected = false;
 
             return true;
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<ServerResponse> Execute
             (
@@ -301,7 +302,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<ServerResponse> Execute
             (
@@ -326,7 +327,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<string> FormatRecord(string format, int mfn)
         {
@@ -358,7 +359,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<int> GetMaxMfn(string database = null)
         {
@@ -385,7 +386,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<ServerVersion> GetServerVersion()
         {
@@ -410,7 +411,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<string[]> ListFiles(string specification)
         {
@@ -445,7 +446,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<ProcessInfo[]> ListProcesses()
         {
@@ -469,7 +470,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void ParseConnectionString
             (
@@ -547,7 +548,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<MarcRecord> ReadRecord(int mfn)
         {
@@ -565,10 +566,8 @@ namespace ManagedIrbis
                 return null;
             }
 
-            var code = response.GetReturnCode();
-            if (code < 0)
+            if (!response.CheckReturnCode(_goodCodesForReadRecord))
             {
-                // TODO add good codes
                 return null;
             }
 
@@ -583,7 +582,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<TermInfo[]> ReadAllTerms
             (
@@ -619,6 +618,7 @@ namespace ManagedIrbis
                         startIndex = 1;
                     }
                 }
+
                 for (var i = startIndex; i < terms.Length; i++)
                 {
                     var term = terms[i];
@@ -644,7 +644,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<TermInfo[]> ReadTerms
             (
@@ -667,7 +667,7 @@ namespace ManagedIrbis
             var prepared = IrbisFormat.PrepareFormat(parameters.Format);
             query.AddAnsi(prepared).NewLine();
             var response = await Execute(query);
-            if (!response.CheckReturnCode(-202, -203, -204))
+            if (!response.CheckReturnCode(_goodCodesForReadTerms))
             {
                 return Array.Empty<TermInfo>();
             }
@@ -679,7 +679,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<TermInfo[]> ReadTerms
             (
@@ -698,7 +698,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<string> ReadTextFile
             (
@@ -729,7 +729,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<FoundItem[]> Search
             (
@@ -768,7 +768,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<int[]> Search
             (
@@ -806,7 +806,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<int> SearchCount
             (
@@ -835,7 +835,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<MarcRecord[]> SearchRead
             (
@@ -889,7 +889,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<MarcRecord> SearchReadOneRecord
             (
@@ -903,7 +903,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [NotNull]
         public string ToConnectionString()
@@ -912,7 +912,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> TruncateDatabase
             (
@@ -926,7 +926,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> UnlockDatabase
             (
@@ -940,7 +940,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> UnlockRecords
             (
@@ -956,7 +956,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public async Task<bool> UpdateIniFile
             (
@@ -972,6 +972,67 @@ namespace ManagedIrbis
             var response = await Execute("+7", text);
 
             return !ReferenceEquals(response, null);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<int> WriteRecord
+            (
+                [CanBeNull] MarcRecord record,
+                bool lockFlag = false,
+                bool actualize = true,
+                bool dontParse = false
+            )
+        {
+            if (!Connected || ReferenceEquals(record, null))
+            {
+                return 0;
+            }
+
+            var database = record.Database ?? Database;
+            var query = new ClientQuery(this, "D");
+            query.AddAnsi(database).NewLine();
+            query.Add(Convert.ToInt32(lockFlag)).NewLine();
+            query.Add(Convert.ToInt32(actualize)).NewLine();
+            query.AddUtf(record.Encode()).NewLine();
+            var response = await Execute(query);
+            if (!response.CheckReturnCode())
+            {
+                return 0;
+            }
+
+            if (!dontParse)
+            {
+                record.Clear();
+                var lines = new LocalList<string>();
+                lines.Add(response.ReadUtf());
+                lines.AddRange(IrbisText.SplitIrbisToLines(response.ReadUtf()));
+                record.Decode(lines.ToArray());
+                record.Database = database;
+            }
+
+            return response.ReturnCode;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public async Task<bool> WriteRecords
+            (
+                [CanBeNull] IEnumerable<MarcRecord> records
+            )
+        {
+            if (!Connected || ReferenceEquals(records, null))
+            {
+                return false;
+            }
+
+            // TODO implement
+
+            await Task.Delay(10, Cancellation);
+
+            return true;
         }
 
         #endregion

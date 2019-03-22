@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libs\AM.Core\AM.Core.22.csproj" />
+    <ProjectReference Include="..\..\Libs\ManagedIrbis\ManagedIrbis.22.csproj" />
+  </ItemGroup>
+
+</Project>

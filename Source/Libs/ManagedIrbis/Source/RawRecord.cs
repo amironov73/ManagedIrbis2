@@ -10,7 +10,9 @@
 #region Using directives
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -53,7 +55,7 @@ namespace ManagedIrbis
         /// </summary>
         public bool Deleted
         {
-            get { return (Status & RecordStatus.LogicallyDeleted) != 0; }
+            get => (Status & RecordStatus.LogicallyDeleted) != 0;
             set
             {
                 if (value)
@@ -76,11 +78,7 @@ namespace ManagedIrbis
         /// Lines of text.
         /// </summary>
         [CanBeNull]
-        public string[] Lines { get; set; }
-
-        #endregion
-
-        #region Construction
+        public List<string> Fields { get; set; }
 
         #endregion
 
@@ -138,9 +136,9 @@ namespace ManagedIrbis
                     Version
                 );
 
-            if (!ReferenceEquals(Lines, null))
+            if (!ReferenceEquals(Fields, null))
             {
-                foreach (string line in Lines)
+                foreach (string line in Fields)
                 {
                     result.Append(line);
                     result.Append(delimiter);
@@ -195,14 +193,15 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
-            string[] lines = IrbisText.SplitIrbisToLines(text);
+            var lines = IrbisText.SplitIrbisToLines(text);
 
+            var startOffset = 0;
             if (lines[0] == lines[1])
             {
-                lines = lines.GetSpan(1);
+                startOffset = 1;
             }
 
-            RawRecord result = Parse(lines);
+            RawRecord result = Parse(lines, startOffset);
 
             return result;
         }
@@ -213,7 +212,8 @@ namespace ManagedIrbis
         [NotNull]
         public static RawRecord Parse
             (
-                [NotNull] string[] lines
+                [NotNull] string[] lines,
+                int startOffset = 0
             )
         {
             Sure.NotNull(lines, nameof(lines));
@@ -229,14 +229,12 @@ namespace ManagedIrbis
                 throw new IrbisException("Text too short");
             }
 
-            string line1 = lines[0];
-            string line2 = lines[1];
-            lines = lines.GetSpan(2);
+            string line1 = lines[startOffset + 0];
+            string line2 = lines[startOffset + 1];
 
-            RawRecord result = new RawRecord
-            {
-                Lines = lines
-            };
+            RawRecord result = new RawRecord();
+            result.Fields = new List<string>();
+            result.Fields.AddRange(lines.Skip(startOffset + 2));
 
             ParseMfnStatusVersion
                 (

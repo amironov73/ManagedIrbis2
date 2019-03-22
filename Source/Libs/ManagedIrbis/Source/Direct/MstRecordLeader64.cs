@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.IO;
 
 using AM;
-using AM.IO;
+//using AM.IO;
 
 using JetBrains.Annotations;
 
@@ -80,51 +80,51 @@ namespace ManagedIrbis.Direct
 
         #region Public methods
 
-        /// <summary>
-        /// Read the record leader.
-        /// </summary>
-        public static MstRecordLeader64 Read
-            (
-                [NotNull] Stream stream
-            )
-        {
-            Sure.NotNull(stream, nameof(stream));
+        ///// <summary>
+        ///// Read the record leader.
+        ///// </summary>
+        //public static MstRecordLeader64 Read
+        //    (
+        //        [NotNull] Stream stream
+        //    )
+        //{
+        //    Sure.NotNull(stream, nameof(stream));
 
-            MstRecordLeader64 result = new MstRecordLeader64
-            {
-                Mfn = stream.ReadInt32Network(),
-                Length = stream.ReadInt32Network(),
-                Previous = stream.ReadInt64Network(),
-                Base = stream.ReadInt32Network(),
-                Nvf = stream.ReadInt32Network(),
-                Version = stream.ReadInt32Network(),
-                Status = stream.ReadInt32Network()
-            };
+        //    MstRecordLeader64 result = new MstRecordLeader64
+        //    {
+        //        Mfn = stream.ReadInt32Network(),
+        //        Length = stream.ReadInt32Network(),
+        //        Previous = stream.ReadInt64Network(),
+        //        Base = stream.ReadInt32Network(),
+        //        Nvf = stream.ReadInt32Network(),
+        //        Version = stream.ReadInt32Network(),
+        //        Status = stream.ReadInt32Network()
+        //    };
 
-            //Debug.Assert(result.Base ==
-            //    (LeaderSize + result.Nvf * MstDictionaryEntry64.EntrySize));
+        //    //Debug.Assert(result.Base ==
+        //    //    (LeaderSize + result.Nvf * MstDictionaryEntry64.EntrySize));
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        /// <summary>
-        /// Write the record leader.
-        /// </summary>
-        public void Write
-            (
-                [NotNull] Stream stream
-            )
-        {
-            Sure.NotNull(stream, nameof(stream));
+        ///// <summary>
+        ///// Write the record leader.
+        ///// </summary>
+        //public void Write
+        //    (
+        //        [NotNull] Stream stream
+        //    )
+        //{
+        //    Sure.NotNull(stream, nameof(stream));
 
-            stream.WriteInt32Network(Mfn);
-            stream.WriteInt32Network(Length);
-            stream.WriteInt64Network(Previous);
-            stream.WriteInt32Network(Base);
-            stream.WriteInt32Network(Nvf);
-            stream.WriteInt32Network(Version);
-            stream.WriteInt32Network(Status);
-        }
+        //    stream.WriteInt32Network(Mfn);
+        //    stream.WriteInt32Network(Length);
+        //    stream.WriteInt64Network(Previous);
+        //    stream.WriteInt32Network(Base);
+        //    stream.WriteInt32Network(Nvf);
+        //    stream.WriteInt32Network(Version);
+        //    stream.WriteInt32Network(Status);
+        //}
 
         #endregion
 

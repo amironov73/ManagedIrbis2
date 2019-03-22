@@ -34,32 +34,32 @@ namespace ManagedIrbis.Infrastructure
         #region Properties
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string Command { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int ClientId { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int QueryId { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int ReturnCode { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int AnswerSize { get; private set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ServerVersion { get; private set; }
 
@@ -91,7 +91,7 @@ namespace ManagedIrbis.Infrastructure
         #endregion
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public bool CheckReturnCode(params int[] goodCodes)
         {
@@ -168,7 +168,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte Peek()
         {
@@ -194,7 +194,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte ReadByte()
         {
@@ -237,43 +237,45 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [NotNull]
         public byte[] ReadLine()
         {
-            var result = new MemoryStream();
-            while (true)
+            using (var result = new MemoryStream())
             {
-                var one = ReadByte();
-                if (one == 0)
+                while (true)
                 {
-                    break;
-                }
-
-                if (one == 13)
-                {
-                    if (Peek() == 10)
+                    var one = ReadByte();
+                    if (one == 0)
                     {
-                        ReadByte();
+                        break;
                     }
 
-                    break;
+                    if (one == 13)
+                    {
+                        if (Peek() == 10)
+                        {
+                            ReadByte();
+                        }
+
+                        break;
+                    }
+
+                    if (one == 10)
+                    {
+                        break;
+                    }
+
+                    result.WriteByte(one);
                 }
 
-                if (one == 10)
-                {
-                    break;
-                }
-
-                result.WriteByte(one);
+                return result.ToArray();
             }
-
-            return result.ToArray();
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ReadLine(Encoding encoding)
         {
@@ -287,7 +289,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte[] RemainingBytes()
         {
@@ -325,7 +327,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string RemainingText(Encoding encoding)
         {
@@ -356,7 +358,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int GetReturnCode()
         {
@@ -366,17 +368,17 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ReadAnsi() => ReadLine(IrbisEncoding.Ansi);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int ReadInteger() => ReadLine(IrbisEncoding.Ansi).SafeToInt32();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<string> EnumRemainingAnsiLines()
         {
@@ -401,7 +403,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<string> EnumRemainingNonNullAnsiLines()
         {
@@ -426,7 +428,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<string> EnumRemainingUtfLines()
         {
@@ -451,7 +453,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<string> EnumRemainingNonNullUtfLines()
         {
@@ -476,7 +478,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public IEnumerable<byte[]> EnumRemainingBinaryLines()
         {
@@ -501,7 +503,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public string[] ReadRemainingAnsiLines()
@@ -518,12 +520,12 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ReadRemainingAnsiText() => RemainingText(IrbisEncoding.Ansi);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string[] ReadRemainingUtfLines()
         {
@@ -539,12 +541,12 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ReadRemainingUtfText() => RemainingText(IrbisEncoding.Utf8);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string ReadUtf() => ReadLine(IrbisEncoding.Utf8);
     }

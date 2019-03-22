@@ -12,7 +12,7 @@
 using System.IO;
 
 using AM;
-using AM.IO;
+//using AM.IO;
 
 using JetBrains.Annotations;
 
@@ -87,48 +87,48 @@ namespace ManagedIrbis.Direct
 
         #region Public methods
 
-        /// <summary>
-        /// Read the control record from specified stream.
-        /// </summary>
-        public static MstControlRecord64 Read
-            (
-                [NotNull] Stream stream
-            )
-        {
-            Sure.NotNull(stream, nameof(stream));
+        ///// <summary>
+        ///// Read the control record from specified stream.
+        ///// </summary>
+        //public static MstControlRecord64 Read
+        //    (
+        //        [NotNull] Stream stream
+        //    )
+        //{
+        //    Sure.NotNull(stream, nameof(stream));
 
-            MstControlRecord64 result = new MstControlRecord64
-            {
-                Reserv1 = stream.ReadInt32Network(),
-                NextMfn = stream.ReadInt32Network(),
-                NextPosition = stream.ReadInt64Network(),
-                Reserv2 = stream.ReadInt32Network(),
-                Reserv3 = stream.ReadInt32Network(),
-                Reserv4 = stream.ReadInt32Network(),
-                Blocked = stream.ReadInt32Network()
-            };
+        //    MstControlRecord64 result = new MstControlRecord64
+        //    {
+        //        Reserv1 = stream.ReadInt32Network(),
+        //        NextMfn = stream.ReadInt32Network(),
+        //        NextPosition = stream.ReadInt64Network(),
+        //        Reserv2 = stream.ReadInt32Network(),
+        //        Reserv3 = stream.ReadInt32Network(),
+        //        Reserv4 = stream.ReadInt32Network(),
+        //        Blocked = stream.ReadInt32Network()
+        //    };
 
-            return result;
-        }
+        //    return result;
+        //}
 
-        /// <summary>
-        /// Write the control record to specified stream.
-        /// </summary>
-        public void Write
-            (
-                [NotNull] Stream stream
-            )
-        {
-            Sure.NotNull(stream, nameof(stream));
+        ///// <summary>
+        ///// Write the control record to specified stream.
+        ///// </summary>
+        //public void Write
+        //    (
+        //        [NotNull] Stream stream
+        //    )
+        //{
+        //    Sure.NotNull(stream, nameof(stream));
 
-            stream.WriteInt32Network(Reserv1);
-            stream.WriteInt32Network(NextMfn);
-            stream.WriteInt64Network(NextPosition);
-            stream.WriteInt32Network(Reserv2);
-            stream.WriteInt32Network(Reserv3);
-            stream.WriteInt32Network(Reserv4);
-            stream.WriteInt32Network(Blocked);
-        }
+        //    stream.WriteInt32Network(Reserv1);
+        //    stream.WriteInt32Network(NextMfn);
+        //    stream.WriteInt64Network(NextPosition);
+        //    stream.WriteInt32Network(Reserv2);
+        //    stream.WriteInt32Network(Reserv3);
+        //    stream.WriteInt32Network(Reserv4);
+        //    stream.WriteInt32Network(Blocked);
+        //}
 
         #endregion
     }
