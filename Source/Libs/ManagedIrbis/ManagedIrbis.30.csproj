@@ -47,7 +47,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AM.Core\AM.Core.csproj" />
+    <ProjectReference Include="..\AM.Core\AM.Core.30.csproj" />
   </ItemGroup>
 
   <ItemGroup>

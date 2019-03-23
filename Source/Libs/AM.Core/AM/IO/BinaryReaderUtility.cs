@@ -39,7 +39,7 @@ namespace AM.IO
             (
                 [NotNull] this BinaryReader reader
             )
-            where T: class, IHandmadeSerializable, new ()
+            where T : class, IHandmadeSerializable, new()
         {
             Sure.NotNull(reader, nameof(reader));
 

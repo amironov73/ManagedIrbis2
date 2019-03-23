@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\AM.Core\AM.Core.csproj" />
-    <ProjectReference Include="..\..\Libs\ManagedIrbis\ManagedIrbis.csproj" />
+    <ProjectReference Include="..\..\Libs\AM.Core\AM.Core.30.csproj" />
+    <ProjectReference Include="..\..\Libs\ManagedIrbis\ManagedIrbis.30.csproj" />
   </ItemGroup>
 
 </Project>
