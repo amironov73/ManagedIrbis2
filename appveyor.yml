@@ -20,12 +20,12 @@ nuget:
 
 before_build:
 - cmd: dotnet --info
-- cmd: dotnet restore Source/ManagedIrbis.sln
+- cmd: dotnet restore Source/ManagedIrbis.30.sln
 - cmd: choco install opencover.portable
 - cmd: choco install codecov
 
 build_script:
-- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.sln" /m /verbosity:minimal
+- dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.30.sln" /m /verbosity:minimal
 
 after_build:
 - cmd: compile.cmd
