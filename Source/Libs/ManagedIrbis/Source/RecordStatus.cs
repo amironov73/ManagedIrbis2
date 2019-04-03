@@ -20,36 +20,50 @@ namespace ManagedIrbis
     /// </summary>
     [Flags]
     public enum RecordStatus
-        : byte
     {
         /// <summary>
-        /// Запись логически удалена
+        /// Запись логически удалена.
         /// </summary>
         LogicallyDeleted = 1,
 
         /// <summary>
-        /// Запись физически удалена
+        /// Запись физически удалена.
         /// </summary>
         PhysicallyDeleted = 2,
 
         /// <summary>
-        /// Запись отсутствует
+        /// Запись отсутствует.
         /// </summary>
         Absent = 4,
 
         /// <summary>
-        /// Запись не актуализирована
+        /// Запись не актуализирована.
         /// </summary>
         NonActualized = 8,
 
         /// <summary>
-        /// Последний экземпляр записи
+        /// Первый экземпляр записи.
+        /// </summary>
+        NewRecord = 16,
+
+        /// <summary>
+        /// Последний экземпляр записи.
         /// </summary>
         Last = 32,
 
         /// <summary>
         /// Запись заблокирована
         /// </summary>
-        Locked = 64
+        Locked = 64,
+
+        /// <summary>
+        /// Ошибка в Autoin.gbl.
+        /// </summary>
+        AutoinError = 128,
+
+        /// <summary>
+        /// Полный текст не актуализирован.
+        /// </summary>
+        FullTextNotActualized = 256
     }
 }

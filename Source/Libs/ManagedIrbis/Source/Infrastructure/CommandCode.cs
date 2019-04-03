@@ -27,6 +27,16 @@ namespace ManagedIrbis.Infrastructure
         public const string ExclusiveDatabaseLock = "#";
 
         /// <summary>
+        /// Новый полнотекстовый поиск для ИРБИС64+.
+        /// </summary>
+        public const string NewFulltextSearch = "&";
+
+        /// <summary>
+        /// Фасеты по результатам поиска.
+        /// </summary>
+        public const string SearchCell = "$";
+
+        /// <summary>
         /// Получение списка удаленных, неактуализированных
         /// и заблокированных записей.
         /// </summary>
@@ -48,9 +58,9 @@ namespace ManagedIrbis.Infrastructure
         public const string FormatIsoGroup = "3";
 
         /// <summary>
-        /// ???
+        /// Сбросить запущенную задачу только на сервере.
         /// </summary>
-        public const string UnknownCommand4 = "4";
+        public const string StopClientProcess = "4";
 
         /// <summary>
         /// Глобальная корректировка.
@@ -240,9 +250,9 @@ namespace ManagedIrbis.Infrastructure
         public const string GetServerStat = "+1";
 
         /// <summary>
-        /// ???
+        /// Список запущенных потоков.
         /// </summary>
-        public const string UnknownCommandPlus2 = "+2";
+        public const string GetThreadList = "+2";
 
         /// <summary>
         /// Получение списка запущенных процессов.
@@ -250,19 +260,19 @@ namespace ManagedIrbis.Infrastructure
         public const string GetProcessList = "+3";
 
         /// <summary>
-        /// ???
+        /// Сбросить запущенную задачу.
         /// </summary>
-        public const string UnknownCommandPlus4 = "+4";
+        public const string StopProcess = "+4";
 
         /// <summary>
-        /// ???
+        /// Сбросить запущенный поток.
         /// </summary>
-        public const string UnknownCommandPlus5 = "+5";
+        public const string StopThread = "+5";
 
         /// <summary>
-        /// ???
+        /// Сбросить зарегистрированного клиента.
         /// </summary>
-        public const string UnknownCommandPlus6 = "+6";
+        public const string StopClient = "+6";
 
         /// <summary>
         /// Сохранение списка пользователей.
