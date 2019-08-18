@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* IrbisException.cs -- исключения, специфичные для библиотеки
+/* IrbisException.cs -- IRBIS-specific exceptions
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -11,7 +11,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 using AM;
 
@@ -24,8 +23,7 @@ using ManagedIrbis.Properties;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// Исключения, специфичные для библиотеки
-    /// ManagedClient
+    /// IRBIS-specific exceptions.
     /// </summary>
     [PublicAPI]
     [DebuggerDisplay("Code={" + nameof(ErrorCode) + "}, Message={" + nameof(Message) + "}")]
@@ -35,7 +33,9 @@ namespace ManagedIrbis
         #region Properties
 
         /// <summary>
-        /// Код возврата (код ошибки)
+        /// Return (error) code.
+        /// Less than zero means error.
+        /// Zero or more means normal execution.
         /// </summary>
         public int ErrorCode { get; private set; }
 
@@ -44,14 +44,14 @@ namespace ManagedIrbis
         #region Construction
 
         /// <summary>
-        /// Конструктор по умолчанию.
+        /// Default constructor.
         /// </summary>
         public IrbisException()
         {
         }
 
         /// <summary>
-        /// Конструктор с кодом ошибки.
+        /// Constructor with return (error) code.
         /// </summary>
         public IrbisException
             (
@@ -63,8 +63,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// Конструктор с готовым сообщением
-        /// об ошибке.
+        /// Constructor with error message.
         /// </summary>
         public IrbisException
             (
@@ -75,7 +74,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// Constructor.
+        /// Constructor with error message and inner exception.
         /// </summary>
         public IrbisException
             (
@@ -91,7 +90,7 @@ namespace ManagedIrbis
         #region Public methods
 
         /// <summary>
-        /// Текстовое описание ошибки.
+        /// Get text description of the error.
         /// </summary>
         [NotNull]
         public static string GetErrorDescription
@@ -107,10 +106,9 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// Текстовое описание ошибки.
+        /// Get text description ot the error.
         /// </summary>
         [NotNull]
-        [ExcludeFromCodeCoverage]
         public static string GetErrorDescription
             (
                 int code

@@ -11,20 +11,19 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 using AM;
 using AM.Collections;
-using JetBrains.Annotations;
 
-using ManagedIrbis.Infrastructure;
+using JetBrains.Annotations;
 
 using Newtonsoft.Json;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace ManagedIrbis.Search
 {
@@ -122,7 +121,7 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Should serialize the <see cref="Text"/> field?
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public bool ShouldSerializeText()
         {
             return !string.IsNullOrEmpty(Text);
@@ -131,7 +130,7 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Should serialize the <see cref="Count"/> field?
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public bool ShouldSerializeCount()
         {
             return Count != 0;

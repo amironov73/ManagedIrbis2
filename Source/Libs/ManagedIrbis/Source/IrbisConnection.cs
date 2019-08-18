@@ -117,7 +117,7 @@ namespace ManagedIrbis
         /// Socket.
         /// </summary>
         [NotNull]
-        public IrbisSocket Socket { get; private set; }
+        public ClientSocket Socket { get; private set; }
 
         /// <summary>
         /// Busy?

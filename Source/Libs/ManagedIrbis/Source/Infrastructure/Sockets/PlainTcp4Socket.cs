@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* PlainTcp4Socket.cs --
+/* PlainTcp4Socket.cs -- plain BSD-socket for TCP v4
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -14,18 +14,22 @@ using System.Diagnostics;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+
 using AM;
+
 using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace ManagedIrbis.Infrastructure.Sockets
 {
     /// <summary>
-    /// 
+    /// Простой BSD-сокет TCP/IP v4.
     /// </summary>
     public sealed class PlainTcp4Socket
-        : IrbisSocket
+        : ClientSocket
     {
         #region Construction
 
@@ -45,9 +49,12 @@ namespace ManagedIrbis.Infrastructure.Sockets
         #region IrbisSocket members
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public override async Task<ServerResponse> Transact(ClientQuery query)
+        public override async Task<ServerResponse> Transact
+            (
+            ClientQuery query
+            )
         {
             if (Connection.Cancellation.IsCancellationRequested)
             {
@@ -70,7 +77,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 var stream = client.GetStream();
 
                 var length = query.GetLength();
-                var prefix = Encoding.ASCII.GetBytes(length.ToInvariantString() + "\n");
+                var prefix = Encoding.ASCII.GetBytes
+                    (
+                        length.ToInvariantString() + "\n"
+                    );
                 var chunks = query.GetChunks();
                 chunks[0] = prefix;
                 try
@@ -102,7 +112,12 @@ namespace ManagedIrbis.Infrastructure.Sockets
                         throw new OperationCanceledException();
                     }
 
-                    await result.PullDataAsync(stream, 2048, Connection.Cancellation);
+                    await result.PullDataAsync
+                        (
+                            stream,
+                            2048,
+                            Connection.Cancellation
+                        );
                 }
                 catch (Exception exception)
                 {
@@ -113,7 +128,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 return result;
             }
 
-            #endregion
-        }
-    }
+        } // method Transact
+
+        #endregion
+
+    } // class PlainTcp4Socket
 }

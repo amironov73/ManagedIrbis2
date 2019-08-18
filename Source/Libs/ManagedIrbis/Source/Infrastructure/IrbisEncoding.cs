@@ -10,7 +10,6 @@
 #region Using directives
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 using AM;
@@ -121,7 +120,7 @@ namespace ManagedIrbis.Infrastructure
         /// Get encoding from config file.
         /// </summary>
         [NotNull]
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static Encoding FromConfig
             (
                 [NotNull] string key

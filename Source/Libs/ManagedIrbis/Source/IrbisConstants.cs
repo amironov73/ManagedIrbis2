@@ -4,7 +4,7 @@
 /* IrbisConstants.cs -- common constants
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
@@ -12,6 +12,8 @@
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace ManagedIrbis
 {
@@ -24,17 +26,17 @@ namespace ManagedIrbis
         #region Constants
 
         /// <summary>
-        /// Database list for administrator.
+        /// File name of the database list for administrator.
         /// </summary>
         public const string AdministratorDatabaseList = "dbnam1.mnu";
 
         /// <summary>
-        /// Database list for cataloger.
+        /// File name of the database list for cataloger.
         /// </summary>
         public const string CatalogerDatabaseList = "dbnam2.mnu";
 
         /// <summary>
-        /// Длина записи (размер полки) -- ограничение при форматировании.
+        /// Record length (shelf size) is the format limitation.
         /// </summary>
         public const int MaxRecord = 32000;
 
@@ -44,7 +46,7 @@ namespace ManagedIrbis
         public const int MaxPostings = 32758;
 
         /// <summary>
-        /// Database list for reader.
+        /// File name of the database list for reader.
         /// </summary>
         public const string ReaderDatabaseList = "dbnam3.mnu";
 

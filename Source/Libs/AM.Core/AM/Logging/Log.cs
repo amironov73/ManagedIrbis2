@@ -10,7 +10,7 @@
 #region Using directives
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM.Logging
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class Log
@@ -48,7 +48,7 @@ namespace AM.Logging
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForConsoleApplication()
         {
             TeeLogger root = new TeeLogger();
@@ -66,7 +66,7 @@ namespace AM.Logging
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForServiceApplication()
         {
             TeeLogger root = new TeeLogger();
@@ -83,7 +83,7 @@ namespace AM.Logging
         /// <summary>
         /// Apply defaults for console application.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForWindowedApplication()
         {
             TeeLogger root = new TeeLogger();

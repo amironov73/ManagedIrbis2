@@ -78,7 +78,7 @@ namespace ConsoleApp1
 
                 await connection.Disconnect();
             }
-        }
+        } // method AsyncMain
 
         static void Main()
         {

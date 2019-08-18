@@ -21,7 +21,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// Common format related stuff.
+    /// Common IRBIS format related stuff.
     /// </summary>
     [PublicAPI]
     public static class IrbisFormat
@@ -133,10 +133,10 @@ namespace ManagedIrbis
                 }
 
                 index++;
-            }
+            } // while
 
             return result.ToString();
-        }
+        } // method RemoveComments
 
         /// <summary>
         /// Prepare the dynamic format string.
@@ -190,7 +190,7 @@ namespace ManagedIrbis
             }
 
             return result.ToString();
-        }
+        } // method PrepareFormat
 
         /// <summary>
         /// Verify format string.
@@ -233,7 +233,7 @@ namespace ManagedIrbis
 
                     return false;
                 }
-            }
+            } // foreach
 
             const char zero = '\0';
             char state = zero;
@@ -258,8 +258,9 @@ namespace ManagedIrbis
                         {
                             Log.Error
                                 (
-                                    nameof(IrbisFormat) + "::" + nameof(VerifyFormat)
-                                    + "containt comment"
+                                    nameof(IrbisFormat) + "::"
+                                    + nameof(VerifyFormat)
+                                    + "contains comment"
                                 );
                             if (throwOnError)
                             {
@@ -277,7 +278,7 @@ namespace ManagedIrbis
                 }
 
                 index++;
-            }
+            } // while
 
             if (state != zero)
             {
@@ -292,11 +293,11 @@ namespace ManagedIrbis
                 }
 
                 return false;
-            }
+            } // if
 
             return true;
-        }
+        } // method VerifyFormat
 
         #endregion
-    }
+    } // class IrbisFormat
 }

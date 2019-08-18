@@ -9,8 +9,6 @@
 
 #region Using directives
 
-using System.Diagnostics.CodeAnalysis;
-
 using JetBrains.Annotations;
 
 #endregion
@@ -47,7 +45,7 @@ namespace AM
         /// <summary>
         /// Default constructor.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected BinaryAttachment()
         {
         }

@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using AM.Logging;
@@ -72,7 +71,7 @@ namespace AM
 
         #region Private members
 
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         [ContractAnnotation("=> halt")]
         private void _Throw()
         {
@@ -89,7 +88,7 @@ namespace AM
             }
         }
 
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         [ContractAnnotation("=> halt")]
         private void _Throw
             (
@@ -109,7 +108,7 @@ namespace AM
             }
         }
 
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         [ContractAnnotation("=> halt")]
         private void _Throw
             (
@@ -364,7 +363,6 @@ namespace AM
         /// </summary>
         [StringFormatMethod("format")]
         [ContractAnnotation("=> halt")]
-        [ExcludeFromCodeCoverage]
         public void Throw
             (
                 string format,
