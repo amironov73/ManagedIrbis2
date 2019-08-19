@@ -1,8 +1,16 @@
 ### ManagedIrbis
+
 ManagedIrbis2 is a framework for client development for
 popular russian library computer system IRBIS64 ("ИРБИС64").
 
 ManagedIrbis2 adapted for .NET Core 3.0
+
+Currently supports:
+
+* Windows 7/10 x64
+* MacOS 10.14
+* .NET Core 2.2 SDK
+* .NET Core 3.0 SDK preview 8
 
 ### Build status
 
