@@ -18,8 +18,7 @@ nuget:
   project_feed: false
 
 before_build:
-- cmd: appveyor DownloadFile -FileName dotnet-sdk.exe https://download.visualstudio.microsoft.com/download/pr/a46fa009-033b-430d-89a8-c9a107f73d87/d25f962e8212aafb3b0c426eb8cb4dc6/dotnet-sdk-3.0.100-preview8-013656-win-x64.exe
-- cmd: dotnet-sdk.exe
+- cmd: choco upgrade dotnetcore-sdk --pre
 - cmd: dotnet --info
 - cmd: dotnet restore Source/ManagedIrbis.30.sln
 - cmd: choco install opencover.portable
