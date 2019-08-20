@@ -28,8 +28,7 @@ namespace AM.Logging
         /// <summary>
         /// Logger.
         /// </summary>
-        [CanBeNull]
-        public static IAmLogger Logger { get; private set; }
+        public static IAmLogger? Logger { get; private set; }
 
         #endregion
 
@@ -102,17 +101,15 @@ namespace AM.Logging
         /// </summary>
         public static void Debug
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Debug(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Debug(text);
+                }
             }
         }
 
@@ -121,17 +118,15 @@ namespace AM.Logging
         /// </summary>
         public static void Error
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Error(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Error(text);
+                }
             }
         }
 
@@ -140,17 +135,15 @@ namespace AM.Logging
         /// </summary>
         public static void Fatal
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Fatal(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Fatal(text);
+                }
             }
         }
 
@@ -159,33 +152,30 @@ namespace AM.Logging
         /// </summary>
         public static void Info
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Info(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Info(text);
+                }
             }
         }
 
         /// <summary>
         /// Set new logger.
         /// </summary>
-        /// <returns>Previous logger</returns>
-        [CanBeNull]
-        public static IAmLogger SetLogger
+        /// <returns>Previous logger.</returns>
+        public static IAmLogger? SetLogger
             (
-                [CanBeNull] IAmLogger logger
+                IAmLogger? logger
             )
         {
             lock (SyncRoot)
             {
-                IAmLogger result = Logger;
+                IAmLogger? result = Logger;
 
                 Logger = logger;
 
@@ -198,17 +188,15 @@ namespace AM.Logging
         /// </summary>
         public static void Trace
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Trace(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Trace(text);
+                }
             }
         }
 
@@ -217,17 +205,12 @@ namespace AM.Logging
         /// </summary>
         public static void TraceException
             (
-                [NotNull] string text,
-                [NotNull] Exception exception
+                string text,
+                Exception exception
             )
         {
-            string fullText = string.Format
-                (
-                    "{0}: {1}: {2}",
-                    text,
-                    exception.GetType().Name,
-                    exception.Message
-                );
+            var name = exception.GetType().Name;
+            string fullText = $"{text}: {name}: {exception.Message}";
 
             Trace(fullText);
         }
@@ -237,17 +220,15 @@ namespace AM.Logging
         /// </summary>
         public static void Warn
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (!string.IsNullOrEmpty(text))
             {
-                return;
-            }
-
-            lock (SyncRoot)
-            {
-                Logger?.Warn(text);
+                lock (SyncRoot)
+                {
+                    Logger?.Warn(text);
+                }
             }
         }
 

@@ -68,7 +68,7 @@ namespace AM.Text
 
         #region Private members
 
-        private static Encoding _cp866, _windows1251;
+        private static Encoding? _cp866, _windows1251;
 
         #endregion
 

@@ -169,8 +169,7 @@ namespace AM.IO
         /// <summary>
         /// Read some bytes from the stream.
         /// </summary>
-        [CanBeNull]
-        public static byte[] ReadBytes
+        public static byte[]? ReadBytes
             (
                 [NotNull] Stream stream,
                 int count

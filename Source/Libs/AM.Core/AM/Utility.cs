@@ -36,7 +36,7 @@ namespace AM
         // =========================================================
 
         /// <summary>
-        /// Шестнадцатиричный дамп массива байт.
+        /// Hexadecimal dump of the byte array.
         /// </summary>
         [Pure]
         public static string DumpBytes
@@ -86,8 +86,8 @@ namespace AM
         [Pure]
         public static bool EnumerableEquals
             (
-                [CanBeNull] IEnumerable left,
-                [CanBeNull] IEnumerable right
+                IEnumerable? left,
+                IEnumerable? right
             )
         {
             if (ReferenceEquals(left, null)
@@ -104,7 +104,7 @@ namespace AM
             IEnumerator rightEnumerator = right.GetEnumerator();
             rightEnumerator.Reset();
 
-            foreach (object leftItem in left)
+            foreach (object? leftItem in left)
             {
                 // unequal amount of items
                 if (!rightEnumerator.MoveNext())
@@ -112,10 +112,21 @@ namespace AM
                     return false;
                 }
 
+                if (ReferenceEquals(leftItem, null))
+                {
+                    return false;
+                }
+
+                var rightItem = rightEnumerator.Current;
+                if (ReferenceEquals(rightItem, null))
+                {
+                    return false;
+                }
+
                 if (!MemberwiseEquals
                     (
                         leftItem,
-                        rightEnumerator.Current
+                        rightItem
                     ))
                 {
                     return false;
@@ -195,54 +206,54 @@ namespace AM
             return result;
         }
 
-        /// <summary>
-        /// Выборка элемента из массива.
-        /// </summary>
-        [Pure]
-        public static T GetItem<T>
-            (
-                [NotNull] this T[] array,
-                int index
-            )
-        {
-            return GetItem(array, index, default(T));
-        }
-
-        /// <summary>
-        /// Выборка элемента из списка.
-        /// </summary>
-        [Pure]
-        public static T GetItem<T>
-            (
-                [NotNull] this IList<T> list,
-                int index,
-                [CanBeNull] T defaultValue
-            )
-        {
-            Sure.NotNull(list, nameof(list));
-
-            index = index >= 0
-                ? index
-                : list.Count + index;
-
-            T result = index >= 0 && index < list.Count
-                ? list[index]
-                : defaultValue;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Выборка элемента из массива.
-        /// </summary>
-        public static T GetItem<T>
-            (
-                [NotNull] this IList<T> list,
-                int index
-            )
-        {
-            return GetItem(list, index, default(T));
-        }
+//        /// <summary>
+//        /// Выборка элемента из массива.
+//        /// </summary>
+//        [Pure]
+//        public static T GetItem<T>
+//            (
+//                [NotNull] this T[] array,
+//                int index
+//            )
+//        {
+//            return GetItem(array, index, default(T));
+//        }
+//
+//        /// <summary>
+//        /// Выборка элемента из списка.
+//        /// </summary>
+//        [Pure]
+//        public static T GetItem<T>
+//            (
+//                [NotNull] this IList<T> list,
+//                int index,
+//                T defaultValue
+//            )
+//        {
+//            Sure.NotNull(list, nameof(list));
+//
+//            index = index >= 0
+//                ? index
+//                : list.Count + index;
+//
+//            T result = index >= 0 && index < list.Count
+//                ? list[index]
+//                : defaultValue;
+//
+//            return result;
+//        }
+//
+//        /// <summary>
+//        /// Выборка элемента из массива.
+//        /// </summary>
+//        public static T GetItem<T>
+//            (
+//                [NotNull] this IList<T> list,
+//                int index
+//            )
+//        {
+//            return GetItem(list, index, default(T));
+//        }
 
         // =========================================================
 
@@ -280,8 +291,8 @@ namespace AM
         [Pure]
         public static bool MemberwiseEquals
             (
-                [CanBeNull] object left,
-                [CanBeNull] object right
+                object? left,
+                object? right
             )
         {
             if (ReferenceEquals(left, null)
@@ -306,13 +317,18 @@ namespace AM
                 return left.Equals(right);
             }
 
-            if (type == type.GetMethod("Equals").DeclaringType)
+            var equals = type.GetMethod("Equals");
+            if (ReferenceEquals(equals, null))
+            {
+                return false;
+            }
+            if (type == equals.DeclaringType)
             {
                 return left.Equals(right);
             }
 
-            IEnumerable leftEnumerable = left as IEnumerable;
-            IEnumerable rightEnumerable = right as IEnumerable;
+            IEnumerable? leftEnumerable = left as IEnumerable;
+            IEnumerable? rightEnumerable = right as IEnumerable;
             if (!ReferenceEquals(leftEnumerable, null))
             {
                 return EnumerableEquals
@@ -404,8 +420,8 @@ namespace AM
 
             foreach (PropertyInfo property in properties)
             {
-                object leftValue = property.GetValue(left, null);
-                object rightValue = property.GetValue(right, null);
+                object? leftValue = property.GetValue(left, null);
+                object? rightValue = property.GetValue(right, null);
 
                 if (ReferenceEquals(leftValue, null)
                     || ReferenceEquals(rightValue, null))
@@ -527,7 +543,7 @@ namespace AM
         }
 
         /// <summary>
-        /// Преобразование любого значения в строку.
+        /// Convert any value to visible string.
         /// </summary>
         /// <returns>Для <c>null</c> возвращается "(null)".
         /// </returns>
@@ -535,19 +551,24 @@ namespace AM
         [NotNull]
         public static string ToVisibleString<T>
             (
-                [CanBeNull] this T value
+                this T? value
             )
+            where T: class
         {
             if (ReferenceEquals(value, null))
             {
                 return "(null)";
             }
 
-            string result = value.ToString();
+            string? result1 = value.ToString();
 
             // ReSharper disable InvokeAsExtensionMethod
-            return StringUtility.ToVisibleString(result);
+            string? result2 = StringUtility.ToVisibleString(result1);
             // ReSharper restore InvokeAsExtensionMethod
+
+            return string.IsNullOrEmpty(result2)
+                ? "(null)"
+                : result2;
         }
 
         #endregion

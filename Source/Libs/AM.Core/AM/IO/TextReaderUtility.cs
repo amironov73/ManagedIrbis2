@@ -61,7 +61,7 @@ namespace AM.IO
         {
             Sure.NotNull(reader, nameof(reader));
 
-            string result = reader.ReadLine();
+            string? result = reader.ReadLine();
             if (ReferenceEquals(result, null))
             {
                 Log.Error

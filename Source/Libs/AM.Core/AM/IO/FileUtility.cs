@@ -29,29 +29,24 @@ namespace AM.IO
         #region Public methods
 
         /// <summary>
-        /// Побайтовое сравнение двух файлов.
+        /// Byte-by-byte comparison of two files.
         /// </summary>
         public static int Compare
             (
-                [NotNull] string first,
-                [NotNull] string second
+                string first,
+                string second
             )
         {
             Sure.FileExists(first, nameof(first));
             Sure.FileExists(second, nameof(second));
 
-            using
+            using FileStream firstStream = File.OpenRead(first),
+                secondStream = File.OpenRead(second);
+            return StreamUtility.CompareTo
                 (
-                    FileStream firstStream = File.OpenRead(first),
-                        secondStream = File.OpenRead(second)
-                )
-            {
-                return StreamUtility.CompareTo
-                    (
-                        firstStream,
-                        secondStream
-                    );
-            }
+                    firstStream,
+                    secondStream
+                );
         }
 
         /// <summary>
@@ -60,8 +55,8 @@ namespace AM.IO
         /// </summary>
         public static void Copy
             (
-                [NotNull] string sourceName,
-                [NotNull] string targetName,
+                string sourceName,
+                string targetName,
                 bool overwrite
             )
         {
@@ -90,8 +85,8 @@ namespace AM.IO
         /// </returns>
         public static bool CopyNewer
             (
-                [NotNull] string sourcePath,
-                [NotNull] string targetPath,
+                string sourcePath,
+                string targetPath,
                 bool backup
             )
         {
@@ -124,8 +119,7 @@ namespace AM.IO
         /// <param name="targetPath">The target path.</param>
         /// <returns>Name of backup file or <c>null</c>
         /// if no backup created.</returns>
-        [CanBeNull]
-        public static string CopyWithBackup
+        public static string? CopyWithBackup
             (
                 [NotNull] string sourcePath,
                 [NotNull] string targetPath
@@ -134,7 +128,7 @@ namespace AM.IO
             Sure.FileExists(sourcePath, nameof(sourcePath));
             Sure.NotNullNorEmpty(targetPath, nameof(targetPath));
 
-            string result = null;
+            string? result = null;
             if (File.Exists(targetPath))
             {
                 result = CreateBackup(targetPath, true);
@@ -197,11 +191,10 @@ namespace AM.IO
         /// <summary>
         /// Find file in path.
         /// </summary>
-        [CanBeNull]
-        public static string FindFileInPath
+        public static string? FindFileInPath
             (
                 [NotNull] string fileName,
-                [CanBeNull] string path,
+                string? path,
                 char elementDelimiter
             )
         {

@@ -10,12 +10,11 @@
 #region Using directives
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
+
 using AM.Collections;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -41,26 +40,26 @@ namespace AM
         #region Public methods
 
         /// <summary>
-        /// Сравнивает две строки с точностью до регистра символов.
-        /// Нечувствительно к культуре.
+        /// Compares two strings ignoring case of the characters.
+        /// Culture-tolerant.
         /// </summary>
         [Pure]
         public static int CompareNoCase
             (
-                [CanBeNull] string left,
-                [CanBeNull] string right
+                string? left,
+                string? right
             )
         {
             return string.Compare
-            (
-                left,
-                right,
-                StringComparison.OrdinalIgnoreCase
-            );
+                (
+                    left,
+                    right,
+                    StringComparison.OrdinalIgnoreCase
+                );
         }
 
         /// <summary>
-        /// Сравнивает два символа с точностью до регистра.
+        /// Compares two symbols ignoring case of the characters.
         /// </summary>
         [Pure]
         public static int CompareNoCase
@@ -75,10 +74,9 @@ namespace AM
         /// <summary>
         /// Converts empty string to <c>null</c>.
         /// </summary>
-        [CanBeNull]
-        public static string EmptyToNull
+        public static string? EmptyToNull
             (
-                [CanBeNull] this string value
+                this string? value
             )
         {
             return string.IsNullOrEmpty(value)
@@ -91,10 +89,10 @@ namespace AM
         /// </summary>
         public static char FirstChar
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
-            return ReferenceEquals(text, null) || text.Length == 0
+            return string.IsNullOrEmpty(text)
                 ? '\0'
                 : text[0];
         }
@@ -184,15 +182,14 @@ namespace AM
         /// <summary>
         ///
         /// </summary>
-        [CanBeNull]
-        public static string SafeSubstring
+        public static string? SafeSubstring
             (
-                [CanBeNull] this string text,
+                this string? text,
                 int offset,
                 int width
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -224,8 +221,8 @@ namespace AM
         [Pure]
         public static bool SameString
             (
-                [CanBeNull] this string one,
-                [CanBeNull] string two
+                this string? one,
+                string? two
             )
         {
             return string.Compare
@@ -242,8 +239,8 @@ namespace AM
         [Pure]
         public static bool SameStringSensitive
             (
-                [CanBeNull] this string one,
-                [CanBeNull] string two
+                this string? one,
+                string? two
             )
         {
             return string.Compare
@@ -255,7 +252,7 @@ namespace AM
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static ReadOnlyMemory<char>[] SplitToSpan
             (
@@ -298,7 +295,7 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToVisibleString
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
             if (ReferenceEquals(text, null))

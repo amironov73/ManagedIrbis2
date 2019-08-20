@@ -22,7 +22,7 @@ namespace AM
     /// Binary attachment (e. g. for <see cref="ArsMagnaException"/>).
     /// </summary>
     [PublicAPI]
-    public class BinaryAttachment
+    public sealed class BinaryAttachment
     {
         #region Properties
 
@@ -30,25 +30,17 @@ namespace AM
         /// Name of the attachment.
         /// </summary>
         [NotNull]
-        public virtual string Name { get; protected set; }
+        public string Name { get; }
 
         /// <summary>
         /// Content of the attachment.
         /// </summary>
         [NotNull]
-        public virtual byte[] Content { get; protected set; }
+        public byte[] Content { get; }
 
         #endregion
 
         #region Construction
-
-        /// <summary>
-        /// Default constructor.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
-        protected BinaryAttachment()
-        {
-        }
 
         /// <summary>
         /// Constructor.

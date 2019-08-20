@@ -24,7 +24,7 @@ using JetBrains.Annotations;
 namespace AM.IO
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class BinaryReaderUtility
@@ -136,7 +136,6 @@ namespace AM.IO
         /// <summary>
         /// Read <see cref="DateTime"/> from the stream.
         /// </summary>
-        [CanBeNull]
         public static DateTime? ReadNullableDateTime
             (
                 [NotNull] this BinaryReader reader
@@ -246,7 +245,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable byte.
         /// </summary>
-        [CanBeNull]
         public static byte? ReadNullableByte
             (
                 [NotNull] this BinaryReader reader
@@ -263,7 +261,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable double precision number.
         /// </summary>
-        [CanBeNull]
         public static double? ReadNullableDouble
             (
                 [NotNull] this BinaryReader reader
@@ -280,7 +277,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable decimal.
         /// </summary>
-        [CanBeNull]
         public static decimal? ReadNullableDecimal
             (
                 [NotNull] this BinaryReader reader
@@ -298,7 +294,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable 16-bit integer.
         /// </summary>
-        [CanBeNull]
         public static short? ReadNullableInt16
             (
                 [NotNull] this BinaryReader reader
@@ -315,7 +310,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable 32-bit integer.
         /// </summary>
-        [CanBeNull]
         public static int? ReadNullableInt32
             (
                 [NotNull] this BinaryReader reader
@@ -332,8 +326,7 @@ namespace AM.IO
         /// <summary>
         /// Read array of 32-bit integers.
         /// </summary>
-        [CanBeNull]
-        public static int[] ReadNullableInt32Array
+        public static int[]? ReadNullableInt32Array
             (
                 [NotNull] this BinaryReader reader
             )
@@ -360,7 +353,6 @@ namespace AM.IO
         /// <summary>
         /// Read nullable 64-bit integer.
         /// </summary>
-        [CanBeNull]
         public static long? ReadNullableInt64
             (
                 [NotNull] this BinaryReader reader
@@ -377,8 +369,7 @@ namespace AM.IO
         /// <summary>
         /// Read nullable string.
         /// </summary>
-        [CanBeNull]
-        public static string ReadNullableString
+        public static string? ReadNullableString
             (
                 [NotNull] this BinaryReader reader
             )
@@ -394,15 +385,14 @@ namespace AM.IO
         /// <summary>
         /// Read nullable array of strings.
         /// </summary>
-        [CanBeNull]
-        public static string[] ReadNullableStringArray
+        public static string[]? ReadNullableStringArray
             (
                 [NotNull] this BinaryReader reader
             )
         {
             Sure.NotNull(reader, nameof(reader));
 
-            string[] result = null;
+            string[]? result = null;
             if (reader.ReadBoolean())
             {
                 int count = reader.ReadPackedInt32();
@@ -419,8 +409,7 @@ namespace AM.IO
         /// <summary>
         /// Read nullable array of objects.
         /// </summary>
-        [CanBeNull]
-        public static T[] ReadNullableArray<T>
+        public static T[]? ReadNullableArray<T>
             (
                 [NotNull] this BinaryReader reader
             )
@@ -428,7 +417,7 @@ namespace AM.IO
         {
             Sure.NotNull(reader, nameof(reader));
 
-            T[] result = null;
+            T[]? result = null;
 
             if (reader.ReadBoolean())
             {

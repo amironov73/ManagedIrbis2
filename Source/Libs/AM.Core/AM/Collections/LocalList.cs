@@ -28,7 +28,7 @@ namespace AM.Collections
 
         private const int InitialCapacity = 4;
 
-        private T[] _array;
+        private T[]? _array;
         private int _size;
 
         private void _Extend(int newSize)
@@ -41,7 +41,7 @@ namespace AM.Collections
 
         private void _GrowAsNeeded()
         {
-            if (_size >= _array.Length)
+            if (_size >= _array!.Length)
             {
                 _Extend(_size * 2);
             }
@@ -77,7 +77,7 @@ namespace AM.Collections
         {
             for (int i = 0; i < _size; i++)
             {
-                yield return _array[i];
+                yield return _array![i];
             }
         }
 
@@ -93,7 +93,7 @@ namespace AM.Collections
             }
 
             _GrowAsNeeded();
-            _array[_size++] = item;
+            _array![_size++] = item;
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace AM.Collections
             foreach (T item in items)
             {
                 _GrowAsNeeded();
-                _array[_size++] = item;
+                _array![_size++] = item;
             }
         }
 
@@ -196,12 +196,21 @@ namespace AM.Collections
                 _Extend(InitialCapacity);
             }
 
+            var array = _array!;
+
             if (_size != 0 && index != _size - 1)
             {
-                Array.Copy(_array, index, _array, index + 1, _size - index - 1);
+                Array.Copy
+                    (
+                        array,
+                        index,
+                        array,
+                        index + 1,
+                        _size - index - 1
+                    );
             }
 
-            _array[index] = item;
+            array[index] = item;
             _size++;
         }
 

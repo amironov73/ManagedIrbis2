@@ -32,7 +32,7 @@ namespace AM
         /// Prefix.
         /// </summary>
         [CanBeNull]
-        public string Prefix { get; set; }
+        public string? Prefix { get; set; }
 
         /// <summary>
         /// Result.
@@ -81,10 +81,7 @@ namespace AM
                 {
                     Throw(Prefix);
                 }
-                else
-                {
-                    Throw();
-                }
+                Throw();
             }
         }
 
@@ -101,10 +98,7 @@ namespace AM
                 {
                     Throw(Prefix + ": " + message);
                 }
-                else
-                {
-                    Throw(message);
-                }
+                Throw(message);
             }
         }
 
@@ -123,10 +117,7 @@ namespace AM
                     string message = Prefix + ": " + string.Format(format, arguments);
                     Throw(message);
                 }
-                else
-                {
-                    Throw(format, arguments);
-                }
+                Throw(format, arguments);
             }
         }
 
