@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* IrbisConnection.cs -- client for IRBIS-server
+/* IrbisConnection.cs -- connection to IRBIS-server
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -32,6 +32,8 @@ using ManagedIrbis.Properties;
 using ManagedIrbis.Search;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace ManagedIrbis
 {
@@ -158,7 +160,7 @@ namespace ManagedIrbis
         {
             Busy = busy;
             BusyChanged?.Invoke(this, EventArgs.Empty);
-        }
+        } // method SetBusy
 
         #endregion
 
@@ -167,11 +169,15 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> ActualizeRecord(string database, int mfn)
+        public async Task<bool> ActualizeRecordAsync
+            (
+                string database,
+                int mfn
+            )
         {
-            var response = await Execute("F", database, mfn);
+            var response = await ExecuteAsync("F", database, mfn);
             return !ReferenceEquals(response, null);
-        }
+        } // method ActualizeRecordAsync
 
         /// <summary>
         /// Cancel the current operation.
@@ -179,12 +185,12 @@ namespace ManagedIrbis
         public void CancelOperation()
         {
             _cancellation.Cancel();
-        }
+        } // method CancelOperation
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> Connect()
+        public async Task<bool> ConnectAsync()
         {
             if (Connected)
             {
@@ -198,7 +204,7 @@ namespace ManagedIrbis
             query.AddAnsi(Username).NewLine();
             query.AddAnsi(Password);
 
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return false;
@@ -220,12 +226,12 @@ namespace ManagedIrbis
             // TODO Read INI-file
 
             return true;
-        }
+        } // method ConnectAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> Disconnect()
+        public bool Disconnect()
         {
             if (Connected)
             {
@@ -233,7 +239,7 @@ namespace ManagedIrbis
                 query.AddAnsi(Username);
                 try
                 {
-                    await Execute(query);
+                    Execute(query);
                 }
                 catch (Exception exception)
                 {
@@ -244,12 +250,36 @@ namespace ManagedIrbis
             }
 
             return true;
-        }
+        } // method Disconnect
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerResponse> Execute
+        public async Task<bool> DisconnectAsync()
+        {
+            if (Connected)
+            {
+                var query = new ClientQuery(this, "B");
+                query.AddAnsi(Username);
+                try
+                {
+                    await ExecuteAsync(query);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                }
+
+                Connected = false;
+            }
+
+            return true;
+        } // method DisconnectAsync
+
+        /// <summary>
+        ///
+        /// </summary>
+        public ServerResponse Execute
             (
                 [NotNull] ClientQuery query
             )
@@ -272,7 +302,7 @@ namespace ManagedIrbis
                         query.Debug(Console.Out);
                     }
 
-                    result = await Socket.Transact(query);
+                    result = Socket.Transact(query);
                 }
                 catch (Exception exception)
                 {
@@ -299,12 +329,67 @@ namespace ManagedIrbis
             {
                 SetBusy(false);
             }
-        }
+        } // method Execute
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerResponse> Execute
+        public async Task<ServerResponse> ExecuteAsync
+            (
+                [NotNull] ClientQuery query
+            )
+        {
+            Sure.NotNull(query, nameof(query));
+
+            SetBusy(true);
+            try
+            {
+                if (_cancellation.IsCancellationRequested)
+                {
+                    _cancellation = new CancellationTokenSource();
+                }
+
+                ServerResponse result;
+                try
+                {
+                    if (_debug)
+                    {
+                        query.Debug(Console.Out);
+                    }
+
+                    result = await Socket.TransactAsync(query);
+                }
+                catch (Exception exception)
+                {
+                    Debug.WriteLine(exception.Message);
+                    return null;
+                }
+
+                if (ReferenceEquals(result, null))
+                {
+                    return null;
+                }
+
+                if (_debug)
+                {
+                    result.Debug(Console.Out);
+                }
+
+                result.Parse();
+                QueryId++;
+
+                return result;
+            }
+            finally
+            {
+                SetBusy(false);
+            }
+        } // method ExecuteAsync
+
+        /// <summary>
+        ///
+        /// </summary>
+        public async Task<ServerResponse> ExecuteAsync
             (
                 [NotNull] string command,
                 params object[] args
@@ -321,15 +406,15 @@ namespace ManagedIrbis
                 query.AddAnsi(arg).NewLine();
             }
 
-            var result = await Execute(query);
+            var result = await ExecuteAsync(query);
 
             return result;
-        }
+        } // method ExecuteAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<string> FormatRecord(string format, int mfn)
+        public async Task<string> FormatRecordAsync(string format, int mfn)
         {
             if (!Connected)
             {
@@ -342,7 +427,7 @@ namespace ManagedIrbis
             query.AddAnsi(prepared).NewLine();
             query.Add(1).NewLine();
             query.Add(mfn).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return null;
@@ -356,12 +441,15 @@ namespace ManagedIrbis
             }
 
             return result;
-        }
+        } // method FormatRecordAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<int> GetMaxMfn(string database = null)
+        public async Task<int> GetMaxMfnAsync
+            (
+                string database = null
+            )
         {
             if (!Connected)
             {
@@ -371,7 +459,7 @@ namespace ManagedIrbis
             database = database ?? Database;
             var query = new ClientQuery(this, "O");
             query.AddAnsi(database).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return 0;
@@ -383,12 +471,12 @@ namespace ManagedIrbis
             }
 
             return response.ReturnCode;
-        }
+        } // method GetMaxMfnAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerVersion> GetServerVersion()
+        public async Task<ServerVersion> GetServerVersionAsync()
         {
             if (!Connected)
             {
@@ -396,7 +484,7 @@ namespace ManagedIrbis
             }
 
             var query = new ClientQuery(this, "1");
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return null;
@@ -408,12 +496,15 @@ namespace ManagedIrbis
             result.Parse(lines);
 
             return result;
-        }
+        } // method GetServerVersionAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<string[]> ListFiles(string specification)
+        public async Task<string[]> ListFilesAsync
+            (
+                string specification
+            )
         {
             if (!Connected || string.IsNullOrEmpty(specification))
             {
@@ -422,7 +513,7 @@ namespace ManagedIrbis
 
             var query = new ClientQuery(this, "!");
             query.AddAnsi(specification).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return Array.Empty<string>();
@@ -443,12 +534,12 @@ namespace ManagedIrbis
             }
 
             return result.ToArray();
-        }
+        } // method ListFilesAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<ProcessInfo[]> ListProcesses()
+        public async Task<ProcessInfo[]> ListProcessesAsync()
         {
             if (!Connected)
             {
@@ -456,7 +547,7 @@ namespace ManagedIrbis
             }
 
             var query = new ClientQuery(this, "+3");
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return Array.Empty<ProcessInfo>();
@@ -467,7 +558,7 @@ namespace ManagedIrbis
             var result = ProcessInfo.Parse(lines);
 
             return result;
-        }
+        } // method ListProcessesAsync
 
         /// <summary>
         ///
@@ -545,12 +636,15 @@ namespace ManagedIrbis
                         throw new IrbisException($"Unknown key {name}");
                 }
             }
-        }
+        } // method ParseConnectionString
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<MarcRecord> ReadRecord(int mfn)
+        public async Task<MarcRecord> ReadRecordAsync
+            (
+                int mfn
+            )
         {
             if (!Connected)
             {
@@ -560,7 +654,7 @@ namespace ManagedIrbis
             var query = new ClientQuery(this, "C");
             query.AddAnsi(Database).NewLine();
             query.Add(mfn).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return null;
@@ -579,12 +673,12 @@ namespace ManagedIrbis
             result.Decode(lines);
 
             return result;
-        }
+        } // method ReadRecordAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<TermInfo[]> ReadAllTerms
+        public async Task<TermInfo[]> ReadAllTermsAsync
             (
                 [NotNull] string prefix
             )
@@ -602,7 +696,7 @@ namespace ManagedIrbis
             var flag = true;
             while (flag)
             {
-                var terms = await ReadTerms(startTerm, 1024);
+                var terms = await ReadTermsAsync(startTerm, 1024);
                 if (terms.Length == 0)
                 {
                     break;
@@ -641,12 +735,12 @@ namespace ManagedIrbis
             }
 
             return result.ToArray();
-        }
+        } // method ReadAllTermsAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<TermInfo[]> ReadTerms
+        public async Task<TermInfo[]> ReadTermsAsync
             (
                 [NotNull] TermParameters parameters
             )
@@ -666,7 +760,7 @@ namespace ManagedIrbis
             query.Add(parameters.NumberOfTerms).NewLine();
             var prepared = IrbisFormat.PrepareFormat(parameters.Format);
             query.AddAnsi(prepared).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode(_goodCodesForReadTerms))
             {
                 return Array.Empty<TermInfo>();
@@ -676,12 +770,12 @@ namespace ManagedIrbis
             var result = TermInfo.Parse(lines);
 
             return result;
-        }
+        } // method ReadTermsAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<TermInfo[]> ReadTerms
+        public async Task<TermInfo[]> ReadTermsAsync
             (
                 [CanBeNull] string startTerm,
                 int numberOfTerms = 100
@@ -692,15 +786,15 @@ namespace ManagedIrbis
                 StartTerm = startTerm,
                 NumberOfTerms = numberOfTerms
             };
-            var result = await ReadTerms(parameters);
+            var result = await ReadTermsAsync(parameters);
 
             return result;
-        }
+        } // method ReadTermsAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<string> ReadTextFile
+        public async Task<string> ReadTextFileAsync
             (
                 [CanBeNull] string specification
             )
@@ -717,7 +811,7 @@ namespace ManagedIrbis
 
             var query = new ClientQuery(this, "L");
             query.AddAnsi(specification).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
                 return null;
@@ -726,12 +820,12 @@ namespace ManagedIrbis
             var result = IrbisText.IrbisToWindows(response.ReadAnsi());
 
             return result;
-        }
+        } // method ReadTextFileAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<FoundItem[]> Search
+        public async Task<FoundItem[]> SearchAsync
             (
                 [NotNull] SearchParameters parameters
             )
@@ -754,7 +848,7 @@ namespace ManagedIrbis
             query.Add(parameters.MinMfn).NewLine();
             query.Add(parameters.MaxMfn).NewLine();
             query.AddAnsi(parameters.SequentialSpecification).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<FoundItem>();
@@ -765,12 +859,12 @@ namespace ManagedIrbis
             var result = FoundItem.ParseServerResponse(lines, count);
 
             return result;
-        }
+        } // method SearchAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<int[]> Search
+        public async Task<int[]> SearchAsync
             (
                 [CanBeNull] string expression
             )
@@ -785,14 +879,14 @@ namespace ManagedIrbis
             query.AddUtf(expression).NewLine();
             query.Add(0).NewLine();
             query.Add(1).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<int>();
             }
 
             int count = response.ReadInteger(); // Число найденных записей
-            var result = new LocalList<int>(count);
+            var result = new LocalList<int>(Math.Max(count, 2));
             foreach (var line in response.EnumRemainingBinaryLines())
             {
                 int mfn = FastNumber.ParseInt32(line, 0, line.Length);
@@ -803,12 +897,12 @@ namespace ManagedIrbis
             }
 
             return result.ToArray();
-        }
+        } // method SearchAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<int> SearchCount
+        public async Task<int> SearchCountAsync
             (
                 [CanBeNull] string expression
             )
@@ -823,7 +917,7 @@ namespace ManagedIrbis
             query.AddUtf(expression).NewLine();
             query.Add(0).NewLine();
             query.Add(1).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode())
             {
                 return 0;
@@ -832,12 +926,12 @@ namespace ManagedIrbis
             int result = response.ReadInteger(); // Число найденных записей
 
             return result;
-        }
+        } // method SearchCountAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<MarcRecord[]> SearchRead
+        public async Task<MarcRecord[]> SearchReadAsync
             (
                 [CanBeNull] string expression,
                 int limit = 0
@@ -860,7 +954,7 @@ namespace ManagedIrbis
             query.Add(limit).NewLine();
             query.Add(1).NewLine();
             query.AddAnsi(IrbisFormat.All).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<MarcRecord>();
@@ -886,21 +980,21 @@ namespace ManagedIrbis
             }
 
             return result.ToArray();
-        }
+        } // method SearchReadAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<MarcRecord> SearchReadOneRecord
+        public async Task<MarcRecord> SearchReadOneRecordAsync
             (
                 [CanBeNull] string expression
             )
         {
-            var found = await SearchRead(expression, 1);
+            var found = await SearchReadAsync(expression, 1);
             var result = found.FirstOrDefault();
 
             return result;
-        }
+        } // method SearchReadOneRecordAsync
 
         /// <summary>
         ///
@@ -909,40 +1003,40 @@ namespace ManagedIrbis
         public string ToConnectionString()
         {
             return $"host={Host};port={Port};username={Username};password={Password};database={Database};arm={Workstation};";
-        }
+        } // method ToConnectionString
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> TruncateDatabase
+        public async Task<bool> TruncateDatabaseAsync
             (
                 [CanBeNull] string database = null
             )
         {
             database = database ?? Database;
-            var response = await Execute("S", database);
+            var response = await ExecuteAsync("S", database);
 
             return !ReferenceEquals(response, null);
-        }
+        } // method TruncateDartabaseAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> UnlockDatabase
+        public async Task<bool> UnlockDatabaseAsync
             (
                 [CanBeNull] string database = null
             )
         {
             database = database ?? Database;
-            var response = await Execute("U", database);
+            var response = await ExecuteAsync("U", database);
 
             return !ReferenceEquals(response, null);
-        }
+        } // method UnlockDatabaseAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> UnlockRecords
+        public async Task<bool> UnlockRecordsAsync
             (
                 [CanBeNull] string database,
                 [NotNull] IList<int> mfnList
@@ -950,15 +1044,15 @@ namespace ManagedIrbis
         {
             database = database ?? Database;
             var list = string.Join("\n", mfnList.Select(NumericUtility.ToInvariantString));
-            var response = await Execute("Q", database, list);
+            var response = await ExecuteAsync("Q", database, list);
 
             return !ReferenceEquals(response, null);
-        }
+        } // method UnlockRecordsAsync
 
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> UpdateIniFile
+        public async Task<bool> UpdateIniFileAsync
             (
                 [CanBeNull] IList<string> lines
             )
@@ -969,15 +1063,15 @@ namespace ManagedIrbis
             }
 
             var text = string.Join("\n", lines);
-            var response = await Execute("+7", text);
+            var response = await ExecuteAsync("+7", text);
 
             return !ReferenceEquals(response, null);
-        }
+        } // method UpdateIniFileAsync
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public async Task<int> WriteRecord
+        public async Task<int> WriteRecordAsync
             (
                 [CanBeNull] MarcRecord record,
                 bool lockFlag = false,
@@ -996,7 +1090,7 @@ namespace ManagedIrbis
             query.Add(Convert.ToInt32(lockFlag)).NewLine();
             query.Add(Convert.ToInt32(actualize)).NewLine();
             query.AddUtf(record.Encode()).NewLine();
-            var response = await Execute(query);
+            var response = await ExecuteAsync(query);
             if (!response.CheckReturnCode())
             {
                 return 0;
@@ -1013,12 +1107,12 @@ namespace ManagedIrbis
             }
 
             return response.ReturnCode;
-        }
+        } // method WriteRecordAsync
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public async Task<bool> WriteRecords
+        public async Task<bool> WriteRecordsAsync
             (
                 [CanBeNull] IEnumerable<MarcRecord> records
             )
@@ -1033,7 +1127,7 @@ namespace ManagedIrbis
             await Task.Delay(10, Cancellation);
 
             return true;
-        }
+        } // method WriteRecordsAsync
 
         #endregion
 
@@ -1042,8 +1136,8 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose()
         {
-            Disconnect().Wait(Cancellation);
-        }
+            Disconnect();
+        } // method Dispose
 
         #endregion
     }

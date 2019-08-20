@@ -48,12 +48,10 @@ namespace ManagedIrbis.Infrastructure.Sockets
 
         #region IrbisSocket members
 
-        /// <summary>
-        ///
-        /// </summary>
-        public override async Task<ServerResponse> Transact
+        /// <inheritdoc cref="ClientSocket.TransactAsync"/>
+        public override async Task<ServerResponse> TransactAsync
             (
-            ClientQuery query
+                ClientQuery query
             )
         {
             if (Connection.Cancellation.IsCancellationRequested)
@@ -61,73 +59,146 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 throw new OperationCanceledException();
             }
 
-            using (var client = new TcpClient())
+            using var client = new TcpClient();
+            try
             {
-                try
-                {
-                    await client.ConnectAsync(Connection.Host, Connection.Port);
-                }
-                catch (Exception exception)
-                {
-                    Debug.WriteLine(exception.Message);
-                    return null;
-                }
+                await client.ConnectAsync(Connection.Host, Connection.Port);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
+            }
 
-                var socket = client.Client;
-                var stream = client.GetStream();
+            var socket = client.Client;
+            var stream = client.GetStream();
 
-                var length = query.GetLength();
-                var prefix = Encoding.ASCII.GetBytes
-                    (
-                        length.ToInvariantString() + "\n"
-                    );
-                var chunks = query.GetChunks();
-                chunks[0] = prefix;
-                try
-                {
-                    foreach (var chunk in chunks)
-                    {
-                        if (Connection.Cancellation.IsCancellationRequested)
-                        {
-                            throw new OperationCanceledException();
-                        }
-
-                        await stream.WriteAsync(chunk, Connection.Cancellation);
-                    }
-
-                    // await stream.FlushAsync();
-                    socket.Shutdown(SocketShutdown.Send);
-                }
-                catch (Exception exception)
-                {
-                    Debug.WriteLine(exception.Message);
-                    return null;
-                }
-
-                var result = new ServerResponse();
-                try
+            var length = query.GetLength();
+            var prefix = Encoding.ASCII.GetBytes
+                (
+                    length.ToInvariantString() + "\n"
+                );
+            var chunks = query.GetChunks();
+            chunks[0] = prefix;
+            try
+            {
+                foreach (var chunk in chunks)
                 {
                     if (Connection.Cancellation.IsCancellationRequested)
                     {
                         throw new OperationCanceledException();
                     }
 
-                    await result.PullDataAsync
-                        (
-                            stream,
-                            2048,
-                            Connection.Cancellation
-                        );
-                }
-                catch (Exception exception)
-                {
-                    Debug.WriteLine(exception.Message);
-                    return null;
+                    await stream.WriteAsync(chunk, Connection.Cancellation);
                 }
 
-                return result;
+                // await stream.FlushAsync();
+                socket.Shutdown(SocketShutdown.Send);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
             }
 
+            var result = new ServerResponse();
+            try
+            {
+                if (Connection.Cancellation.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                await result.PullDataAsync
+                (
+                    stream,
+                    2048,
+                    Connection.Cancellation
+                );
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
+            }
+
+            return result;
+        } // method TransactAsync
+
+        /// <inheritdoc cref="ClientSocket.Transact"/>
+        public override ServerResponse Transact
+            (
+                ClientQuery query
+            )
+        {
+            if (Connection.Cancellation.IsCancellationRequested)
+            {
+                throw new OperationCanceledException();
+            }
+
+            using var client = new TcpClient();
+            try
+            {
+                client.Connect(Connection.Host, Connection.Port);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
+            }
+
+            var socket = client.Client;
+            var stream = client.GetStream();
+
+            var length = query.GetLength();
+            var prefix = Encoding.ASCII.GetBytes
+                (
+                    length.ToInvariantString() + "\n"
+                );
+            var chunks = query.GetChunks();
+            chunks[0] = prefix;
+            try
+            {
+                foreach (var chunk in chunks)
+                {
+                    if (Connection.Cancellation.IsCancellationRequested)
+                    {
+                        throw new OperationCanceledException();
+                    }
+
+                    stream.Write(chunk);
+                }
+
+                // await stream.FlushAsync();
+                socket.Shutdown(SocketShutdown.Send);
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
+            }
+
+            var result = new ServerResponse();
+            try
+            {
+                if (Connection.Cancellation.IsCancellationRequested)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                result.PullData
+                (
+                    stream,
+                    2048
+                );
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception.Message);
+                return null;
+            }
+
+            return result;
         } // method Transact
 
         #endregion

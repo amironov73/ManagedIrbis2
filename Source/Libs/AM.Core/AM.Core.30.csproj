@@ -21,6 +21,7 @@
     <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

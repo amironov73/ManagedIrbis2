@@ -13,6 +13,9 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
@@ -207,7 +210,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Метка задана не числом.
         /// </summary>
-        GblTagError = -802, 
+        GblTagError = -802,
 
         /// <summary>
         /// Ошибка в клиентском файле формата.
@@ -245,7 +248,7 @@ namespace ManagedIrbis.Infrastructure
         WrongClientIdentifier = -3335,
 
         /// <summary>
-        /// Зарегистрировано максимально допустимое 
+        /// Зарегистрировано максимально допустимое
         /// количество клиентов.
         /// </summary>
         ClientListOverload = -3336,

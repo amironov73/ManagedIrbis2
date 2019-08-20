@@ -24,6 +24,9 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
@@ -108,7 +111,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// Pull the data from the stream.
+        /// Pull the data from the stream -- in asynchronous manner.
         /// </summary>
         public async Task PullDataAsync
             (
@@ -136,7 +139,32 @@ namespace ManagedIrbis.Infrastructure
                 var chunk = new ArraySegment<byte>(buffer, 0, read);
                 _memory.Add(chunk);
             }
-        }
+        } // method PullDataAsync
+
+        /// <summary>
+        /// Pull the data from the stream -- in synchronous manner.
+        /// </summary>
+        public void PullData
+            (
+                [NotNull] Stream stream,
+                int bufferSize
+            )
+        {
+            Sure.NotNull(stream, nameof(stream));
+
+            while (true)
+            {
+                var buffer = new byte[bufferSize];
+                var read = stream.Read(buffer, 0, bufferSize);
+                if (read <= 0)
+                {
+                    break;
+                }
+
+                var chunk = new ArraySegment<byte>(buffer, 0, read);
+                _memory.Add(chunk);
+            }
+        } // method PullData
 
         /// <summary>
         /// Parse the answer.

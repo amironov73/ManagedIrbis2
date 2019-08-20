@@ -25,6 +25,7 @@
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

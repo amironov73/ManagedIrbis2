@@ -58,9 +58,17 @@ namespace ManagedIrbis.Infrastructure.Sockets
         #region Public methods
 
         /// <summary>
-        /// Собственно общение с сервером.
+        /// Собственно общение с сервером -- в асинхронном режиме.
         /// </summary>
-        public abstract Task<ServerResponse> Transact
+        public abstract Task<ServerResponse> TransactAsync
+            (
+                [NotNull] ClientQuery query
+            );
+
+        /// <summary>
+        /// Собственно общение с сервером -- в синхронном режиме.
+        /// </summary>
+        public abstract ServerResponse Transact
             (
                 [NotNull] ClientQuery query
             );

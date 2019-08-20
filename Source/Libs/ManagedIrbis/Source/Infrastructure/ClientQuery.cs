@@ -9,14 +9,16 @@
 
 #region Using directives
 
-using System;
 using System.Collections.Generic;
 using System.IO;
+
 using AM;
 
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace ManagedIrbis.Infrastructure
 {
@@ -120,7 +122,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public byte[][] GetChunks()
         {
@@ -128,7 +130,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int GetLength()
         {
