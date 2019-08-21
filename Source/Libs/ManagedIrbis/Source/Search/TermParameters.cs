@@ -36,10 +36,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("database")]
         [JsonProperty("database")]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// Number of terms to return.
@@ -58,18 +57,16 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Start term.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("start")]
         [JsonProperty("start")]
-        public string StartTerm { get; set; }
+        public string? StartTerm { get; set; }
 
         /// <summary>
         /// Format.
         /// </summary>
-        [CanBeNull]
         [XmlElement("format")]
         [JsonProperty("format")]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         #endregion
 

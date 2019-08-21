@@ -71,13 +71,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Cleanup the text.
         /// </summary>
-        [CanBeNull]
-        public static string CleanupMarkup
+        public static string? CleanupMarkup
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0
+            if (string.IsNullOrEmpty(text)
                 || !text.Contains("[["))
             {
                 return text;
@@ -149,13 +148,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert IRBIS line endings to standard.
         /// </summary>
-        [CanBeNull]
-        public static string IrbisToWindows
+        public static string? IrbisToWindows
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -180,18 +178,18 @@ namespace ManagedIrbis
         [NotNull]
         public static string[] SplitIrbisToLines
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return StringUtility.EmptyArray;
             }
 
-            text = IrbisToWindows(text).ThrowIfNull();
-            string[] result = string.IsNullOrEmpty(text)
+            var provenText = IrbisToWindows(text)!;
+            string[] result = string.IsNullOrEmpty(provenText)
                 ? new[] { string.Empty }
-                : text.Split
+                : provenText.Split
                     (
                         _delimiters,
                         StringSplitOptions.None
@@ -203,13 +201,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert text to lower case.
         /// </summary>
-        [CanBeNull]
-        public static string ToLower
+        public static string? ToLower
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -222,13 +219,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert text to upper case.
         /// </summary>
-        [CanBeNull]
-        public static string ToUpper
+        public static string? ToUpper
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -243,13 +239,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert standard line endings to IRBIS.
         /// </summary>
-        [CanBeNull]
-        public static string WindowsToIrbis
+        public static string? WindowsToIrbis
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }

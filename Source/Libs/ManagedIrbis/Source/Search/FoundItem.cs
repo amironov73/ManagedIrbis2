@@ -55,12 +55,11 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Text.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("text")]
         [JsonProperty("text")]
         [Description("Библиографическое описание")]
         [DisplayName("Библиографическое описание")]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         /// <summary>
         /// MFN.
@@ -74,11 +73,10 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Associated record.
         /// </summary>
-        [CanBeNull]
         [XmlElement("record")]
         [JsonProperty("record")]
         [Browsable(false)]
-        public MarcRecord Record { get; set; }
+        public MarcRecord? Record { get; set; }
 
         /// <summary>
         /// Is selected?
@@ -92,11 +90,10 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Arbitrary user data.
         /// </summary>
-        [CanBeNull]
         [XmlIgnore]
         [JsonIgnore]
         [Browsable(false)]
-        public object UserData { get; set; }
+        public object? UserData { get; set; }
 
         #endregion
 
@@ -133,14 +130,14 @@ namespace ManagedIrbis.Search
         /// </summary>
         [NotNull]
         [ItemCanBeNull]
-        public static string[] ConvertToText
+        public static string?[] ConvertToText
             (
                 [NotNull][ItemNotNull] List<FoundItem> found
             )
         {
             Sure.NotNull(found, nameof(found));
 
-            string[] result = new string[found.Count];
+            string?[] result = new string[found.Count];
             for (int i = 0; i < found.Count; i++)
             {
                 result[i] = found[i].Text.EmptyToNull();
@@ -167,7 +164,7 @@ namespace ManagedIrbis.Search
             };
             if (parts.Length > 1)
             {
-                string text = parts[1].EmptyToNull();
+                var text = parts[1].EmptyToNull();
                 text = IrbisText.IrbisToWindows(text);
                 result.Text = text;
             }

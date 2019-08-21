@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* RecordField.cs -- 
+/* RecordField.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -22,7 +22,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class RecordField
@@ -35,7 +35,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Значение поля до первого разделителя.
         /// </summary>
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         /// <summary>
         /// Список подполей.
@@ -43,7 +43,7 @@ namespace ManagedIrbis
         public List<SubField> Subfields { get; } = new List<SubField>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public RecordField Add(char code, string value)
         {
@@ -54,7 +54,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public RecordField Clear()
         {
@@ -65,7 +65,7 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Decode(string line)
         {

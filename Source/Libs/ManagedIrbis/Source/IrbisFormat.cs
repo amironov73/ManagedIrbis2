@@ -146,10 +146,9 @@ namespace ManagedIrbis
         /// string delimiters (no matter
         /// real or IRBIS).
         /// </remarks>
-        [CanBeNull]
-        public static string PrepareFormat
+        public static string? PrepareFormat
             (
-                [CanBeNull] string text
+                string? text
             )
         {
             if (string.IsNullOrEmpty(text))

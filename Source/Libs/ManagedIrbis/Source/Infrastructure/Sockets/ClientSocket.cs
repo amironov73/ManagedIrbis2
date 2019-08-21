@@ -60,17 +60,17 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// <summary>
         /// Собственно общение с сервером -- в асинхронном режиме.
         /// </summary>
-        public abstract Task<ServerResponse> TransactAsync
+        public abstract Task<ServerResponse?> TransactAsync
             (
-                [NotNull] ClientQuery query
+                ClientQuery query
             );
 
         /// <summary>
         /// Собственно общение с сервером -- в синхронном режиме.
         /// </summary>
-        public abstract ServerResponse Transact
+        public abstract ServerResponse? Transact
             (
-                [NotNull] ClientQuery query
+                ClientQuery query
             );
 
         #endregion

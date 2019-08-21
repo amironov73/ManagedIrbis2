@@ -49,7 +49,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Fired when <see cref="Busy"/> changed.
         /// </summary>
-        public event EventHandler BusyChanged;
+        public event EventHandler? BusyChanged;
 
         #endregion
 
@@ -98,12 +98,12 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public string ServerVersion { get; private set; }
+        public string? ServerVersion { get; private set; }
 
         /// <summary>
         ///
         /// </summary>
-        public object IniFile { get; private set; }
+        public object? IniFile { get; private set; }
 
         /// <summary>
         ///
@@ -279,13 +279,11 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public ServerResponse Execute
+        public ServerResponse? Execute
             (
-                [NotNull] ClientQuery query
+                ClientQuery query
             )
         {
-            Sure.NotNull(query, nameof(query));
-
             SetBusy(true);
             try
             {
@@ -294,7 +292,7 @@ namespace ManagedIrbis
                     _cancellation = new CancellationTokenSource();
                 }
 
-                ServerResponse result;
+                ServerResponse? result;
                 try
                 {
                     if (_debug)
@@ -334,13 +332,11 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerResponse> ExecuteAsync
+        public async Task<ServerResponse?> ExecuteAsync
             (
-                [NotNull] ClientQuery query
+                ClientQuery query
             )
         {
-            Sure.NotNull(query, nameof(query));
-
             SetBusy(true);
             try
             {
@@ -349,7 +345,7 @@ namespace ManagedIrbis
                     _cancellation = new CancellationTokenSource();
                 }
 
-                ServerResponse result;
+                ServerResponse? result;
                 try
                 {
                     if (_debug)
@@ -389,9 +385,9 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerResponse> ExecuteAsync
+        public async Task<ServerResponse?> ExecuteAsync
             (
-                [NotNull] string command,
+                string command,
                 params object[] args
             )
         {
@@ -403,7 +399,7 @@ namespace ManagedIrbis
             var query = new ClientQuery(this, command);
             foreach (var arg in args)
             {
-                query.AddAnsi(arg).NewLine();
+                query.AddAnsi(arg?.ToString()).NewLine();
             }
 
             var result = await ExecuteAsync(query);
@@ -414,7 +410,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<string> FormatRecordAsync(string format, int mfn)
+        public async Task<string?> FormatRecordAsync(string format, int mfn)
         {
             if (!Connected)
             {
@@ -423,7 +419,7 @@ namespace ManagedIrbis
 
             var query = new ClientQuery(this, "G");
             query.AddAnsi(Database).NewLine();
-            string prepared = IrbisFormat.PrepareFormat(format);
+            var prepared = IrbisFormat.PrepareFormat(format);
             query.AddAnsi(prepared).NewLine();
             query.Add(1).NewLine();
             query.Add(mfn).NewLine();
@@ -448,7 +444,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<int> GetMaxMfnAsync
             (
-                string database = null
+                string? database = null
             )
         {
             if (!Connected)
@@ -476,7 +472,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<ServerVersion> GetServerVersionAsync()
+        public async Task<ServerVersion?> GetServerVersionAsync()
         {
             if (!Connected)
             {
@@ -641,7 +637,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<MarcRecord> ReadRecordAsync
+        public async Task<MarcRecord?> ReadRecordAsync
             (
                 int mfn
             )
@@ -761,6 +757,10 @@ namespace ManagedIrbis
             var prepared = IrbisFormat.PrepareFormat(parameters.Format);
             query.AddAnsi(prepared).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<TermInfo>();
+            }
             if (!response.CheckReturnCode(_goodCodesForReadTerms))
             {
                 return Array.Empty<TermInfo>();
@@ -794,7 +794,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<string> ReadTextFileAsync
+        public async Task<string?> ReadTextFileAsync
             (
                 [CanBeNull] string specification
             )
@@ -849,6 +849,10 @@ namespace ManagedIrbis
             query.Add(parameters.MaxMfn).NewLine();
             query.AddAnsi(parameters.SequentialSpecification).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<FoundItem>();
+            }
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<FoundItem>();
@@ -880,6 +884,10 @@ namespace ManagedIrbis
             query.Add(0).NewLine();
             query.Add(1).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<int>();
+            }
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<int>();
@@ -918,6 +926,10 @@ namespace ManagedIrbis
             query.Add(0).NewLine();
             query.Add(1).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return 0;
+            }
             if (!response.CheckReturnCode())
             {
                 return 0;
@@ -955,6 +967,10 @@ namespace ManagedIrbis
             query.Add(1).NewLine();
             query.AddAnsi(IrbisFormat.All).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return Array.Empty<MarcRecord>();
+            }
             if (!response.CheckReturnCode())
             {
                 return Array.Empty<MarcRecord>();
@@ -1010,7 +1026,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> TruncateDatabaseAsync
             (
-                [CanBeNull] string database = null
+                string? database = null
             )
         {
             database = database ?? Database;
@@ -1024,7 +1040,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> UnlockDatabaseAsync
             (
-                [CanBeNull] string database = null
+                string? database = null
             )
         {
             database = database ?? Database;
@@ -1091,6 +1107,10 @@ namespace ManagedIrbis
             query.Add(Convert.ToInt32(actualize)).NewLine();
             query.AddUtf(record.Encode()).NewLine();
             var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return 0;
+            }
             if (!response.CheckReturnCode())
             {
                 return 0;

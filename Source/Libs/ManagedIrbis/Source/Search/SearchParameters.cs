@@ -36,10 +36,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("database")]
         [JsonProperty("database")]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// First record offset.
@@ -51,10 +50,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Format specification.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("format")]
         [JsonProperty("format")]
-        public string FormatSpecification { get; set; }
+        public string? FormatSpecification { get; set; }
 
         /// <summary>
         /// Maximal MFN.
@@ -80,26 +78,23 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Search query expression.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("expression")]
         [JsonProperty("expression")]
-        public string SearchExpression { get; set; }
+        public string? SearchExpression { get; set; }
 
         /// <summary>
         /// Specification of sequential search.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("sequential")]
         [JsonProperty("sequential")]
-        public string SequentialSpecification { get; set; }
+        public string? SequentialSpecification { get; set; }
 
         /// <summary>
         /// Specification for local filter.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("filter")]
         [JsonProperty("filter")]
-        public string FilterSpecification { get; set; }
+        public string? FilterSpecification { get; set; }
 
         /// <summary>
         /// Use UTF8 encoding for

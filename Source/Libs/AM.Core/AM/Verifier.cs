@@ -281,7 +281,7 @@ namespace AM
         /// </summary>
         public Verifier<T> NotNullNorEmpty
             (
-                string value,
+                string? value,
                 string name
             )
         {

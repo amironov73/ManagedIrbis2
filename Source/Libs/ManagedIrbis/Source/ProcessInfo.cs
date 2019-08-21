@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ProcessInfo.cs -- 
+/* ProcessInfo.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -22,63 +22,63 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ProcessInfo
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Number { get; set; }
+        public string? Number { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string IpAddress { get; set; }
+        public string? IpAddress { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string ClienId { get; set; }
+        public string? ClientId { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Workstation { get; set; }
+        public string? Workstation { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Started { get; set; }
+        public string? Started { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string LastCommand { get; set; }
+        public string? LastCommand { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string CommandNumber { get; set; }
+        public string? CommandNumber { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string ProcessId { get; set; }
+        public string? ProcessId { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string State { get; set; }
+        public string? State { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="lines"></param>
         /// <returns></returns>
@@ -104,7 +104,7 @@ namespace ManagedIrbis
                     Number = lines.GetItem(i + 0),
                     IpAddress = lines.GetItem(i + 1),
                     Name = lines.GetItem(i + 2),
-                    ClienId = lines.GetItem(i + 3),
+                    ClientId = lines.GetItem(i + 3),
                     Workstation = lines.GetItem(i + 4),
                     Started = lines.GetItem(i + 5),
                     LastCommand = lines.GetItem(i + 6),

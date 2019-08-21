@@ -39,7 +39,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         ///
         /// </summary>
-        public string Command { get; private set; }
+        public string? Command { get; private set; }
 
         /// <summary>
         ///
@@ -64,7 +64,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         ///
         /// </summary>
-        public string ServerVersion { get; private set; }
+        public string? ServerVersion { get; private set; }
 
         /// <summary>
         /// End of text?
@@ -270,42 +270,43 @@ namespace ManagedIrbis.Infrastructure
         [NotNull]
         public byte[] ReadLine()
         {
-            using (var result = new MemoryStream())
+            using var result = new MemoryStream();
+            while (true)
             {
-                while (true)
+                var one = ReadByte();
+                if (one == 0)
                 {
-                    var one = ReadByte();
-                    if (one == 0)
-                    {
-                        break;
-                    }
-
-                    if (one == 13)
-                    {
-                        if (Peek() == 10)
-                        {
-                            ReadByte();
-                        }
-
-                        break;
-                    }
-
-                    if (one == 10)
-                    {
-                        break;
-                    }
-
-                    result.WriteByte(one);
+                    break;
                 }
 
-                return result.ToArray();
+                if (one == 13)
+                {
+                    if (Peek() == 10)
+                    {
+                        ReadByte();
+                    }
+
+                    break;
+                }
+
+                if (one == 10)
+                {
+                    break;
+                }
+
+                result.WriteByte(one);
             }
+
+            return result.ToArray();
         }
 
         /// <summary>
         ///
         /// </summary>
-        public string ReadLine(Encoding encoding)
+        public string ReadLine
+            (
+                Encoding encoding
+            )
         {
             byte[] bytes = ReadLine();
             if (bytes.Length == 0)
@@ -412,7 +413,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (!EOT)
             {
-                string line = null;
+                string line;
                 try
                 {
                     line = ReadAnsi();
@@ -423,10 +424,7 @@ namespace ManagedIrbis.Infrastructure
                     continue;
                 }
 
-                if (!ReferenceEquals(line, null))
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 
@@ -437,7 +435,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (!EOT)
             {
-                string line = null;
+                string line;
                 try
                 {
                     line = ReadAnsi();
@@ -448,10 +446,7 @@ namespace ManagedIrbis.Infrastructure
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(line))
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 
@@ -462,7 +457,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (!EOT)
             {
-                string line = null;
+                string line;
                 try
                 {
                     line = ReadUtf();
@@ -473,10 +468,7 @@ namespace ManagedIrbis.Infrastructure
                     continue;
                 }
 
-                if (!ReferenceEquals(line, null))
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 
@@ -487,7 +479,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (!EOT)
             {
-                string line = null;
+                string line;
                 try
                 {
                     line = ReadUtf();
@@ -498,10 +490,7 @@ namespace ManagedIrbis.Infrastructure
                     continue;
                 }
 
-                if (!string.IsNullOrEmpty(line))
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 
@@ -512,7 +501,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (!EOT)
             {
-                byte[] line = null;
+                byte[] line;
                 try
                 {
                     line = ReadLine();
@@ -523,10 +512,7 @@ namespace ManagedIrbis.Infrastructure
                     continue;
                 }
 
-                if (!ReferenceEquals(line, null))
-                {
-                    yield return line;
-                }
+                yield return line;
             }
         }
 

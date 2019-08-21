@@ -37,8 +37,8 @@ namespace AM.IO
         /// </summary>
         public static void AppendTo
             (
-                [NotNull] Stream sourceStream,
-                [NotNull] Stream destinationStream,
+                Stream sourceStream,
+                Stream destinationStream,
                 int chunkSize
             )
         {
@@ -69,8 +69,8 @@ namespace AM.IO
         /// </summary>
         public static unsafe int CompareTo
             (
-                [NotNull] Stream firstStream,
-                [NotNull] Stream secondStream
+                Stream firstStream,
+                Stream secondStream
             )
         {
             Sure.NotNull(firstStream, nameof(firstStream));
@@ -113,7 +113,7 @@ namespace AM.IO
         /// </summary>
         public static byte[] ReadAsMuchAsPossible
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int maximum
             )
         {
@@ -147,7 +147,7 @@ namespace AM.IO
         /// </summary>
         public static bool ReadBoolean
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
             Sure.NotNull(stream, nameof(stream));
@@ -171,7 +171,7 @@ namespace AM.IO
         /// </summary>
         public static byte[]? ReadBytes
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int count
             )
         {
@@ -539,7 +539,7 @@ namespace AM.IO
         /// </summary>
         public static unsafe void ReadExact
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 Span<byte> span
             )
         {
@@ -593,7 +593,7 @@ namespace AM.IO
         [CLSCompliant(false)]
         public static void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 ushort value
             )
         {
@@ -606,7 +606,7 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int value
             )
         {
@@ -620,7 +620,7 @@ namespace AM.IO
         [CLSCompliant(false)]
         public static void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 uint value
             )
         {
@@ -633,7 +633,7 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 long value
             )
         {

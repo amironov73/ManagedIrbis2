@@ -18,12 +18,10 @@ using JetBrains.Annotations;
 
 #endregion
 
-// ReSharper disable CommentTypo
-
 namespace ManagedIrbis.Infrastructure
 {
     /// <summary>
-    /// Клиентский запрос.
+    /// Client query.
     /// </summary>
     public sealed class ClientQuery
     {
@@ -68,40 +66,49 @@ namespace ManagedIrbis.Infrastructure
         #region Public methods
 
         /// <summary>
-        /// Добавление целого числа.
+        /// Add integer number.
         /// </summary>
-        public ClientQuery Add(int value)
+        public ClientQuery Add
+            (
+                int value
+            )
         {
             return AddAnsi(value.ToInvariantString());
         }
 
         /// <summary>
-        /// Добавление текста в кодировке ANSI.
+        /// Add the text in ANSI encoding.
         /// </summary>
-        public ClientQuery AddAnsi<T>(T value)
+        public ClientQuery AddAnsi
+            (
+                string? value
+            )
         {
             if (ReferenceEquals(value, null))
             {
                 return this;
             }
 
-            byte[] converted = IrbisEncoding.Ansi.GetBytes(value.ToString());
+            byte[] converted = IrbisEncoding.Ansi.GetBytes(value);
             _chunks.Add(converted);
 
             return this;
         }
 
         /// <summary>
-        /// Добавление текста в кодировке ANSI.
+        /// Add the text in UTF-8 encoding.
         /// </summary>
-        public ClientQuery AddUtf<T>(T value)
+        public ClientQuery AddUtf
+            (
+                string? value
+            )
         {
             if (ReferenceEquals(value, null))
             {
                 return this;
             }
 
-            byte[] converted = IrbisEncoding.Utf8.GetBytes(value.ToString());
+            byte[] converted = IrbisEncoding.Utf8.GetBytes(value);
             _chunks.Add(converted);
 
             return this;
@@ -110,7 +117,10 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Debug print.
         /// </summary>
-        public void Debug(TextWriter writer)
+        public void Debug
+            (
+                TextWriter writer
+            )
         {
             foreach (var memory in _chunks)
             {

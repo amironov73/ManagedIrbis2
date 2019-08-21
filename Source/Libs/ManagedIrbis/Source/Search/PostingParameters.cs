@@ -35,10 +35,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("database")]
         [JsonProperty("database")]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// First posting to return.
@@ -50,10 +49,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Format.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("format")]
         [JsonProperty("format")]
-        public string Format { get; set; }
+        public string? Format { get; set; }
 
         /// <summary>
         /// Number of postings to return.
@@ -65,19 +63,17 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Term.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("term")]
         [JsonProperty("term")]
-        public string Term { get; set; }
+        public string? Term { get; set; }
 
         /// <summary>
         /// List of terms.
         /// </summary>
-        [CanBeNull]
         [XmlArray("terms")]
         [XmlArrayItem("term")]
         [JsonProperty("terms")]
-        public string[] ListOfTerms { get; set; }
+        public string[]? ListOfTerms { get; set; }
 
         #endregion
 
@@ -92,7 +88,7 @@ namespace ManagedIrbis.Search
         }
 
         #endregion
-        
+
         #region Public methods
 
         /// <summary>
@@ -121,7 +117,7 @@ namespace ManagedIrbis.Search
                         throwOnError
                     );
 
-            verifier                
+            verifier
                 .Assert(FirstPosting >= 0, "FirstPosting")
                 .Assert(NumberOfPostings >= 0, "NumberOfPostings");
 

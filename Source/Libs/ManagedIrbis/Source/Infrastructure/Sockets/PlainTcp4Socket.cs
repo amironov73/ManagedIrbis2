@@ -49,15 +49,12 @@ namespace ManagedIrbis.Infrastructure.Sockets
         #region IrbisSocket members
 
         /// <inheritdoc cref="ClientSocket.TransactAsync"/>
-        public override async Task<ServerResponse> TransactAsync
+        public override async Task<ServerResponse?> TransactAsync
             (
                 ClientQuery query
             )
         {
-            if (Connection.Cancellation.IsCancellationRequested)
-            {
-                throw new OperationCanceledException();
-            }
+            Connection.Cancellation.ThrowIfCancellationRequested();
 
             using var client = new TcpClient();
             try
@@ -84,11 +81,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
             {
                 foreach (var chunk in chunks)
                 {
-                    if (Connection.Cancellation.IsCancellationRequested)
-                    {
-                        throw new OperationCanceledException();
-                    }
-
+                    Connection.Cancellation.ThrowIfCancellationRequested();
                     await stream.WriteAsync(chunk, Connection.Cancellation);
                 }
 
@@ -104,17 +97,13 @@ namespace ManagedIrbis.Infrastructure.Sockets
             var result = new ServerResponse();
             try
             {
-                if (Connection.Cancellation.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException();
-                }
-
+                Connection.Cancellation.ThrowIfCancellationRequested();
                 await result.PullDataAsync
-                (
-                    stream,
-                    2048,
-                    Connection.Cancellation
-                );
+                    (
+                        stream,
+                        2048,
+                        Connection.Cancellation
+                    );
             }
             catch (Exception exception)
             {
@@ -126,15 +115,12 @@ namespace ManagedIrbis.Infrastructure.Sockets
         } // method TransactAsync
 
         /// <inheritdoc cref="ClientSocket.Transact"/>
-        public override ServerResponse Transact
+        public override ServerResponse? Transact
             (
                 ClientQuery query
             )
         {
-            if (Connection.Cancellation.IsCancellationRequested)
-            {
-                throw new OperationCanceledException();
-            }
+            Connection.Cancellation.ThrowIfCancellationRequested();
 
             using var client = new TcpClient();
             try

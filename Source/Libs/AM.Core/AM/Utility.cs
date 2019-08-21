@@ -186,12 +186,13 @@ namespace AM
         /// Выборка элемента из массива.
         /// </summary>
         [Pure]
-        public static T GetItem<T>
+        public static T? GetItem<T>
             (
-                [NotNull] this T[] array,
+                this T[] array,
                 int index,
-                [CanBeNull] T defaultValue
+                T? defaultValue
             )
+            where T: class
         {
             Sure.NotNull(array, nameof(array));
 
@@ -199,61 +200,64 @@ namespace AM
                 ? index
                 : array.Length + index;
 
-            T result = index >= 0 && index < array.Length
+            var result = index >= 0 && index < array.Length
                 ? array[index]
                 : defaultValue;
 
             return result;
         }
 
-//        /// <summary>
-//        /// Выборка элемента из массива.
-//        /// </summary>
-//        [Pure]
-//        public static T GetItem<T>
-//            (
-//                [NotNull] this T[] array,
-//                int index
-//            )
-//        {
-//            return GetItem(array, index, default(T));
-//        }
-//
-//        /// <summary>
-//        /// Выборка элемента из списка.
-//        /// </summary>
-//        [Pure]
-//        public static T GetItem<T>
-//            (
-//                [NotNull] this IList<T> list,
-//                int index,
-//                T defaultValue
-//            )
-//        {
-//            Sure.NotNull(list, nameof(list));
-//
-//            index = index >= 0
-//                ? index
-//                : list.Count + index;
-//
-//            T result = index >= 0 && index < list.Count
-//                ? list[index]
-//                : defaultValue;
-//
-//            return result;
-//        }
-//
-//        /// <summary>
-//        /// Выборка элемента из массива.
-//        /// </summary>
-//        public static T GetItem<T>
-//            (
-//                [NotNull] this IList<T> list,
-//                int index
-//            )
-//        {
-//            return GetItem(list, index, default(T));
-//        }
+        /// <summary>
+        /// Get item from the array by specified index.
+        /// </summary>
+        [Pure]
+        public static T? GetItem<T>
+            (
+                this T[] array,
+                int index
+            )
+            where T: class
+        {
+            return GetItem(array, index, default);
+        }
+
+        /// <summary>
+        /// Get item from the list by specified index.
+        /// </summary>
+        [Pure]
+        public static T? GetItem<T>
+            (
+                this IList<T> list,
+                int index,
+                T? defaultValue
+            )
+            where T: class
+        {
+            Sure.NotNull(list, nameof(list));
+
+            index = index >= 0
+                ? index
+                : list.Count + index;
+
+            var result = index >= 0 && index < list.Count
+                ? list[index]
+                : defaultValue;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get item from the list by specified index.
+        /// </summary>
+        public static T? GetItem<T>
+            (
+                this IList<T> list,
+                int index
+            )
+            where T: class
+        {
+            return GetItem(list, index, default);
+        }
 
         // =========================================================
 
@@ -520,10 +524,10 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ThrowIfNull<T>
             (
-                [CanBeNull] this T value,
-                [NotNull] string message
+                this T? value,
+                string message
             )
-            where T : class
+            where T: class
         {
             Sure.NotNull(message, nameof(message));
 

@@ -78,8 +78,7 @@ namespace ManagedIrbis.Search
         /// </summary>
         [XmlAttribute("text")]
         [JsonProperty("text")]
-        [CanBeNull]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         #endregion
 

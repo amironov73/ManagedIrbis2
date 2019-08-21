@@ -55,10 +55,9 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Поисковый термин.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("text")]
         [JsonProperty("text")]
-        public string Text { get; set; }
+        public string? Text { get; set; }
 
         #endregion
 
@@ -162,8 +161,8 @@ namespace ManagedIrbis.Search
             {
                 foreach (TermInfo term in terms)
                 {
-                    string item = term.Text;
-                    if (!ReferenceEquals(item, null) && item.StartsWith(prefix))
+                    var item = term.Text;
+                    if (!string.IsNullOrEmpty(item) && item.StartsWith(prefix))
                     {
                         item = item.Substring(prefixLength);
                     }

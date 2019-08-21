@@ -37,8 +37,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// MFN.
@@ -77,8 +76,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Lines of text.
         /// </summary>
-        [CanBeNull]
-        public List<string> Fields { get; set; }
+        public List<string>? Fields { get; set; }
 
         #endregion
 

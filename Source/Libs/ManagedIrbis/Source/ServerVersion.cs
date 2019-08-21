@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ServerVersion.cs -- 
+/* ServerVersion.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -18,33 +18,33 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ServerVersion
     {
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Organization { get; set; }
+        public string? Organization { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int MaxClients { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int ConnectedClient { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void Parse(string[] lines)
         {

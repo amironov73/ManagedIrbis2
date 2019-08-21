@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* MarcRecord.cs -- 
+/* MarcRecord.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -29,7 +29,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Имя базы данных, в которой хранится запись.
         /// </summary>
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// MFN записи.
@@ -57,7 +57,11 @@ namespace ManagedIrbis
         /// <returns>
         /// Свежедобавленное поле.
         /// </returns>
-        public RecordField Add(int tag, string value = null)
+        public RecordField Add
+            (
+                int tag,
+                string? value = null
+            )
         {
             var result = new RecordField {Tag = tag, Value = value};
             Fields.Add(result);
