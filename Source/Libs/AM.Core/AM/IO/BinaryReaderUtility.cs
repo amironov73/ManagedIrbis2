@@ -43,8 +43,8 @@ namespace AM.IO
         {
             Sure.NotNull(reader, nameof(reader));
 
-            T[] array = reader.ReadArray<T>();
-            NonNullCollection<T> result = new NonNullCollection<T>();
+            var array = reader.ReadArray<T>();
+            var result = new NonNullCollection<T>();
             result.AddRange(array);
 
             return result;
@@ -441,7 +441,7 @@ namespace AM.IO
         /// </remarks>
         public static int ReadPackedInt32
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
             unchecked

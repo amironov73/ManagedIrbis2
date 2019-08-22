@@ -1,6 +1,7 @@
 version: 2.0.0.{build}
 configuration: Debug
-image: Visual Studio 2019 Preview
+image: Visual Studio 2019 Preview
+
 init:
   - git config --global core.autocrlf true
 
@@ -22,7 +23,7 @@ before_build:
 - cmd: dotnet --info
 - cmd: dotnet restore Source/ManagedIrbis.30.sln
 - cmd: choco install opencover.portable
-- cmd: choco install codecov
+- cmd: rem choco install codecov
 
 build_script:
 - dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.30.sln" /m /verbosity:minimal
@@ -32,9 +33,9 @@ after_build:
 
 test_script:
 - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --no-build --logger:trx;LogFileName=Source/UnitTests/results.trx /p:DebugType=full Source/UnitTests/UnitTests.csproj" -filter:"+[AM.Core]AM.* -[*]AM.Core.Properties.* +[ManagedIrbis]* -[*]ManagedIrbis.Biblio.* -[*]ManagedIrbis.Properties.*" -excludebyattribute:"*.ExcludeFromCodeCoverage*" -output:"%TEMP%\coverage.xml" -oldStyle
-- codecov -f "%TEMP%\coverage.xml" -t b086eb50-83b2-419f-a1e2-47cc7750b482
-- dotnet.exe build -c Release --verbosity=minimal Source\Benchmarks
-- dotnet.exe run -c Release -p Source\Benchmarks
+- rem codecov -f "%TEMP%\coverage.xml" -t b086eb50-83b2-419f-a1e2-47cc7750b482
+- rem dotnet.exe build -c Release --verbosity=minimal Source\Benchmarks
+- rem dotnet.exe run -c Release -p Source\Benchmarks
 
 artifacts:
   - path: Binaries

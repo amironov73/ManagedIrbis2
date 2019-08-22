@@ -35,8 +35,8 @@ namespace AM
                 int number
             )
         {
-            char[] buffer = new char[10];
-            int offset = 9;
+            var buffer = new char[10];
+            var offset = 9;
             if (number == 0)
             {
                 buffer[offset] = '0';
@@ -64,8 +64,8 @@ namespace AM
                 long number
             )
         {
-            char[] buffer = new char[20];
-            int offset = 19;
+            var buffer = new char[20];
+            var offset = 19;
             if (number == 0)
             {
                 buffer[offset] = '0';
@@ -90,10 +90,10 @@ namespace AM
         /// </summary>
         public static int ParseInt32
             (
-                [NotNull] string text
+                string text
             )
         {
-            int result = 0;
+            var result = 0;
             unchecked
             {
                 foreach (char c in text)
@@ -110,12 +110,12 @@ namespace AM
         /// </summary>
         public static int ParseInt32
             (
-                [NotNull] string text,
+                string text,
                 int offset,
                 int length
             )
         {
-            int result = 0;
+            var result = 0;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -132,12 +132,12 @@ namespace AM
         /// </summary>
         public static int ParseInt32
             (
-                [NotNull] char[] text,
+                char[] text,
                 int offset,
                 int length
             )
         {
-            int result = 0;
+            var result = 0;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -154,12 +154,12 @@ namespace AM
         /// </summary>
         public static int ParseInt32
             (
-                [NotNull] byte[] text,
+                byte[] text,
                 int offset,
                 int length
             )
         {
-            int result = 0;
+            var result = 0;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -179,7 +179,7 @@ namespace AM
                 ReadOnlyMemory<char> text
             )
         {
-            int result = 0;
+            var result = 0;
             var span = text.Span;
             unchecked
             {
@@ -200,7 +200,7 @@ namespace AM
                 ReadOnlyMemory<byte> text
             )
         {
-            int result = 0;
+            var result = 0;
             var span = text.Span;
             unchecked
             {
@@ -220,10 +220,10 @@ namespace AM
         /// </summary>
         public static long ParseInt64
             (
-                [NotNull] string text
+                string text
             )
         {
-            long result = 0;
+            var result = 0L;
             unchecked
             {
                 foreach (char c in text)
@@ -240,12 +240,12 @@ namespace AM
         /// </summary>
         public static long ParseInt64
             (
-                [NotNull] string text,
+                string text,
                 int offset,
                 int length
             )
         {
-            long result = 0;
+            var result = 0L;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -262,12 +262,12 @@ namespace AM
         /// </summary>
         public static long ParseInt64
             (
-                [NotNull] char[] text,
+                char[] text,
                 int offset,
                 int length
             )
         {
-            long result = 0;
+            var result = 0L;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -284,12 +284,12 @@ namespace AM
         /// </summary>
         public static long ParseInt64
             (
-                [NotNull] byte[] text,
+                byte[] text,
                 int offset,
                 int length
             )
         {
-            long result = 0;
+            var result = 0L;
             unchecked
             {
                 for (; length > 0; length--, offset++)
@@ -309,7 +309,7 @@ namespace AM
                 ReadOnlyMemory<char> text
             )
         {
-            long result = 0;
+            var result = 0L;
             var span = text.Span;
             unchecked
             {
@@ -330,7 +330,7 @@ namespace AM
                 ReadOnlyMemory<byte> text
             )
         {
-            long result = 0;
+            var result = 0L;
             var span = text.Span;
             unchecked
             {

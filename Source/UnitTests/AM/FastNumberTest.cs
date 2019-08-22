@@ -143,6 +143,36 @@ namespace UnitTests.AM
             Assert.AreEqual(123456789, FastNumber.ParseInt32(text, 0, 9));
         }
 
+        private void _TestBytes
+            (
+                int expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(text);
+            ReadOnlyMemory<byte> memory = new ReadOnlyMemory<byte>(bytes, offset, length);
+            int actual = FastNumber.ParseInt32(memory);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_6()
+        {
+            string text = "123456789";
+            _TestBytes(0, "0", 0, 1);
+            _TestBytes(1, text, 0, 1);
+            _TestBytes(12, text, 0, 2);
+            _TestBytes(123, text, 0, 3);
+            _TestBytes(1234, text, 0, 4);
+            _TestBytes(12345, text, 0, 5);
+            _TestBytes(123456, text, 0, 6);
+            _TestBytes(1234567, text, 0, 7);
+            _TestBytes(12345678, text, 0, 8);
+            _TestBytes(123456789, text, 0, 9);
+        }
+
         [TestMethod]
         public void FastNumber_ParseInt64_1()
         {
@@ -284,6 +314,46 @@ namespace UnitTests.AM
             Assert.AreEqual(12345678901234567L, FastNumber.ParseInt64(text, 0, 17));
             Assert.AreEqual(123456789012345678L, FastNumber.ParseInt64(text, 0, 18));
             Assert.AreEqual(1234567890123456789L, FastNumber.ParseInt64(text, 0, 19));
+        }
+
+        private void _TestBytes
+            (
+                long expected,
+                string text,
+                int offset,
+                int length
+            )
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(text);
+            ReadOnlyMemory<byte> memory = new ReadOnlyMemory<byte>(bytes, offset, length);
+            long actual = FastNumber.ParseInt64(memory);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt64_6()
+        {
+            string text = "1234567890123456789";
+            _TestBytes(0L, "0", 0, 1);
+            _TestBytes(1L, text, 0, 1);
+            _TestBytes(12L, text, 0, 2);
+            _TestBytes(123L, text, 0, 3);
+            _TestBytes(1234L, text, 0, 4);
+            _TestBytes(12345L, text, 0, 5);
+            _TestBytes(123456L, text, 0, 6);
+            _TestBytes(1234567L, text, 0, 7);
+            _TestBytes(12345678L, text, 0, 8);
+            _TestBytes(123456789L, text, 0, 9);
+            _TestBytes(1234567890L, text, 0, 10);
+            _TestBytes(12345678901L, text, 0, 11);
+            _TestBytes(123456789012L, text, 0, 12);
+            _TestBytes(1234567890123L, text, 0, 13);
+            _TestBytes(12345678901234L, text, 0, 14);
+            _TestBytes(123456789012345L, text, 0, 15);
+            _TestBytes(1234567890123456L, text, 0, 16);
+            _TestBytes(12345678901234567L, text, 0, 17);
+            _TestBytes(123456789012345678L, text, 0, 18);
+            _TestBytes(1234567890123456789L, text, 0, 19);
         }
     }
 }

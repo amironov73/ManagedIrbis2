@@ -25,22 +25,14 @@ namespace AM.Collections
     [PublicAPI]
     public class NonNullCollection<T>
         : Collection<T>
-        where T : class
+        where T: class
     {
         #region Properties
 
         /// <summary>
         /// Capacity.
         /// </summary>
-        public int Capacity
-        {
-            get
-            {
-                List<T> innerList = _GetInnerList();
-
-                return innerList.Capacity;
-            }
-        }
+        public int Capacity => _GetInnerList().Capacity;
 
         #endregion
 
@@ -79,10 +71,9 @@ namespace AM.Collections
         /// <summary>
         /// Add several elements to the collection.
         /// </summary>
-        [NotNull]
         public NonNullCollection<T> AddRange
             (
-                [NotNull] IEnumerable<T> range
+                IEnumerable<T> range
             )
         {
             Sure.NotNull(range, nameof(range));
@@ -98,10 +89,9 @@ namespace AM.Collections
         /// <summary>
         /// Add several elements to the collection.
         /// </summary>
-        [NotNull]
         public NonNullCollection<T> AddRange
             (
-                [NotNull] T[] array
+                T[] array
             )
         {
             Sure.NotNull(array, nameof(array));
@@ -156,13 +146,7 @@ namespace AM.Collections
         /// </summary>
         /// <returns>Array of items of type <typeparamref name="T"/>.
         /// </returns>
-        [NotNull]
-        public T[] ToArray()
-        {
-            List<T> result = new List<T>(this);
-
-            return result.ToArray();
-        }
+        public T[] ToArray() => _GetInnerList().ToArray();
 
         #endregion
 
