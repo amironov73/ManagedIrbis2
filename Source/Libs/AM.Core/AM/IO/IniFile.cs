@@ -58,14 +58,12 @@ namespace AM.IO
             /// <summary>
             /// Key (name) of the element.
             /// </summary>
-            [NotNull]
             public string Key { get; private set; }
 
             /// <summary>
             /// Value of the element.
             /// </summary>
-            [CanBeNull]
-            public string Value
+            public string? Value
             {
                 get => _value;
                 set
@@ -97,8 +95,8 @@ namespace AM.IO
             /// </summary>
             public Line
                 (
-                    [NotNull] string key,
-                    [CanBeNull] string value
+                    string key,
+                    string? value
                 )
             {
                 CheckKeyName(key);
@@ -112,8 +110,8 @@ namespace AM.IO
             /// </summary>
             public Line
                 (
-                    [NotNull] string key,
-                    [CanBeNull] string value,
+                    string key,
+                    string? value,
                     bool modified
                 )
             {
@@ -128,7 +126,7 @@ namespace AM.IO
 
             #region Private members
 
-            private string _value;
+            private string? _value;
 
             #endregion
 
@@ -139,11 +137,9 @@ namespace AM.IO
             /// </summary>
             public void Write
                 (
-                    [NotNull] TextWriter writer
+                    TextWriter writer
                 )
             {
-                Sure.NotNull(writer, nameof(writer));
-
                 if (string.IsNullOrEmpty(Value))
                 {
                     writer.WriteLine(Key);
@@ -195,17 +191,7 @@ namespace AM.IO
             #region Object members
 
             /// <inheritdoc cref="object.ToString" />
-            public override string ToString()
-            {
-                string result = string.Format
-                    (
-                        "{0}={1}",
-                        Key,
-                        Value
-                    );
-
-                return result;
-            }
+            public override string ToString() => $"{Key}={Value}";
 
             #endregion
         }
@@ -230,7 +216,6 @@ namespace AM.IO
             /// <summary>
             /// All the keys of the section.
             /// </summary>
-            [NotNull]
             public IEnumerable<string> Keys
             {
                 get
@@ -250,8 +235,7 @@ namespace AM.IO
             /// <summary>
             /// Section name.
             /// </summary>
-            [CanBeNull]
-            public string Name
+            public string? Name
             {
                 get => _name;
                 set => SetName(value.ThrowIfNull("value"));
@@ -260,13 +244,12 @@ namespace AM.IO
             /// <summary>
             /// INI-file.
             /// </summary>
-            [NotNull]
             public IniFile Owner { get; private set; }
 
             /// <summary>
             /// Indexer.
             /// </summary>
-            public string this[[NotNull] string key]
+            public string? this[string key]
             {
                 get => GetValue(key, null);
                 set => SetValue(key, value);
@@ -277,10 +260,10 @@ namespace AM.IO
             #region Construction
 
             internal Section
-            (
-                [NotNull] IniFile owner,
-                [CanBeNull] string name
-            )
+                (
+                    IniFile owner,
+                    string? name
+                )
             {
                 Owner = owner;
                 _name = name;
@@ -291,7 +274,7 @@ namespace AM.IO
 
             #region Private members
 
-            private string _name;
+            private string? _name;
 
             private NonNullCollection<Line> _lines;
 
@@ -304,8 +287,8 @@ namespace AM.IO
             /// </summary>
             public void Add
                 (
-                    [NotNull] string key,
-                    [CanBeNull] string value
+                    string key,
+                    string? value
                 )
             {
                 Line line = new Line(key, value);
@@ -317,7 +300,7 @@ namespace AM.IO
             /// </summary>
             public void Add
                 (
-                    [NotNull] Line line
+                    Line line
                 )
             {
                 Sure.NotNull(line, nameof(line));
@@ -342,7 +325,7 @@ namespace AM.IO
             /// </summary>
             public void ApplyTo
                 (
-                    [NotNull] Section section
+                    Section section
                 )
             {
                 Sure.NotNull(section, nameof(section));
@@ -368,7 +351,7 @@ namespace AM.IO
             /// </summary>
             public bool ContainsKey
                 (
-                    [NotNull] string key
+                    string key
                 )
             {
                 Sure.NotNullNorEmpty(key, nameof(key));
@@ -387,11 +370,10 @@ namespace AM.IO
             /// <summary>
             /// Get value associated with specified key.
             /// </summary>
-            [CanBeNull]
-            public string GetValue
+            public string? GetValue
                 (
-                    [NotNull] string key,
-                    [CanBeNull] string defaultValue
+                    string key,
+                    string? defaultValue
                 )
             {
                 CheckKeyName(key);
@@ -413,13 +395,13 @@ namespace AM.IO
             [CanBeNull]
             public T GetValue<T>
                 (
-                    [NotNull] string key,
+                    string key,
                     [CanBeNull] T defaultValue
                 )
             {
                 Sure.NotNullNorEmpty(key, nameof(key));
 
-                string value = GetValue(key, null);
+                string? value = GetValue(key, null);
                 if (string.IsNullOrEmpty(value))
                 {
                     return defaultValue;
@@ -433,10 +415,9 @@ namespace AM.IO
             /// <summary>
             /// Remove specified key.
             /// </summary>
-            [NotNull]
             public Section Remove
                 (
-                    [NotNull] string key
+                    string key
                 )
             {
                 CheckKeyName(key);
@@ -460,7 +441,7 @@ namespace AM.IO
             /// </summary>
             public void SetName
                 (
-                    [NotNull] string name
+                    string name
                 )
             {
                 Sure.NotNullNorEmpty(name, nameof(name));
@@ -472,16 +453,15 @@ namespace AM.IO
             /// <summary>
             /// Set value associated with given key.
             /// </summary>
-            [NotNull]
             public Section SetValue
                 (
-                    [NotNull] string key,
-                    [CanBeNull] string value
+                    string key,
+                    string? value
                 )
             {
                 CheckKeyName(key);
 
-                Line target = null;
+                Line? target = null;
                 foreach (Line line in _lines)
                 {
                     if (line.Key.SameString(key))
@@ -505,10 +485,9 @@ namespace AM.IO
             /// <summary>
             /// Set value associate with given key.
             /// </summary>
-            [NotNull]
             public Section SetValue<T>
                 (
-                    [NotNull] string key,
+                    string key,
                     T value
                 )
             {
@@ -516,11 +495,11 @@ namespace AM.IO
 
                 if (ReferenceEquals(value, null))
                 {
-                    SetValue(key, null);
+                    Remove(key);
                 }
                 else
                 {
-                    string text = ConversionUtility.ConvertTo<string>(value);
+                    var text = value.ToString();
                     SetValue(key, text);
                 }
 
@@ -532,8 +511,8 @@ namespace AM.IO
             /// </summary>
             public bool TryGetValue
                 (
-                    [NotNull] string key,
-                    out string value
+                    string key,
+                    out string? value
                 )
             {
                 CheckKeyName(key);
@@ -624,14 +603,12 @@ namespace AM.IO
         /// <summary>
         /// Encoding.
         /// </summary>
-        [CanBeNull]
-        public Encoding Encoding { get; set; }
+        public Encoding? Encoding { get; set; }
 
         /// <summary>
         /// Name of the file.
         /// </summary>
-        [CanBeNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// Modified?
@@ -641,17 +618,15 @@ namespace AM.IO
         /// <summary>
         /// Section indexer.
         /// </summary>
-        [CanBeNull]
-        public Section this[[NotNull] string sectionName] => GetSection(sectionName);
+        public Section? this[string sectionName] => GetSection(sectionName);
 
         /// <summary>
         /// Value indexer.
         /// </summary>
-        [CanBeNull]
-        public string this
+        public string? this
             [
-                [NotNull] string sectionName,
-                [NotNull] string keyName
+                string sectionName,
+                string keyName
             ]
         {
             get => GetValue(sectionName, keyName, null);
@@ -681,8 +656,8 @@ namespace AM.IO
         /// </summary>
         public IniFile
             (
-                [NotNull] string fileName,
-                [CanBeNull] Encoding encoding = null,
+                string fileName,
+                Encoding? encoding = null,
                 bool writable = false
             )
             : this()
@@ -741,8 +716,8 @@ namespace AM.IO
 
         private static void _SaveSection
             (
-                [NotNull] TextWriter writer,
-                [NotNull] Section section
+                TextWriter writer,
+                Section section
             )
         {
             if (!string.IsNullOrEmpty(section.Name))
@@ -768,14 +743,14 @@ namespace AM.IO
         /// </summary>
         public void ApplyTo
             (
-                [NotNull] IniFile iniFile
+                IniFile iniFile
             )
         {
             Sure.NotNull(iniFile, nameof(iniFile));
 
             foreach (Section thisSection in this)
             {
-                string name = thisSection.Name;
+                var name = thisSection.Name;
                 if (!ReferenceEquals(name, null) && name.Length != 0)
                 {
                     Section otherSection = iniFile.GetOrCreateSection(name);
@@ -816,7 +791,7 @@ namespace AM.IO
         /// </summary>
         public bool ContainsSection
             (
-                [NotNull] string name
+                string name
             )
         {
             CheckKeyName(name);
@@ -835,10 +810,9 @@ namespace AM.IO
         /// <summary>
         /// Create section with specified name.
         /// </summary>
-        [NotNull]
         public Section CreateSection
             (
-                [NotNull] string name
+                string name
             )
         {
             CheckKeyName(name);
@@ -864,10 +838,9 @@ namespace AM.IO
         /// <summary>
         /// Get or create (if not exist) section with given name.
         /// </summary>
-        [NotNull]
         public Section GetOrCreateSection
             (
-                [NotNull] string name
+                string name
             )
         {
             CheckKeyName(name);
@@ -881,10 +854,9 @@ namespace AM.IO
         /// <summary>
         /// Get section with given name.
         /// </summary>
-        [CanBeNull]
-        public Section GetSection
+        public Section? GetSection
             (
-                [NotNull] string name
+                string name
             )
         {
             CheckKeyName(name);
@@ -903,16 +875,15 @@ namespace AM.IO
         /// <summary>
         /// Get value from the given section and key.
         /// </summary>
-        [CanBeNull]
-        public string GetValue
+        public string? GetValue
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
-                [CanBeNull] string defaultValue
+                string sectionName,
+                string keyName,
+                string? defaultValue
             )
         {
-            Section section = GetSection(sectionName);
-            string result = section == null
+            var section = GetSection(sectionName);
+            var result = ReferenceEquals(section, null)
                 ? defaultValue
                 : section.GetValue(keyName, defaultValue);
 
@@ -922,16 +893,15 @@ namespace AM.IO
         /// <summary>
         /// Get value from the given section and key.
         /// </summary>
-        [CanBeNull]
         public T GetValue<T>
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
-                [CanBeNull] T defaultValue
+                string sectionName,
+                string keyName,
+                T defaultValue
             )
         {
-            Section section = GetSection(sectionName);
-            T result = section == null
+            var section = GetSection(sectionName);
+            T result = ReferenceEquals(section, null)
                 ? defaultValue
                 : section.GetValue(keyName, defaultValue);
 
@@ -941,10 +911,9 @@ namespace AM.IO
         /// <summary>
         /// Remove specified section.
         /// </summary>
-        [NotNull]
         public IniFile RemoveSection
             (
-                [NotNull] string name
+                string name
             )
         {
             CheckKeyName(name);
@@ -964,14 +933,13 @@ namespace AM.IO
         /// <summary>
         /// Remove specified value.
         /// </summary>
-        [NotNull]
         public IniFile RemoveValue
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName
+                string sectionName,
+                string keyName
             )
         {
-            Section section = GetSection(sectionName);
+            var section = GetSection(sectionName);
             section?.Remove(keyName);
 
             return this;
@@ -997,21 +965,19 @@ namespace AM.IO
         /// </summary>
         public void Read
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
             Sure.NotNull(encoding, nameof(encoding));
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
+            using StreamReader reader = TextReaderUtility.OpenRead
                 (
                     fileName,
                     encoding
-                ))
-            {
-                Read(reader);
-            }
+                );
+            Read(reader);
         }
 
         /// <summary>
@@ -1019,16 +985,16 @@ namespace AM.IO
         /// </summary>
         public void Read
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
             Sure.NotNull(reader, nameof(reader));
 
             char[] separators = {'='};
             _sections.Clear();
-            Section section = null;
+            Section? section = null;
 
-            string line;
+            string? line;
             while ((line = reader.ReadLine()) != null)
             {
                 line = line.Trim();
@@ -1062,12 +1028,12 @@ namespace AM.IO
                         _sections.Add(section);
                     }
 
-                    string[] parts = line.Split(separators, 2);
+                    var parts = line.Split(separators, 2);
 
-                    string key = parts[0];
+                    var key = parts[0];
                     if (!string.IsNullOrEmpty(key))
                     {
-                        string value = parts.Length == 2
+                        var value = parts.Length == 2
                             ? parts[1]
                             : null;
                         section.SetValue(key, value);
@@ -1083,7 +1049,7 @@ namespace AM.IO
         /// </summary>
         public void Save
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
             Sure.NotNull(writer, nameof(writer));
@@ -1113,32 +1079,29 @@ namespace AM.IO
         /// </summary>
         public void Save
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             Encoding encoding = Encoding ?? Encoding.Default;
 
-            using (StreamWriter writer = TextWriterUtility.Create
+            using StreamWriter writer = TextWriterUtility.Create
                 (
                     fileName,
                     encoding
-                ))
-            {
-                Save(writer);
-            }
+                );
+            Save(writer);
         }
 
         /// <summary>
         /// Set value for specified section and key.
         /// </summary>
-        [NotNull]
         public IniFile SetValue
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
-                [CanBeNull] string value
+                string sectionName,
+                string keyName,
+                string? value
             )
         {
             Section section = GetOrCreateSection(sectionName);
@@ -1150,12 +1113,11 @@ namespace AM.IO
         /// <summary>
         /// Set value for specified section and key.
         /// </summary>
-        [NotNull]
         public IniFile SetValue<T>
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
-                [CanBeNull] T value
+                string sectionName,
+                string keyName,
+                T value
             )
         {
             Section section = GetOrCreateSection(sectionName);
@@ -1169,7 +1131,7 @@ namespace AM.IO
         /// </summary>
         public void WriteModifiedValues
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
             Sure.NotNull(writer, nameof(writer));
@@ -1229,7 +1191,7 @@ namespace AM.IO
             Sure.NotNull(reader, nameof(reader));
 
             FileName = reader.ReadNullableString();
-            string encodingName = reader.ReadNullableString();
+            var encodingName = reader.ReadNullableString();
             Encoding = string.IsNullOrEmpty(encodingName)
                 ? null
                 : Encoding.GetEncoding(encodingName);
@@ -1254,7 +1216,7 @@ namespace AM.IO
 
             writer.WriteNullable(FileName);
 
-            string encodingName = Encoding?.EncodingName;
+            var encodingName = Encoding?.EncodingName;
             writer.WriteNullable(encodingName);
             writer.Write(Modified);
             writer.WritePackedInt32(_sections.Count);

@@ -25,7 +25,7 @@ using JetBrains.Annotations;
 namespace AM.IO
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class BinaryWriterUtility
@@ -401,16 +401,15 @@ namespace AM.IO
         /// <summary>
         /// Write nullable string.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteNullable
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] string value
+                this BinaryWriter writer,
+                string? value
             )
         {
             Sure.NotNull(writer, nameof(writer));
 
-            if (value != null)
+            if (!ReferenceEquals(value, null))
             {
                 writer.Write(true);
                 writer.Write(value);

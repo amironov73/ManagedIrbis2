@@ -41,7 +41,7 @@ namespace AM
                 [CanBeNull] object value
             )
         {
-            if (value != null)
+            if (!ReferenceEquals(value, null))
             {
                 Type sourceType = value.GetType();
                 Type targetType = typeof(T);
@@ -56,7 +56,7 @@ namespace AM
                     return true;
                 }
 
-                IConvertible convertible = value as IConvertible;
+                IConvertible? convertible = value as IConvertible;
                 if (!ReferenceEquals(convertible, null))
                 {
                     return true; // ???
@@ -85,12 +85,12 @@ namespace AM
         /// <returns>Converted value.</returns>
         public static T ConvertTo<T>
             (
-                [CanBeNull] object value
+                object? value
             )
         {
             if (ReferenceEquals(value, null))
             {
-                return default(T);
+                return default!;
             }
 
             Type sourceType = value.GetType();
@@ -98,7 +98,7 @@ namespace AM
 
             if (targetType == typeof(string))
             {
-                return (T)(object)value.ToString();
+                return (T)(object)value.ToString()!;
             }
 
             if (targetType.IsAssignableFrom(sourceType))
@@ -142,11 +142,9 @@ namespace AM
         /// </exception>
         public static bool ToBoolean
             (
-                [NotNull] object value
+                object value
             )
         {
-            Sure.NotNull(value, "value");
-
             if (value is bool)
             {
                 return (bool)value;
@@ -154,7 +152,7 @@ namespace AM
 
             try
             {
-                bool result = bool.Parse(value as string);
+                bool result = bool.Parse(value as string ?? false.ToString());
 
                 return result;
             }
@@ -164,7 +162,7 @@ namespace AM
                 // Pass through
             }
 
-            string svalue = value as string;
+            string? svalue = value as string;
             if (!ReferenceEquals(svalue, null))
             {
                 svalue = svalue.ToLowerInvariant();

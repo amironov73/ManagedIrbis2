@@ -94,13 +94,12 @@ namespace AM.Text
         /// <summary>
         /// Change MS-DOS to UNIX line endings.
         /// </summary>
-        [CanBeNull]
-        public static string DosToUnix
+        public static string? DosToUnix
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -122,13 +121,12 @@ namespace AM.Text
         /// <summary>
         /// Remove NewLine symbol.
         /// </summary>
-        [CanBeNull]
-        public static string RemoveLineBreaks
+        public static string? RemoveLineBreaks
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
@@ -150,13 +148,12 @@ namespace AM.Text
         /// <summary>
         /// Change UNIX to MS-DOS line endings.
         /// </summary>
-        [CanBeNull]
-        public static string UnixToDos
+        public static string? UnixToDos
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
