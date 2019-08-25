@@ -165,8 +165,7 @@ namespace AM.Text
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
         [Pure]
-        [CanBeNull]
-        public string GetRemainingText()
+        public string? GetRemainingText()
         {
             if (IsEOF)
             {
@@ -388,8 +387,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string PeekString
+        public string? PeekString
             (
                 int length
             )
@@ -428,8 +426,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string PeekTo
+        public string? PeekTo
             (
                 char stopChar
             )
@@ -442,7 +439,7 @@ namespace AM.Text
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadTo(stopChar);
+            var result = ReadTo(stopChar);
 
             _position = savePosition;
             _column = saveColumn;
@@ -457,8 +454,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string PeekTo
+        public string? PeekTo
             (
                 char[] stopChars
             )
@@ -471,7 +467,7 @@ namespace AM.Text
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadTo(stopChars);
+            var result = ReadTo(stopChars);
 
             _position = savePosition;
             _column = saveColumn;
@@ -485,8 +481,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string PeekUntil
+        public string? PeekUntil
             (
                 char stopChar
             )
@@ -499,7 +494,7 @@ namespace AM.Text
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadUntil(stopChar);
+            var result = ReadUntil(stopChar);
 
             _position = savePosition;
             _column = saveColumn;
@@ -513,8 +508,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string PeekUntil
+        public string? PeekUntil
             (
                 char[] stopChars
             )
@@ -527,7 +521,7 @@ namespace AM.Text
             int savePosition = _position, saveColumn = _column,
                 saveLine = _line;
 
-            string result = ReadUntil(stopChars);
+            var result = ReadUntil(stopChars);
 
             _position = savePosition;
             _column = saveColumn;
@@ -567,8 +561,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadEscapedUntil
+        public string? ReadEscapedUntil
             (
                 char escapeChar,
                 char stopChar
@@ -627,8 +620,7 @@ namespace AM.Text
         /// Пустая строка, если нет открывающего
         /// или закрывающего символа.
         /// </returns>
-        [CanBeNull]
-        public string ReadFrom
+        public string? ReadFrom
             (
                 char openChar,
                 char closeChar
@@ -678,8 +670,7 @@ namespace AM.Text
         /// Пустая строка, если нет открывающего
         /// или закрывающего символа.
         /// </returns>
-        [CanBeNull]
-        public string ReadFrom
+        public string? ReadFrom
             (
                 char[] openChars,
                 char[] closeChars
@@ -726,8 +717,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// Пустую строку, если не число.</returns>
-        [CanBeNull]
-        public string ReadInteger()
+        public string? ReadInteger()
         {
             if (IsEOF)
             {
@@ -758,8 +748,7 @@ namespace AM.Text
         /// <summary>
         /// Чтение до конца строки.
         /// </summary>
-        [CanBeNull]
-        public string ReadLine()
+        public string? ReadLine()
         {
             if (IsEOF)
             {
@@ -802,8 +791,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadString
+        public string? ReadString
             (
                 int length
             )
@@ -836,8 +824,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadTo
+        public string? ReadTo
             (
                 char stopChar
             )
@@ -872,8 +859,7 @@ namespace AM.Text
         /// (разделитель не помещается в возвращаемое значение,
         /// однако, считывается).
         /// </summary>
-        [CanBeNull]
-        public string ReadTo
+        public string? ReadTo
             (
                 [NotNull] string stopString
             )
@@ -928,8 +914,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadTo
+        public string? ReadTo
             (
                 params char[] stopChars
             )
@@ -966,8 +951,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadUntil
+        public string? ReadUntil
             (
                 char stopChar
             )
@@ -1003,8 +987,7 @@ namespace AM.Text
         /// (разделитель не помещается в возвращаемое значение
         /// и не считывается).
         /// </summary>
-        [CanBeNull]
-        public string ReadUntil
+        public string? ReadUntil
             (
                 [NotNull] string stopString
             )
@@ -1061,8 +1044,7 @@ namespace AM.Text
         /// </summary>
         /// <remarks><c>null</c>, если достигнут конец текста.
         /// </remarks>
-        [CanBeNull]
-        public string ReadUntil
+        public string? ReadUntil
             (
                 params char[] stopChars
             )
@@ -1100,8 +1082,7 @@ namespace AM.Text
         /// </summary>
         /// <remarks><c>null</c>, если достигнут конец текста.
         /// </remarks>
-        [CanBeNull]
-        public string ReadUntil
+        public string? ReadUntil
             (
                 [NotNull] char[] openChars,
                 [NotNull] char[] closeChars,
@@ -1163,8 +1144,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadWhile
+        public string? ReadWhile
             (
                 char goodChar
             )
@@ -1200,8 +1180,7 @@ namespace AM.Text
         /// </summary>
         /// <returns><c>null</c>, если достигнут конец текста.
         /// </returns>
-        [CanBeNull]
-        public string ReadWhile
+        public string? ReadWhile
             (
                 params char[] goodChars
             )
@@ -1236,8 +1215,7 @@ namespace AM.Text
         /// <summary>
         /// Read word.
         /// </summary>
-        [CanBeNull]
-        public string ReadWord()
+        public string? ReadWord()
         {
             if (IsEOF)
             {
@@ -1269,8 +1247,7 @@ namespace AM.Text
         /// <summary>
         /// Read word.
         /// </summary>
-        [CanBeNull]
-        public string ReadWord
+        public string? ReadWord
             (
                 params char[] additionalWordCharacters
             )
@@ -1710,7 +1687,7 @@ namespace AM.Text
             {
                 if (SkipWhileNot(goodCharacters))
                 {
-                    string word = ReadWhile(goodCharacters);
+                    var word = ReadWhile(goodCharacters);
                     if (!string.IsNullOrEmpty(word))
                     {
                         result.Add(word);
@@ -1728,7 +1705,7 @@ namespace AM.Text
         [ItemNotNull]
         public string[] SplitToWords()
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
             while (true)
             {
@@ -1737,8 +1714,11 @@ namespace AM.Text
                     break;
                 }
 
-                string word = ReadWord();
-                result.Add(word);
+                var word = ReadWord();
+                if (!string.IsNullOrEmpty(word))
+                {
+                    result.Add(word);
+                }
             }
 
             return result.ToArray();
@@ -1754,7 +1734,7 @@ namespace AM.Text
                 params char[] additionalWordCharacters
             )
         {
-            List<string> result = new List<string>();
+            var result = new List<string>();
 
             while (true)
             {
@@ -1763,8 +1743,11 @@ namespace AM.Text
                     break;
                 }
 
-                string word = ReadWord(additionalWordCharacters);
-                result.Add(word);
+                var word = ReadWord(additionalWordCharacters);
+                if (!string.IsNullOrEmpty(word))
+                {
+                    result.Add(word);
+                }
             }
 
             return result.ToArray();

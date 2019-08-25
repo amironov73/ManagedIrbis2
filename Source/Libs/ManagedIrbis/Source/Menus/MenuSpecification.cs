@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* MenuSpecification.cs -- 
+/* MenuSpecification.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -36,8 +36,8 @@ namespace ManagedIrbis.Menus
     // <Menu_file_name>\<SYS|DBN>,<N>\<MnuSort> где:
     // <Menu_file_name> - имя файла справочника (с расширением);
     // <SYS|DBN>,<N> - указывает путь, по которому находится
-    // файл справочника. Может принимать следующие значения: 
-    // SYS,0 - директория исполняемых модулей; 
+    // файл справочника. Может принимать следующие значения:
+    // SYS,0 - директория исполняемых модулей;
     // SYS,N - (N>0) рабочая директория (указываемая в параметре WORKDIR);
     // DBN,N - директория БД ввода (N - любая цифра);
     // <MnuSort> - порядок сортировки справочника:
@@ -47,7 +47,7 @@ namespace ManagedIrbis.Menus
     //
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     [XmlRoot("menu")]
@@ -60,18 +60,16 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// File name (with extension).
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("file")]
         [JsonProperty("file")]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("db")]
         [JsonProperty("db")]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// Path.
@@ -136,7 +134,7 @@ namespace ManagedIrbis.Menus
 
             if (!ReferenceEquals(text, null) && text.Length != 0)
             {
-                TextNavigator navigator = new TextNavigator(text);
+                var navigator = new TextNavigator(text);
                 result.FileName = navigator.ReadUntil('\\');
                 if (navigator.PeekChar() == '\\')
                 {
@@ -144,17 +142,17 @@ namespace ManagedIrbis.Menus
                 }
                 if (!navigator.IsEOF)
                 {
-                    string db = navigator.ReadUntil('\\');
+                    var db = navigator.ReadUntil('\\');
                     if (navigator.PeekChar() == '\\')
                     {
                         navigator.ReadChar();
                     }
 
-                    result.Database = db; 
+                    result.Database = db;
 
                     if (!navigator.IsEOF)
                     {
-                        string sortText = navigator.GetRemainingText();
+                        var sortText = navigator.GetRemainingText();
                         NumericUtility.TryParseInt32(sortText, out int sortMode);
                         result.SortMode = sortMode;
                     }

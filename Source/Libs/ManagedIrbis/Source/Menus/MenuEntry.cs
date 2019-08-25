@@ -39,26 +39,23 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// First line -- the code.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("code")]
         [JsonProperty("code")]
-        public string Code { get; set; }
+        public string? Code { get; set; }
 
         /// <summary>
         /// Second line -- the comment.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("comment")]
         [JsonProperty("comment")]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Other menu entry.
         /// </summary>
-        [CanBeNull]
         [XmlIgnore]
         [JsonIgnore]
-        public MenuEntry OtherEntry { get; set; }
+        public MenuEntry? OtherEntry { get; set; }
 
         #endregion
 
@@ -104,12 +101,9 @@ namespace ManagedIrbis.Menus
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(Comment))
-            {
-                return Code.ToVisibleString();
-            }
-
-            return $"{Code} - {Comment}";
+            return string.IsNullOrEmpty(Comment)
+                ? Code.ToVisibleString()
+                : $"{Code} - {Comment}";
         }
 
         #endregion

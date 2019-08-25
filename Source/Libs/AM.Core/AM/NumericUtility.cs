@@ -736,11 +736,11 @@ namespace AM
         /// </summary>
         public static bool TryParseInt32
             (
-                [CanBeNull] string text,
+                string? text,
                 out int value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
 

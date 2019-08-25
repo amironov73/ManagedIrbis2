@@ -65,20 +65,17 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// File name.
         /// </summary>
-        [CanBeNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// File content (when we want write the file).
         /// </summary>
-        [CanBeNull]
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         #endregion
 
@@ -112,8 +109,8 @@ namespace ManagedIrbis.Infrastructure
         public FileSpecification
             (
                 IrbisPath path,
-                [CanBeNull] string database,
-                [NotNull] string fileName
+                string? database,
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -129,8 +126,8 @@ namespace ManagedIrbis.Infrastructure
 
         private static bool _CompareDatabases
             (
-                [CanBeNull] string first,
-                [CanBeNull] string second
+                string? first,
+                string? second
             )
         {
             if (string.IsNullOrEmpty(first) && string.IsNullOrEmpty(second))
@@ -161,7 +158,7 @@ namespace ManagedIrbis.Infrastructure
                 (
                     navigator.ReadTo(".").ThrowIfNull(nameof(navigator.ReadTo))
                 );
-            string database = navigator.ReadTo(".").EmptyToNull();
+            var database = navigator.ReadTo(".").EmptyToNull();
             string fileName = navigator.GetRemainingText().ThrowIfNull(nameof(fileName));
             bool binaryFile = fileName.StartsWith("@");
             if (binaryFile)
@@ -169,7 +166,7 @@ namespace ManagedIrbis.Infrastructure
                 fileName = fileName.Substring(1);
             }
 
-            string content = null;
+            string? content = null;
             int position = fileName.IndexOf("&", StringComparison.InvariantCulture);
             if (position >= 0)
             {
@@ -273,7 +270,7 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <inheritdoc cref="object.Equals(object)" />
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -305,7 +302,7 @@ namespace ManagedIrbis.Infrastructure
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            string fileName = FileName;
+            var fileName = FileName;
             if (BinaryFile)
             {
                 fileName = "@" + fileName;
