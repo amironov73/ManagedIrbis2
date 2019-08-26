@@ -22,6 +22,8 @@
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
+    <AssemblyName>AM.Core</AssemblyName>
+    <RootNamespace>AM.Core</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

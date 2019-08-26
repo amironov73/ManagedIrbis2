@@ -26,6 +26,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
     <Nullable>enable</Nullable>
+    <AssemblyName>ManagedIrbis</AssemblyName>
+    <RootNamespace>ManagedIrbis</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
