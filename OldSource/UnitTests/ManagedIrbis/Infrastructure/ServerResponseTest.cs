@@ -166,7 +166,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         public void ServerResponse_Construction_1()
         {
             ServerResponse response = _GetResponse();
-            Assert.AreEqual("H", response.CommandCode);
+            Assert.AreEqual("H", response.Command);
             Assert.IsNotNull(response.Connection);
             Assert.AreEqual(222884, response.ClientID);
             Assert.AreEqual(5, response.CommandNumber);

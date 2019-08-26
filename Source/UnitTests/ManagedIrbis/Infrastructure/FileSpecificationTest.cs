@@ -141,44 +141,44 @@ namespace UnitTests.ManagedIrbis.Infrastructure
             Assert.IsTrue(first.Equals((object)second));
         }
 
-        private void _TestSerialization
-            (
-                FileSpecification first
-            )
-        {
-            byte[] bytes = first.SaveToMemory();
-
-            FileSpecification second =
-                bytes.RestoreObjectFromMemory<FileSpecification>();
-
-            Assert.AreEqual(first.Database, second.Database);
-            Assert.AreEqual(first.BinaryFile, second.BinaryFile);
-            Assert.AreEqual(first.Content, second.Content);
-            Assert.AreEqual(first.FileName, second.FileName);
-            Assert.AreEqual(first.Path, second.Path);
-        }
-
-        [TestMethod]
-        public void FileSpecification_Serialization_1()
-        {
-            FileSpecification specification = new FileSpecification();
-            _TestSerialization(specification);
-
-            specification = new FileSpecification
-                (
-                    IrbisPath.MasterFile,
-                    "brief.pft"
-                );
-            _TestSerialization(specification);
-
-            specification = new FileSpecification
-                (
-                    IrbisPath.MasterFile,
-                    "IBIS",
-                    "brief.pft"
-                );
-            _TestSerialization(specification);
-        }
+//        private void _TestSerialization
+//            (
+//                FileSpecification first
+//            )
+//        {
+//            byte[] bytes = first.SaveToMemory();
+//
+//            FileSpecification second =
+//                bytes.RestoreObjectFromMemory<FileSpecification>();
+//
+//            Assert.AreEqual(first.Database, second.Database);
+//            Assert.AreEqual(first.BinaryFile, second.BinaryFile);
+//            Assert.AreEqual(first.Content, second.Content);
+//            Assert.AreEqual(first.FileName, second.FileName);
+//            Assert.AreEqual(first.Path, second.Path);
+//        }
+//
+//        [TestMethod]
+//        public void FileSpecification_Serialization_1()
+//        {
+//            FileSpecification specification = new FileSpecification();
+//            _TestSerialization(specification);
+//
+//            specification = new FileSpecification
+//                (
+//                    IrbisPath.MasterFile,
+//                    "brief.pft"
+//                );
+//            _TestSerialization(specification);
+//
+//            specification = new FileSpecification
+//                (
+//                    IrbisPath.MasterFile,
+//                    "IBIS",
+//                    "brief.pft"
+//                );
+//            _TestSerialization(specification);
+//        }
 
         [TestMethod]
         public void FileSpecification_Verify_1()
