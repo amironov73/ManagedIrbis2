@@ -54,14 +54,13 @@ namespace ManagedIrbis.Menus
         /// Name of menu file -- for identification
         /// purposes only.
         /// </summary>
-        [JsonIgnore]
         [XmlIgnore]
+        [JsonIgnore]
         public string? FileName { get; set; }
 
         /// <summary>
         /// Gets the entries.
         /// </summary>
-        [NotNull]
         [XmlElement("entry")]
         [JsonProperty("entries")]
         public NonNullCollection<MenuEntry> Entries { get; }
@@ -105,16 +104,13 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Adds the specified code and comment.
         /// </summary>
-        [NotNull]
         public MenuFile Add
             (
-                [NotNull] string code,
-                [CanBeNull] string comment
+                string code,
+                string? comment
             )
         {
-            Sure.NotNull(code, nameof(code));
-
-            MenuEntry entry = new MenuEntry
+            var entry = new MenuEntry
             {
                 Code = code,
                 Comment = comment
@@ -127,16 +123,13 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Trims the code.
         /// </summary>
-        [NotNull]
         public static string TrimCode
             (
-                [NotNull] string code
+                string code
             )
         {
-            Sure.NotNull(code, nameof(code));
-
             code = code.Trim();
-            string[] parts = code.Split(MenuSeparators);
+            var parts = code.Split(MenuSeparators);
             if (parts.Length != 0)
             {
                 code = parts[0];
@@ -148,10 +141,9 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds the entry.
         /// </summary>
-        [CanBeNull]
-        public MenuEntry FindEntry
+        public MenuEntry? FindEntry
             (
-                [NotNull] string code
+                string code
             )
         {
             return Entries.FirstOrDefault
@@ -163,10 +155,9 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds the entry (case sensitive).
         /// </summary>
-        [CanBeNull]
-        public MenuEntry FindEntrySensitive
+        public MenuEntry? FindEntrySensitive
             (
-                [NotNull] string code
+                string code
             )
         {
             return Entries.FirstOrDefault
@@ -178,15 +169,12 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds the entry.
         /// </summary>
-        [CanBeNull]
-        public MenuEntry GetEntry
+        public MenuEntry? GetEntry
             (
-                [NotNull] string code
+                string code
             )
         {
-            Sure.NotNull(code, nameof(code));
-
-            MenuEntry result = FindEntry(code);
+            var result = FindEntry(code);
             if (!ReferenceEquals(result, null))
             {
                 return result;
@@ -208,15 +196,12 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds the entry (case sensitive).
         /// </summary>
-        [CanBeNull]
-        public MenuEntry GetEntrySensitive
+        public MenuEntry? GetEntrySensitive
             (
-                [NotNull] string code
+                string code
             )
         {
-            Sure.NotNull(code, nameof(code));
-
-            MenuEntry result = FindEntrySensitive(code);
+            var result = FindEntrySensitive(code);
             if (!ReferenceEquals(result, null))
             {
                 return result;
@@ -240,13 +225,11 @@ namespace ManagedIrbis.Menus
         /// </summary>
         public string? GetString
             (
-                [NotNull] string code,
+                string code,
                 string? defaultValue = null
             )
         {
-            Sure.NotNull(code, nameof(code));
-
-            MenuEntry found = FindEntry(code);
+            var found = FindEntry(code);
 
             return ReferenceEquals(found, null)
                 ? defaultValue
@@ -258,13 +241,11 @@ namespace ManagedIrbis.Menus
         /// </summary>
         public string? GetStringSensitive
             (
-                [NotNull] string code,
+                string code,
                 string? defaultValue = null
             )
         {
-            Sure.NotNull(code, nameof(code));
-
-            MenuEntry found = FindEntrySensitive(code);
+            var found = FindEntrySensitive(code);
 
             return ReferenceEquals(found, null)
                 ? defaultValue
@@ -274,15 +255,12 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Parses the specified stream.
         /// </summary>
-        [NotNull]
         public static MenuFile ParseStream
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            MenuFile result = new MenuFile();
+            var result = new MenuFile();
 
             while (true)
             {
@@ -296,14 +274,13 @@ namespace ManagedIrbis.Menus
                     break;
                 }
 
-                string comment = reader.RequireLine();
-                MenuEntry entry = new MenuEntry
+                var comment = reader.RequireLine();
+                var entry = new MenuEntry
                 {
                     Code = code,
                     Comment = comment
                 };
                 result.Entries.Add(entry);
-
             }
 
             return result;
@@ -312,36 +289,29 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Parses the local file.
         /// </summary>
-        [NotNull]
         public static MenuFile ParseLocalFile
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
+            using StreamReader reader = TextReaderUtility.OpenRead
+                (
+                    fileName,
+                    encoding
+                );
+            var result = ParseStream(reader);
+            result.FileName = Path.GetFileName(fileName);
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
-                    (
-                        fileName,
-                        encoding
-                    ))
-            {
-                MenuFile result = ParseStream(reader);
-                result.FileName = Path.GetFileName(fileName);
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
         /// Parses the local file.
         /// </summary>
-        [NotNull]
         public static MenuFile ParseLocalFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             return ParseLocalFile
@@ -419,7 +389,7 @@ namespace ManagedIrbis.Menus
                 MenuSort sortBy
             )
         {
-            List<MenuEntry> copy = new List<MenuEntry>(Entries);
+            var copy = new List<MenuEntry>(Entries);
             switch (sortBy)
             {
                 case MenuSort.None:
@@ -452,9 +422,9 @@ namespace ManagedIrbis.Menus
         /// </summary>
         public string ToText()
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
-            foreach (MenuEntry entry in Entries)
+            foreach (var entry in Entries)
             {
                 result.AppendLine(entry.Code);
                 result.AppendLine(entry.Comment);

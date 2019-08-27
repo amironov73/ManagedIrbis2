@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* SerializationUtility.cs -- сериализация
+/* SerializationUtility.cs -- serialization related helper methods
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -22,7 +22,7 @@ using JetBrains.Annotations;
 namespace AM.Runtime
 {
     /// <summary>
-    /// Хелперы, связанные с сериализацией и десериализацией.
+    /// Serialization related helper methods.
     /// </summary>
     [PublicAPI]
     public static class SerializationUtility
@@ -30,23 +30,20 @@ namespace AM.Runtime
         #region Public methods
 
         /// <summary>
-        /// Считывание массива из потока.
+        /// Reads array from the stream.
         /// </summary>
-        [CanBeNull]
         [ItemNotNull]
         public static T[] RestoreArray<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            int count = reader.ReadPackedInt32();
-            T[] result = new T[count];
+            var count = reader.ReadPackedInt32();
+            var result = new T[count];
             for (int i = 0; i < count; i++)
             {
-                T item = new T();
+                var item = new T();
                 item.RestoreFromStream(reader);
                 result[i] = item;
             }
@@ -55,33 +52,30 @@ namespace AM.Runtime
         }
 
         /// <summary>
-        /// Считывание массива из файла.
+        /// Read array from the file.
         /// </summary>
-        [CanBeNull]
         [ItemNotNull]
         public static T[] RestoreArrayFromFile<T>
             (
-                [NotNull] string fileName
+                string fileName
             )
             where T : IHandmadeSerializable, new()
         {
             Sure.FileExists(fileName, nameof(fileName));
 
-            using (Stream stream = File.OpenRead(fileName))
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                return reader.RestoreArray<T>();
-            }
+            using var stream = File.OpenRead(fileName);
+            using var reader = new BinaryReader(stream);
+
+            return reader.RestoreArray<T>();
         }
 
         /// <summary>
-        /// Считывание массива из файла.
+        /// Read array from the file.
         /// </summary>
-        [CanBeNull]
         [ItemNotNull]
         public static T[] RestoreArrayFromZipFile<T>
             (
-                [NotNull] string fileName
+                string fileName
             )
             where T : IHandmadeSerializable, new()
         {
@@ -141,49 +135,41 @@ namespace AM.Runtime
         }
 
         /// <summary>
-        /// Считывание из потока обнуляемого объекта.
+        /// Read nullable object from the stream.
         /// </summary>
-        [CanBeNull]
-        public static T RestoreNullable<T>
+        public static T? RestoreNullable<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            bool isNull = !reader.ReadBoolean();
+            var isNull = !reader.ReadBoolean();
             if (isNull)
             {
                 return null;
             }
 
-            T result = new T();
+            var result = new T();
             result.RestoreFromStream(reader);
 
             return result;
         }
 
         /// <summary>
-        /// Считывание объекта из файла.
+        /// Read non-nullable object from the file.
         /// </summary>
-        [NotNull]
         public static T RestoreObjectFromFile<T>
             (
-                [NotNull] string fileName
+                string fileName
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.FileExists(fileName, nameof(fileName));
+            using var stream = File.OpenRead(fileName);
+            using var reader = new BinaryReader(stream);
+            var result = new T();
+            result.RestoreFromStream(reader);
 
-            using (Stream stream = File.OpenRead(fileName))
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                T result = new T();
-                result.RestoreFromStream(reader);
-
-                return result;
-            }
+            return result;
         }
 
 
@@ -215,21 +201,18 @@ namespace AM.Runtime
         }
 
         /// <summary>
-        /// Считывание объекта из памяти.
+        /// Read nullable object from the memory.
         /// </summary>
-        public static T RestoreObjectFromMemory<T>
+        public static T? RestoreObjectFromMemory<T>
             (
-                [NotNull] this byte[] array
+                this byte[] array
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(array, nameof(array));
+            using var stream = new MemoryStream(array);
+            using var reader = new BinaryReader(stream);
 
-            using (Stream stream = new MemoryStream(array))
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                return reader.RestoreNullable<T>();
-            }
+            return reader.RestoreNullable<T>();
         }
 
         /// <summary>
@@ -237,12 +220,12 @@ namespace AM.Runtime
         /// </summary>
         public static T RestoreObjectFromString<T>
             (
-                [NotNull] this string text
+                this string text
             )
             where T : class, IHandmadeSerializable, new()
         {
-            byte[] bytes = Convert.FromBase64String(text);
-            T result = bytes.RestoreObjectFromZipMemory<T>();
+            var bytes = Convert.FromBase64String(text);
+            var result = bytes.RestoreObjectFromZipMemory<T>();
 
             return result;
         }
