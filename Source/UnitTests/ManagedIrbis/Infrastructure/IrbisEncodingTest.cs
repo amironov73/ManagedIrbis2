@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Text;
 
-using ManagedIrbis;
+using ManagedIrbis.Infrastructure;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 
 namespace UnitTests.ManagedIrbis
 {

@@ -41,7 +41,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public int ConnectedClient { get; set; }
+        public int ConnectedClients { get; set; }
 
         /// <summary>
         ///
@@ -52,15 +52,35 @@ namespace ManagedIrbis
             {
                 Organization = lines[0];
                 Version = lines[1];
-                ConnectedClient = NumericUtility.ParseInt32(lines[2]);
+                ConnectedClients = NumericUtility.ParseInt32(lines[2]);
                 MaxClients = NumericUtility.ParseInt32(lines[3]);
             }
             else
             {
                 Version = lines[0];
-                ConnectedClient = NumericUtility.ParseInt32(lines[1]);
+                ConnectedClients = NumericUtility.ParseInt32(lines[1]);
                 MaxClients = NumericUtility.ParseInt32(lines[2]);
             }
         }
+
+        #region Object members
+
+        /// <inheritdoc cref="object.ToString" />
+        public override string ToString()
+        {
+            // ReSharper disable once UseStringInterpolation
+            return string.Format
+                (
+                    "Version: {0}, MaxClients: {1}, "
+                    + "ConnectedClients: {2}, Organization: {3}",
+                    Version.ToVisibleString(),
+                    MaxClients,
+                    ConnectedClients,
+                    Organization.ToVisibleString()
+                );
+        }
+
+        #endregion
+
     }
 }

@@ -28,30 +28,30 @@ namespace UnitTests.ManagedIrbis.Menus
             Assert.AreEqual(otherEntry, thisEntry.OtherEntry);
         }
 
-        private static void _TestSerialization
-            (
-                [NotNull] MenuEntry first
-            )
-        {
-            byte[] bytes = first.SaveToMemory();
-            MenuEntry second = bytes
-                .RestoreObjectFromMemory<MenuEntry>();
-
-            Assert.AreEqual(first.Code, second.Code);
-            Assert.AreEqual(first.Comment, second.Comment);
-            Assert.IsNull(second.OtherEntry);
-        }
-
-        [TestMethod]
-        public void MenuEntry_Serialization_1()
-        {
-            MenuEntry entry = new MenuEntry();
-            _TestSerialization(entry);
-            entry.Code = "A";
-            _TestSerialization(entry);
-            entry.Comment = "B";
-            _TestSerialization(entry);
-        }
+//        private static void _TestSerialization
+//            (
+//                [NotNull] MenuEntry first
+//            )
+//        {
+//            byte[] bytes = first.SaveToMemory();
+//            MenuEntry second = bytes
+//                .RestoreObjectFromMemory<MenuEntry>();
+//
+//            Assert.AreEqual(first.Code, second.Code);
+//            Assert.AreEqual(first.Comment, second.Comment);
+//            Assert.IsNull(second.OtherEntry);
+//        }
+//
+//        [TestMethod]
+//        public void MenuEntry_Serialization_1()
+//        {
+//            MenuEntry entry = new MenuEntry();
+//            _TestSerialization(entry);
+//            entry.Code = "A";
+//            _TestSerialization(entry);
+//            entry.Comment = "B";
+//            _TestSerialization(entry);
+//        }
 
         private static void _TestJson
             (

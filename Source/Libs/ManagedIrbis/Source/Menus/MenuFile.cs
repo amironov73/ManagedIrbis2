@@ -56,7 +56,7 @@ namespace ManagedIrbis.Menus
         /// </summary>
         [JsonIgnore]
         [XmlIgnore]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// Gets the entries.
@@ -238,11 +238,10 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds comment by the code.
         /// </summary>
-        [CanBeNull]
-        public string GetString
+        public string? GetString
             (
                 [NotNull] string code,
-                [CanBeNull] string defaultValue = null
+                string? defaultValue = null
             )
         {
             Sure.NotNull(code, nameof(code));
@@ -257,11 +256,10 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Finds comment by the code (case sensitive).
         /// </summary>
-        [CanBeNull]
-        public string GetStringSensitive
+        public string? GetStringSensitive
             (
                 [NotNull] string code,
-                [CanBeNull] string defaultValue = null
+                string? defaultValue = null
             )
         {
             Sure.NotNull(code, nameof(code));
@@ -288,7 +286,7 @@ namespace ManagedIrbis.Menus
 
             while (true)
             {
-                string code = reader.ReadLine();
+                var code = reader.ReadLine();
                 if (string.IsNullOrEmpty(code))
                 {
                     break;
@@ -353,63 +351,63 @@ namespace ManagedIrbis.Menus
                 );
         }
 
-        /// <summary>
-        /// Parse server response.
-        /// </summary>
-        [NotNull]
-        public static MenuFile ParseServerResponse
-            (
-                [NotNull] ServerResponse response
-            )
-        {
-            Sure.NotNull(response, nameof(response));
+//        /// <summary>
+//        /// Parse server response.
+//        /// </summary>
+//        [NotNull]
+//        public static MenuFile ParseServerResponse
+//            (
+//                [NotNull] ServerResponse response
+//            )
+//        {
+//            Sure.NotNull(response, nameof(response));
+//
+//            TextReader reader = response.GetReader(IrbisEncoding.Ansi);
+//            MenuFile result = ParseStream(reader);
+//
+//            return result;
+//        }
+//
+//        /// <summary>
+//        /// Parse server response.
+//        /// </summary>
+//        [NotNull]
+//        public static MenuFile ParseServerResponse
+//            (
+//                [NotNull] string response
+//            )
+//        {
+//            Sure.NotNullNorEmpty(response, nameof(response));
+//
+//            TextReader reader = new StringReader(response);
+//            MenuFile result = ParseStream(reader);
+//
+//            return result;
+//        }
 
-            TextReader reader = response.GetReader(IrbisEncoding.Ansi);
-            MenuFile result = ParseStream(reader);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Parse server response.
-        /// </summary>
-        [NotNull]
-        public static MenuFile ParseServerResponse
-            (
-                [NotNull] string response
-            )
-        {
-            Sure.NotNullNorEmpty(response, nameof(response));
-
-            TextReader reader = new StringReader(response);
-            MenuFile result = ParseStream(reader);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Read <see cref="MenuFile"/> from server.
-        /// </summary>
-        [CanBeNull]
-        public static MenuFile ReadFromServer
-            (
-                [NotNull] IIrbisConnection connection,
-                [NotNull] FileSpecification fileSpecification
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
-            Sure.NotNull(fileSpecification, nameof(fileSpecification));
-
-            string response = connection.ReadTextFile(fileSpecification);
-            if (string.IsNullOrEmpty(response))
-            {
-                return null;
-            }
-
-            MenuFile result = ParseServerResponse(response);
-
-            return result;
-        }
+//        /// <summary>
+//        /// Read <see cref="MenuFile"/> from server.
+//        /// </summary>
+//        [CanBeNull]
+//        public static MenuFile ReadFromServer
+//            (
+//                [NotNull] IIrbisConnection connection,
+//                [NotNull] FileSpecification fileSpecification
+//            )
+//        {
+//            Sure.NotNull(connection, nameof(connection));
+//            Sure.NotNull(fileSpecification, nameof(fileSpecification));
+//
+//            string response = connection.ReadTextFile(fileSpecification);
+//            if (string.IsNullOrEmpty(response))
+//            {
+//                return null;
+//            }
+//
+//            MenuFile result = ParseServerResponse(response);
+//
+//            return result;
+//        }
 
         /// <summary>
         /// Sorts the entries.
