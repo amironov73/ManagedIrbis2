@@ -132,13 +132,13 @@ namespace ManagedIrbis.Search
         [ItemCanBeNull]
         public static string?[] ConvertToText
             (
-                [NotNull][ItemNotNull] List<FoundItem> found
+                [NotNull][ItemNotNull] FoundItem[] found
             )
         {
             Sure.NotNull(found, nameof(found));
 
-            string?[] result = new string[found.Count];
-            for (int i = 0; i < found.Count; i++)
+            string?[] result = new string[found.Length];
+            for (int i = 0; i < found.Length; i++)
             {
                 result[i] = found[i].Text.EmptyToNull();
             }

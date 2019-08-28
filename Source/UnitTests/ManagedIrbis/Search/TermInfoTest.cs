@@ -21,30 +21,30 @@ namespace UnitTests.ManagedIrbis.Search
             Assert.IsNull(term.Text);
         }
 
-        private void _TestSerialization
-            (
-                [NotNull] TermInfo first
-            )
-        {
-            byte[] bytes = first.SaveToMemory();
-
-            TermInfo second
-                = bytes.RestoreObjectFromMemory<TermInfo>();
-
-            Assert.AreEqual(first.Count, second.Count);
-            Assert.AreEqual(first.Text, second.Text);
-        }
-
-        [TestMethod]
-        public void TermInfo_Serialization_1()
-        {
-            TermInfo termInfo = new TermInfo();
-            _TestSerialization(termInfo);
-
-            termInfo.Count = 10;
-            termInfo.Text = "T=HELLO";
-            _TestSerialization(termInfo);
-        }
+//        private void _TestSerialization
+//            (
+//                [NotNull] TermInfo first
+//            )
+//        {
+//            byte[] bytes = first.SaveToMemory();
+//
+//            TermInfo second
+//                = bytes.RestoreObjectFromMemory<TermInfo>();
+//
+//            Assert.AreEqual(first.Count, second.Count);
+//            Assert.AreEqual(first.Text, second.Text);
+//        }
+//
+//        [TestMethod]
+//        public void TermInfo_Serialization_1()
+//        {
+//            TermInfo termInfo = new TermInfo();
+//            _TestSerialization(termInfo);
+//
+//            termInfo.Count = 10;
+//            termInfo.Text = "T=HELLO";
+//            _TestSerialization(termInfo);
+//        }
 
         [TestMethod]
         public void TermInfo_Verify_1()

@@ -9,6 +9,7 @@
 
 #region Using directives
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -33,7 +34,7 @@ namespace AM.Xml
         /// </summary>
         public static T Deserialize<T>
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.FileExists(fileName, nameof(fileName));
@@ -50,10 +51,10 @@ namespace AM.Xml
         /// </summary>
         public static T DeserializeString<T>
             (
-                [NotNull] string xmlText
+                string xmlText
             )
         {
-            Sure.NotNullNorEmpty(xmlText, "xmlText");
+            Sure.NotNullNorEmpty(xmlText, nameof(xmlText));
 
             StringReader reader = new StringReader(xmlText);
             XmlSerializer serializer = new XmlSerializer(typeof(T));
@@ -65,25 +66,29 @@ namespace AM.Xml
         /// </summary>
         public static void Serialize<T>
             (
-                [NotNull] string fileName,
+                string fileName,
                 T obj
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            XmlWriterSettings settings = new XmlWriterSettings
+            if (ReferenceEquals(obj, null))
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            var settings = new XmlWriterSettings
             {
                 OmitXmlDeclaration = true,
                 Indent = true
             };
-            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            var namespaces = new XmlSerializerNamespaces();
             namespaces.Add(string.Empty, string.Empty);
-            using (StreamWriter output = new StreamWriter(fileName))
-            using (XmlWriter writer = XmlWriter.Create(output, settings))
-            {
-                XmlSerializer serializer = new XmlSerializer(obj.GetType());
-                serializer.Serialize(writer, obj, namespaces);
-            }
+            using var output = new StreamWriter(fileName);
+            using var writer = XmlWriter.Create(output, settings);
+            var objType = obj.GetType();
+            var serializer = new XmlSerializer(objType);
+            serializer.Serialize(writer, obj, namespaces);
         }
 
         /// <summary>
@@ -93,10 +98,10 @@ namespace AM.Xml
         [NotNull]
         public static string SerializeShort
             (
-                [NotNull] object obj
+                object obj
             )
         {
-            Sure.NotNull(obj, "obj");
+            Sure.NotNull(obj, nameof(obj));
 
             XmlWriterSettings settings = new XmlWriterSettings
             {

@@ -12,40 +12,40 @@ namespace UnitTests.ManagedIrbis.Search
     [TestClass]
     public class SearchParametersTest
     {
-        private void _TestSerialization
-            (
-                SearchParameters first
-            )
-        {
-            byte[] bytes = first.SaveToMemory();
-
-            SearchParameters second
-                = bytes.RestoreObjectFromMemory<SearchParameters>();
-
-            Assert.AreEqual(first.Database, second.Database);
-            Assert.AreEqual(first.FirstRecord, second.FirstRecord);
-            Assert.AreEqual(first.FormatSpecification, second.FormatSpecification);
-            Assert.AreEqual(first.MaxMfn, second.MaxMfn);
-            Assert.AreEqual(first.MinMfn, second.MinMfn);
-            Assert.AreEqual(first.NumberOfRecords, second.NumberOfRecords);
-            Assert.AreEqual(first.SearchExpression, second.SearchExpression);
-            Assert.AreEqual(first.SequentialSpecification, second.SequentialSpecification);
-        }
-
-        [TestMethod]
-        public void TestSearchParameters_Serialization()
-        {
-            SearchParameters parameters = new SearchParameters();
-            _TestSerialization(parameters);
-
-            parameters = new SearchParameters
-            {
-                Database = "IBIS",
-                SearchExpression = "T=A$",
-                FormatSpecification = "@brief"
-            };
-            _TestSerialization(parameters);
-        }
+//        private void _TestSerialization
+//            (
+//                SearchParameters first
+//            )
+//        {
+//            byte[] bytes = first.SaveToMemory();
+//
+//            SearchParameters second
+//                = bytes.RestoreObjectFromMemory<SearchParameters>();
+//
+//            Assert.AreEqual(first.Database, second.Database);
+//            Assert.AreEqual(first.FirstRecord, second.FirstRecord);
+//            Assert.AreEqual(first.FormatSpecification, second.FormatSpecification);
+//            Assert.AreEqual(first.MaxMfn, second.MaxMfn);
+//            Assert.AreEqual(first.MinMfn, second.MinMfn);
+//            Assert.AreEqual(first.NumberOfRecords, second.NumberOfRecords);
+//            Assert.AreEqual(first.SearchExpression, second.SearchExpression);
+//            Assert.AreEqual(first.SequentialSpecification, second.SequentialSpecification);
+//        }
+//
+//        [TestMethod]
+//        public void TestSearchParameters_Serialization()
+//        {
+//            SearchParameters parameters = new SearchParameters();
+//            _TestSerialization(parameters);
+//
+//            parameters = new SearchParameters
+//            {
+//                Database = "IBIS",
+//                SearchExpression = "T=A$",
+//                FormatSpecification = "@brief"
+//            };
+//            _TestSerialization(parameters);
+//        }
 
         [TestMethod]
         public void TestSearchParameters_Clone()

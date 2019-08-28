@@ -12,39 +12,39 @@ namespace UnitTests.ManagedIrbis.Search
     [TestClass]
     public class TermPostingTest
     {
-        private void _TestSerialization
-            (
-                TermPosting first
-            )
-        {
-            byte[] bytes = first.SaveToMemory();
-
-            TermPosting second = bytes
-                .RestoreObjectFromMemory<TermPosting>();
-
-            Assert.AreEqual(first.Count, second.Count);
-            Assert.AreEqual(first.Mfn, second.Mfn);
-            Assert.AreEqual(first.Occurrence, second.Occurrence);
-            Assert.AreEqual(first.Tag, second.Tag);
-            Assert.AreEqual(first.Text, second.Text);
-        }
-
-        [TestMethod]
-        public void TestTermPosting_Serialization()
-        {
-            TermPosting posting = new TermPosting();
-            _TestSerialization(posting);
-
-            posting = new TermPosting
-            {
-                Count = 10,
-                Mfn = 20,
-                Occurrence = 30,
-                Tag = 40,
-                Text = "T=HELLLO"
-            };
-            _TestSerialization(posting);
-        }
+//        private void _TestSerialization
+//            (
+//                TermPosting first
+//            )
+//        {
+//            byte[] bytes = first.SaveToMemory();
+//
+//            TermPosting second = bytes
+//                .RestoreObjectFromMemory<TermPosting>();
+//
+//            Assert.AreEqual(first.Count, second.Count);
+//            Assert.AreEqual(first.Mfn, second.Mfn);
+//            Assert.AreEqual(first.Occurrence, second.Occurrence);
+//            Assert.AreEqual(first.Tag, second.Tag);
+//            Assert.AreEqual(first.Text, second.Text);
+//        }
+//
+//        [TestMethod]
+//        public void TestTermPosting_Serialization()
+//        {
+//            TermPosting posting = new TermPosting();
+//            _TestSerialization(posting);
+//
+//            posting = new TermPosting
+//            {
+//                Count = 10,
+//                Mfn = 20,
+//                Occurrence = 30,
+//                Tag = 40,
+//                Text = "T=HELLLO"
+//            };
+//            _TestSerialization(posting);
+//        }
 
         [TestMethod]
         public void TestTermPosting_ToString()

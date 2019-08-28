@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -35,12 +34,12 @@ namespace AM.Json
         /// <summary>
         /// Expand $type's.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ExpandTypes
             (
-                [NotNull] JObject obj,
-                [NotNull] string nameSpace,
-                [NotNull] string assembly
+                JObject obj,
+                string nameSpace,
+                string assembly
             )
         {
             Sure.NotNull(obj, nameof(obj));
@@ -52,27 +51,33 @@ namespace AM.Json
                 .OfType<JValue>();
             foreach (JValue value in values)
             {
-                string typeName = value.Value.ToString();
-                if (!typeName.Contains('.'))
+                if (value.Value != null)
                 {
-                    typeName = nameSpace
-                               + "."
-                               + typeName
-                               + ", "
-                               + assembly;
-                    value.Value = typeName;
+                    var typeName = value.Value.ToString();
+                    if (!string.IsNullOrEmpty(typeName))
+                    {
+                        if (!typeName.Contains('.'))
+                        {
+                            typeName = nameSpace
+                                       + "."
+                                       + typeName
+                                       + ", "
+                                       + assembly;
+                            value.Value = typeName;
+                        }
+                    }
                 }
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void Include
             (
-                [NotNull] JObject obj,
-                [NotNull] Action<JProperty> resolver
+                JObject obj,
+                Action<JProperty> resolver
             )
         {
             Sure.NotNull(obj, nameof(obj));
@@ -85,18 +90,21 @@ namespace AM.Json
 
             foreach (JValue value in values)
             {
-                JProperty property = (JProperty)value.Parent;
-                resolver(property);
+                if (value.Parent != null)
+                {
+                    JProperty property = (JProperty) value.Parent;
+                    resolver(property);
+                }
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void Include
             (
-                [NotNull] JObject obj
+                JObject obj
             )
         {
             Sure.NotNull(obj, nameof(obj));
@@ -107,39 +115,42 @@ namespace AM.Json
 
             foreach (JToken token in tokens)
             {
-                JProperty property = (JProperty)token.Parent;
-                Resolve(property);
+                if (token.Parent != null)
+                {
+                    JProperty property = (JProperty)token.Parent;
+                    Resolve(property);
+                }
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void Include
             (
-                [NotNull] JObject obj,
-                [NotNull] string newName
+                JObject obj,
+                string newName
             )
         {
             Sure.NotNull(obj, nameof(obj));
             Sure.NotNullNorEmpty(newName, nameof(newName));
 
-            Action<JProperty> resolver = prop =>
+            void Resolver(JProperty prop)
             {
                 Resolve(prop, newName);
-            };
-            Include(obj, resolver);
+            }
+
+            Include(obj, Resolver);
         }
 
         /// <summary>
         /// Read <see cref="JArray"/> from specified
         /// local file.
         /// </summary>
-        [NotNull]
         public static JArray ReadArrayFromFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.FileExists(fileName, nameof(fileName));
@@ -154,10 +165,9 @@ namespace AM.Json
         /// Read <see cref="JObject"/> from specified
         /// local JSON file.
         /// </summary>
-        [NotNull]
         public static JObject ReadObjectFromFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -172,10 +182,9 @@ namespace AM.Json
         /// Read arbitrary object from specified
         /// local JSON file.
         /// </summary>
-        [NotNull]
         public static T ReadObjectFromFile<T>
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.FileExists(fileName, nameof(fileName));
@@ -192,8 +201,8 @@ namespace AM.Json
         /// </summary>
         public static void SaveArrayToFile
             (
-                [NotNull] JArray array,
-                [NotNull] string fileName
+                JArray array,
+                string fileName
             )
         {
             Sure.NotNull(array, nameof(array));
@@ -208,8 +217,8 @@ namespace AM.Json
         /// </summary>
         public static void SaveObjectToFile
             (
-                [NotNull] JObject obj,
-                [NotNull] string fileName
+                JObject obj,
+                string fileName
             )
         {
             Sure.NotNull(obj, nameof(obj));
@@ -224,8 +233,8 @@ namespace AM.Json
         /// </summary>
         public static void SaveObjectToFile
             (
-                [NotNull] object obj,
-                [NotNull] string fileName
+                object obj,
+                string fileName
             )
         {
             JObject json = JObject.FromObject(obj);
@@ -236,11 +245,11 @@ namespace AM.Json
         /// <summary>
         /// Resolver for <see cref="Include(JObject,Action{JProperty})"/>.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void Resolve
             (
-                [NotNull] JProperty property,
-                [NotNull] string newName
+                JProperty property,
+                string newName
             )
         {
             Sure.NotNull(property, nameof(property));
@@ -258,32 +267,35 @@ namespace AM.Json
         /// <summary>
         /// Resolver for <see cref="Include(JObject,Action{JProperty})"/>.
         /// </summary>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void Resolve
             (
-                [NotNull] JProperty property
+                JProperty property
             )
         {
             Sure.NotNull(property, nameof(property));
 
             // TODO use path for searching
 
-            JObject obj = (JObject)property.Value;
-            string newName = obj["name"].Value<string>();
-            string fileName = obj["file"].Value<string>();
-            string text = File.ReadAllText(fileName);
-            JObject value = JObject.Parse(text);
-            JProperty newProperty = new JProperty(newName, value);
-            property.Replace(newProperty);
+            var obj = (JObject)property.Value;
+            var newName = obj["name"]?.Value<string>();
+            var fileName = obj["file"]?.Value<string>();
+            if (!string.IsNullOrEmpty(newName)
+                && !string.IsNullOrEmpty(fileName))
+            {
+                var text = File.ReadAllText(fileName);
+                var value = JObject.Parse(text);
+                var newProperty = new JProperty(newName, value);
+                property.Replace(newProperty);
+            }
         }
 
         /// <summary>
         /// Serialize to short string.
         /// </summary>
-        [NotNull]
         public static string SerializeShort
             (
-                [NotNull] object obj
+                object obj
             )
         {
             Sure.NotNull(obj, nameof(obj));
