@@ -45,7 +45,7 @@ namespace AM.IO
         #region Properties
 
         /// <summary>
-        /// Interval to sleep between subsequential attempts,
+        /// Interval to sleep between subsequent attempts,
         /// milliseconds.
         /// </summary>
         public static int SleepInterval { get; set; }
@@ -74,10 +74,10 @@ namespace AM.IO
 
         private static T _Evaluate<T>
             (
-                [NotNull] Func<T> function
+                Func<T> function
             )
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             while (true)
@@ -86,7 +86,7 @@ namespace AM.IO
 
                 try
                 {
-                    T result = function();
+                    var result = function();
 
                     return result;
                 }
@@ -101,12 +101,12 @@ namespace AM.IO
                         );
                 }
 
-                int elapsed = (int) stopwatch.ElapsedMilliseconds;
+                var elapsed = (int) stopwatch.ElapsedMilliseconds;
                 if (elapsed > Timeout)
                 {
                     Log.Error
                         (
-                        nameof(InsistentFile) + "::" + nameof(_Evaluate)
+                            nameof(InsistentFile) + "::" + nameof(_Evaluate)
                             + ": timeout is exhausted"
                         );
 
@@ -127,21 +127,17 @@ namespace AM.IO
 
         /// <inheritdoc
         /// cref="File.Open(string,FileMode,FileAccess,FileShare)" />.
-        [NotNull]
         public static FileStream Open
             (
-                [NotNull] string path,
+                string path,
                 FileMode mode,
                 FileAccess access,
                 FileShare share
             )
         {
-            Sure.NotNullNorEmpty(path, nameof(path));
+            FileStream Func() => File.Open(path, mode, access, share);
 
-            FileStream result = _Evaluate
-                (
-                    () => File.Open(path, mode, access, share)
-                );
+            FileStream result = _Evaluate(Func);
 
             return result;
         }
@@ -149,10 +145,9 @@ namespace AM.IO
         /// <summary>
         /// Open specified file for exclusive reading.
         /// </summary>
-        [NotNull]
         public static FileStream OpenForExclusiveRead
             (
-                [NotNull] string path
+                string path
             )
         {
             return Open
@@ -167,10 +162,9 @@ namespace AM.IO
         /// <summary>
         /// Open specified file for exclusive writing.
         /// </summary>
-        [NotNull]
         public static FileStream OpenForExclusiveWrite
             (
-                [NotNull] string path
+                string path
             )
         {
             return Open
@@ -185,10 +179,9 @@ namespace AM.IO
         /// <summary>
         /// Open specified file for shared reading.
         /// </summary>
-        [NotNull]
         public static FileStream OpenForSharedRead
             (
-                [NotNull] string path
+                string path
             )
         {
             return Open
@@ -203,10 +196,9 @@ namespace AM.IO
         /// <summary>
         /// Open specified file for shared reading/writing.
         /// </summary>
-        [NotNull]
         public static FileStream OpenForSharedWrite
             (
-                [NotNull] string path
+                string path
             )
         {
             return Open

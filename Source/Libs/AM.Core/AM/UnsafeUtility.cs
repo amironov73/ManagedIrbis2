@@ -24,7 +24,7 @@ using static System.Runtime.InteropServices.MemoryMarshal;
 
 #endregion
 
-namespace AM.Core
+namespace AM
 {
     /// <summary>
     ///
