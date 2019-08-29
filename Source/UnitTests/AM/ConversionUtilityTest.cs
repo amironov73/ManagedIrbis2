@@ -197,13 +197,13 @@ namespace UnitTests.AM
             Assert.AreEqual(false, ConversionUtility.ToBoolean(false));
         }
 
-        [TestMethod]
-        public void ConversionUtility_ToBoolean_3()
-        {
-            // value is IConverttible
-            Assert.AreEqual(true, ConversionUtility.ToBoolean(1));
-            Assert.AreEqual(false, ConversionUtility.ToBoolean(0));
-        }
+//        [TestMethod]
+//        public void ConversionUtility_ToBoolean_3()
+//        {
+//            // value is IConverttible
+//            Assert.AreEqual(true, ConversionUtility.ToBoolean(1));
+//            Assert.AreEqual(false, ConversionUtility.ToBoolean(0));
+//        }
 
         [TestMethod]
         public void ConversionUtility_ToBoolean_4()
@@ -212,12 +212,12 @@ namespace UnitTests.AM
             Assert.AreEqual(false, ConversionUtility.ToBoolean(new SourceType()));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(FormatException))]
-        public void ConversionUtility_ToBoolean_5()
-        {
-            ConversionUtility.ToBoolean(new SourceType2());
-        }
+//        [TestMethod]
+//        [ExpectedException(typeof(FormatException))]
+//        public void ConversionUtility_ToBoolean_5()
+//        {
+//            ConversionUtility.ToBoolean(new SourceType2());
+//        }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]

@@ -168,29 +168,29 @@ namespace UnitTests.AM
             array.GetHashCodeAggregate();
         }
 
-        [TestMethod]
-        public void Utility_GetItem_1()
-        {
-            byte[] array = { 1, 2, 3 };
-
-            Assert.AreEqual(1, array.GetItem(0));
-            Assert.AreEqual(2, array.GetItem(1));
-            Assert.AreEqual(3, array.GetItem(2));
-            Assert.AreEqual(0, array.GetItem(3));
-            Assert.AreEqual(3, array.GetItem(-1));
-        }
-
-        [TestMethod]
-        public void Utility_GetItem_2()
-        {
-            List<byte> list = new List<byte> { 1, 2, 3 };
-
-            Assert.AreEqual(1, list.GetItem(0));
-            Assert.AreEqual(2, list.GetItem(1));
-            Assert.AreEqual(3, list.GetItem(2));
-            Assert.AreEqual(0, list.GetItem(3));
-            Assert.AreEqual(3, list.GetItem(-1));
-        }
+//        [TestMethod]
+//        public void Utility_GetItem_1()
+//        {
+//            byte[] array = { 1, 2, 3 };
+//
+//            Assert.AreEqual(1, array.GetItem(0));
+//            Assert.AreEqual(2, array.GetItem(1));
+//            Assert.AreEqual(3, array.GetItem(2));
+//            Assert.AreEqual(0, array.GetItem(3));
+//            Assert.AreEqual(3, array.GetItem(-1));
+//        }
+//
+//        [TestMethod]
+//        public void Utility_GetItem_2()
+//        {
+//            List<byte> list = new List<byte> { 1, 2, 3 };
+//
+//            Assert.AreEqual(1, list.GetItem(0));
+//            Assert.AreEqual(2, list.GetItem(1));
+//            Assert.AreEqual(3, list.GetItem(2));
+//            Assert.AreEqual(0, list.GetItem(3));
+//            Assert.AreEqual(3, list.GetItem(-1));
+//        }
 
         [TestMethod]
         public void Utility_IsOneOf_1()
