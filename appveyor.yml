@@ -24,6 +24,7 @@ before_build:
 - cmd: dotnet restore Source/ManagedIrbis.30.sln
 - cmd: choco install opencover.portable
 - cmd: rem choco install codecov
+- cmd: choco install dottrace
 
 build_script:
 - dotnet msbuild "C:\projects\managedirbis2\Source\ManagedIrbis.30.sln" /m /verbosity:minimal
