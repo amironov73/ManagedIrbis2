@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* NonBufferedStream.cs --
+/* NonBufferedStream.cs -- stream that flushes on every write operation
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM.IO
 {
     /// <summary>
-    ///
+    /// Stream that flushes on every write operation.
     /// </summary>
     [PublicAPI]
     public sealed class NonBufferedStream
@@ -29,7 +29,6 @@ namespace AM.IO
         /// <summary>
         /// Inner stream.
         /// </summary>
-        [NotNull]
         public Stream InnerStream { get; }
 
         #endregion
@@ -41,11 +40,9 @@ namespace AM.IO
         /// </summary>
         public NonBufferedStream
             (
-                [NotNull] Stream innerStream
+                Stream innerStream
             )
         {
-            Sure.NotNull(innerStream, nameof(innerStream));
-
             InnerStream = innerStream;
         }
 
@@ -75,6 +72,7 @@ namespace AM.IO
                 long value
             )
         {
+            Flush();
             InnerStream.SetLength(value);
         }
 
@@ -145,7 +143,7 @@ namespace AM.IO
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return InnerStream.ToString();
+            return InnerStream.ToVisibleString();
         }
 
         #endregion

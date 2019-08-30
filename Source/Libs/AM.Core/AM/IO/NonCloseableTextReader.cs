@@ -11,7 +11,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 using JetBrains.Annotations;
@@ -26,6 +25,7 @@ namespace AM.IO
     /// Non-closeable <see cref="T:System.IO.TextReader"/>.
     /// Call <see cref="RealClose"/> to close it.
     /// </summary>
+    [PublicAPI]
     public class NonCloseableTextReader
         : TextReader,
           IDisposable
@@ -37,7 +37,7 @@ namespace AM.IO
         /// </summary>
         public NonCloseableTextReader
             (
-                [NotNull] TextReader innerReader
+                TextReader innerReader
             )
         {
             Sure.NotNull(innerReader, nameof(innerReader));
@@ -75,7 +75,7 @@ namespace AM.IO
         }
 
         /// <inheritdoc cref="TextReader.Dispose(bool)"/>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         protected override void Dispose
             (
                 bool disposing
@@ -123,7 +123,7 @@ namespace AM.IO
         }
 
         /// <inheritdoc cref="TextReader.ReadLine" />
-        public override string ReadLine()
+        public override string? ReadLine()
         {
             return _innerReader.ReadLine();
         }
@@ -140,7 +140,7 @@ namespace AM.IO
         #region IDisposable members
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
-        [ExcludeFromCodeCoverage]
+        [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         void IDisposable.Dispose()
         {
             // Nothing to do actually
