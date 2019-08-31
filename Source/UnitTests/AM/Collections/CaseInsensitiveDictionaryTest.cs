@@ -30,8 +30,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void CaseInsensitiveDictionary_Construction_2()
         {
-            CaseInsensitiveDictionary<int> dictionary
-                = new CaseInsensitiveDictionary<int>(100);
+            var dictionary = new CaseInsensitiveDictionary<int>(100);
             Assert.AreEqual(0, dictionary.Count);
             dictionary.Add("first", 1);
             dictionary.Add("second", 2);
@@ -50,15 +49,14 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void CaseInsensitiveDictionary_Construction_3()
         {
-            CaseInsensitiveDictionary<int> first
-                = new CaseInsensitiveDictionary<int>
+            var first = new CaseInsensitiveDictionary<int>
                 {
                     ["first"] = 1,
                     ["second"] = 2,
                     ["third"] = 3,
                 };
-            CaseInsensitiveDictionary<int> second
-                = new CaseInsensitiveDictionary<int>(first);
+
+            var second = new CaseInsensitiveDictionary<int>(first);
             Assert.AreEqual(first.Count, second.Count);
             Assert.IsTrue(second.ContainsKey("first"));
             Assert.IsTrue(second.ContainsKey("FIRST"));

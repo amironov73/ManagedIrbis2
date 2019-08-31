@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CloneableCollection.cs -- 
+/* CloneableCollection.cs -- collection of cloneable elements
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,10 +20,10 @@ using JetBrains.Annotations;
 namespace AM.Collections
 {
     /// <summary>
-    /// 
+    /// Collection of cloneable elements.
     /// </summary>
     [PublicAPI]
-    [DebuggerDisplay("Count={Count}")]
+    [DebuggerDisplay("Count={" + nameof(Count) + "}")]
     public class CloneableCollection<T>
         : Collection<T>,
         ICloneable
@@ -33,10 +33,9 @@ namespace AM.Collections
         /// <inheritdoc cref="ICloneable.Clone" />
         public object Clone()
         {
-            CloneableCollection<T> result 
-                = new CloneableCollection<T>();
+            var result = new CloneableCollection<T>();
 
-            foreach (T item in this)
+            foreach (var item in this)
             {
                 result.Add(item);
             }

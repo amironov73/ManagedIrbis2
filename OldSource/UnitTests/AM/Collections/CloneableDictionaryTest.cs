@@ -10,16 +10,14 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void CloneableDictionary_Clone()
         {
-            CloneableDictionary<int, string> source
-                = new CloneableDictionary<int, string>
+            var source = new CloneableDictionary<int, string>
                 {
                     { 1, "one" },
                     { 2, "two" },
                     { 3, "three" }
                 };
 
-            CloneableDictionary<int, string> clone
-                = (CloneableDictionary<int, string>) source.Clone();
+            var clone = (CloneableDictionary<int, string>) source.Clone();
 
             Assert.AreEqual(source.Count, clone.Count);
             var keys = source.Keys;

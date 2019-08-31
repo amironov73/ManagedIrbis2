@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CaseInsensitiveDictionary.cs --
+/* CaseInsensitiveDictionary.cs -- case-insensitive dictionary
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.Collections
 {
     /// <summary>
-    /// 
+    /// Case-insensitive dictionary.
     /// </summary>
     [PublicAPI]
     public class CaseInsensitiveDictionary<T>
@@ -41,7 +41,7 @@ namespace AM.Collections
         public CaseInsensitiveDictionary
             (
                 int capacity
-            ) 
+            )
             : base(capacity, _GetComparer())
         {
         }

@@ -45,7 +45,7 @@ namespace AM.IO
         {
             public readonly byte[] Buffer;
 
-            public Chunk Next;
+            public Chunk? Next;
 
             public Chunk
                 (
@@ -93,10 +93,10 @@ namespace AM.IO
         {
             get
             {
-                int result = 0;
+                var result = 0;
 
                 for (
-                        Chunk chunk = _first;
+                        var chunk = _first;
                         !ReferenceEquals(chunk, null)
                         && !ReferenceEquals(chunk, _last);
                         chunk = chunk.Next
@@ -140,7 +140,9 @@ namespace AM.IO
 
         #region Private members
 
-        private Chunk _first, _current, _last;
+        private Chunk? _first;
+        private Chunk? _current;
+        private Chunk? _last;
         private readonly int _chunkSize;
         private int _position, _read;
 
@@ -151,6 +153,11 @@ namespace AM.IO
                 return false;
             }
 
+            if (ReferenceEquals(_current, null))
+            {
+                throw new BugFoundException("_current == null");
+            }
+
             _current = _current.Next;
             _read = 0;
 
@@ -159,7 +166,7 @@ namespace AM.IO
 
         private void _AppendChunk()
         {
-            Chunk newChunk = new Chunk(_chunkSize);
+            var newChunk = new Chunk(_chunkSize);
             if (ReferenceEquals(_first, null))
             {
                 _first = newChunk;
@@ -167,6 +174,11 @@ namespace AM.IO
             }
             else
             {
+                if (ReferenceEquals(_last, null))
+                {
+                    throw new BugFoundException("_last == null");
+                }
+
                 _last.Next = newChunk;
             }
             _last = newChunk;
@@ -182,14 +194,13 @@ namespace AM.IO
         /// </summary>
         public void CopyFrom
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int bufferSize
             )
         {
-            Sure.NotNull(stream, nameof(stream));
             Sure.Positive(bufferSize, nameof(bufferSize));
 
-            byte[] buffer = new byte[bufferSize];
+            var buffer = new byte[bufferSize];
             int read;
             while ((read = stream.Read(buffer, 0, buffer.Length)) > 0)
             {
@@ -228,15 +239,7 @@ namespace AM.IO
         /// <summary>
         /// Read array of bytes.
         /// </summary>
-        public int Read
-            (
-                [NotNull] byte[] buffer
-            )
-        {
-            Sure.NotNull(buffer, nameof(buffer));
-
-            return Read(buffer, 0, buffer.Length);
-        }
+        public int Read ( byte[] buffer ) => Read(buffer, 0, buffer.Length);
 
         /// <summary>
         /// Read bytes.
@@ -248,7 +251,6 @@ namespace AM.IO
                 int count
             )
         {
-            Sure.NotNull(buffer, nameof(buffer));
             Sure.NonNegative(offset, nameof(offset));
 
             if (count <= 0)
@@ -261,10 +263,10 @@ namespace AM.IO
                 return 0;
             }
 
-            int total = 0;
+            var total = 0;
             do
             {
-                int remaining = ReferenceEquals(_current, _last)
+                var remaining = ReferenceEquals(_current, _last)
                     ? _position - _read
                     : _chunkSize - _read;
 
@@ -276,7 +278,7 @@ namespace AM.IO
                     }
                 }
 
-                int portion = Math.Min(count, remaining);
+                var portion = Math.Min(count, remaining);
                 Array.Copy
                     (
                         _current.Buffer,
@@ -325,10 +327,9 @@ namespace AM.IO
         /// <summary>
         /// Read one line from the current position.
         /// </summary>
-        [CanBeNull]
-        public string ReadLine
+        public string? ReadLine
             (
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
             if (Eof)
@@ -336,15 +337,20 @@ namespace AM.IO
                 return null;
             }
 
-            MemoryStream result = new MemoryStream();
+            if (ReferenceEquals(_current, null))
+            {
+                return null;
+            }
+
+            var result = new MemoryStream();
             byte found = 0;
             while (found == 0)
             {
-                byte[] buffer = _current.Buffer;
+                var buffer = _current.Buffer;
                 int stop = ReferenceEquals(_current, _last)
                     ? _position
                     : _chunkSize;
-                int head = _read;
+                var head = _read;
                 for (; head < stop; head++)
                 {
                     byte c = buffer[head];
@@ -368,6 +374,7 @@ namespace AM.IO
                     }
                 }
             }
+
             if (found == '\r')
             {
                 if (Peek() == '\n')
@@ -391,21 +398,20 @@ namespace AM.IO
         /// <summary>
         /// Get internal buffers.
         /// </summary>
-        [NotNull]
         public byte[][] ToArrays
             (
                 int prefix
             )
         {
-            List<byte[]> result = new List<byte[]>();
+            var result = new List<byte[]>();
 
-            for (int i = 0; i < prefix; i++)
+            for (var i = 0; i < prefix; i++)
             {
                 result.Add(Array.Empty<byte>());
             }
 
             for (
-                    Chunk chunk = _first;
+                    var chunk = _first;
                     !ReferenceEquals(chunk, null)
                     && !ReferenceEquals(chunk, _last);
                     chunk = chunk.Next
@@ -416,7 +422,12 @@ namespace AM.IO
 
             if (_position != 0)
             {
-                byte[] chunk = new byte[_position];
+                if (ReferenceEquals(_last, null))
+                {
+                    throw new BugFoundException("_last == null");
+                }
+
+                var chunk = new byte[_position];
                 Array.Copy(_last.Buffer, 0, chunk, 0, _position);
                 result.Add(chunk);
             }
@@ -427,14 +438,13 @@ namespace AM.IO
         /// <summary>
         /// Get all data as one big array of bytes.
         /// </summary>
-        [NotNull]
         public byte[] ToBigArray()
         {
-            int total = Length;
-            byte[] result = new byte[total];
-            int offset = 0;
+            var total = Length;
+            var result = new byte[total];
+            var offset = 0;
             for (
-                    Chunk chunk = _first;
+                    var chunk = _first;
                     !ReferenceEquals(chunk, null)
                     && !ReferenceEquals(chunk, _last);
                     chunk = chunk.Next
@@ -446,7 +456,19 @@ namespace AM.IO
 
             if (_position != 0)
             {
-                Array.Copy(_last.Buffer, 0, result, offset, _position);
+                if (ReferenceEquals(_last, null))
+                {
+                    throw new BugFoundException("_last == null");
+                }
+
+                Array.Copy
+                    (
+                        _last.Buffer,
+                        0,
+                        result,
+                        offset,
+                        _position
+                    );
             }
 
             return result;
@@ -456,13 +478,7 @@ namespace AM.IO
         /// Write a block of bytes to the current stream
         /// using data read from a buffer.
         /// </summary>
-        public void Write
-            (
-                [NotNull] byte[] buffer
-            )
-        {
-            Write(buffer, 0, buffer.Length);
-        }
+        public void Write ( byte[] buffer ) => Write(buffer, 0, buffer.Length);
 
 
         /// <summary>
@@ -471,12 +487,11 @@ namespace AM.IO
         /// </summary>
         public void Write
             (
-                [NotNull] byte[] buffer,
+                byte[] buffer,
                 int offset,
                 int count
             )
         {
-            Sure.NotNull(buffer, nameof(buffer));
             Sure.NonNegative(offset, nameof(offset));
 
             if (count <= 0)
@@ -491,14 +506,19 @@ namespace AM.IO
 
             do
             {
-                int free = _chunkSize - _position;
+                var free = _chunkSize - _position;
                 if (free == 0)
                 {
                     _AppendChunk();
                     free = _chunkSize;
                 }
 
-                int portion = Math.Min(count, free);
+                if (ReferenceEquals(_last, null))
+                {
+                    throw new BugFoundException("_last == null");
+                }
+
+                var portion = Math.Min(count, free);
                 Array.Copy
                     (
                         buffer,
@@ -519,14 +539,11 @@ namespace AM.IO
         /// </summary>
         public void Write
             (
-                [NotNull] string text,
-                [NotNull] Encoding encoding
+                string text,
+                Encoding encoding
             )
         {
-            Sure.NotNull(text, nameof(text));
-            Sure.NotNull(encoding, nameof(encoding));
-
-            byte[] bytes = encoding.GetBytes(text);
+            var bytes = encoding.GetBytes(text);
 
             Write(bytes);
         }
@@ -547,6 +564,11 @@ namespace AM.IO
             if (_position >= _chunkSize)
             {
                 _AppendChunk();
+            }
+
+            if (ReferenceEquals(_last, null))
+            {
+                throw new BugFoundException("_last == null");
             }
 
             _last.Buffer[_position++] = value;
