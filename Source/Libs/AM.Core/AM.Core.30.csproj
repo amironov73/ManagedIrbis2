@@ -18,7 +18,7 @@
     <ApplicationIcon>BlueBook.ico</ApplicationIcon>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>http://arsmagna.ru</PackageProjectUrl>
-    <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
+    <PackageIcon>arsmagna.png</PackageIcon>
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
@@ -75,6 +75,10 @@
     <Folder Include="AM\Collections\" />
     <Folder Include="AM\Logging\" />
     <Folder Include="AM\Text\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="arsmagna.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>
 
 </Project>

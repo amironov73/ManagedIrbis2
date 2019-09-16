@@ -21,7 +21,7 @@
     <Description>Fully managed framework for popular russian library automation system IRBIS64.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>http://arsmagna.ru</PackageProjectUrl>
-    <PackageIconUrl>http://arsmagna.ru/images/arsmagna-icon.png</PackageIconUrl>
+    <PackageIcon>arsmagna.png</PackageIcon>
     <RepositoryUrl>https://github.com/amironov73/ManagedIrbis2</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AssemblyOriginatorKeyFile>ArsMagna.private.snk</AssemblyOriginatorKeyFile>
@@ -79,5 +79,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Release\netstandard2.0\ManagedIrbis.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="arsmagna.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
 
 </Project>
