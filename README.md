@@ -9,8 +9,7 @@ Currently supports:
 
 * Windows 7/10 x64
 * MacOS 10.14
-* .NET Core 2.2 SDK
-* .NET Core 3.0 SDK preview 8
+* .NET Core 3.0 SDK
 
 ### Build status
 

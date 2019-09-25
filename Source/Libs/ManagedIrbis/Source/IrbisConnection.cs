@@ -1013,6 +1013,18 @@ namespace ManagedIrbis
         } // method SearchReadOneRecordAsync
 
         /// <summary>
+        /// Полнотекстовый поиск.
+        /// </summary>
+        /// <param name="parameters"></param>
+        public void SearchText
+            (
+                TextParameters parameters
+            )
+        {
+            // TODO implement
+        }
+
+        /// <summary>
         ///
         /// </summary>
         [NotNull]
