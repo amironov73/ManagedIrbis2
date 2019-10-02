@@ -4,13 +4,14 @@
 /* StreamUtility.cs -- stream manipulation routines.
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 
 using AM.Logging;
@@ -39,12 +40,9 @@ namespace AM.IO
             (
                 Stream sourceStream,
                 Stream destinationStream,
-                int chunkSize
+                int chunkSize = 0
             )
         {
-            Sure.NotNull(sourceStream, nameof(sourceStream));
-            Sure.NotNull(destinationStream, nameof(destinationStream));
-
             if (chunkSize <= 0)
             {
                 chunkSize = 4 * 1024;
@@ -74,9 +72,6 @@ namespace AM.IO
                 Stream secondStream
             )
         {
-            Sure.NotNull(firstStream, nameof(firstStream));
-            Sure.NotNull(secondStream, nameof(secondStream));
-
             const int bufferSize = 1024;
             var firstArray = stackalloc byte[bufferSize];
             var firstBuffer = new Span<byte>(firstArray, bufferSize);
@@ -116,8 +111,6 @@ namespace AM.IO
                 Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             return stream.ReadByte() switch
             {
                 0 => false,
@@ -135,11 +128,10 @@ namespace AM.IO
                 int count
             )
         {
-            Sure.NotNull(stream, nameof(stream));
             Sure.Positive(count, nameof(count));
 
-            byte[] result = new byte[count];
-            int read = stream.Read(result, 0, count);
+            var result = new byte[count];
+            var read = stream.Read(result, 0, count);
             if (read <= 0)
             {
                 return null;
@@ -275,16 +267,13 @@ namespace AM.IO
         /// <seealso cref="Write(Stream,string,Encoding)"/>
         public static string ReadString
             (
-                [NotNull] Stream stream,
-                [NotNull] Encoding encoding
+                Stream stream,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(encoding, nameof(encoding));
-
-            int count = ReadInt32(stream);
-            byte[] bytes = ReadExact(stream, count);
-            string result = encoding.GetString(bytes);
+            var count = ReadInt32(stream);
+            var bytes = ReadExact(stream, count);
+            var result = encoding.GetString(bytes);
 
             return result;
         }
@@ -295,11 +284,9 @@ namespace AM.IO
         /// </summary>
         public static string ReadString
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             return ReadString(stream, Encoding.UTF8);
         }
 
@@ -309,14 +296,12 @@ namespace AM.IO
         /// </summary>
         public static short[] ReadInt16Array
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            int length = ReadInt32(stream);
-            short[] result = new short[length];
-            for (int i = 0; i < length; i++)
+            var length = ReadInt32(stream);
+            var result = new short[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = ReadInt16(stream);
             }
@@ -331,14 +316,12 @@ namespace AM.IO
         [CLSCompliant(false)]
         public static ushort[] ReadUInt16Array
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            int length = ReadInt32(stream);
-            ushort[] result = new ushort[length];
-            for (int i = 0; i < length; i++)
+            var length = ReadInt32(stream);
+            var result = new ushort[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = ReadUInt16(stream);
             }
@@ -352,14 +335,12 @@ namespace AM.IO
         /// </summary>
         public static int[] ReadInt32Array
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            int length = ReadInt32(stream);
-            int[] result = new int[length];
-            for (int i = 0; i < length; i++)
+            var length = ReadInt32(stream);
+            var result = new int[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = ReadInt32(stream);
             }
@@ -371,18 +352,15 @@ namespace AM.IO
         /// Reads array of <see cref="UInt32"/> values from the
         /// <see cref="Stream"/>.
         /// </summary>
-        [NotNull]
         [CLSCompliant(false)]
         public static uint[] ReadUInt32Array
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            int length = ReadInt32(stream);
-            uint[] result = new uint[length];
-            for (int i = 0; i < length; i++)
+            var length = ReadInt32(stream);
+            var result = new uint[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = ReadUInt32(stream);
             }
@@ -394,19 +372,15 @@ namespace AM.IO
         /// Reads array of <see cref="String"/>'s from the given stream until the end
         /// of the stream using specified <see cref="Encoding"/>.
         /// </summary>
-        [NotNull]
         public static string[] ReadStringArray
             (
-                [NotNull] Stream stream,
-                [NotNull] Encoding encoding
+                Stream stream,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(encoding, nameof(encoding));
-
-            int length = ReadInt32(stream);
-            string[] result = new string[length];
-            for (int i = 0; i < length; i++)
+            var length = ReadInt32(stream);
+            var result = new string[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = ReadString(stream, encoding);
             }
@@ -418,14 +392,11 @@ namespace AM.IO
         /// Reads array of <see cref="String"/>'s from the <see cref="Stream"/>
         /// using UTF-8 <see cref="Encoding"/>.
         /// </summary>
-        [NotNull]
         public static string[] ReadStringArray
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             return ReadStringArray(stream, Encoding.UTF8);
         }
 
@@ -453,9 +424,7 @@ namespace AM.IO
                 Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            long binary = ReadInt64(stream);
+            var binary = ReadInt64(stream);
 
             return DateTime.FromBinary(binary);
         }
@@ -463,15 +432,15 @@ namespace AM.IO
         /// <summary>
         /// Чтение точного числа байт.
         /// </summary>
-        [NotNull]
         public static byte[] ReadExact
             (
                 Stream stream,
                 int length
             )
         {
-            byte[] buffer = new byte[length];
-            if (stream.Read(buffer, 0, length) != length)
+            var buffer = new byte[length];
+            if (length != 0 &&
+                stream.Read(buffer, 0, length) != length)
             {
                 Log.Error
                     (
@@ -479,7 +448,7 @@ namespace AM.IO
                         + "unexpected end of stream"
                     );
 
-                throw new IOException();
+                throw new IOException("Unexpected end of stream");
             }
 
             return buffer;
@@ -494,7 +463,8 @@ namespace AM.IO
                 Span<byte> span
             )
         {
-            if (stream.Read(span) != span.Length)
+            if (!span.IsEmpty &&
+                stream.Read(span) != span.Length)
             {
                 Log.Error
                     (
@@ -502,7 +472,7 @@ namespace AM.IO
                         + "unexpected end of stream"
                     );
 
-                throw new IOException();
+                throw new IOException("Unexpected end of stream");
             }
         }
 
@@ -515,8 +485,6 @@ namespace AM.IO
                 bool value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             stream.WriteByte
                 (
                     value
@@ -638,16 +606,12 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] string value,
-                [NotNull] Encoding encoding
+                Stream stream,
+                string value,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(value, nameof(value));
-            Sure.NotNull(encoding, nameof(encoding));
-
-            byte[] bytes = encoding.GetBytes(value);
+            var bytes = encoding.GetBytes(value);
             Write(stream, bytes.Length);
             stream.Write(bytes, 0, bytes.Length);
         }
@@ -658,13 +622,10 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] string value
+                Stream stream,
+                string value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(value, nameof(value));
-
             Write(stream, value, Encoding.UTF8);
         }
 
@@ -673,17 +634,14 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] short[] values
+                Stream stream,
+                short[] values
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-
             Write(stream, values.Length);
 
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 Write(stream, values[i]);
             }
@@ -695,17 +653,14 @@ namespace AM.IO
         [CLSCompliant(false)]
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] ushort[] values
+                Stream stream,
+                ushort[] values
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-
             Write(stream, values.Length);
 
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 Write(stream, values[i]);
             }
@@ -728,17 +683,14 @@ namespace AM.IO
         /// <see cref="ReadInt32Array"/>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] int[] values
+                Stream stream,
+                int[] values
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-
             Write(stream, values.Length);
 
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 Write(stream, values[i]);
             }
@@ -762,17 +714,14 @@ namespace AM.IO
         [CLSCompliant(false)]
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] uint[] values
+                Stream stream,
+                uint[] values
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-
             Write(stream, values.Length);
 
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 Write(stream, values[i]);
             }
@@ -797,19 +746,15 @@ namespace AM.IO
         /// <see cref="ReadStringArray(Stream,Encoding)"/>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] string[] values,
-                [NotNull] Encoding encoding
+                Stream stream,
+                string[] values,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-            Sure.NotNull(encoding, nameof(encoding));
-
             Write(stream, values.Length);
 
             // ReSharper disable once ForCanBeConvertedToForeach
-            for (int i = 0; i < values.Length; i++)
+            for (var i = 0; i < values.Length; i++)
             {
                 Write(stream, values[i], encoding);
             }
@@ -832,13 +777,10 @@ namespace AM.IO
         /// <seealso cref="ReadStringArray(Stream)"/>
         public static void Write
             (
-                [NotNull] Stream stream,
-                [NotNull] string[] values
+                Stream stream,
+                string[] values
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(values, nameof(values));
-
             Write(stream, values, Encoding.UTF8);
         }
 
@@ -887,9 +829,29 @@ namespace AM.IO
                 int offset
             )
         {
-            byte temp = array[offset];
-            array[offset] = array[offset + 1];
-            array[offset + 1] = temp;
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp = array[offset];
+                array[offset] = array[offset + 1];
+                array[offset + 1] = temp;
+            }
+        }
+
+        /// <summary>
+        /// Network to host byte conversion.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void NetworkToHost16
+            (
+                byte* ptr
+            )
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp = *ptr;
+                *ptr = ptr[1];
+                ptr[1] = temp;
+            }
         }
 
         /// <summary>
@@ -901,12 +863,35 @@ namespace AM.IO
                 int offset
             )
         {
-            byte temp1 = array[offset];
-            byte temp2 = array[offset + 1];
-            array[offset] = array[offset + 3];
-            array[offset + 1] = array[offset + 2];
-            array[offset + 3] = temp1;
-            array[offset + 2] = temp2;
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp1 = array[offset];
+                var temp2 = array[offset + 1];
+                array[offset] = array[offset + 3];
+                array[offset + 1] = array[offset + 2];
+                array[offset + 3] = temp1;
+                array[offset + 2] = temp2;
+            }
+        }
+
+        /// <summary>
+        /// Network to host byte conversion.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void NetworkToHost32
+            (
+                byte* ptr
+            )
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp1 = *ptr;
+                var temp2 = ptr[1];
+                *ptr = ptr[3];
+                ptr[1] = ptr[2];
+                ptr[3] = temp1;
+                ptr[2] = temp2;
+            }
         }
 
         /// <summary>
@@ -915,7 +900,7 @@ namespace AM.IO
         /// <remarks>IRBIS64-oriented!</remarks>
         public static void NetworkToHost64
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
@@ -924,17 +909,52 @@ namespace AM.IO
         }
 
         /// <summary>
+        /// Network to host byte conversion.
+        /// </summary>
+        /// <remarks>IRBIS64-oriented!</remarks>
+        [CLSCompliant(false)]
+        public static unsafe void NetworkToHost64
+            (
+                byte* ptr
+            )
+        {
+            NetworkToHost32(ptr);
+            NetworkToHost32(ptr + 4);
+        }
+
+        /// <summary>
         /// Host to network byte conversion.
         /// </summary>
         public static void HostToNetwork16
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
-            byte temp = array[offset];
-            array[offset] = array[offset + 1];
-            array[offset + 1] = temp;
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp = array[offset];
+                array[offset] = array[offset + 1];
+                array[offset + 1] = temp;
+            }
+        }
+
+        /// <summary>
+        /// Host to network byte conversion.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void HostToNetwork16
+            (
+                byte* ptr
+            )
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp = *ptr;
+                *ptr = ptr[1];
+                ptr[1] = temp;
+            }
+
         }
 
         /// <summary>
@@ -942,12 +962,12 @@ namespace AM.IO
         /// </summary>
         public static void HostToNetwork32
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
-            byte temp1 = array[offset];
-            byte temp2 = array[offset + 1];
+            var temp1 = array[offset];
+            var temp2 = array[offset + 1];
             array[offset] = array[offset + 3];
             array[offset + 1] = array[offset + 2];
             array[offset + 3] = temp1;
@@ -957,10 +977,30 @@ namespace AM.IO
         /// <summary>
         /// Host to network byte conversion.
         /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void HostToNetwork32
+            (
+                byte* ptr
+            )
+        {
+            if (BitConverter.IsLittleEndian)
+            {
+                var temp1 = *ptr;
+                var temp2 = ptr[1];
+                *ptr = ptr[3];
+                ptr[1] = ptr[2];
+                ptr[3] = temp1;
+                ptr[2] = temp2;
+            }
+        }
+
+        /// <summary>
+        /// Host to network byte conversion.
+        /// </summary>
         /// <remarks>IRBIS64-oriented!</remarks>
         public static void HostToNetwork64
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
@@ -969,90 +1009,102 @@ namespace AM.IO
         }
 
         /// <summary>
-        /// Read integer in network byte order.
+        /// Host to network byte conversion.
         /// </summary>
-        public static short ReadInt16Network
+        /// <remarks>IRBIS64-oriented!</remarks>
+        [CLSCompliant(false)]
+        public static unsafe void HostToNetwork64
             (
-                [NotNull] this Stream stream
+                byte* ptr
             )
         {
-            byte[] buffer = ReadExact(stream, 2);
-            NetworkToHost16(buffer, 0);
-            short result = BitConverter.ToInt16(buffer, 0);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Read integer in host byte order.
-        /// </summary>
-        public static short ReadInt16Host
-            (
-                [NotNull] this Stream stream
-            )
-        {
-            byte[] buffer = ReadExact(stream, 2);
-            short result = BitConverter.ToInt16(buffer, 0);
-
-            return result;
+            HostToNetwork32(ptr);
+            HostToNetwork32(ptr + 4);
         }
 
         /// <summary>
         /// Read integer in network byte order.
         /// </summary>
-        public static int ReadInt32Network
-            (
-                [NotNull] this Stream stream
-            )
-        {
-            byte[] buffer = ReadExact(stream, 4);
-            NetworkToHost32(buffer, 0);
-            int result = BitConverter.ToInt32(buffer, 0);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Read integer in host byte order.
-        /// </summary>
-        public static int ReadInt32Host
-            (
-                [NotNull] this Stream stream
-            )
-        {
-            byte[] buffer = ReadExact(stream, 4);
-            int result = BitConverter.ToInt32(buffer, 0);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Read integer in network byte order.
-        /// </summary>
-        public static long ReadInt64Network
+        public static unsafe short ReadInt16Network
             (
                 this Stream stream
             )
         {
-            byte[] buffer = ReadExact(stream, 8);
-            NetworkToHost64(buffer, 0);
-            long result = BitConverter.ToInt64(buffer, 0);
-
-            return result;
+            var buffer = stackalloc byte[sizeof(short)];
+            var span = new Span<byte>(buffer, sizeof(short));
+            ReadExact(stream, span);
+            return IPAddress.NetworkToHostOrder(*(short*) buffer);
         }
 
         /// <summary>
         /// Read integer in host byte order.
         /// </summary>
-        public static long ReadInt64Host
+        public static unsafe short ReadInt16Host
             (
                 this Stream stream
             )
         {
-            byte[] buffer = ReadExact(stream, 8);
-            long result = BitConverter.ToInt64(buffer, 0);
+            var buffer = stackalloc byte[sizeof(short)];
+            var span = new Span<byte>(buffer, sizeof(short));
+            ReadExact(stream, span);
+            return *(short*) buffer;
+        }
 
-            return result;
+        /// <summary>
+        /// Read integer in network byte order.
+        /// </summary>
+        public static unsafe int ReadInt32Network
+            (
+                this Stream stream
+            )
+        {
+            var buffer = stackalloc byte[sizeof(int)];
+            var span = new Span<byte>(buffer, sizeof(int));
+            ReadExact(stream, span);
+            return IPAddress.NetworkToHostOrder(*(int*) buffer);
+        }
+
+        /// <summary>
+        /// Read integer in host byte order.
+        /// </summary>
+        public static unsafe int ReadInt32Host
+            (
+                this Stream stream
+            )
+        {
+            var buffer = stackalloc byte[sizeof(int)];
+            var span = new Span<byte>(buffer, sizeof(int));
+            ReadExact(stream, span);
+            return *(int*) buffer;
+        }
+
+        /// <summary>
+        /// Read integer in network byte order.
+        /// </summary>
+        public static unsafe long ReadInt64Network
+            (
+                this Stream stream
+            )
+        {
+            var buffer = stackalloc byte[sizeof(long)];
+            var span = new Span<byte>(buffer, sizeof(long));
+            ReadExact(stream, span);
+            NetworkToHost64(buffer);
+            return *(long*) buffer;
+        }
+
+        /// <summary>
+        /// Read integer in host byte order.
+        /// </summary>
+        public static unsafe long ReadInt64Host
+            (
+                this Stream stream
+            )
+        {
+            var buffer = stackalloc byte[sizeof(long)];
+            var span = new Span<byte>(buffer, sizeof(long));
+            ReadExact(stream, span);
+            return *(long*) buffer;
         }
 
         /// <summary>
@@ -1062,20 +1114,17 @@ namespace AM.IO
         /// ответ, после чего закрывает соединение).</remarks>
         /// <param name="stream">Поток для чтения.</param>
         /// <returns>Массив считанных байт.</returns>
-        [NotNull]
         public static byte[] ReadToEnd
             (
                 this Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            MemoryStream result = new MemoryStream(); //-V3114
+            var result = new MemoryStream(); //-V3114
 
             while (true)
             {
-                byte[] buffer = new byte[50 * 1024];
-                int read = stream.Read(buffer, 0, buffer.Length);
+                var buffer = new byte[50 * 1024];
+                var read = stream.Read(buffer, 0, buffer.Length);
                 if (read <= 0)
                 {
                     break;
@@ -1089,43 +1138,100 @@ namespace AM.IO
         /// <summary>
         /// Write 16-bit integer to the stream in network byte order.
         /// </summary>
-        public static void WriteInt16Network
+        public static unsafe void WriteInt16Network
             (
                 this Stream stream,
                 short value
             )
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            HostToNetwork16(buffer, 0);
-            stream.Write(buffer, 0, 2);
+            value = IPAddress.HostToNetworkOrder(value);
+            var ptr = (byte*)&value;
+            var span = new Span<byte>(ptr, sizeof(short));
+            stream.Write(span);
+        }
+
+        /// <summary>
+        /// Write 16-bit integer to the stream in network byte order.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void WriteUInt16Network
+            (
+                this Stream stream,
+                ushort value
+            )
+        {
+            unchecked
+            {
+                value = (ushort) IPAddress.HostToNetworkOrder((short) value);
+                var ptr = (byte*) &value;
+                var span = new Span<byte>(ptr, sizeof(ushort));
+                stream.Write(span);
+            }
         }
 
         /// <summary>
         /// Write 32-bit integer to the stream in network byte order.
         /// </summary>
-        public static void WriteInt32Network
+        public static unsafe void WriteInt32Network
             (
                 this Stream stream,
                 int value
             )
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            HostToNetwork32(buffer, 0);
-            stream.Write(buffer, 0, 4);
+            value = IPAddress.HostToNetworkOrder(value);
+            var ptr = (byte*)&value;
+            var span = new Span<byte>(ptr, sizeof(int));
+            stream.Write(span);
+        }
+
+        /// <summary>
+        /// Write 32-bit integer to the stream in network byte order.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void WriteUInt32Network
+            (
+                this Stream stream,
+                uint value
+            )
+        {
+            unchecked
+            {
+                value = (uint) IPAddress.HostToNetworkOrder((int)value);
+                var ptr = (byte*) &value;
+                var span = new Span<byte>(ptr, sizeof(uint));
+                stream.Write(span);
+            }
         }
 
         /// <summary>
         /// Write 64-bit integer to the stream in network byte order.
         /// </summary>
-        public static void WriteInt64Network
+        public static unsafe void WriteInt64Network
             (
                 this Stream stream,
                 long value
             )
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            HostToNetwork64(buffer, 0);
-            stream.Write(buffer, 0, 8);
+            var ptr = (byte*)&value;
+            HostToNetwork64(ptr);
+            var span = new Span<byte>(ptr, sizeof(long));
+            stream.Write(span);
+        }
+
+        /// <summary>
+        /// Write 64-bit integer to the stream in network byte order.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe void WriteUInt64Network
+            (
+                this Stream stream,
+                ulong value
+            )
+        {
+            var ptr = (byte*)&value;
+            HostToNetwork64(ptr);
+            var span = new Span<byte>(ptr, sizeof(ulong));
+            stream.Write(span);
         }
 
         #endregion

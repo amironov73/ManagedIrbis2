@@ -342,6 +342,18 @@ namespace UnitTests.AM.IO
         }
 
         [TestMethod]
+        public unsafe void StreamUtility_HostToNetwork16_2()
+        {
+            byte[] array = {1, 2};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.HostToNetwork16(ptr);
+                Assert.AreEqual(2, array[0]);
+                Assert.AreEqual(1, array[1]);
+            }
+        }
+
+        [TestMethod]
         public void StreamUtility_HostToNetwork32_1()
         {
             byte[] array = {1, 2, 3, 4};
@@ -350,6 +362,20 @@ namespace UnitTests.AM.IO
             Assert.AreEqual(3, array[1]);
             Assert.AreEqual(2, array[2]);
             Assert.AreEqual(1, array[3]);
+        }
+
+        [TestMethod]
+        public unsafe void StreamUtility_HostToNetwork32_2()
+        {
+            byte[] array = {1, 2, 3, 4};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.HostToNetwork32(ptr);
+                Assert.AreEqual(4, array[0]);
+                Assert.AreEqual(3, array[1]);
+                Assert.AreEqual(2, array[2]);
+                Assert.AreEqual(1, array[3]);
+            }
         }
 
         [TestMethod]
@@ -365,6 +391,103 @@ namespace UnitTests.AM.IO
             Assert.AreEqual(7, array[5]);
             Assert.AreEqual(6, array[6]);
             Assert.AreEqual(5, array[7]);
+        }
+
+        [TestMethod]
+        public unsafe void StreamUtility_HostToNetwork64_2()
+        {
+            byte[] array = {1, 2, 3, 4, 5, 6, 7, 8};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.HostToNetwork64(ptr);
+                Assert.AreEqual(4, array[0]);
+                Assert.AreEqual(3, array[1]);
+                Assert.AreEqual(2, array[2]);
+                Assert.AreEqual(1, array[3]);
+                Assert.AreEqual(8, array[4]);
+                Assert.AreEqual(7, array[5]);
+                Assert.AreEqual(6, array[6]);
+                Assert.AreEqual(5, array[7]);
+            }
+        }
+
+        [TestMethod]
+        public void StreamUtility_NetworkToHost16_1()
+        {
+            byte[] array = {1, 2};
+            StreamUtility.NetworkToHost16(array, 0);
+            Assert.AreEqual(2, array[0]);
+            Assert.AreEqual(1, array[1]);
+        }
+
+        [TestMethod]
+        public unsafe void StreamUtility_NetworkToHost16_2()
+        {
+            byte[] array = {1, 2};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.NetworkToHost16(ptr);
+                Assert.AreEqual(2, array[0]);
+                Assert.AreEqual(1, array[1]);
+            }
+        }
+
+        [TestMethod]
+        public void StreamUtility_NetworkToHost32_1()
+        {
+            byte[] array = {1, 2, 3, 4};
+            StreamUtility.NetworkToHost32(array, 0);
+            Assert.AreEqual(4, array[0]);
+            Assert.AreEqual(3, array[1]);
+            Assert.AreEqual(2, array[2]);
+            Assert.AreEqual(1, array[3]);
+        }
+
+        [TestMethod]
+        public unsafe void StreamUtility_NetworkToHost32_2()
+        {
+            byte[] array = {1, 2, 3, 4};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.NetworkToHost32(ptr);
+                Assert.AreEqual(4, array[0]);
+                Assert.AreEqual(3, array[1]);
+                Assert.AreEqual(2, array[2]);
+                Assert.AreEqual(1, array[3]);
+            }
+        }
+
+        [TestMethod]
+        public void StreamUtility_NetworkToHost64_1()
+        {
+            byte[] array = {1, 2, 3, 4, 5, 6, 7, 8};
+            StreamUtility.NetworkToHost64(array, 0);
+            Assert.AreEqual(4, array[0]);
+            Assert.AreEqual(3, array[1]);
+            Assert.AreEqual(2, array[2]);
+            Assert.AreEqual(1, array[3]);
+            Assert.AreEqual(8, array[4]);
+            Assert.AreEqual(7, array[5]);
+            Assert.AreEqual(6, array[6]);
+            Assert.AreEqual(5, array[7]);
+        }
+
+        [TestMethod]
+        public unsafe void StreamUtility_NetworkToHost64_2()
+        {
+            byte[] array = {1, 2, 3, 4, 5, 6, 7, 8};
+            fixed (byte* ptr = &array[0])
+            {
+                StreamUtility.NetworkToHost64(ptr);
+                Assert.AreEqual(4, array[0]);
+                Assert.AreEqual(3, array[1]);
+                Assert.AreEqual(2, array[2]);
+                Assert.AreEqual(1, array[3]);
+                Assert.AreEqual(8, array[4]);
+                Assert.AreEqual(7, array[5]);
+                Assert.AreEqual(6, array[6]);
+                Assert.AreEqual(5, array[7]);
+            }
         }
 
         [TestMethod]
@@ -422,7 +545,7 @@ namespace UnitTests.AM.IO
         }
 
         [TestMethod]
-        public void StreamUtility_Write16Network_1()
+        public void StreamUtility_WriteInt16Network_1()
         {
             var stream = new MemoryStream();
             StreamUtility.WriteInt16Network(stream, 0x0102);
@@ -433,7 +556,7 @@ namespace UnitTests.AM.IO
         }
 
         [TestMethod]
-        public void StreamUtility_Write32Network_1()
+        public void StreamUtility_WriteInt32Network_1()
         {
             var stream = new MemoryStream();
             StreamUtility.WriteInt32Network(stream, 0x01020304);
@@ -446,10 +569,51 @@ namespace UnitTests.AM.IO
         }
 
         [TestMethod]
-        public void StreamUtility_Write64Network_1()
+        public void StreamUtility_WriteInt64Network_1()
         {
             var stream = new MemoryStream();
             StreamUtility.WriteInt64Network(stream, 0x0102030405060708L);
+            var array = stream.ToArray();
+            Assert.AreEqual(8, array.Length);
+            Assert.AreEqual(5, array[0]);
+            Assert.AreEqual(6, array[1]);
+            Assert.AreEqual(7, array[2]);
+            Assert.AreEqual(8, array[3]);
+            Assert.AreEqual(1, array[4]);
+            Assert.AreEqual(2, array[5]);
+            Assert.AreEqual(3, array[6]);
+            Assert.AreEqual(4, array[7]);
+        }
+
+        [TestMethod]
+        public void StreamUtility_WriteUInt16Network_1()
+        {
+            var stream = new MemoryStream();
+            StreamUtility.WriteUInt16Network(stream, 0x0102);
+            var array = stream.ToArray();
+            Assert.AreEqual(2, array.Length);
+            Assert.AreEqual(1, array[0]);
+            Assert.AreEqual(2, array[1]);
+        }
+
+        [TestMethod]
+        public void StreamUtility_WriteUInt32Network_1()
+        {
+            var stream = new MemoryStream();
+            StreamUtility.WriteUInt32Network(stream, 0x01020304);
+            var array = stream.ToArray();
+            Assert.AreEqual(4, array.Length);
+            Assert.AreEqual(1, array[0]);
+            Assert.AreEqual(2, array[1]);
+            Assert.AreEqual(3, array[2]);
+            Assert.AreEqual(4, array[3]);
+        }
+
+        [TestMethod]
+        public void StreamUtility_WriteUInt64Network_1()
+        {
+            var stream = new MemoryStream();
+            StreamUtility.WriteUInt64Network(stream, 0x0102030405060708L);
             var array = stream.ToArray();
             Assert.AreEqual(8, array.Length);
             Assert.AreEqual(5, array[0]);
