@@ -33,4 +33,8 @@
     <ProjectReference Include="..\Libs\ManagedIrbis\ManagedIrbis.30.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ManagedIrbis\Direct" />
+  </ItemGroup>
+
 </Project>

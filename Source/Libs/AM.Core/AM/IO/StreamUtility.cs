@@ -11,15 +11,15 @@
 
 using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 
-using AM.Core;
 using AM.Logging;
 
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace AM.IO
 {
@@ -35,7 +35,7 @@ namespace AM.IO
         /// Appends one's stream contents (starting from current position)
         /// to another stream.
         /// </summary>
-        public static void AppendTo
+        public static unsafe void AppendTo
             (
                 Stream sourceStream,
                 Stream destinationStream,
@@ -50,17 +50,18 @@ namespace AM.IO
                 chunkSize = 4 * 1024;
             }
 
-            byte[] buffer = new byte[chunkSize];
+            var buffer = stackalloc byte[chunkSize];
+            var span = new Span<byte>(buffer, chunkSize);
             destinationStream.Seek(0, SeekOrigin.End);
             while (true)
             {
-                int readed = sourceStream.Read(buffer, 0, chunkSize);
-                if (readed <= 0)
+                var read = sourceStream.Read(span);
+                if (read <= 0)
                 {
                     break;
                 }
 
-                destinationStream.Write(buffer, 0, readed);
+                destinationStream.Write(span.Slice(0, read));
             }
         }
 
@@ -77,26 +78,26 @@ namespace AM.IO
             Sure.NotNull(secondStream, nameof(secondStream));
 
             const int bufferSize = 1024;
-            byte* firstArray = stackalloc byte[bufferSize];
-            Span<byte> firstBuffer = MemoryMarshal.CreateSpan(ref firstArray[0], bufferSize);
-            byte* secondArray = stackalloc byte[bufferSize];
-            Span<byte> secondBuffer = MemoryMarshal.CreateSpan(ref secondArray[0], bufferSize);
+            var firstArray = stackalloc byte[bufferSize];
+            var firstBuffer = new Span<byte>(firstArray, bufferSize);
+            var secondArray = stackalloc byte[bufferSize];
+            var secondBuffer = new Span<byte>(secondArray, bufferSize);
             while (true)
             {
-                int firstReaded = firstStream.Read(firstBuffer);
-                int secondReaded = secondStream.Read(secondBuffer);
-                int difference = firstReaded - secondReaded;
+                var firstRead = firstStream.Read(firstBuffer);
+                var secondRead = secondStream.Read(secondBuffer);
+                var difference = firstRead - secondRead;
                 if (difference != 0)
                 {
                     return difference;
                 }
 
-                if (firstReaded == 0)
+                if (firstRead == 0)
                 {
                     return 0;
                 }
 
-                for (int i = 0; i < firstReaded; i++)
+                for (var i = 0; i < firstRead; i++)
                 {
                     difference = firstBuffer[i] - secondBuffer[i];
                     if (difference != 0)
@@ -105,41 +106,6 @@ namespace AM.IO
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Read as up to <paramref name="maximum"/> bytes
-        /// from the given stream.
-        /// </summary>
-        public static byte[] ReadAsMuchAsPossible
-            (
-                Stream stream,
-                int maximum
-            )
-        {
-            Sure.NotNull(stream, nameof(stream));
-
-            if (maximum < 0)
-            {
-                Log.Error
-                    (
-                        "StreamUtility::ReadAsMuchAsPossible: "
-                        + "maximum="
-                        + maximum
-                    );
-
-                throw new ArgumentOutOfRangeException(nameof(maximum));
-            }
-
-            byte[] result = new byte[maximum];
-            int readed = stream.Read(result, 0, maximum);
-            if (readed <= 0)
-            {
-                return new byte[0];
-            }
-            Array.Resize(ref result, readed);
-
-            return result;
         }
 
         /// <summary>
@@ -152,18 +118,12 @@ namespace AM.IO
         {
             Sure.NotNull(stream, nameof(stream));
 
-            int value = stream.ReadByte();
-            switch (value)
+            return stream.ReadByte() switch
             {
-                case 0:
-                    return false;
-
-                case -1:
-                    throw new IOException();
-
-                default:
-                    return true;
-            }
+                0 => false,
+                -1 => throw new IOException(),
+                _ => true
+            };
         }
 
         /// <summary>
@@ -196,15 +156,14 @@ namespace AM.IO
         /// <summary>
         /// Reads <see cref="Int16"/> value from the <see cref="Stream"/>.
         /// </summary>
-        public static short ReadInt16
+        public static unsafe short ReadInt16
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            short value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            short value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(short));
+            ReadExact(stream, span);
             return value;
         }
 
@@ -212,30 +171,28 @@ namespace AM.IO
         /// Reads <see cref="UInt16"/> value from the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static ushort ReadUInt16
+        public static unsafe ushort ReadUInt16
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            ushort value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            ushort value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(ushort));
+            ReadExact(stream, span);
             return value;
         }
 
         /// <summary>
         /// Reads <see cref="Int32"/> value from the <see cref="Stream"/>.
         /// </summary>
-        public static int ReadInt32
+        public static unsafe int ReadInt32
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            int value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            int value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(int));
+            ReadExact(stream, span);
             return value;
         }
 
@@ -243,30 +200,28 @@ namespace AM.IO
         /// Reads <see cref="UInt32"/> value from the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static uint ReadUInt32
+        public static unsafe uint ReadUInt32
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            uint value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            uint value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(uint));
+            ReadExact(stream, span);
             return value;
         }
 
         /// <summary>
         /// Reads <see cref="Int64"/> value from the <see cref="Stream"/>.
         /// </summary>
-        public static long ReadInt64
+        public static unsafe long ReadInt64
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            long value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            long value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(long));
+            ReadExact(stream, span);
             return value;
         }
 
@@ -274,45 +229,42 @@ namespace AM.IO
         /// Reads <see cref="UInt64"/> value from the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static ulong ReadUInt64
+        public static unsafe ulong ReadUInt64
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            ulong value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            ulong value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(ulong));
+            ReadExact(stream, span);
             return value;
         }
 
         /// <summary>
         /// Reads <see cref="Single"/> value from the <see cref="Stream"/>.
         /// </summary>
-        public static float ReadSingle
+        public static unsafe float ReadSingle
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            float value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            float value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(float));
+            ReadExact(stream, span);
             return value;
         }
 
         /// <summary>
         /// Reads <see cref="Double"/> value from the <see cref="Stream"/>.
         /// </summary>
-        public static double ReadDouble
+        public static unsafe double ReadDouble
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            double value = 0;
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            ReadExact(stream, buffer);
-
+            double value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(double));
+            ReadExact(stream, span);
             return value;
         }
 
@@ -481,17 +433,16 @@ namespace AM.IO
         /// Reads the <see cref="Decimal"/> from the specified
         /// <see cref="Stream"/>.
         /// </summary>
-        public static decimal ReadDecimal
+        public static unsafe decimal ReadDecimal
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            int[] bits = ReadInt32Array(stream);
-            return new decimal(bits);
+            decimal value = default;
+            var span = new Span<byte>((byte*)&value, sizeof(decimal));
+            ReadExact(stream, span);
+            return value;
         }
-
 
         /// <summary>
         /// Reads the date time.
@@ -499,7 +450,7 @@ namespace AM.IO
         /// <param name="stream">The stream.</param>
         public static DateTime ReadDateTime
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
             Sure.NotNull(stream, nameof(stream));
@@ -515,7 +466,7 @@ namespace AM.IO
         [NotNull]
         public static byte[] ReadExact
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int length
             )
         {
@@ -537,7 +488,7 @@ namespace AM.IO
         /// <summary>
         /// Чтение точного числа байт.
         /// </summary>
-        public static unsafe void ReadExact
+        public static void ReadExact
             (
                 Stream stream,
                 Span<byte> span
@@ -560,7 +511,7 @@ namespace AM.IO
         /// </summary>
         public static void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 bool value
             )
         {
@@ -577,108 +528,108 @@ namespace AM.IO
         /// <summary>
         /// Writes the <see cref="Int16"/> value to the <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 short value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(short));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="UInt16"/> value to the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static void Write
+        public static unsafe void Write
             (
                 Stream stream,
                 ushort value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(ushort));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="Int32"/> to the <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
                 Stream stream,
                 int value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(int));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="UInt32"/> to the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static void Write
+        public static unsafe void Write
             (
                 Stream stream,
                 uint value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(uint));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="Int64"/> to the <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
                 Stream stream,
                 long value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(long));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="UInt64"/> to the <see cref="Stream"/>.
         /// </summary>
         [CLSCompliant(false)]
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 ulong value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(ulong));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="Single"/> to the <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 float value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(float));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="Double"/> to the <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 double value
             )
         {
-            var buffer = UnsafeUtility.AsSpan(ref value);
-            stream.Write(buffer);
+            var span = new Span<byte>((byte*)&value, sizeof(double));
+            stream.Write(span);
         }
 
         /// <summary>
@@ -903,30 +854,28 @@ namespace AM.IO
         /// <exception cref="IOException">Error during stream output
         /// happens.</exception>
         /// <seealso cref="ReadDecimal"/>
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 decimal value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            Write(stream, decimal.GetBits(value));
+            var span = new Span<byte>((byte*)&value, sizeof(decimal));
+            stream.Write(span);
         }
 
         /// <summary>
         /// Writes the <see cref="DateTime"/> to the specified
         /// <see cref="Stream"/>.
         /// </summary>
-        public static void Write
+        public static unsafe void Write
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 DateTime value
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
-            Write(stream, value.ToBinary());
+            var span = new Span<byte>((byte*)&value, sizeof(decimal));
+            stream.Write(span);
         }
 
         /// <summary>
@@ -934,7 +883,7 @@ namespace AM.IO
         /// </summary>
         public static void NetworkToHost16
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
@@ -948,7 +897,7 @@ namespace AM.IO
         /// </summary>
         public static void NetworkToHost32
             (
-                [NotNull] byte[] array,
+                byte[] array,
                 int offset
             )
         {
@@ -1082,7 +1031,7 @@ namespace AM.IO
         /// </summary>
         public static long ReadInt64Network
             (
-                [NotNull] this Stream stream
+                this Stream stream
             )
         {
             byte[] buffer = ReadExact(stream, 8);
@@ -1097,7 +1046,7 @@ namespace AM.IO
         /// </summary>
         public static long ReadInt64Host
             (
-                [NotNull] this Stream stream
+                this Stream stream
             )
         {
             byte[] buffer = ReadExact(stream, 8);
@@ -1116,7 +1065,7 @@ namespace AM.IO
         [NotNull]
         public static byte[] ReadToEnd
             (
-                [NotNull] this Stream stream
+                this Stream stream
             )
         {
             Sure.NotNull(stream, nameof(stream));
@@ -1142,7 +1091,7 @@ namespace AM.IO
         /// </summary>
         public static void WriteInt16Network
             (
-                [NotNull] this Stream stream,
+                this Stream stream,
                 short value
             )
         {
@@ -1156,7 +1105,7 @@ namespace AM.IO
         /// </summary>
         public static void WriteInt32Network
             (
-                [NotNull] this Stream stream,
+                this Stream stream,
                 int value
             )
         {
@@ -1170,7 +1119,7 @@ namespace AM.IO
         /// </summary>
         public static void WriteInt64Network
             (
-                [NotNull] this Stream stream,
+                this Stream stream,
                 long value
             )
         {

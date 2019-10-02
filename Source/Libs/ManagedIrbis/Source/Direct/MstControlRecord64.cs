@@ -18,6 +18,9 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+
 namespace ManagedIrbis.Direct
 {
     /// <summary>
@@ -47,7 +50,7 @@ namespace ManagedIrbis.Direct
         #region Properties
 
         /// <summary>
-        /// Резерв.
+        /// Резерв. CTL_MFN в документации.
         /// </summary>
         public int Reserv1 { get; set; }
 
@@ -64,9 +67,9 @@ namespace ManagedIrbis.Direct
         public long NextPosition { get; set; }
 
         /// <summary>
-        /// Резерв.
+        /// Версия (плюс или нет?).
         /// </summary>
-        public int Reserv2 { get; set; }
+        public int Version { get; set; }
 
         /// <summary>
         /// Резерв.

@@ -13,6 +13,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace ManagedIrbis.Direct
 {
     /// <summary>

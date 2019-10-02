@@ -4,7 +4,7 @@
 /* DirectAccessMode.cs -- modes for database file direct access
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives

@@ -9,6 +9,8 @@ using JetBrains.Annotations;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+// ReSharper disable CommentTypo
+
 namespace UnitTests.Common
 {
     public class CommonUnitTest
