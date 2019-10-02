@@ -13,9 +13,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreInstaller@0
-  displayName: 'Install .net core 3.0'
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 3.0 SDK'
   inputs:
+    packageType: 'sdk'
     version: '3.0.100'
+
 - script: dotnet build --configuration $(buildConfiguration) Source/ManagedIrbis.30.sln
   displayName: 'dotnet build'
