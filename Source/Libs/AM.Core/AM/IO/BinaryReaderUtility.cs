@@ -262,11 +262,9 @@ namespace AM.IO
         /// </summary>
         public static short? ReadNullableInt16
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? (short?)reader.ReadInt16()
@@ -278,11 +276,9 @@ namespace AM.IO
         /// </summary>
         public static int? ReadNullableInt32
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? (int?)reader.ReadInt32()
@@ -294,11 +290,9 @@ namespace AM.IO
         /// </summary>
         public static int[]? ReadNullableInt32Array
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool isNull = !reader.ReadBoolean();
             if (isNull)
             {
@@ -321,11 +315,9 @@ namespace AM.IO
         /// </summary>
         public static long? ReadNullableInt64
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? (long?)reader.ReadInt64()
@@ -337,11 +329,9 @@ namespace AM.IO
         /// </summary>
         public static string? ReadNullableString
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? reader.ReadString()
@@ -353,11 +343,9 @@ namespace AM.IO
         /// </summary>
         public static string[]? ReadNullableStringArray
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             string[]? result = null;
             if (reader.ReadBoolean())
             {
@@ -377,12 +365,10 @@ namespace AM.IO
         /// </summary>
         public static T[]? ReadNullableArray<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
             T[]? result = null;
 
             if (reader.ReadBoolean())
@@ -445,7 +431,7 @@ namespace AM.IO
         /// </remarks>
         public static long ReadPackedInt64
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
             unchecked
@@ -467,14 +453,12 @@ namespace AM.IO
         /// <summary>
         /// Read string with given length.
         /// </summary>
-        [NotNull]
         public static string ReadString
             (
-                [NotNull] this BinaryReader reader,
+                this BinaryReader reader,
                 int count
             )
         {
-            Sure.NotNull(reader, nameof(reader));
             Sure.Positive(count, nameof(count));
 
             char[] characters = reader.ReadChars(count);
@@ -486,14 +470,11 @@ namespace AM.IO
         /// <summary>
         /// Read array of strings.
         /// </summary>
-        [NotNull]
         public static string[] ReadStringArray
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int length = reader.ReadPackedInt32();
             string[] result = new string[length];
             for (int i = 0; i < length; i++)

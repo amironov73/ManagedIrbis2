@@ -1,10 +1,10 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* UniversalComparer.cs -- универсальный компаратор
+/* UniversalComparer.cs -- universal comparer
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: good
  */
 
 #region Using directives
@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// Универсальный компаратор.
+    /// Universal comparer.
     /// </summary>
     [PublicAPI]
     public sealed class UniversalComparer<T>
@@ -28,9 +28,8 @@ namespace AM
         #region Properties
 
         /// <summary>
-        /// Используемый для сравнения делегат.
+        /// Delegate that does comparison.
         /// </summary>
-        [NotNull]
         public Func<T, T, int> Function { get; }
 
         #endregion
@@ -42,7 +41,7 @@ namespace AM
         /// </summary>
         public UniversalComparer
             (
-                [NotNull] Func<T, T, int> function
+                Func<T, T, int> function
             )
         {
             Sure.NotNull(function, nameof(function));

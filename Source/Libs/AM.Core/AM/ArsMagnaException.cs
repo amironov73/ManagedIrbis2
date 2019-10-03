@@ -20,7 +20,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public class ArsMagnaException
@@ -69,7 +69,6 @@ namespace AM
         /// <summary>
         /// List of attachments.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         protected List<BinaryAttachment> Attachments
         {
@@ -83,14 +82,11 @@ namespace AM
         /// <summary>
         /// Attach some binary data.
         /// </summary>
-        [NotNull]
         public ArsMagnaException Attach
             (
-                [NotNull] BinaryAttachment attachment
+                BinaryAttachment attachment
             )
         {
-            Sure.NotNull(attachment, nameof(attachment));
-
             Attachments.Add(attachment);
 
             return this;

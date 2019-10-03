@@ -40,9 +40,9 @@ namespace AM
         /// </summary>
         public static void Raise
             (
-                [CanBeNull] this EventHandler handler,
-                [CanBeNull] object sender,
-                [CanBeNull] EventArgs args
+                this EventHandler? handler,
+                object? sender,
+                EventArgs args
             )
         {
             handler?.Invoke(sender, args);
@@ -53,9 +53,9 @@ namespace AM
         /// </summary>
         public static void Raise<T>
             (
-                [CanBeNull] this EventHandler<T> handler,
-                [CanBeNull] object sender,
-                [CanBeNull] T args
+                this EventHandler<T>? handler,
+                object? sender,
+                T args
             )
             where T : EventArgs
         {
@@ -67,12 +67,12 @@ namespace AM
         /// </summary>
         public static void Raise<T>
             (
-                [CanBeNull] this EventHandler<T> handler,
-                [CanBeNull] object sender
+                this EventHandler<T>? handler,
+                object? sender
             )
             where T : EventArgs
         {
-            handler?.Invoke(sender, null);
+            handler?.Invoke(sender, null!);
         }
 
         /// <summary>
@@ -80,8 +80,8 @@ namespace AM
         /// </summary>
         public static void Raise
             (
-                [CanBeNull] this EventHandler handler,
-                [CanBeNull] object sender
+                this EventHandler? handler,
+                object? sender
             )
         {
             handler?.Invoke(sender, EventArgs.Empty);
@@ -92,11 +92,11 @@ namespace AM
         /// </summary>
         public static void Raise<T>
             (
-                [CanBeNull] this EventHandler<T> handler
+                this EventHandler<T>? handler
             )
             where T : EventArgs
         {
-            handler?.Invoke(null, null);
+            handler?.Invoke(null, null!);
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace AM
         /// </summary>
         public static Task RaiseAsync
             (
-                [CanBeNull] this EventHandler handler,
-                [CanBeNull] object sender,
-                [CanBeNull] EventArgs args
+                this EventHandler? handler,
+                object? sender,
+                EventArgs args
             )
         {
             Task result = Task.Factory.StartNew
@@ -125,8 +125,8 @@ namespace AM
         /// </summary>
         public static Task RaiseAsync
             (
-                [CanBeNull] this EventHandler handler,
-                [CanBeNull] object sender
+                this EventHandler? handler,
+                object? sender
             )
         {
             Task result = Task.Factory.StartNew

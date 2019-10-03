@@ -29,13 +29,11 @@ namespace AM
         /// <summary>
         /// Name of the attachment.
         /// </summary>
-        [NotNull]
         public string Name { get; }
 
         /// <summary>
         /// Content of the attachment.
         /// </summary>
-        [NotNull]
         public byte[] Content { get; }
 
         #endregion
@@ -49,12 +47,11 @@ namespace AM
         /// <param name="content">Content of the attachment.</param>
         public BinaryAttachment
             (
-                [NotNull] string name,
-                [NotNull] byte[] content
+                string name,
+                byte[] content
             )
         {
             Sure.NotNullNorEmpty(name, nameof(name));
-            Sure.NotNull(content, nameof(content));
 
             Name = name;
             Content = content;

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using AM.IO;
+using AM.Runtime;
 
 namespace UnitTests.AM.IO
 {
@@ -11,16 +12,21 @@ namespace UnitTests.AM.IO
         [TestMethod]
         public void FileUtility_FindFileInPath()
         {
-            string path = Environment.GetEnvironmentVariable("PATH");
-            // TODO: support for UNIX environments
-            string found = FileUtility.FindFileInPath
+            var shellName = RuntimeUtility.IsWindows
+                ? "cmd.exe"
+                : "sh";
+            var delimiter = RuntimeUtility.IsWindows
+                ? ';'
+                : ':';
+            var path = Environment.GetEnvironmentVariable("PATH");
+            var found = FileUtility.FindFileInPath
                 (
-                    "cmd.exe",
+                    shellName,
                     path,
-                    ';'
+                    delimiter
                 );
-            Assert.IsTrue(string.IsNullOrEmpty(found)
-                || found != null);
+            Assert.IsTrue(!string.IsNullOrEmpty(found)
+                          || found is null);
         }
     }
 }

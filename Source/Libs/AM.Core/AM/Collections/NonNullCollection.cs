@@ -107,7 +107,6 @@ namespace AM.Collections
         /// <summary>
         /// Add several elements to the collection.
         /// </summary>
-        [NotNull]
         public NonNullCollection<T> AddRange
             (
                 IList<T> list

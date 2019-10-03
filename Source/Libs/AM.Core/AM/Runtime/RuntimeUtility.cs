@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using AM.Logging;
 
@@ -28,7 +29,6 @@ namespace AM.Runtime
     /// Some useful methods for runtime.
     /// </summary>
     [PublicAPI]
-    [ExcludeFromCodeCoverage]
     public static class RuntimeUtility
     {
         #region Properties
@@ -38,14 +38,13 @@ namespace AM.Runtime
         /// </summary>
         /// <remarks>
         /// Типичная выдача:
-        /// C:\WINDOWS\Microsoft.NET\Framework\v2.0.50215
+        /// C:\Program Files\dotnet\shared\Microsoft.NETCore.App\3.0.0
         /// </remarks>
-        [NotNull]
         public static string FrameworkLocation
         {
             get
             {
-                string result = Path.GetDirectoryName(typeof(int).Assembly.Location);
+                var result = Path.GetDirectoryName(typeof(int).Assembly.Location);
                 if (string.IsNullOrEmpty(result))
                 {
                     throw new ArsMagnaException("Can't determine framework location");
@@ -58,16 +57,29 @@ namespace AM.Runtime
         /// <summary>
         /// Имя исполняемого процесса.
         /// </summary>
-        [NotNull]
-        public static string ExecutableFileName
+        /// <remarks>
+        /// В .NET Core типичная выдача:
+        /// C:\Program Files\dotnet\dotnet.exe
+        /// </remarks>
+        public static string? ExecutableFileName
         {
             get
             {
-                Process process = Process.GetCurrentProcess();
-                ProcessModule module = process.MainModule;
+                var process = Process.GetCurrentProcess();
+                var module = process.MainModule;
 
-                return module.FileName;
+                return module?.FileName;
             }
+        }
+
+        /// <summary>
+        /// Приложение запущено на Windows?
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public static bool IsWindows
+        {
+            [DebuggerStepThrough]
+            get => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         }
 
         #endregion
@@ -77,16 +89,17 @@ namespace AM.Runtime
         /// <summary>
         /// Pre-JIT types of the <paramref name="assembly"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void PrepareAssembly
             (
-                [NotNull] Assembly assembly
+                Assembly assembly
             )
         {
             Sure.NotNull(assembly, nameof(assembly));
 
             try
             {
-                foreach (Type type in assembly.GetTypes())
+                foreach (var type in assembly.GetTypes())
                 {
                     PrepareType(type);
                 }
@@ -104,16 +117,17 @@ namespace AM.Runtime
         /// <summary>
         /// Pre-JIT methods of the <paramref name="type"/>.
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void PrepareType
             (
-                [NotNull] Type type
+                Type type
             )
         {
             Sure.NotNull(type, nameof(type));
 
             try
             {
-                foreach (MethodInfo method in type.GetMethods())
+                foreach (var method in type.GetMethods())
                 {
                     RuntimeHelpers.PrepareMethod(method.MethodHandle);
                 }

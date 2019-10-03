@@ -98,7 +98,7 @@ namespace AM
         public static bool OneOf
             (
                 this char one,
-                [NotNull] IEnumerable<char> many
+                IEnumerable<char> many
             )
         {
             foreach (char s in many)

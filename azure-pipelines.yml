@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
+  buildConfiguration: 'Debug'
 
 steps:
 - task: UseDotNet@2
@@ -22,5 +22,5 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) Source/ManagedIrbis.30.sln
   displayName: 'Build'
 
-- script: dotnet build Source/ManagedIrbis.30.sln
+- script: dotnet test --no-build Source/ManagedIrbis.30.sln
   displayName: 'Test'

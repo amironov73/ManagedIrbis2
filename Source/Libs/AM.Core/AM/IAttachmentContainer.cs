@@ -24,7 +24,6 @@ namespace AM
         /// <summary>
         /// List attachments.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         BinaryAttachment[] ListAttachments();
     }

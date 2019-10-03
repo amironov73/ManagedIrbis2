@@ -104,7 +104,7 @@ namespace AM.Collections
         /// </summary>
         public void AddRange
             (
-                [NotNull] IEnumerable<T> items
+                IEnumerable<T> items
             )
         {
             if (ReferenceEquals(_array, null))
@@ -260,7 +260,6 @@ namespace AM.Collections
         /// <summary>
         /// Convert the list to array.
         /// </summary>
-        [NotNull]
         public T[] ToArray()
         {
             if (ReferenceEquals(_array, null) || _size == 0)

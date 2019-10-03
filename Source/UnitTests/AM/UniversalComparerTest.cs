@@ -12,8 +12,7 @@ namespace UnitTests.AM
         [TestMethod]
         public void UniversalComparer_Compare()
         {
-            UniversalComparer<int> comparer
-                = new UniversalComparer<int>
+            var comparer = new UniversalComparer<int>
                     (
                         (left, right) => left - right
                     );
@@ -30,7 +29,7 @@ namespace UnitTests.AM
                 );
             Assert.IsTrue
                 (
-                    0 > 
+                    0 >
                     comparer.Compare(1,2)
                 );
         }
@@ -38,8 +37,7 @@ namespace UnitTests.AM
         [TestMethod]
         public void UniversalComparer_Function()
         {
-            UniversalComparer<int> comparer
-                = new UniversalComparer<int>
+            var comparer = new UniversalComparer<int>
                     (
                         (left, right) => left - right
                     );

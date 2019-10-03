@@ -10,13 +10,8 @@
 #region Using directives
 
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 
-using AM.Logging;
 
 using JetBrains.Annotations;
 
@@ -43,7 +38,7 @@ namespace AM
             )
             where T: struct
         {
-            int size = Unsafe.SizeOf<T>();
+            var size = Unsafe.SizeOf<T>();
 
             return AsBytes(CreateSpan(ref value, size));
         }

@@ -18,7 +18,7 @@ namespace UnitTests.AM
         [TestMethod]
         public void EventUtility_Raise_1()
         {
-            EventArgs args = new EventArgs();
+            var args = new EventArgs();
 
             Handler1.Raise(this, args);
         }
@@ -26,7 +26,7 @@ namespace UnitTests.AM
         [TestMethod]
         public void EventUtility_Raise_2()
         {
-            CancelEventArgs args = new CancelEventArgs();
+            var args = new CancelEventArgs();
 
             Handler2.Raise(this, args);
         }
@@ -52,9 +52,9 @@ namespace UnitTests.AM
         [TestMethod]
         public void EventUtility_RaiseAsync_1()
         {
-            EventArgs args = new EventArgs();
+            var args = new EventArgs();
 
-            Task task = Handler1.RaiseAsync(this, args);
+            var task = Handler1.RaiseAsync(this, args);
             Assert.IsNotNull(task);
             task.Wait();
         }
@@ -62,7 +62,7 @@ namespace UnitTests.AM
         [TestMethod]
         public void EventUtility_RaiseAsync_2()
         {
-            Task task = Handler1.RaiseAsync(this);
+            var task = Handler1.RaiseAsync(this);
             Assert.IsNotNull(task);
             task.Wait();
         }

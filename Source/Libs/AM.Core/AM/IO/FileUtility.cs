@@ -60,9 +60,6 @@ namespace AM.IO
                 bool overwrite
             )
         {
-            Sure.NotNull(sourceName, nameof(sourceName));
-            Sure.NotNull(targetName, nameof(targetName));
-
             File.Copy(sourceName, targetName, overwrite);
             DateTime creationTime = File.GetCreationTime(sourceName);
             File.SetCreationTime(targetName, creationTime);
@@ -121,8 +118,8 @@ namespace AM.IO
         /// if no backup created.</returns>
         public static string? CopyWithBackup
             (
-                [NotNull] string sourcePath,
-                [NotNull] string targetPath
+                string sourcePath,
+                string targetPath
             )
         {
             Sure.FileExists(sourcePath, nameof(sourcePath));
@@ -145,10 +142,9 @@ namespace AM.IO
         /// <param name="rename">If set to <c>true</c>
         /// given file will be renamed; otherwise it will be copied.</param>
         /// <returns>Name of the backup file.</returns>
-        [NotNull]
         public static string CreateBackup
             (
-                [NotNull] string path,
+                string path,
                 bool rename
             )
         {
@@ -177,7 +173,7 @@ namespace AM.IO
         /// <param name="fileName">Name of the file.</param>
         public static void DeleteIfExists
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -193,7 +189,7 @@ namespace AM.IO
         /// </summary>
         public static string? FindFileInPath
             (
-                [NotNull] string fileName,
+                string fileName,
                 string? path,
                 char elementDelimiter
             )
@@ -228,11 +224,10 @@ namespace AM.IO
         /// <param name="original">The original.</param>
         /// <param name="suffix">The suffix.</param>
         /// <returns>Name of not existent file.</returns>
-        [NotNull]
         public static string GetNotExistentFileName
             (
-                [NotNull] string original,
-                [NotNull] string suffix
+                string original,
+                string suffix
             )
         {
             Sure.NotNullNorEmpty(original, nameof(original));
@@ -273,7 +268,7 @@ namespace AM.IO
         /// <remarks>If no such file exists it will be created.</remarks>
         public static void Touch
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
