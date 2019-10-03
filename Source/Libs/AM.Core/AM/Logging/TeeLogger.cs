@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM.Logging
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class TeeLogger
@@ -29,7 +29,6 @@ namespace AM.Logging
         /// <summary>
         /// Loggers.
         /// </summary>
-        [NotNull]
         public NonNullCollection<IAmLogger> Loggers
         {
             get; private set;
@@ -57,7 +56,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Debug(text);
             }
@@ -69,7 +68,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Error(text);
             }
@@ -81,7 +80,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Fatal(text);
             }
@@ -93,7 +92,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Info(text);
             }
@@ -105,7 +104,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Trace(text);
             }
@@ -117,7 +116,7 @@ namespace AM.Logging
                 string text
             )
         {
-            foreach (IAmLogger logger in Loggers)
+            foreach (var logger in Loggers)
             {
                 logger.Warn(text);
             }

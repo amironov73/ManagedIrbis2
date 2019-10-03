@@ -51,13 +51,11 @@ namespace ManagedIrbis
         /// <summary>
         /// Text representation of today date.
         /// </summary>
-        [NotNull]
         public static string TodayText => new IrbisDate().Text;
 
         /// <summary>
         /// В виде текста.
         /// </summary>
-        [NotNull]
         public string Text { get; private set; }
 
         /// <summary>
@@ -86,7 +84,7 @@ namespace ManagedIrbis
         /// </summary>
         public IrbisDate
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
@@ -114,7 +112,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Преобразование даты в строку.
         /// </summary>
-        [NotNull]
         public static string ConvertDateToString(DateTime date)
             => date.ToString(ConversionFormat);
 
@@ -123,7 +120,7 @@ namespace ManagedIrbis
         /// </summary>
         public static DateTime ConvertStringToDate
             (
-                [CanBeNull] string date
+                string? date
             )
         {
             if (ReferenceEquals(date, null) || date.Length < 4)
@@ -133,7 +130,7 @@ namespace ManagedIrbis
 
             if (date.Length > 8)
             {
-                Match match = Regex.Match(date, @"\d{8}");
+                var match = Regex.Match(date, @"\d{8}");
                 if (match.Success)
                 {
                     date = match.Value;
@@ -146,7 +143,7 @@ namespace ManagedIrbis
                     ConversionFormat,
                     CultureInfo.CurrentCulture,
                     DateTimeStyles.None,
-                    out DateTime result
+                    out var result
                 );
 
             return result;
@@ -157,7 +154,7 @@ namespace ManagedIrbis
         /// </summary>
         public static TimeSpan ConvertStringToTime
             (
-                [CanBeNull] string time
+                string? time
             )
         {
             if (ReferenceEquals(time, null) || time.Length < 4)
@@ -165,12 +162,12 @@ namespace ManagedIrbis
                 return new TimeSpan();
             }
 
-            int hours = NumericUtility.ParseInt32(time.Substring(0, 2));
-            int minutes = NumericUtility.ParseInt32(time.Substring(2, 2));
-            int seconds = time.Length < 6
+            var hours = NumericUtility.ParseInt32(time.Substring(0, 2));
+            var minutes = NumericUtility.ParseInt32(time.Substring(2, 2));
+            var seconds = time.Length < 6
                 ? 0
                 : NumericUtility.ParseInt32(time.Substring(4, 2));
-            TimeSpan result = new TimeSpan(hours, minutes, seconds);
+            var result = new TimeSpan(hours, minutes, seconds);
 
             return result;
         }
@@ -178,11 +175,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert time to string.
         /// </summary>
-        [NotNull]
-        public static string ConvertTimeToString
-            (
-                TimeSpan time
-            )
+        public static string ConvertTimeToString (TimeSpan time)
         {
             return String.Format
                 (
@@ -195,55 +188,24 @@ namespace ManagedIrbis
         }
 
         /// <summary>
-        /// Неявное преобразование
+        /// Неявное преобразование.
         /// </summary>
-        [NotNull]
-        public static implicit operator IrbisDate
-            (
-                [NotNull] string text
-            )
-        {
-            return new IrbisDate(text);
-        }
+        public static implicit operator IrbisDate (string text) => new IrbisDate(text);
 
         /// <summary>
-        /// Неявное преобразование
+        /// Неявное преобразование.
         /// </summary>
-        [NotNull]
-        public static implicit operator IrbisDate
-            (
-                DateTime date
-            )
-        {
-            return new IrbisDate(date);
-        }
+        public static implicit operator IrbisDate (DateTime date) => new IrbisDate(date);
 
         /// <summary>
-        /// Неявное преобразование
+        /// Неявное преобразование.
         /// </summary>
-        [NotNull]
-        public static implicit operator string
-            (
-                [NotNull] IrbisDate date
-            )
-        {
-            Sure.NotNull(date, nameof(date));
-
-            return date.Text;
-        }
+        public static implicit operator string (IrbisDate date) => date.Text;
 
         /// <summary>
-        /// Неявное преобразование
+        /// Неявное преобразование.
         /// </summary>
-        public static implicit operator DateTime
-            (
-                [NotNull] IrbisDate date
-            )
-        {
-            Sure.NotNull(date, nameof(date));
-
-            return date.Date;
-        }
+        public static implicit operator DateTime (IrbisDate date) => date.Date;
 
         #endregion
 
@@ -260,23 +222,14 @@ namespace ManagedIrbis
         }
 
         /// <see cref="IHandmadeSerializable.SaveToStream" />
-        public void SaveToStream
-            (
-                BinaryWriter writer
-            )
-        {
-            writer.Write(Text);
-        }
+        public void SaveToStream (BinaryWriter writer) => writer.Write(Text);
 
         #endregion
 
         #region Object members
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString()
-        {
-            return Text.ToVisibleString();
-        }
+        public override string ToString() => Text.ToVisibleString();
 
         #endregion
     }

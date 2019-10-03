@@ -38,13 +38,11 @@ namespace AM.IO
         /// </summary>
         public static BinaryWriter Write<T>
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] NonNullCollection<T> collection
+                this BinaryWriter writer,
+                NonNullCollection<T> collection
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, nameof(writer));
-
             writer.WriteArray(collection.ToArray());
 
             return writer;
@@ -53,16 +51,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable 8-bit integer.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] byte? value
+                this BinaryWriter writer,
+                byte? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -78,16 +73,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable 16-bit integer.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] short? value
+                this BinaryWriter writer,
+                short? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -103,16 +95,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable 32-bit integer.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] int? value
+                this BinaryWriter writer,
+                int? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -128,16 +117,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable 64-bit integer.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] long? value
+                this BinaryWriter writer,
+                long? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -153,16 +139,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable decimal number.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] decimal? value
+                this BinaryWriter writer,
+                decimal? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -178,16 +161,13 @@ namespace AM.IO
         /// <summary>
         /// Write <see cref="DateTime"/>.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
+                this BinaryWriter writer,
                 DateTime value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            long ticks = value.ToBinary();
+            var ticks = value.ToBinary();
             writer.Write(ticks);
 
             return writer;
@@ -196,16 +176,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable DateTime.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] DateTime? value
+                this BinaryWriter writer,
+                DateTime? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -221,16 +198,13 @@ namespace AM.IO
         /// <summary>
         /// Write nullable double precision number.
         /// </summary>
-        [NotNull]
         public static BinaryWriter Write
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] double? value
+                this BinaryWriter writer,
+                double? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            if (value != null)
+            if (value.HasValue)
             {
                 writer.Write(true);
                 writer.Write(value.Value);
@@ -246,16 +220,12 @@ namespace AM.IO
         /// <summary>
         /// Write array of bytes.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] byte[] array
+                this BinaryWriter writer,
+                byte[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
             writer.Write(array);
 
@@ -265,18 +235,14 @@ namespace AM.IO
         /// <summary>
         /// Write array of 16-bit integers.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] short[] array
+                this BinaryWriter writer,
+                short[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 writer.Write(array[i]);
             }
@@ -287,18 +253,14 @@ namespace AM.IO
         /// <summary>
         /// Write array of 32-bit integers.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] int[] array
+                this BinaryWriter writer,
+                int[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 writer.Write(array[i]);
             }
@@ -309,18 +271,14 @@ namespace AM.IO
         /// <summary>
         /// Write array of 64-bit integers.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] long[] array
+                this BinaryWriter writer,
+                long[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 writer.Write(array[i]);
             }
@@ -331,18 +289,14 @@ namespace AM.IO
         /// <summary>
         /// Write array of strings.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull] string[] array
+                this BinaryWriter writer,
+                string[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 writer.Write(array[i]);
             }
@@ -353,21 +307,17 @@ namespace AM.IO
         /// <summary>
         /// Write the array.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteArray<T>
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull][ItemNotNull] T[] array
+                this BinaryWriter writer,
+                [ItemNotNull] T[] array
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
             writer.WritePackedInt32(array.Length);
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
-                T item = array[i];
+                var item = array[i];
                 item.SaveToStream(writer);
             }
 
@@ -377,21 +327,17 @@ namespace AM.IO
         /// <summary>
         /// Write the list to the stream.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteList<T>
             (
-                [NotNull] this BinaryWriter writer,
-                [NotNull][ItemNotNull] List<T> list
+                this BinaryWriter writer,
+                [ItemNotNull] List<T> list
             )
             where T : IHandmadeSerializable, new()
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(list, nameof(list));
-
             writer.WritePackedInt32(list.Count);
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                T item = list[i];
+                var item = list[i];
                 item.SaveToStream(writer);
             }
 
@@ -407,8 +353,6 @@ namespace AM.IO
                 string? value
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             if (!ReferenceEquals(value, null))
             {
                 writer.Write(true);
@@ -425,15 +369,12 @@ namespace AM.IO
         /// <summary>
         /// Write array of 32-bit integers.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteNullableArray
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] int[] array
+                this BinaryWriter writer,
+                int[]? array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             if (ReferenceEquals(array, null))
             {
                 writer.Write(false);
@@ -442,7 +383,7 @@ namespace AM.IO
             {
                 writer.Write(true);
                 writer.WritePackedInt32(array.Length);
-                for (int i = 0; i < array.Length; i++)
+                for (var i = 0; i < array.Length; i++)
                 {
                     writer.Write(array[i]);
                 }
@@ -454,15 +395,12 @@ namespace AM.IO
         /// <summary>
         /// Write array of 32-bit integers.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteNullableArray
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] string[] array
+                this BinaryWriter writer,
+                string[]? array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             if (ReferenceEquals(array, null))
             {
                 writer.Write(false);
@@ -471,7 +409,7 @@ namespace AM.IO
             {
                 writer.Write(true);
                 writer.WritePackedInt32(array.Length);
-                for (int i = 0; i < array.Length; i++)
+                for (var i = 0; i < array.Length; i++)
                 {
                     writer.Write(array[i]);
                 }
@@ -483,16 +421,13 @@ namespace AM.IO
         /// <summary>
         /// Write array of objects.
         /// </summary>
-        [NotNull]
         public static BinaryWriter WriteNullableArray<T>
             (
-                [NotNull] this BinaryWriter writer,
-                [CanBeNull] T[] array
+                this BinaryWriter writer,
+                T[]? array
             )
             where T : IHandmadeSerializable
         {
-            Sure.NotNull(writer, nameof(writer));
-
             if (ReferenceEquals(array, null))
             {
                 writer.Write(false);
@@ -501,7 +436,7 @@ namespace AM.IO
             {
                 writer.Write(true);
                 writer.WritePackedInt32(array.Length);
-                for (int i = 0; i < array.Length; i++)
+                for (var i = 0; i < array.Length; i++)
                 {
                     array[i].SaveToStream(writer);
                 }
@@ -518,13 +453,13 @@ namespace AM.IO
         /// </remarks>
         public static BinaryWriter WritePackedInt32
             (
-                [NotNull] this BinaryWriter writer,
+                this BinaryWriter writer,
                 int value
             )
         {
             unchecked
             {
-                uint v = (uint)value;
+                var v = (uint)value;
                 while (v >= 0x80)
                 {
                     writer.Write((byte)(v | 0x80));
@@ -544,13 +479,13 @@ namespace AM.IO
         /// </remarks>
         public static BinaryWriter WritePackedInt64
             (
-                [NotNull] this BinaryWriter writer,
+                this BinaryWriter writer,
                 long value
             )
         {
             unchecked
             {
-                ulong v = (ulong)value;
+                var v = (ulong)value;
                 while (v >= 0x80)
                 {
                     writer.Write((byte)(v | 0x80));

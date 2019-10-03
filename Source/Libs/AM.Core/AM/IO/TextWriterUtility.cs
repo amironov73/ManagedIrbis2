@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.IO
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class TextWriterUtility
@@ -29,17 +29,15 @@ namespace AM.IO
         /// <summary>
         /// Open file for append.
         /// </summary>
-        [NotNull]
         public static StreamWriter Append
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            StreamWriter result = new StreamWriter
+            var result = new StreamWriter
                 (
                     new FileStream(fileName, FileMode.Append),
                     encoding
@@ -51,17 +49,15 @@ namespace AM.IO
         /// <summary>
         /// Open file for writing.
         /// </summary>
-        [NotNull]
         public static StreamWriter Create
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            StreamWriter result = new StreamWriter
+            var result = new StreamWriter
                 (
                     new FileStream(fileName, FileMode.Create),
                     encoding

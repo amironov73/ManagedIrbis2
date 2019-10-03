@@ -58,7 +58,7 @@ namespace AM
         /// </summary>
         public Verifier
             (
-                [NotNull] T target,
+                T target,
                 bool throwOnError
             )
         {
@@ -309,9 +309,9 @@ namespace AM
         /// </summary>
         public Verifier<T> ReferenceEquals
             (
-                [CanBeNull] object first,
-                [CanBeNull] object second,
-                [NotNull] string message
+                object? first,
+                object? second,
+                string message
             )
         {
             return Assert
@@ -374,11 +374,9 @@ namespace AM
         /// </summary>
         public Verifier<T> VerifySubObject
             (
-                [NotNull] IVerifiable verifiable
+                IVerifiable verifiable
             )
         {
-            Sure.NotNull(verifiable, nameof(verifiable));
-
             Assert(verifiable.Verify(ThrowOnError));
 
             return this;
@@ -389,11 +387,10 @@ namespace AM
         /// </summary>
         public Verifier<T> VerifySubObject
             (
-                [NotNull] IVerifiable verifiable,
-                [NotNull] string name
+                IVerifiable verifiable,
+                string name
             )
         {
-            Sure.NotNull(verifiable, nameof(verifiable));
             Sure.NotNullNorEmpty(name, nameof(name));
 
             Assert(verifiable.Verify(ThrowOnError), name);

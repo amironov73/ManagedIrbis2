@@ -10,7 +10,6 @@
 #region Using directives
 
 using System;
-using System.Diagnostics;
 using System.IO;
 
 using JetBrains.Annotations;
@@ -37,15 +36,8 @@ namespace AM.IO
         /// Initializes a new instance of the
         /// <see cref="NonCloseableStream"/> class.
         /// </summary>
-        public NonCloseableStream
-            (
-                [NotNull] Stream innerStream
-            )
-        {
-            Sure.NotNull(innerStream, nameof(innerStream));
-
-            _innerStream = innerStream;
-        }
+        public NonCloseableStream (Stream innerStream)
+            => _innerStream = innerStream;
 
         #endregion
 
@@ -70,122 +62,52 @@ namespace AM.IO
         #region Stream members
 
         /// <inheritdoc cref="Stream.CanRead" />
-        public override bool CanRead
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _innerStream.CanRead;
-            }
-        }
+        public override bool CanRead => _innerStream.CanRead;
 
         /// <inheritdoc cref="Stream.CanSeek" />
-        public override bool CanSeek
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _innerStream.CanSeek;
-            }
-        }
+        public override bool CanSeek => _innerStream.CanSeek;
 
         /// <inheritdoc cref="Stream.CanWrite" />
-        public override bool CanWrite
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _innerStream.CanWrite;
-            }
-        }
+        public override bool CanWrite => _innerStream.CanWrite;
 
         /// <summary>
         /// NOT closes the current stream and releases any resources
         /// (such as sockets and file handles) associated with the current stream.
         /// </summary>
         /// <seealso cref="M:AM.IO.NonCloseable.NonCloseableStream.ReallyClose"/>
-        [DebuggerStepThrough]
         public override void Close()
         {
             // Nothing to do actually
         }
 
         /// <inheritdoc cref="Stream.Flush" />
-        [DebuggerStepThrough]
-        public override void Flush()
-        {
-            _innerStream.Flush();
-        }
+        public override void Flush() => _innerStream.Flush();
 
         /// <inheritdoc cref="Stream.Length" />
-        public override long Length
-        {
-            [DebuggerStepThrough]
-            get
-            {
-                return _innerStream.Length;
-            }
-        }
+        public override long Length => _innerStream.Length;
 
         /// <inheritdoc cref="Stream.Position" />
         public override long Position
         {
-            [DebuggerStepThrough]
-            get
-            {
-                return _innerStream.Position;
-            }
-            [DebuggerStepThrough]
-            set
-            {
-                _innerStream.Position = value;
-            }
+            get => _innerStream.Position;
+            set => _innerStream.Position = value;
         }
 
         /// <inheritdoc cref="Stream.Read(byte[],int,int)" />
-        [DebuggerStepThrough]
-        public override int Read
-            (
-                byte[] buffer,
-                int offset,
-                int count
-            )
-        {
-            return _innerStream.Read(buffer, offset, count);
-        }
+        public override int Read (byte[] buffer, int offset, int count)
+            => _innerStream.Read(buffer, offset, count);
 
         /// <inheritdoc cref="Stream.Seek" />
-        [DebuggerStepThrough]
-        public override long Seek
-            (
-                long offset,
-                SeekOrigin origin
-            )
-        {
-            return _innerStream.Seek(offset, origin);
-        }
+        public override long Seek (long offset, SeekOrigin origin)
+            => _innerStream.Seek(offset, origin);
 
         /// <inheritdoc cref="Stream.SetLength" />
-        [DebuggerStepThrough]
-        public override void SetLength
-            (
-                long value
-            )
-        {
-            _innerStream.SetLength(value);
-        }
+        public override void SetLength (long value)
+            => _innerStream.SetLength(value);
 
         /// <inheritdoc cref="Stream.Write(byte[],int,int)" />
-        [DebuggerStepThrough]
-        public override void Write
-            (
-                byte[] buffer,
-                int offset,
-                int count
-            )
-        {
-            _innerStream.Write(buffer, offset, count);
-        }
+        public override void Write (byte[] buffer, int offset, int count)
+            => _innerStream.Write(buffer, offset, count);
 
         #endregion
 

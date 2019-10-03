@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 namespace AM.Logging
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public interface IAmLogger
@@ -26,7 +26,7 @@ namespace AM.Logging
         /// </summary>
         void Debug
             (
-                [NotNull] string text
+                string text
             );
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace AM.Logging
         /// </summary>
         void Error
             (
-                [NotNull] string text
+                string text
             );
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace AM.Logging
         /// </summary>
         void Fatal
             (
-                [NotNull] string text
+                string text
             );
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace AM.Logging
         /// </summary>
         void Info
             (
-                [NotNull] string text
+                string text
             );
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace AM.Logging
         /// </summary>
         void Trace
             (
-                [NotNull] string text
+                string text
             );
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace AM.Logging
         /// </summary>
         void Warn
             (
-                [NotNull] string text
+                string text
             );
     }
 }

@@ -20,6 +20,7 @@ namespace AM.Runtime
     /// <summary>
     /// The object can be stored to a stream and restored back.
     /// </summary>
+    [PublicAPI]
     public interface IHandmadeSerializable
     {
         /// <summary>
@@ -27,7 +28,7 @@ namespace AM.Runtime
         /// </summary>
         void RestoreFromStream
             (
-                [NotNull] BinaryReader reader
+                BinaryReader reader
             );
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace AM.Runtime
         /// </summary>
         void SaveToStream
             (
-                [NotNull] BinaryWriter writer
+                BinaryWriter writer
             );
     }
 }

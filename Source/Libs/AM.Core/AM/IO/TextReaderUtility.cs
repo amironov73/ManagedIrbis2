@@ -31,17 +31,15 @@ namespace AM.IO
         /// <summary>
         /// Open file for reading.
         /// </summary>
-        [NotNull]
         public static StreamReader OpenRead
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            StreamReader result = new StreamReader
+            var result = new StreamReader
                 (
                     File.OpenRead(fileName),
                     encoding
@@ -53,20 +51,20 @@ namespace AM.IO
         /// <summary>
         /// Обязательное чтение строки.
         /// </summary>
-        [NotNull]
         public static string RequireLine
             (
-                [NotNull] this TextReader reader
+                this TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            string? result = reader.ReadLine();
+            var result = reader.ReadLine();
             if (ReferenceEquals(result, null))
             {
                 Log.Error
                     (
-                        "TextReaderUtility::RequireLine: "
+                        nameof(TextReaderUtility)
+                        + "::"
+                        + nameof(RequireLine)
+                        + ": "
                         + "unexpected end of stream"
                     );
 

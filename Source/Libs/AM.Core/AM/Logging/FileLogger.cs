@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM.Logging
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class FileLogger
@@ -29,7 +29,6 @@ namespace AM.Logging
         /// <summary>
         /// File name.
         /// </summary>
-        [NotNull]
         public string FileName { get; private set; }
 
         #endregion
@@ -41,7 +40,7 @@ namespace AM.Logging
         /// </summary>
         public FileLogger
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -56,18 +55,15 @@ namespace AM.Logging
         /// <summary>
         /// Write one line.
         /// </summary>
-        [NotNull]
         public FileLogger WriteLine
             (
-                [CanBeNull] string line
+                string? line
             )
         {
             if (!ReferenceEquals(line, null))
             {
-                using (StreamWriter writer = new StreamWriter(FileName, true))
-                {
-                    writer.WriteLine(line);
-                }
+                using var writer = new StreamWriter(FileName, true);
+                writer.WriteLine(line);
             }
 
             return this;

@@ -50,7 +50,7 @@ namespace AM.Logging
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForConsoleApplication()
         {
-            TeeLogger root = new TeeLogger();
+            var root = new TeeLogger();
             Logger = root;
             root.Loggers.AddRange
                 (
@@ -68,7 +68,7 @@ namespace AM.Logging
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForServiceApplication()
         {
-            TeeLogger root = new TeeLogger();
+            var root = new TeeLogger();
             Logger = root;
             root.Loggers.AddRange
                 (
@@ -85,7 +85,7 @@ namespace AM.Logging
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static void ApplyDefaultsForWindowedApplication()
         {
-            TeeLogger root = new TeeLogger();
+            var root = new TeeLogger();
             Logger = root;
             root.Loggers.AddRange
                 (
@@ -175,7 +175,7 @@ namespace AM.Logging
         {
             lock (SyncRoot)
             {
-                IAmLogger? result = Logger;
+                var result = Logger;
 
                 Logger = logger;
 
@@ -210,7 +210,7 @@ namespace AM.Logging
             )
         {
             var name = exception.GetType().Name;
-            string fullText = $"{text}: {name}: {exception.Message}";
+            var fullText = $"{text}: {name}: {exception.Message}";
 
             Trace(fullText);
         }

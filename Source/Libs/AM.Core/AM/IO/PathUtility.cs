@@ -13,6 +13,8 @@ using System;
 using System.IO;
 using System.Text;
 
+using AM.Runtime;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -27,16 +29,8 @@ namespace AM.IO
     {
         #region Private members
 
-#if PORTABLE
-
-        private static string _backslash = "/";
-
-#else
-
         private static string _backslash
             = new string(Path.DirectorySeparatorChar, 1);
-
-#endif
 
         #endregion
 
@@ -49,15 +43,14 @@ namespace AM.IO
         /// <param name="path">Path to convert.</param>
         /// <returns>Converted path.</returns>
         /// <remarks>Path need NOT to be existent.</remarks>
-        [NotNull]
         public static string AppendBackslash
             (
-                [NotNull] string path
+                string path
             )
         {
             Sure.NotNullNorEmpty(path, nameof(path));
 
-            string result = ConvertSlashes(path);
+            var result = ConvertSlashes(path);
             if (!result.EndsWith(_backslash))
             {
                 result = result + _backslash;
@@ -72,15 +65,12 @@ namespace AM.IO
         /// <param name="path">Path to convert.</param>
         /// <returns>Converted path.</returns>
         /// <remarks>Path need NOT to be existent.</remarks>
-        [NotNull]
         public static string ConvertSlashes
             (
-                [NotNull] string path
+                string path
             )
         {
-            Sure.NotNull(path, nameof(path));
-
-            string result = path.Replace
+            var result = path.Replace
                 (
                     Path.AltDirectorySeparatorChar,
                     Path.DirectorySeparatorChar
@@ -92,11 +82,10 @@ namespace AM.IO
         /// <summary>
         /// Get relative path.
         /// </summary>
-        [NotNull]
         public static string GetRelativePath
             (
-                [NotNull] string absolutePath,
-                [NotNull] string baseDirectory
+                string absolutePath,
+                string baseDirectory
             )
         {
             Sure.NotNullNorEmpty(absolutePath, nameof(absolutePath));
@@ -105,8 +94,8 @@ namespace AM.IO
             // absolutePath = Path.GetFullPath(absolutePath);
             // baseDirectory = Path.GetFullPath(baseDirectory);
 
-            string mainSeparator = char.ToString(Path.DirectorySeparatorChar);
-            string altSeparator = char.ToString(Path.AltDirectorySeparatorChar);
+            var mainSeparator = char.ToString(Path.DirectorySeparatorChar);
+            var altSeparator = char.ToString(Path.AltDirectorySeparatorChar);
 
             string[] separators =
             {
@@ -114,16 +103,16 @@ namespace AM.IO
                 altSeparator
             };
 
-            string[] absoluteParts = absolutePath.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string[] baseParts = baseDirectory.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            int length = Math.Min
-                (
-                    absoluteParts.Length,
-                    baseParts.Length
-                );
+            var absoluteParts = absolutePath.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var baseParts = baseDirectory.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            var length = Math.Min
+            (
+                absoluteParts.Length,
+                baseParts.Length
+            );
 
-            int offset = 0;
-            for (int i = 0; i < length; i++)
+            var offset = 0;
+            for (var i = 0; i < length; i++)
             {
                 if (StringUtility.CompareNoCase(absoluteParts[i], baseParts[i]) == 0)
                 {
@@ -140,74 +129,62 @@ namespace AM.IO
                 if (!absolutePath.StartsWith(mainSeparator)) // Linux
                 {
                     throw new ArgumentException
-                        (
-                            "Paths do not have a common base!"
-                        );
+                    (
+                        "Paths do not have a common base!"
+                    );
                 }
             }
 
             var relativePath = new StringBuilder();
 
-            for (int i = 0; i < baseParts.Length - offset; i++)
+            for (var i = 0; i < baseParts.Length - offset; i++)
             {
                 relativePath.Append("..");
                 relativePath.Append(mainSeparator);
             }
 
-            for (int i = offset; i < absoluteParts.Length - 1; i++)
+            for (var i = offset; i < absoluteParts.Length - 1; i++)
             {
                 relativePath.Append(absoluteParts[i]);
                 relativePath.Append(mainSeparator);
             }
 
-            relativePath.Append(absoluteParts[absoluteParts.Length - 1]);
+            relativePath.Append(absoluteParts[^1]);
 
             return relativePath.ToString();
         }
 
-#if CLASSIC
-
         /// <summary>
         /// Maps the path relative to the executable name.
         /// </summary>
-        [NotNull]
         public static string MapPath
             (
-                [NotNull] string path
+                string path
             )
         {
-            Code.NotNull(path, "path");
+            Sure.NotNullNorEmpty(path, nameof(path));
 
-            string appDirectory = Path.GetDirectoryName
+            var appDirectory = Path.GetDirectoryName
                 (
                     RuntimeUtility.ExecutableFileName
                 );
-            string result = string.IsNullOrEmpty(appDirectory)
+            var result = string.IsNullOrEmpty(appDirectory)
                 ? path
-                : Path.Combine
-                    (
-                        appDirectory,
-                        path
-                    );
+                : Path.Combine(appDirectory, path);
 
             return result;
         }
 
-#endif
-
         /// <summary>
         /// Strips extension from given path.
         /// </summary>
-        [NotNull]
         public static string StripExtension
             (
-                [NotNull] string path
+                string path
             )
         {
-            Sure.NotNull(path, nameof(path));
-
-            string extension = Path.GetExtension(path);
-            string result = path;
+            var extension = Path.GetExtension(path);
+            var result = path;
             if (!string.IsNullOrEmpty(extension))
             {
                 result = result.Substring
@@ -226,22 +203,19 @@ namespace AM.IO
         /// <param name="path">Path to convert.</param>
         /// <returns>Converted path.</returns>
         /// <remarks>Path need NOT to be existent.</remarks>
-        [NotNull]
         public static string StripTrailingBackslash
             (
-                [NotNull] string path
+                string path
             )
         {
-            Sure.NotNull(path, nameof(path));
-
-            string result = ConvertSlashes(path);
+            var result = ConvertSlashes(path);
             while (result.EndsWith(_backslash))
             {
                 result = result.Substring
-                    (
-                        0,
-                        result.Length - _backslash.Length
-                    );
+                (
+                    0,
+                    result.Length - _backslash.Length
+                );
             }
 
             return result;
