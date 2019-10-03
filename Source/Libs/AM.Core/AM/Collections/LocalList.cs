@@ -1,10 +1,10 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* LocalList.cs --
+/* LocalList.cs -- dynamic list as value type.
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
@@ -16,10 +16,13 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Collections
 {
     /// <summary>
-    ///
+    /// A fairly simple dynamic list implemented as a value type
+    /// to reduce memory allocations.
     /// </summary>
     [PublicAPI]
     public struct LocalList<T>
@@ -33,7 +36,7 @@ namespace AM.Collections
 
         private void _Extend(int newSize)
         {
-            T[] newArray = new T[newSize];
+            var newArray = new T[newSize];
             _array?.CopyTo(newArray, 0);
 
             _array = newArray;
@@ -75,7 +78,7 @@ namespace AM.Collections
         /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public IEnumerator<T> GetEnumerator()
         {
-            for (int i = 0; i < _size; i++)
+            for (var i = 0; i < _size; i++)
             {
                 yield return _array![i];
             }
@@ -109,7 +112,7 @@ namespace AM.Collections
                 _Extend(InitialCapacity);
             }
 
-            foreach (T item in items)
+            foreach (var item in items)
             {
                 _GrowAsNeeded();
                 _array![_size++] = item;
@@ -133,7 +136,7 @@ namespace AM.Collections
                 return false;
             }
 
-            int index = Array.IndexOf(_array, item, 0, _size);
+            var index = Array.IndexOf(_array, item, 0, _size);
             return index >= 0;
         }
 
@@ -156,7 +159,7 @@ namespace AM.Collections
                 T item
             )
         {
-            int index = IndexOf(item);
+            var index = IndexOf(item);
             if (index >= 0)
             {
                 RemoveAt(index);
@@ -270,7 +273,7 @@ namespace AM.Collections
                 return _array;
             }
 
-            T[] result = new T[_size];
+            var result = new T[_size];
             Array.Copy(_array, result, _size);
 
             return result;
@@ -286,8 +289,8 @@ namespace AM.Collections
                 return new List<T>();
             }
 
-            List<T> result = new List<T>(_size);
-            for (int i = 0; i < _size; i++)
+            var result = new List<T>(_size);
+            for (var i = 0; i < _size; i++)
             {
                 result.Add(_array[i]);
             }

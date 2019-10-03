@@ -1,10 +1,9 @@
 language: csharp
-sudo: required  
+sudo: required
 dist: trusty
 mono: none
-dotnet: 2.0
+dotnet: 3.0
 script:
-  - ./Utils/dotnet-install.sh -v 3.0.100-preview-009812
   - dotnet restore ./Source/
   - dotnet build ./Source/
   - dotnet test --no-build ./Source/UnitTests/

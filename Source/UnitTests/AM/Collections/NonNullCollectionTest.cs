@@ -16,14 +16,14 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_Construction_1()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>();
+            var collection = new NonNullCollection<object>();
             Assert.AreEqual(0, collection.Count);
         }
 
         [TestMethod]
         public void NonNullCollection_Add_1()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>
+            var collection = new NonNullCollection<object>
                 {
                     new object()
                 };
@@ -34,7 +34,7 @@ namespace UnitTests.AM.Collections
         [ExpectedException(typeof(ArgumentException))]
         public void NonNullCollection_Add_1a()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>
+            var collection = new NonNullCollection<object>
             {
                 null
             };
@@ -44,7 +44,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_AddRange_1()
         {
-            NonNullCollection<object> collection
+            var collection
                 = new NonNullCollection<object>();
             collection.AddRange
                 (
@@ -61,7 +61,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_AddRange_2()
         {
-            NonNullCollection<object> collection
+            var collection
                 = new NonNullCollection<object>();
             collection.AddRange
                 (
@@ -78,7 +78,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_AddRange_3()
         {
-            NonNullCollection<object> collection
+            var collection
                 = new NonNullCollection<object>();
             collection.AddRange
                 (
@@ -96,7 +96,7 @@ namespace UnitTests.AM.Collections
         [ExpectedException(typeof(ArgumentException))]
         public void NonNullCollection_AddRange_4()
         {
-            NonNullCollection<object> collection
+            var collection
                 = new NonNullCollection<object>();
             collection.AddRange
                 (
@@ -112,7 +112,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_Clear_1()
         {
-            NonNullCollection<object> collection
+            var collection
                 = new NonNullCollection<object>
                 {
                     new object()
@@ -125,7 +125,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_Indexer_1()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>
+            var collection = new NonNullCollection<object>
                 {
                     new object()
                 };
@@ -137,7 +137,7 @@ namespace UnitTests.AM.Collections
         [ExpectedException(typeof(ArgumentException))]
         public void NonNullCollection_Indexer_1a()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>
+            var collection = new NonNullCollection<object>
                 {
                     new object()
                 };
@@ -147,7 +147,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_EnsureCapacity_1()
         {
-            NonNullCollection<object> collection = new NonNullCollection<object>
+            var collection = new NonNullCollection<object>
             {
                 new object()
             };
@@ -158,17 +158,17 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_ToArray_1()
         {
-            NonNullCollection<string> collection = new NonNullCollection<string>();
-            string[] array = collection.ToArray();
+            var collection = new NonNullCollection<string>();
+            var array = collection.ToArray();
             Assert.AreEqual(0, array.Length);
         }
 
         [TestMethod]
         public void NonNullCollection_ToArray_2()
         {
-            NonNullCollection<string> collection = new NonNullCollection<string>();
+            var collection = new NonNullCollection<string>();
             collection.Add("hello");
-            string[] array = collection.ToArray();
+            var array = collection.ToArray();
             Assert.AreEqual(1, array.Length);
             Assert.AreEqual("hello", array[0]);
         }
@@ -176,10 +176,10 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void NonNullCollection_ToArray_3()
         {
-            NonNullCollection<string> collection = new NonNullCollection<string>();
+            var collection = new NonNullCollection<string>();
             collection.Add("hello");
             collection.Add("world");
-            string[] array = collection.ToArray();
+            var array = collection.ToArray();
             Assert.AreEqual(2, array.Length);
             Assert.AreEqual("hello", array[0]);
             Assert.AreEqual("world", array[1]);

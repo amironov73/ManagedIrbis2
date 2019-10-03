@@ -4,7 +4,7 @@
 /* CloneableCollection.cs -- collection of cloneable elements
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives

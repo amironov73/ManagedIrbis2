@@ -20,4 +20,7 @@ steps:
     version: '3.0.100'
 
 - script: dotnet build --configuration $(buildConfiguration) Source/ManagedIrbis.30.sln
-  displayName: 'dotnet build'
+  displayName: 'Build'
+
+- script: dotnet build Source/ManagedIrbis.30.sln
+  displayName: 'Test'

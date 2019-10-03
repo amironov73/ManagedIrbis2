@@ -4,7 +4,7 @@
 /* CaseInsensitiveDictionary.cs -- case-insensitive dictionary
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
@@ -51,7 +51,7 @@ namespace AM.Collections
         /// </summary>
         public CaseInsensitiveDictionary
             (
-                [NotNull] IDictionary<string, T> dictionary
+                IDictionary<string, T> dictionary
             )
             : base(dictionary, _GetComparer())
         {

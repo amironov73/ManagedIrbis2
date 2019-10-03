@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ListUtility.cs -- 
+/* ListUtility.cs -- useful routines for IList{T}
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -34,7 +34,7 @@ namespace AM.Collections
         /// </summary>
         public static bool AddDistinct<T>
             (
-                [NotNull] this IList<T> list,
+                this IList<T> list,
                 T value
             )
         {
@@ -50,14 +50,11 @@ namespace AM.Collections
         /// </summary>
         public static bool AddDistinct<T>
             (
-                [NotNull] this IList<T> list,
+                this IList<T> list,
                 T value,
-                [NotNull] IEqualityComparer<T> comparer
+                IEqualityComparer<T> comparer
             )
         {
-            Sure.NotNull(list, nameof(list));
-            Sure.NotNull(comparer, nameof(comparer));
-
             if (list.ContainsValue(value, comparer))
             {
                 return false;
@@ -69,21 +66,17 @@ namespace AM.Collections
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static bool AddRangeDistinct<T>
             (
-                [NotNull] this IList<T> list,
-                [NotNull] IEnumerable<T> values,
-                [NotNull] IEqualityComparer<T> comparer
+                this IList<T> list,
+                IEnumerable<T> values,
+                IEqualityComparer<T> comparer
             )
         {
-            Sure.NotNull(list, nameof(list));
-            Sure.NotNull(values, nameof(values));
-            Sure.NotNull(comparer, nameof(comparer));
-
-            bool allAdded = true;
-            foreach (T value in values)
+            var allAdded = true;
+            foreach (var value in values)
             {
                 if (!list.AddDistinct(value, comparer))
                 {
@@ -95,20 +88,17 @@ namespace AM.Collections
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         [Pure]
         public static bool ContainsValue<TSource>
             (
-                [NotNull] this IEnumerable<TSource> source,
+                this IEnumerable<TSource> source,
                 TSource value,
-                [NotNull] IEqualityComparer<TSource> comparer
+                IEqualityComparer<TSource> comparer
             )
         {
-            Sure.NotNull(source, nameof(source));
-            Sure.NotNull(comparer, nameof(comparer));
-
-            foreach (TSource local in source)
+            foreach (var local in source)
             {
                 if (comparer.Equals(local, value))
                 {
@@ -120,19 +110,16 @@ namespace AM.Collections
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public static int IndexOf<T>
             (
-                [NotNull] this IEnumerable<T> collection,
-                [NotNull] Func<T, bool> predicate
+                this IEnumerable<T> collection,
+                Func<T, bool> predicate
             )
         {
-            Sure.NotNull(collection, nameof(collection));
-            Sure.NotNull(predicate, nameof(predicate));
-
-            int index = 0;
-            foreach (T value in collection)
+            var index = 0;
+            foreach (var value in collection)
             {
                 if (predicate(value))
                 {
@@ -150,7 +137,7 @@ namespace AM.Collections
         /// </summary>
         public static bool IsNullOrEmpty<T>
             (
-                [CanBeNull] this IList<T> list
+                this IList<T>? list
             )
         {
             if (!ReferenceEquals(list, null))
@@ -165,17 +152,18 @@ namespace AM.Collections
         /// Throw <see cref="ArgumentNullException"/>
         /// if the list is <c>null</c> or empty.
         /// </summary>
-        [NotNull]
         public static IList<T> ThrowIfNullOrEmpty<T>
             (
-                [CanBeNull] this IList<T> list
+                this IList<T>? list
             )
         {
             if (ReferenceEquals(list, null))
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "list is null"
                     );
@@ -187,7 +175,9 @@ namespace AM.Collections
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "list is empty"
                     );
@@ -203,20 +193,19 @@ namespace AM.Collections
         /// if the list is <c>null</c> or empty.
         /// </summary>
         [Pure]
-        [NotNull]
         public static IList<T> ThrowIfNullOrEmpty<T>
             (
-                [CanBeNull] this IList<T> list,
-                [NotNull] string message
+                this IList<T>? list,
+                string message
             )
         {
-            Sure.NotNullNorEmpty(message, nameof(message));
-
             if (ReferenceEquals(list, null))
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "list is null"
                     );
@@ -228,7 +217,9 @@ namespace AM.Collections
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "list is empty"
                     );
@@ -244,17 +235,18 @@ namespace AM.Collections
         /// if the array is <c>null</c> or empty.
         /// </summary>
         [Pure]
-        [NotNull]
         public static T[] ThrowIfNullOrEmpty<T>
             (
-                [CanBeNull] this T[] array
+                this T[]? array
             )
         {
             if (ReferenceEquals(array, null))
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "array is null"
                     );
@@ -266,7 +258,9 @@ namespace AM.Collections
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "array is empty"
                     );
@@ -282,20 +276,19 @@ namespace AM.Collections
         /// if the array is <c>null</c> or empty.
         /// </summary>
         [Pure]
-        [NotNull]
         public static T[] ThrowIfNullOrEmpty<T>
             (
-                [CanBeNull] this T[] array,
-                [NotNull] string message
+                this T[]? array,
+                string message
             )
         {
-            Sure.NotNullNorEmpty(message, nameof(message));
-
             if (ReferenceEquals(array, null))
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "array is null"
                     );
@@ -307,7 +300,9 @@ namespace AM.Collections
             {
                 Log.Error
                     (
-                        nameof(ListUtility) + "::" + nameof(ThrowIfNullOrEmpty)
+                        nameof(ListUtility)
+                        + "::"
+                        + nameof(ThrowIfNullOrEmpty)
                         + ": "
                         + "array is empty"
                     );

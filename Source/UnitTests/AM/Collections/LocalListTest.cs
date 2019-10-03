@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using AM.Collections;
 
@@ -13,14 +12,22 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Construction_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void LocalList_Construction_2()
+        {
+            var expected = 16;
+            var list = new LocalList<int>(expected);
             Assert.AreEqual(0, list.Count);
         }
 
         [TestMethod]
         public void LocalList_Add_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             list.Add(1);
             Assert.AreEqual(1, list.Count);
@@ -29,7 +36,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Add_2()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             list.Add(1);
             list.Add(2);
@@ -39,7 +46,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Add_3()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             list.Add(1);
             list.Add(2);
@@ -52,7 +59,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_AddRange_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             int[] range = {1, 2};
             list.AddRange(range);
@@ -62,8 +69,8 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_GetEnumerator_1()
         {
-            LocalList<int> list = new LocalList<int>();
-            IEnumerator<int> enumerator = list.GetEnumerator();
+            var list = new LocalList<int>();
+            var enumerator = list.GetEnumerator();
             Assert.IsFalse(enumerator.MoveNext());
             enumerator.Dispose();
         }
@@ -71,11 +78,11 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_GetEnumerator_2()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Add(2);
             list.Add(3);
-            IEnumerator<int> enumerator = list.GetEnumerator();
+            var enumerator = list.GetEnumerator();
             Assert.IsTrue(enumerator.MoveNext());
             Assert.AreEqual(1, enumerator.Current);
             Assert.IsTrue(enumerator.MoveNext());
@@ -89,7 +96,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Clear_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Clear();
             Assert.AreEqual(0, list.Count);
@@ -98,7 +105,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Contains_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.IsFalse(list.Contains(1));
             list.Add(1);
             Assert.IsTrue(list.Contains(1));
@@ -108,8 +115,8 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_CopyTo_1()
         {
-            LocalList<int> list = new LocalList<int>();
-            int[] array = new int[3];
+            var list = new LocalList<int>();
+            var array = new int[3];
             list.CopyTo(array, 0);
             Assert.AreEqual(0, array[0]);
             Assert.AreEqual(0, array[1]);
@@ -119,11 +126,11 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_CopyTo_2()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Add(2);
             list.Add(3);
-            int[] array = new int[3];
+            var array = new int[3];
             list.CopyTo(array, 0);
             Assert.AreEqual(1, array[0]);
             Assert.AreEqual(2, array[1]);
@@ -133,7 +140,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Remove_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.IsFalse(list.Remove(2));
             list.Add(1);
             list.Add(2);
@@ -146,7 +153,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Count_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             list.Add(1);
             Assert.AreEqual(1, list.Count);
@@ -159,14 +166,14 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_IsReadOnly_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.IsFalse(list.IsReadOnly);
         }
 
         [TestMethod]
         public void LocalList_IndexOf_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.IsTrue(list.IndexOf(2) < 0);
             list.Add(1);
             list.Add(2);
@@ -177,7 +184,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Insert_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list.Count);
             list.Insert(0, 3);
             Assert.AreEqual(1, list.Count);
@@ -191,7 +198,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_RemoveAt_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Add(2);
             list.Add(3);
@@ -204,7 +211,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Item_1()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Add(2);
             list.Add(3);
@@ -216,7 +223,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_Item_2()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(0);
             list.Add(0);
             list.Add(0);
@@ -232,7 +239,7 @@ namespace UnitTests.AM.Collections
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void LocalList_Item_3()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             Assert.AreEqual(0, list[0]);
         }
 
@@ -240,15 +247,17 @@ namespace UnitTests.AM.Collections
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void LocalList_Item_4()
         {
-            LocalList<int> list = new LocalList<int>();
+            // ReSharper disable UseObjectOrCollectionInitializer
+            var list = new LocalList<int>();
             list[0] = 0;
+            // ReSharper restore UseObjectOrCollectionInitializer
         }
 
         [TestMethod]
         public void LocalList_ToArray_1()
         {
-            LocalList<int> list = new LocalList<int>();
-            int[] array = list.ToArray();
+            var list = new LocalList<int>();
+            var array = list.ToArray();
             Assert.IsNotNull(array);
             Assert.AreEqual(0, array.Length);
         }
@@ -256,16 +265,53 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void LocalList_ToArray_2()
         {
-            LocalList<int> list = new LocalList<int>();
+            var list = new LocalList<int>();
             list.Add(1);
             list.Add(2);
             list.Add(3);
-            int[] array = list.ToArray();
+            var array = list.ToArray();
             Assert.IsNotNull(array);
             Assert.AreEqual(3, array.Length);
             Assert.AreEqual(1, array[0]);
             Assert.AreEqual(2, array[1]);
             Assert.AreEqual(3, array[2]);
+        }
+
+        [TestMethod]
+        public void LocalList_ToArray_3()
+        {
+            var list = new LocalList<int>(2);
+            list.Add(1);
+            list.Add(2);
+            var array = list.ToArray();
+            Assert.IsNotNull(array);
+            Assert.AreEqual(2, array.Length);
+            Assert.AreEqual(1, array[0]);
+            Assert.AreEqual(2, array[1]);
+        }
+
+        [TestMethod]
+        public void LocalList_ToList_1()
+        {
+            var local = new LocalList<int>();
+            var list = local.ToList();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [TestMethod]
+        public void LocalList_ToList_2()
+        {
+            var local = new LocalList<int>();
+            local.Add(1);
+            local.Add(2);
+            local.Add(3);
+            var list = local.ToList();
+            Assert.IsNotNull(list);
+            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual(1, list[0]);
+            Assert.AreEqual(2, list[1]);
+            Assert.AreEqual(3, list[2]);
         }
     }
 }

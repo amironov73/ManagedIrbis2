@@ -6,12 +6,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v1
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.0.100
-    - name: Build with dotnet
+
+    - name: Build
       run: dotnet build --configuration Release Source/ManagedIrbis.30.sln
+
+    - name: Test
+      run: dotnet test Source/ManagedIrbis.30.sln

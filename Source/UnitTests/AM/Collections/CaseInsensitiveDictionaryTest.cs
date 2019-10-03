@@ -10,8 +10,7 @@ namespace UnitTests.AM.Collections
         [TestMethod]
         public void CaseInsensitiveDictionary_Construction_1()
         {
-            CaseInsensitiveDictionary<int> dictionary
-                = new CaseInsensitiveDictionary<int>();
+            var dictionary = new CaseInsensitiveDictionary<int>();
             Assert.AreEqual(0, dictionary.Count);
             dictionary.Add("first", 1);
             dictionary.Add("second", 2);

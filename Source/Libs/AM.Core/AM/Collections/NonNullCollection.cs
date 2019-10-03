@@ -4,7 +4,7 @@
 /* NonNullCollection.cs -- collection with items that can't be null
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
@@ -38,11 +38,10 @@ namespace AM.Collections
 
         #region Private members
 
-        [NotNull]
         private List<T> _GetInnerList()
         {
             // ReSharper disable SuspiciousTypeConversion.Global
-            List<T> result = (List<T>)Items;
+            var result = (List<T>)Items;
             // ReSharper restore SuspiciousTypeConversion.Global
 
             return result;
@@ -60,8 +59,8 @@ namespace AM.Collections
                 int delta
             )
         {
-            List<T> innerList = _GetInnerList();
-            int newCapacity = innerList.Count + delta;
+            var innerList = _GetInnerList();
+            var newCapacity = innerList.Count + delta;
             if (newCapacity > innerList.Capacity)
             {
                 innerList.Capacity = newCapacity;
@@ -78,7 +77,7 @@ namespace AM.Collections
         {
             Sure.NotNull(range, nameof(range));
 
-            foreach (T item in range)
+            foreach (var item in range)
             {
                 Add(item);
             }
@@ -97,7 +96,7 @@ namespace AM.Collections
             Sure.NotNull(array, nameof(array));
 
             AddCapacity(array.Length);
-            foreach (T item in array)
+            foreach (var item in array)
             {
                 Add(item);
             }
@@ -111,13 +110,13 @@ namespace AM.Collections
         [NotNull]
         public NonNullCollection<T> AddRange
             (
-                [NotNull] IList<T> list
+                IList<T> list
             )
         {
             Sure.NotNull(list, nameof(list));
 
             AddCapacity(list.Count);
-            foreach (T item in list)
+            foreach (var item in list)
             {
                 Add(item);
             }
@@ -133,7 +132,7 @@ namespace AM.Collections
                 int capacity
             )
         {
-            List<T> innerList = _GetInnerList();
+            var innerList = _GetInnerList();
             if (innerList.Capacity < capacity)
             {
                 innerList.Capacity = capacity;

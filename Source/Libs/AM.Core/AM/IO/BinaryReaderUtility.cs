@@ -34,15 +34,12 @@ namespace AM.IO
         /// <summary>
         /// Read <see cref="NonNullCollection{T}"/>
         /// </summary>
-        [NotNull]
         public static NonNullCollection<T> ReadNonNullCollection<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
             var array = reader.ReadArray<T>();
             var result = new NonNullCollection<T>();
             result.AddRange(array);
@@ -55,12 +52,10 @@ namespace AM.IO
         /// </summary>
         public static T[] ReadArray<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int count = reader.ReadPackedInt32();
             T[] result = new T[count];
             for (int i = 0; i < count; i++)
@@ -76,14 +71,11 @@ namespace AM.IO
         /// <summary>
         /// Read array of bytes.
         /// </summary>
-        [NotNull]
         public static byte[] ReadByteArray
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int length = reader.ReadPackedInt32();
             byte[] result = new byte[length];
             reader.Read(result, 0, length);
@@ -94,17 +86,13 @@ namespace AM.IO
         /// <summary>
         /// Reads collection of items from the stream.
         /// </summary>
-        [NotNull]
         public static BinaryReader ReadCollection<T>
             (
-                [NotNull] this BinaryReader reader,
-                [NotNull] NonNullCollection<T> collection
+                this BinaryReader reader,
+                NonNullCollection<T> collection
             )
             where T : class, IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-            Sure.NotNull(collection, nameof(collection));
-
             collection.Clear();
 
             int count = reader.ReadPackedInt32();
@@ -123,11 +111,9 @@ namespace AM.IO
         /// </summary>
         public static DateTime ReadDateTime
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             DateTime result = DateTime.FromBinary(reader.ReadInt64());
 
             return result;
@@ -138,11 +124,9 @@ namespace AM.IO
         /// </summary>
         public static DateTime? ReadNullableDateTime
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             DateTime? result = null;
 
             bool flag = reader.ReadBoolean();
@@ -157,14 +141,11 @@ namespace AM.IO
         /// <summary>
         /// Read array of 16-bit integers.
         /// </summary>
-        [NotNull]
         public static short[] ReadInt16Array
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int length = reader.ReadPackedInt32();
             short[] result = new short[length];
             for (int i = 0; i < length; i++)
@@ -178,14 +159,11 @@ namespace AM.IO
         /// <summary>
         /// Read array of 32-bit integers.
         /// </summary>
-        [NotNull]
         public static int[] ReadInt32Array
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int length = reader.ReadPackedInt32();
             int[] result = new int[length];
             for (int i = 0; i < length; i++)
@@ -199,14 +177,11 @@ namespace AM.IO
         /// <summary>
         /// Read array of 64-bit integers.
         /// </summary>
-        [NotNull]
         public static long[] ReadInt64Array
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int length = reader.ReadPackedInt32();
             long[] result = new long[length];
             for (int i = 0; i < length; i++)
@@ -220,15 +195,12 @@ namespace AM.IO
         /// <summary>
         /// Reads list of items from the stream.
         /// </summary>
-        [NotNull]
         public static List<T> ReadList<T>
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
             where T: IHandmadeSerializable, new()
         {
-            Sure.NotNull(reader, nameof(reader));
-
             int count = reader.ReadPackedInt32();
             List<T> result = new List<T>(count);
 
@@ -247,11 +219,9 @@ namespace AM.IO
         /// </summary>
         public static byte? ReadNullableByte
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? (byte?)reader.ReadByte()
@@ -263,11 +233,9 @@ namespace AM.IO
         /// </summary>
         public static double? ReadNullableDouble
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
             return flag
                 ? (double?)reader.ReadDouble()
@@ -279,11 +247,9 @@ namespace AM.IO
         /// </summary>
         public static decimal? ReadNullableDecimal
             (
-                [NotNull] this BinaryReader reader
+                this BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             bool flag = reader.ReadBoolean();
 
             return flag
