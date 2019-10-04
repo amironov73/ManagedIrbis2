@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* UnicodeRange.cs -- 
+/* UnicodeRange.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -25,7 +25,7 @@ using Newtonsoft.Json;
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     [XmlRoot("range")]
@@ -33,54 +33,47 @@ namespace AM.Text
         : IHandmadeSerializable,
         IVerifiable
     {
-        #region Static 
+        #region Static
 
         /// <summary>
         /// Control characters.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange ControlCharacters
             = new UnicodeRange("Control characters", '\x0000', '\x001F');
 
         /// <summary>
         /// Basic Latin.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange BasicLatin
             = new UnicodeRange("Basic Latin", '\x0020', '\x007F');
 
         /// <summary>
         /// Latin1 supplement.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange Latin1Supplement
             = new UnicodeRange("Latin Supplement", '\x0080', '\x00FF');
 
         /// <summary>
         /// Latin extended.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange LatinExtended
             = new UnicodeRange("Latin Extended", '\x0100', '\x024F');
 
         /// <summary>
         /// Cyrillic.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange Cyrillic
             = new UnicodeRange("Cyrillic", '\x0400', '\x04FF');
 
         /// <summary>
         /// Cyrillic supplement.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange CyrillicSupplement
             = new UnicodeRange("Cyrillic Supplement", '\x0500', '\x052F');
 
         /// <summary>
         /// Russian.
         /// </summary>
-        [NotNull]
         public static readonly UnicodeRange Russian
             = new UnicodeRange("Russian", '\x0410', '\x0451');
 
@@ -91,10 +84,9 @@ namespace AM.Text
         /// <summary>
         /// Name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("name")]
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// From.
@@ -126,7 +118,7 @@ namespace AM.Text
         /// </summary>
         public UnicodeRange
             (
-                [NotNull] string name,
+                string name,
                 char fromChar,
                 char toChar
             )
@@ -180,8 +172,11 @@ namespace AM.Text
         /// <inheritdoc cref="IVerifiable.Verify" />
         public bool Verify(bool throwOnError)
         {
-            Verifier<UnicodeRange> verifier
-                = new Verifier<UnicodeRange>(this, throwOnError);
+            var verifier = new Verifier<UnicodeRange>
+                (
+                    this,
+                    throwOnError
+                );
 
             verifier
                 .NotNullNorEmpty(Name, "Name")

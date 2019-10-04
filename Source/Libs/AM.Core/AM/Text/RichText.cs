@@ -15,6 +15,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable StringLiteralTypo
 // ReSharper disable UseNullPropagation
 
 namespace AM.Text
@@ -22,6 +24,7 @@ namespace AM.Text
     /// <summary>
     /// Rich text support.
     /// </summary>
+    [PublicAPI]
     public static class RichText
     {
         #region Properties
@@ -73,31 +76,30 @@ namespace AM.Text
         /// <summary>
         /// Decode text.
         /// </summary>
-        [CanBeNull]
-        public static string Decode
+        public static string? Decode
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            int length = text.Length;
+            var length = text.Length;
 
-            StringBuilder result = new StringBuilder(length);
-            TextNavigator navigator = new TextNavigator(text);
+            var result = new StringBuilder(length);
+            var navigator = new TextNavigator(text);
             while (!navigator.IsEOF)
             {
-                string chunk = navigator.ReadUntil('\\');
+                var chunk = navigator.ReadUntil('\\');
                 result.Append(chunk);
-                char prefix = navigator.ReadChar();
+                var prefix = navigator.ReadChar();
                 if (prefix != '\\')
                 {
                     break;
                 }
-                char c = navigator.ReadChar();
+                var c = navigator.ReadChar();
                 if (c == '\0')
                 {
                     result.Append(prefix);
@@ -109,7 +111,7 @@ namespace AM.Text
                     result.Append(c);
                     continue;
                 }
-                StringBuilder buffer = new StringBuilder();
+                var buffer = new StringBuilder();
                 while (!navigator.IsEOF)
                 {
                     c = navigator.ReadChar();
@@ -132,11 +134,10 @@ namespace AM.Text
         /// <summary>
         /// Encode text.
         /// </summary>
-        [CanBeNull]
-        public static string Encode
+        public static string? Encode
             (
-                [CanBeNull] string text,
-                [CanBeNull] UnicodeRange goodRange
+                string? text,
+                UnicodeRange? goodRange
             )
         {
             if (ReferenceEquals(text, null) || text.Length == 0)
@@ -144,10 +145,10 @@ namespace AM.Text
                 return text;
             }
 
-            int length = text.Length;
+            var length = text.Length;
 
-            StringBuilder result = new StringBuilder(length);
-            foreach (char c in text)
+            var result = new StringBuilder(length);
+            foreach (var c in text)
             {
                 if (c < 0x20)
                 {
@@ -180,7 +181,7 @@ namespace AM.Text
                 }
                 else
                 {
-                    bool simple = false;
+                    var simple = false;
                     if (!ReferenceEquals(goodRange, null))
                     {
                         if (c >= goodRange.From && c <= goodRange.To)
@@ -207,22 +208,21 @@ namespace AM.Text
         /// <summary>
         /// Encode text.
         /// </summary>
-        [CanBeNull]
-        public static string Encode2
+        public static string? Encode2
             (
-                [CanBeNull] string text,
-                [CanBeNull] UnicodeRange goodRange
+                string? text,
+                UnicodeRange? goodRange
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            int length = text.Length;
+            var length = text.Length;
 
-            StringBuilder result = new StringBuilder(length);
-            foreach (char c in text)
+            var result = new StringBuilder(length);
+            foreach (var c in text)
             {
                 if (c < 0x20)
                 {
@@ -238,7 +238,7 @@ namespace AM.Text
                 }
                 else
                 {
-                    bool simple = false;
+                    var simple = false;
                     if (!ReferenceEquals(goodRange, null))
                     {
                         if (c >= goodRange.From && c <= goodRange.To)
@@ -265,23 +265,22 @@ namespace AM.Text
         /// <summary>
         /// Encode text.
         /// </summary>
-        [CanBeNull]
-        public static string Encode3
+        public static string? Encode3
             (
-                [CanBeNull] string text,
-                [CanBeNull] UnicodeRange goodRange,
-                [CanBeNull] string modeSwitch
+                string? text,
+                UnicodeRange? goodRange,
+                string? modeSwitch
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            int length = text.Length;
+            var length = text.Length;
 
-            StringBuilder result = new StringBuilder(length);
-            foreach (char c in text)
+            var result = new StringBuilder(length);
+            foreach (var c in text)
             {
                 if (c < 0x20)
                 {
@@ -299,7 +298,7 @@ namespace AM.Text
                 }
                 else
                 {
-                    bool simple = false;
+                    var simple = false;
                     if (!ReferenceEquals(goodRange, null))
                     {
                         if (c >= goodRange.From && c <= goodRange.To)

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* HtmlText.cs -- 
+/* HtmlText.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,7 +20,7 @@ using JetBrains.Annotations;
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class HtmlText
@@ -30,20 +30,19 @@ namespace AM.Text
         /// <summary>
         /// Encode html entities.
         /// </summary>
-        [CanBeNull]
-        public static string Encode
+        public static string? Encode
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            StringBuilder result = new StringBuilder(text.Length);
+            var result = new StringBuilder(text.Length);
 
-            foreach (char c in text)
+            foreach (var c in text)
             {
                 switch (c)
                 {
@@ -128,10 +127,9 @@ namespace AM.Text
         /// <summary>
         /// Convert HTML to plain text by stripping tags.
         /// </summary>
-        [CanBeNull]
-        public static string ToPlainText
+        public static string? ToPlainText
             (
-                [CanBeNull] string html
+                string? html
             )
         {
             if (string.IsNullOrEmpty(html))
@@ -139,7 +137,7 @@ namespace AM.Text
                 return html;
             }
 
-            string result = Regex.Replace
+            var result = Regex.Replace
                 (
                     html,
                     @"<.*?>",

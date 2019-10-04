@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* UnicodeCharacter.cs -- 
+/* UnicodeCharacter.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -13,10 +13,12 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class UnicodeCharacter
@@ -76,10 +78,10 @@ namespace AM.Text
         public const char RegisteredSign = (char)0xAE;
 
         /// <summary>
-        /// Typographical symbol that is used, among other things, 
+        /// Typographical symbol that is used, among other things,
         /// to represent degrees of arc (e.g. in geographic coordinate
-        /// systems), hours (in the medical field), degrees 
-        /// of temperature, alcohol proof, or diminished quality 
+        /// systems), hours (in the medical field), degrees
+        /// of temperature, alcohol proof, or diminished quality
         /// in musical harmony.
         /// </summary>
         /// <remarks>
@@ -91,12 +93,12 @@ namespace AM.Text
         /// Mathematical symbol with multiple meanings.
         /// <list type="bullet">
         /// <item><description>In mathematics, it generally indicates
-        /// a choice of exactly two possible values, one of which 
+        /// a choice of exactly two possible values, one of which
         /// is the negation of the other.</description></item>
         /// <item><description>In experimental sciences, the sign
         /// commonly indicates the confidence interval or error
         /// in a measurement, often the standard deviation
-        /// or standard error. The sign may also represent 
+        /// or standard error. The sign may also represent
         /// an inclusive range of values that a reading might have.
         /// </description></item>
         /// <item><description>In engineering the sign indicates
@@ -133,7 +135,7 @@ namespace AM.Text
         public const char FigureSpace = (char) 0x2007;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <remarks>
         /// See https://en.wikipedia.org/wiki/Whitespace_character#Hair_spaces_around_dashes
@@ -165,7 +167,7 @@ namespace AM.Text
         public const char Hyphen = (char)0x2010;
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <remarks>
         /// See https://en.wikipedia.org/wiki/Hyphen#Nonbreaking_hyphens
@@ -294,7 +296,7 @@ namespace AM.Text
         /// <summary>
         /// Symbol to indicate that the preceding mark is a trademark.
         /// It is usually used for unregistered trademarks,
-        /// as opposed to the registered trademark symbol which 
+        /// as opposed to the registered trademark symbol which
         /// is reserved for registered trademarks.
         /// </summary>
         /// <remarks>
