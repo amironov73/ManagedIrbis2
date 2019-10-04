@@ -79,7 +79,6 @@ namespace AM
         /// automatically selecting format
         /// according duration of the span.
         /// </summary>
-        [NotNull]
         public static string ToAutoString
             (
                 this TimeSpan span
@@ -106,7 +105,6 @@ namespace AM
         /// <summary>
         /// Converts time span using format 'dd:hh:mm:ss'
         /// </summary>
-        [NotNull]
         public static string ToDayString
             (
                 this TimeSpan span
@@ -126,7 +124,6 @@ namespace AM
         /// <summary>
         /// Converts time span using format 'hh:mm:ss'
         /// </summary>
-        [NotNull]
         public static string ToHourString
             (
                 this TimeSpan span
@@ -145,15 +142,14 @@ namespace AM
         /// <summary>
         /// Converts time span using format 'mm:ss'
         /// </summary>
-        [NotNull]
         public static string ToMinuteString
             (
                 this TimeSpan span
             )
         {
-            double totalMinutes = span.TotalMinutes;
-            int minutes = (int)totalMinutes;
-            int seconds = (int)((totalMinutes - minutes) * 60.0);
+            var totalMinutes = span.TotalMinutes;
+            var minutes = (int)totalMinutes;
+            var seconds = (int)((totalMinutes - minutes) * 60.0);
 
             return string.Format
                 (

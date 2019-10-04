@@ -22,6 +22,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Threading
 {
     /// <summary>
@@ -37,7 +39,7 @@ namespace AM.Threading
         /// <summary>
         /// Raised when the state has changed.
         /// </summary>
-        public event EventHandler StateChanged;
+        public event EventHandler? StateChanged;
 
         #endregion
 
@@ -93,11 +95,7 @@ namespace AM.Threading
 
         private bool _currentState;
 
-#if !UAP
-
-        private Thread _thread;
-
-#endif
+        private Thread? _thread;
 
         private ManualResetEvent _waitHandle;
 
@@ -110,11 +108,9 @@ namespace AM.Threading
         /// </summary>
         public void Run
             (
-                [NotNull] Action action
+                Action action
             )
         {
-            Sure.NotNull(action, nameof(action));
-
             WaitAndGrab();
 
             try
@@ -132,12 +128,10 @@ namespace AM.Threading
         /// </summary>
         public Task RunAsync
             (
-                [NotNull] Action action
+                Action action
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            Task result = Task.Factory.StartNew
+            var result = Task.Factory.StartNew
                 (
                     () => Run(action)
                 );
@@ -155,7 +149,9 @@ namespace AM.Threading
         {
             Log.Trace
                 (
-                    nameof(BusyState) + "::" + nameof(SetState)
+                    nameof(BusyState)
+                    + "::"
+                    + nameof(SetState)
                     + ": newState="
                     + newState
                 );
@@ -210,8 +206,15 @@ namespace AM.Threading
                 }
             }
 
-        DONE:
-            Log.Trace(nameof(BusyState) + "::" + nameof(WaitAndGrab) + ": return");
+            DONE:
+            Log.Trace
+                (
+                    nameof(BusyState)
+                    + "::"
+                    + nameof(WaitAndGrab)
+                    +
+                    ": return"
+                );
         }
 
         /// <summary>
@@ -230,16 +233,8 @@ namespace AM.Threading
                     return true;
                 }
 
-                bool result;
-
-                if (ReferenceEquals(_thread, Thread.CurrentThread))
-                {
-                    result = true;
-                }
-                else
-                {
-                    result = WaitHandle.WaitOne(timeout);
-                }
+                var result = ReferenceEquals(_thread, Thread.CurrentThread)
+                              || WaitHandle.WaitOne(timeout);
 
                 if (result)
                 {
@@ -270,8 +265,14 @@ namespace AM.Threading
                 WaitHandle.WaitOne();
             }
 
-        DONE:
-            Log.Trace(nameof(BusyState) + "::" + nameof(WaitFreeState) + ": return");
+            DONE:
+            Log.Trace
+                (
+                    nameof(BusyState)
+                    + "::"
+                    + nameof(WaitFreeState)
+                    + ": return"
+                );
         }
 
         /// <summary>
@@ -348,7 +349,7 @@ namespace AM.Threading
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return string.Format("Busy: {0}", Busy);
+            return $"Busy: {Busy}";
         }
 
         #endregion

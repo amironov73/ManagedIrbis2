@@ -22,6 +22,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Threading
 {
     /// <summary>
@@ -38,7 +40,7 @@ namespace AM.Threading
         /// <summary>
         /// Вызывается при изменении значения.
         /// </summary>
-        public event EventHandler ValueChanged;
+        public event EventHandler? ValueChanged;
 
         #endregion
 
@@ -52,7 +54,6 @@ namespace AM.Threading
         /// <summary>
         /// Хэндл для ожидания изменения значения.
         /// </summary>
-        [NotNull]
         public WaitHandle WaitHandle => _waitHandle;
 
         /// <summary>
@@ -71,19 +72,14 @@ namespace AM.Threading
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StateHolder()
+        public StateHolder
+            (
+                T value
+            )
         {
             _lock = new object();
             AllowNull = true;
             _waitHandle = new AutoResetEvent(false);
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public StateHolder(T value)
-            : this()
-        {
             _value = value;
         }
 
@@ -106,7 +102,7 @@ namespace AM.Threading
         /// </summary>
         public void SetValue
             (
-                [CanBeNull] T newValue
+                T newValue
             )
         {
             lock (_lock)
@@ -117,14 +113,17 @@ namespace AM.Threading
                 {
                     Log.Error
                         (
-                            nameof(StateHolder<T>) + "::" + nameof(SetValue)
+                            nameof(StateHolder<T>)
+                            +
+                            "::"
+                            + nameof(SetValue)
                             + ": newValue is null"
                         );
 
                     throw new ArgumentNullException();
                 }
 
-                bool changed = false;
+                var changed = false;
 
                 if (ReferenceEquals(_value, null))
                 {
@@ -156,7 +155,7 @@ namespace AM.Threading
         /// </summary>
         public static implicit operator T
             (
-                [NotNull] StateHolder<T> holder
+                StateHolder<T> holder
             )
         {
             return holder.Value;
@@ -184,13 +183,15 @@ namespace AM.Threading
                 BinaryReader reader
             )
         {
-            bool flag = reader.ReadBoolean();
+            var flag = reader.ReadBoolean();
 
             if (flag)
             {
                 Log.Error
                     (
-                        nameof(StateHolder<T>) + "::" + nameof(RestoreFromStream)
+                        nameof(StateHolder<T>)
+                        + "::"
+                        + nameof(RestoreFromStream)
                         + ": not implemented"
                     );
 
@@ -213,28 +214,22 @@ namespace AM.Threading
             {
                 writer.Write(true);
 
-                IHandmadeSerializable intf = _value as IHandmadeSerializable;
+                var serializable = _value as IHandmadeSerializable;
 
-                if (ReferenceEquals(intf, null))
+                if (ReferenceEquals(serializable, null))
                 {
                     Log.Error
                         (
-                            nameof(StateHolder<T>) + "::" + nameof(SaveToStream)
+                            nameof(StateHolder<T>)
+                            + "::"
+                            + nameof(SaveToStream)
                             + ": nonserializable value"
                         );
 
                     throw new NotImplementedException();
                 }
 
-                intf.SaveToStream(writer);
-
-                Log.Error
-                    (
-                        nameof(StateHolder<T>) + "::" + nameof(SaveToStream)
-                        + ": not implemented"
-                    );
-
-                throw new NotImplementedException();
+                serializable.SaveToStream(writer);
             }
         }
 
@@ -245,7 +240,8 @@ namespace AM.Threading
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return Value.ToVisibleString();
+            return Value?.ToString() ?? "(none)";
+            //return Value.ToVisibleString();
         }
 
         #endregion

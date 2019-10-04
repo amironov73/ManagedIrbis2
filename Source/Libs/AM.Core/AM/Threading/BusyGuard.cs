@@ -17,6 +17,8 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Threading
 {
     /// <summary>
@@ -31,13 +33,12 @@ namespace AM.Threading
         /// <summary>
         /// State.
         /// </summary>
-        [NotNull]
-        public BusyState State { get { return _state; } }
+        public BusyState State { get; }
 
         /// <summary>
         /// Timeout.
         /// </summary>
-        public TimeSpan Timeout { get { return _timeout; } }
+        public TimeSpan Timeout { get; }
 
         #endregion
 
@@ -48,13 +49,11 @@ namespace AM.Threading
         /// </summary>
         public BusyGuard
             (
-                [NotNull] BusyState state
+                BusyState state
             )
         {
-            Sure.NotNull(state, "state");
-
-            _state = state;
-            _timeout = TimeSpan.Zero;
+            State = state;
+            Timeout = TimeSpan.Zero;
 
             _Grab();
         }
@@ -64,14 +63,12 @@ namespace AM.Threading
         /// </summary>
         public BusyGuard
             (
-                [NotNull] BusyState state,
+                BusyState state,
                 TimeSpan timeout
             )
         {
-            Sure.NotNull(state, nameof(state));
-
-            _state = state;
-            _timeout = timeout;
+            State = state;
+            Timeout = timeout;
 
             _Grab();
         }
@@ -79,10 +76,6 @@ namespace AM.Threading
         #endregion
 
         #region Private members
-
-        private readonly BusyState _state;
-
-        private readonly TimeSpan _timeout;
 
         private void _Grab()
         {
@@ -96,7 +89,10 @@ namespace AM.Threading
                 {
                     Log.Error
                         (
-                            "BusyGuard::_Grab: "
+                            nameof(BusyGuard)
+                            + "::"
+                            + nameof(_Grab)
+                            + ": "
                             + "timeout"
                         );
 

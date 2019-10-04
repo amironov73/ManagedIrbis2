@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ScopedLock.cs -- 
+/* ScopedLock.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.Threading
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ScopedLock
@@ -32,11 +32,9 @@ namespace AM.Threading
         /// </summary>
         internal ScopedLock
             (
-                [NotNull] Semaphore semaphore
+                Semaphore semaphore
             )
         {
-            Sure.NotNull(semaphore, nameof(semaphore));
-
             _semaphore = semaphore;
             _semaphore.WaitOne();
         }
@@ -45,7 +43,6 @@ namespace AM.Threading
 
         #region Private members
 
-        [NotNull]
         private readonly Semaphore _semaphore;
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ScopedLockFactory.cs -- 
+/* ScopedLockFactory.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.Threading
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ScopedLockFactory
@@ -48,7 +48,6 @@ namespace AM.Threading
         /// <summary>
         /// Create lock.
         /// </summary>
-        [NotNull]
         public ScopedLock CreateLock()
         {
             return new ScopedLock(_semaphore);
