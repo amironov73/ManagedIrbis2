@@ -24,7 +24,6 @@ namespace AM
         /// <summary>
         /// Creates the read-only clone of the object.
         /// </summary>
-        [NotNull]
         T AsReadOnly();
 
         /// <summary>

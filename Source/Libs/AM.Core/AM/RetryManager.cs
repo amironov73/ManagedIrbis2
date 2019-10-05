@@ -31,12 +31,12 @@ namespace AM
         /// <summary>
         /// Raised when exception occurs.
         /// </summary>
-        public event EventHandler<ExceptionEventArgs> ExceptionOccurs;
+        public event EventHandler<ExceptionEventArgs>? ExceptionOccurs;
 
         /// <summary>
         /// Raised when exception is resolved.
         /// </summary>
-        public event EventHandler Resolved;
+        public event EventHandler? Resolved;
 
         #endregion
 
@@ -75,7 +75,7 @@ namespace AM
         public RetryManager
             (
                 int retryLimit,
-                [CanBeNull] Func<Exception, bool> resolver
+                Func<Exception, bool>? resolver
             )
         {
             Sure.Positive(retryLimit, nameof(retryLimit));
@@ -88,7 +88,7 @@ namespace AM
 
         #region Private members
 
-        private readonly Func<Exception, bool> _resolver;
+        private readonly Func<Exception, bool>? _resolver;
 
         private void _Delay()
         {
@@ -127,7 +127,7 @@ namespace AM
                 throw ex;
             }
 
-            ExceptionEventArgs eventArgs = new ExceptionEventArgs (ex);
+            var eventArgs = new ExceptionEventArgs (ex);
             ExceptionOccurs.Raise(this, eventArgs);
 
             if (ReferenceEquals(_resolver, null))
@@ -135,7 +135,7 @@ namespace AM
                 return;
             }
 
-            bool result = _resolver(ex);
+            var result = _resolver(ex);
             if (!result)
             {
                 Log.Error
@@ -166,12 +166,10 @@ namespace AM
         /// </summary>
         public void Try
             (
-                [NotNull] Action action
+                Action action
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -190,13 +188,11 @@ namespace AM
         /// </summary>
         public void Try<T>
             (
-                [NotNull] Action<T> action,
+                Action<T> action,
                 T argument
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -223,14 +219,12 @@ namespace AM
         /// </summary>
         public void Try<T1,T2>
             (
-                [NotNull] Action<T1,T2> action,
+                Action<T1,T2> action,
                 T1 argument1,
                 T2 argument2
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -257,15 +251,13 @@ namespace AM
         /// </summary>
         public void Try<T1, T2, T3>
             (
-                [NotNull] Action<T1, T2, T3> action,
+                Action<T1, T2, T3> action,
                 T1 argument1,
                 T2 argument2,
                 T3 argument3
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -292,12 +284,10 @@ namespace AM
         /// </summary>
         public T Try<T>
             (
-                [NotNull] Func<T> function
+                Func<T> function
             )
         {
-            Sure.NotNull(function, nameof(function));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -323,13 +313,11 @@ namespace AM
         /// </summary>
         public TResult Try<T1,TResult>
             (
-                [NotNull] Func<T1,TResult> function,
+                Func<T1,TResult> function,
                 T1 argument
             )
         {
-            Sure.NotNull(function, nameof(function));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -355,14 +343,12 @@ namespace AM
         /// </summary>
         public TResult Try<T1, T2, TResult>
             (
-                [NotNull] Func<T1, T2, TResult> function,
+                Func<T1, T2, TResult> function,
                 T1 argument1,
                 T2 argument2
             )
         {
-            Sure.NotNull(function, nameof(function));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {
@@ -388,15 +374,13 @@ namespace AM
         /// </summary>
         public TResult Try<T1, T2, T3, TResult>
             (
-                [NotNull] Func<T1, T2, T3, TResult> function,
+                Func<T1, T2, T3, TResult> function,
                 T1 argument1,
                 T2 argument2,
                 T3 argument3
             )
         {
-            Sure.NotNull(function, nameof(function));
-
-            for (int i = 0; i <= RetryLimit; i++)
+            for (var i = 0; i <= RetryLimit; i++)
             {
                 try
                 {

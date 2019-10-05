@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ActionUtility.cs -- 
+/* ActionUtility.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,7 +20,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class ActionUtility
@@ -32,7 +32,7 @@ namespace AM
         /// </summary>
         public static void SafeCall
             (
-                [CanBeNull] this Action action
+                this Action? action
             )
         {
             if (!ReferenceEquals(action, null))
@@ -46,7 +46,7 @@ namespace AM
         /// </summary>
         public static void SafeCall<T>
             (
-                [CanBeNull] this Action<T> action,
+                this Action<T>? action,
                 T argument1
             )
         {
@@ -61,7 +61,7 @@ namespace AM
         /// </summary>
         public static void SafeCall<T1, T2>
             (
-                [CanBeNull] this Action<T1, T2> action,
+                this Action<T1, T2>? action,
                 T1 argument1,
                 T2 argument2
             )
@@ -77,7 +77,7 @@ namespace AM
         /// </summary>
         public static void SafeCall<T1, T2, T3>
             (
-                [CanBeNull] this Action<T1, T2, T3> action,
+                this Action<T1, T2, T3>? action,
                 T1 argument1,
                 T2 argument2,
                 T3 argument3
@@ -94,11 +94,11 @@ namespace AM
         /// </summary>
         public static TResult SafeCall<TResult>
             (
-                [CanBeNull] this Func<TResult> function,
-                TResult defaultResult
+                this Func<TResult>? function,
+                TResult defaultResult = default
             )
         {
-            TResult result = ReferenceEquals(function, null)
+            var result = ReferenceEquals(function, null)
                 ? defaultResult
                 : function();
 
@@ -110,12 +110,12 @@ namespace AM
         /// </summary>
         public static TResult SafeCall<T1, TResult>
             (
-                [CanBeNull] this Func<T1, TResult> function,
+                this Func<T1, TResult>? function,
                 T1 argument1,
-                TResult defaultResult
+                TResult defaultResult = default
             )
         {
-            TResult result = ReferenceEquals(function, null)
+            var result = ReferenceEquals(function, null)
                 ? defaultResult
                 : function(argument1);
 
@@ -127,13 +127,13 @@ namespace AM
         /// </summary>
         public static TResult SafeCall<T1, T2, TResult>
             (
-                [CanBeNull] this Func<T1, T2, TResult> function,
+                this Func<T1, T2, TResult>? function,
                 T1 argument1,
                 T2 argument2,
-                TResult defaultResult
+                TResult defaultResult = default
             )
         {
-            TResult result = ReferenceEquals(function, null)
+            var result = ReferenceEquals(function, null)
                 ? defaultResult
                 : function(argument1, argument2);
 
@@ -145,14 +145,14 @@ namespace AM
         /// </summary>
         public static TResult SafeCall<T1, T2, T3, TResult>
             (
-                [CanBeNull] this Func<T1, T2, T3, TResult> function,
+                this Func<T1, T2, T3, TResult>? function,
                 T1 argument1,
                 T2 argument2,
                 T3 argument3,
-                TResult defaultResult
+                TResult defaultResult = default
             )
         {
-            TResult result = ReferenceEquals(function, null)
+            var result = ReferenceEquals(function, null)
                 ? defaultResult
                 : function(argument1, argument2, argument3);
 

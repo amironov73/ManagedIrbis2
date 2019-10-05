@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class ExceptionEventArgs
@@ -29,7 +29,6 @@ namespace AM
         /// <summary>
         /// Exception.
         /// </summary>
-        [NotNull]
         public Exception Exception { get; private set; }
 
         /// <summary>
@@ -46,7 +45,7 @@ namespace AM
         /// </summary>
         public ExceptionEventArgs
             (
-                [NotNull] Exception exception
+                Exception exception
             )
         {
             Exception = exception;

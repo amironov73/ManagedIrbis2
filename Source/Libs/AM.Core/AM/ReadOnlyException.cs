@@ -11,13 +11,16 @@
 
 using System;
 
+using JetBrains.Annotations;
+
 #endregion
 
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
+    [PublicAPI]
     public sealed class ReadOnlyException
         : ArsMagnaException
     {

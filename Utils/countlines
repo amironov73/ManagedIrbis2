@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+SRC=Source/Libs
+
+echo Files: `find $SRC/ -name '*.cs' | wc -l`
+echo Lines: `find $SRC/ -name '*.cs' -exec cat {} \; | wc -l`
+echo Bytes: `find $SRC/ -name '*.cs' -exec cat {} \; | wc -c`
+
+cloc --include-lang=C# Source/Libs
