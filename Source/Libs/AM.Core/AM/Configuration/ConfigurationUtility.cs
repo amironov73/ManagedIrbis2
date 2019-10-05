@@ -23,6 +23,8 @@ using CM = System.Configuration.ConfigurationManager;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Configuration
 {
     /// <summary>
@@ -43,7 +45,6 @@ namespace AM.Configuration
         /// <summary>
         /// Application.exe.config file name with full path.
         /// </summary>
-        [NotNull]
         public static string ConfigFileName => string.Concat
             (
                 RuntimeUtility.ExecutableFileName,
@@ -53,18 +54,20 @@ namespace AM.Configuration
         /// <summary>
         /// Получаем сеттинг из возможных кандидатов.
         /// </summary>
-        [CanBeNull]
-        public static string FindSetting
+        public static string? FindSetting
             (
-                [NotNull] params string[] candidates
+                params string[] candidates
             )
         {
-            foreach (string candidate in candidates.NonEmptyLines())
+            foreach (string candidate in candidates)
             {
-                string setting = CM.AppSettings[candidate];
-                if (!string.IsNullOrEmpty(setting))
+                if (!string.IsNullOrEmpty(candidate))
                 {
-                    return setting;
+                    var setting = CM.AppSettings[candidate];
+                    if (!string.IsNullOrEmpty(setting))
+                    {
+                        return setting;
+                    }
                 }
             }
 
@@ -76,12 +79,12 @@ namespace AM.Configuration
         /// </summary>
         public static bool GetBoolean
             (
-                [NotNull] string key,
+                string key,
                 bool defaultValue = false
             )
         {
-            bool result = defaultValue;
-            string setting = CM.AppSettings[key];
+            var result = defaultValue;
+            var setting = CM.AppSettings[key];
             if (!string.IsNullOrEmpty(setting))
             {
                 result = ConversionUtility.ToBoolean(setting);
@@ -95,12 +98,12 @@ namespace AM.Configuration
         /// </summary>
         public static short GetInt16
             (
-                [NotNull] string key,
+                string key,
                 short defaultValue = 0
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseInt16(setting, out short result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt16(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -114,12 +117,12 @@ namespace AM.Configuration
         [CLSCompliant(false)]
         public static ushort GetUInt16
             (
-                [NotNull] string key,
+                string key,
                 ushort defaultValue = 0
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseUInt16(setting, out ushort result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseUInt16(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -133,12 +136,12 @@ namespace AM.Configuration
         /// </summary>
         public static int GetInt32
             (
-                [NotNull] string key,
+                string key,
                 int defaultValue = 0
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseInt32(setting, out int result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt32(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -153,12 +156,12 @@ namespace AM.Configuration
         [CLSCompliant (false)]
         public static uint GetUInt32
             (
-                [NotNull] string key,
+                string key,
                 uint defaultValue = 0
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseUInt32(setting, out uint result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseUInt32(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -172,12 +175,12 @@ namespace AM.Configuration
         /// </summary>
         public static long GetInt64
             (
-                [NotNull] string key,
+                string key,
                 long defaultValue = 0L
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseInt64(setting, out long result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseInt64(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -192,12 +195,12 @@ namespace AM.Configuration
         [CLSCompliant(false)]
         public static ulong GetUInt64
             (
-                [NotNull] string key,
+                string key,
                 ulong defaultValue
             )
         {
-            string s = CM.AppSettings[key];
-            if (!NumericUtility.TryParseUInt64(s, out ulong result))
+            var s = CM.AppSettings[key];
+            if (!NumericUtility.TryParseUInt64(s, out var result))
             {
                 result = defaultValue;
             }
@@ -210,12 +213,12 @@ namespace AM.Configuration
         /// </summary>
         public static float GetSingle
             (
-                [NotNull] string key,
+                string key,
                 float defaultValue = 0.0f
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseSingle(setting, out float result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseSingle(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -228,12 +231,12 @@ namespace AM.Configuration
         /// </summary>
         public static double GetDouble
             (
-                [NotNull] string key,
+                string key,
                 double defaultValue = 0.0
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseDouble(setting, out double result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseDouble(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -246,12 +249,12 @@ namespace AM.Configuration
         /// </summary>
         public static decimal GetDecimal
             (
-                [NotNull] string key,
+                string key,
                 decimal defaultValue = 0.0m
             )
         {
-            string setting = CM.AppSettings[key];
-            if (!NumericUtility.TryParseDecimal(setting, out decimal result))
+            var setting = CM.AppSettings[key];
+            if (!NumericUtility.TryParseDecimal(setting, out var result))
             {
                 result = defaultValue;
             }
@@ -262,17 +265,16 @@ namespace AM.Configuration
         /// <summary>
         /// Get string value from application configuration.
         /// </summary>
-        [CanBeNull]
-        public static string GetString
+        public static string? GetString
             (
-                [NotNull] string key,
-                [CanBeNull] string defaultValue = null
+                string key,
+                string? defaultValue = null
             )
         {
             Sure.NotNullNorEmpty(key, nameof(key));
 
-            string result = defaultValue;
-            string s = CM.AppSettings[key];
+            var result = defaultValue;
+            var s = CM.AppSettings[key];
 
             if (!string.IsNullOrEmpty(s))
             {
@@ -285,15 +287,14 @@ namespace AM.Configuration
         /// <summary>
         /// Get string value from application configuration.
         /// </summary>
-        [NotNull]
         public static string RequireString
             (
-                [NotNull] string key
+                string key
             )
         {
             Sure.NotNullNorEmpty(key, nameof(key));
 
-            string result = GetString(key);
+            var result = GetString(key);
             if (ReferenceEquals(result, null))
             {
                 Log.Error
@@ -315,11 +316,11 @@ namespace AM.Configuration
         /// </summary>
         public static DateTime GetDateTime
             (
-                [NotNull] string key,
+                string key,
                 DateTime defaultValue
             )
         {
-            string setting = CM.AppSettings[key];
+            var setting = CM.AppSettings[key];
             if (!string.IsNullOrEmpty(setting))
             {
                 defaultValue = DateTime.Parse(setting, InvariantCulture);

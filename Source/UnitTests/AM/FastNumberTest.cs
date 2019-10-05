@@ -173,6 +173,34 @@ namespace UnitTests.AM
             _TestBytes(123456789, text, 0, 9);
         }
 
+        private unsafe void _TestPointerWithLength
+            (
+                int expected,
+                string text
+            )
+        {
+            fixed (char* pointer = text)
+            {
+                int actual = FastNumber.ParseInt32(pointer, text.Length);
+                Assert.AreEqual(expected, actual);
+            }
+        }
+
+        [TestMethod]
+        public void FastNumber_ParseInt32_7()
+        {
+            _TestPointerWithLength(0, "0");
+            _TestPointerWithLength(1, "1");
+            _TestPointerWithLength(12, "12");
+            _TestPointerWithLength(123, "123");
+            _TestPointerWithLength(1234, "1234");
+            _TestPointerWithLength(12345, "12345");
+            _TestPointerWithLength(123456, "123456");
+            _TestPointerWithLength(1234567, "1234567");
+            _TestPointerWithLength(12345678, "12345678");
+            _TestPointerWithLength(123456789, "123456789");
+        }
+
         [TestMethod]
         public void FastNumber_ParseInt64_1()
         {

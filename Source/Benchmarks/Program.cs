@@ -1,10 +1,11 @@
-﻿using System.IO;
+using System.IO;
 
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Loggers;
+using BenchmarkDotNet.Running;
 
-//using Benchmarks.AM;
+using Benchmarks.AM;
 
 namespace Benchmarks
 {
@@ -22,7 +23,7 @@ namespace Benchmarks
             config.Add(StatisticColumn.Error);
             config.Add(StatisticColumn.StdDev);
 
-            //BenchmarkRunner.Run<FastNumberBenchmark>(config);
+            BenchmarkRunner.Run<FastNumberBenchmark>(config);
         }
     }
 }

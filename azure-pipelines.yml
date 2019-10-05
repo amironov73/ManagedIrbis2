@@ -24,3 +24,6 @@ steps:
 
 - script: dotnet test --no-build Source/ManagedIrbis.30.sln
   displayName: 'Test'
+
+- script: dotnet run -c Release --project Source/Benchmarks/
+  displayName: 'Benchmarks'

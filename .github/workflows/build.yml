@@ -20,3 +20,6 @@ jobs:
 
     - name: Test
       run: dotnet test Source/ManagedIrbis.30.sln
+
+    - name: Benchmarks
+      run: dotnet run -c Release --project Source/Benchmarks/

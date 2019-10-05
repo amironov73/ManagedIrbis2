@@ -213,6 +213,76 @@ namespace AM
             return result;
         }
 
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe int ParseInt32
+            (
+                char* text
+            )
+        {
+            var result = 0;
+            unchecked
+            {
+                char c;
+                while ((c = *text) != '\0')
+                {
+                    result = result * 10 + c - '0';
+                    text++;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe int ParseInt32
+            (
+                char* text,
+                int length
+            )
+        {
+            var result = 0;
+            unchecked
+            {
+                while (length > 0)
+                {
+                    char c = *text;
+                    result = result * 10 + c - '0';
+                    text++;
+                    length--;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Fast number parsing.
+        /// </summary>
+        [CLSCompliant(false)]
+        public static unsafe int ParseInt32
+            (
+                byte* text
+            )
+        {
+            var result = 0;
+            unchecked
+            {
+                byte c;
+                while ((c = *text) != 0)
+                {
+                    result = result * 10 + c - '0';
+                }
+            }
+
+            return result;
+        }
+
         // ==========================================================
 
         /// <summary>

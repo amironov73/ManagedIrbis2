@@ -36,11 +36,23 @@ namespace Benchmarks.AM
         }
 
         [Benchmark]
-        public void FastNumber_ParseInt32()
+        public void FastNumber_ParseInt32_String()
         {
             foreach (var line in _lines)
             {
                 _data = FastNumber.ParseInt32(line);
+            }
+        }
+
+        [Benchmark]
+        public unsafe void FastNumber_ParseInt32_Pointer()
+        {
+            foreach (var line in _lines)
+            {
+                fixed (char* pointer = line)
+                {
+                    _data = FastNumber.ParseInt32(pointer, line.Length);
+                }
             }
         }
 
