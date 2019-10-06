@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CompressionUtility.cs -- useful routines that simplifies data compression 
+/* CompressionUtility.cs -- useful routines that simplifies data compression
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -21,6 +21,7 @@ namespace AM.IO
     /// <summary>
     /// Useful routines that simplifies data compression/decompression.
     /// </summary>
+    [PublicAPI]
     public static class CompressionUtility
     {
         #region Public methods
@@ -28,16 +29,13 @@ namespace AM.IO
         /// <summary>
         /// Compress the data.
         /// </summary>
-        [NotNull]
         public static byte[] Compress
             (
-                [NotNull] byte[] data
+                byte[] data
             )
         {
-            Sure.NotNull(data, nameof(data));
-
-            MemoryStream memory = new MemoryStream();
-            using (DeflateStream compressor = new DeflateStream
+            var memory = new MemoryStream();
+            using (var compressor = new DeflateStream
                 (
                     memory,
                     CompressionMode.Compress
@@ -52,27 +50,26 @@ namespace AM.IO
         /// <summary>
         /// Decompress the data.
         /// </summary>
-        [NotNull]
         public static byte[] Decompress
             (
-                [NotNull] byte[] data
+                byte[] data
             )
         {
-            Sure.NotNull(data, nameof(data));
-
-            MemoryStream memory = new MemoryStream(data);
-            using (DeflateStream decompresser = new DeflateStream
+            var memory = new MemoryStream(data);
+            using var decompresser = new DeflateStream
                 (
                     memory,
                     CompressionMode.Decompress
-                ))
-            {
-                MemoryStream result = new MemoryStream();
-                StreamUtility.AppendTo(decompresser, result, 0);
-                decompresser.Dispose();
+                );
+            var result = new MemoryStream();
+            StreamUtility.AppendTo
+                (
+                    decompresser,
+                    result
+                );
+            decompresser.Dispose();
 
-                return result.ToArray();
-            }
+            return result.ToArray();
         }
 
         #endregion

@@ -34,14 +34,13 @@ namespace AM
         /// </summary>
         public static void RedirectStandardOutput
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            StreamWriter stdOutput = TextWriterUtility.Create
+            var stdOutput = TextWriterUtility.Create
                 (
                     fileName,
                     encoding
@@ -56,12 +55,10 @@ namespace AM
         /// </summary>
         public static void SetOutputCodePage
             (
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
-            Sure.NotNull(encoding, nameof(encoding));
-
-            StreamWriter stdOutput = new StreamWriter
+            var stdOutput = new StreamWriter
                 (
                     Console.OpenStandardOutput(),
                     encoding
@@ -71,7 +68,7 @@ namespace AM
             };
             Console.SetOut(stdOutput);
 
-            StreamWriter stdError = new StreamWriter
+            var stdError = new StreamWriter
                 (
                     Console.OpenStandardError(),
                     encoding
@@ -98,7 +95,7 @@ namespace AM
         /// </summary>
         public static void SetOutputCodePage
             (
-                [NotNull] string codePage
+                string codePage
             )
         {
             Sure.NotNullNorEmpty(codePage, nameof(codePage));

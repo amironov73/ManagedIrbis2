@@ -35,10 +35,10 @@ namespace AM.IO
                 bool recursive
             )
         {
-            foreach (string mask in masks)
+            foreach (var mask in masks)
             {
-                string[] files = Directory.GetFiles(path, mask);
-                foreach (string file in files)
+                var files = Directory.GetFiles(path, mask);
+                foreach (var file in files)
                 {
                     if (!found.Contains(file))
                     {
@@ -48,20 +48,13 @@ namespace AM.IO
             }
             if (recursive)
             {
-                string[] directories = Directory.GetDirectories(path);
-                foreach (string dir in directories)
+                var directories = Directory.GetDirectories(path);
+                foreach (var dir in directories)
                 {
                     _GetFiles(found, dir, masks, true);
                 }
             }
         }
-
-        /// <summary>
-        /// Разделитель элементов в маске файлов.
-        /// Используется в GetFiles().
-        /// </summary>
-        private static char[] _separator = { ';' };
-
 
         #endregion
 
@@ -79,7 +72,7 @@ namespace AM.IO
         {
             Sure.NotNull(path, nameof(path));
 
-            foreach (string subdirectory in Directory.GetDirectories(path))
+            foreach (var subdirectory in Directory.GetDirectories(path))
             {
                 Directory.Delete
                     (
@@ -87,7 +80,7 @@ namespace AM.IO
                         true
                     );
             }
-            foreach (string fileName in Directory.GetFiles(path))
+            foreach (var fileName in Directory.GetFiles(path))
             {
                 File.Delete(Path.Combine(path, fileName));
             }
@@ -107,11 +100,11 @@ namespace AM.IO
             Sure.NotNullNorEmpty(path, nameof(path));
             Sure.NotNullNorEmpty(mask, nameof(mask));
 
-            List<string> found = new List<string>();
+            var found = new List<string>();
 
-            string[] masks = mask.Split
+            var masks = mask.Split
                 (
-                    _separator,
+                    Delimiters.Semicolon,
                     StringSplitOptions.RemoveEmptyEntries
                 );
             _GetFiles(found, path, masks, recursive);
@@ -138,14 +131,14 @@ namespace AM.IO
         {
             Sure.NotNullNorEmpty(wildcard, nameof(wildcard));
 
-            string dir = Path.GetDirectoryName(wildcard);
-            string name = Path.GetFileName(wildcard);
+            var dir = Path.GetDirectoryName(wildcard);
+            var name = Path.GetFileName(wildcard);
             if (string.IsNullOrEmpty(dir))
             {
-                FileInfo[] files = new DirectoryInfo(Directory.GetCurrentDirectory())
+                var files = new DirectoryInfo(Directory.GetCurrentDirectory())
                     .GetFiles(wildcard);
-                List<string> result = new List<string>(files.Length);
-                foreach (FileInfo file in files)
+                var result = new List<string>(files.Length);
+                foreach (var file in files)
                 {
                     result.Add(file.Name);
                 }

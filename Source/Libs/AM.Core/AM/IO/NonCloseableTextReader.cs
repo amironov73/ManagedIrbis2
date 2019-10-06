@@ -10,7 +10,6 @@
 #region Using directives
 
 using System;
-using System.Diagnostics;
 using System.IO;
 
 using JetBrains.Annotations;
@@ -85,21 +84,18 @@ namespace AM.IO
         }
 
         /// <inheritdoc cref="TextReader.Peek" />
-        [DebuggerStepThrough]
         public override int Peek()
         {
             return _innerReader.Peek();
         }
 
         /// <inheritdoc cref="TextReader.Read()" />
-        [DebuggerStepThrough]
         public override int Read()
         {
             return _innerReader.Read();
         }
 
         /// <inheritdoc cref="TextReader.Read(char[],int,int)" />
-        [DebuggerStepThrough]
         public override int Read
             (
                 char[] buffer,
@@ -111,29 +107,19 @@ namespace AM.IO
         }
 
         /// <inheritdoc cref="TextReader.ReadBlock(char[],int,int)" />
-        [DebuggerStepThrough]
         public override int ReadBlock
             (
                 char[] buffer,
                 int index,
                 int count
             )
-        {
-            return _innerReader.ReadBlock(buffer, index, count);
-        }
+            => _innerReader.ReadBlock(buffer, index, count);
 
         /// <inheritdoc cref="TextReader.ReadLine" />
-        public override string? ReadLine()
-        {
-            return _innerReader.ReadLine();
-        }
+        public override string? ReadLine() => _innerReader.ReadLine();
 
         /// <inheritdoc cref="TextReader.ReadToEnd" />
-        [DebuggerStepThrough]
-        public override string ReadToEnd()
-        {
-            return _innerReader.ReadToEnd();
-        }
+        public override string ReadToEnd() => _innerReader.ReadToEnd();
 
         #endregion
 

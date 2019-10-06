@@ -10,7 +10,6 @@
 #region Using directives
 
 using System;
-using System.Diagnostics;
 using System.Globalization;
 
 using JetBrains.Annotations;
@@ -57,10 +56,9 @@ namespace AM
         /// <value>Current month first day.</value>
         public static DateTime ThisMonth
         {
-            [DebuggerStepThrough]
             get
             {
-                DateTime today = DateTime.Today;
+                var today = DateTime.Today;
 
                 return new DateTime(today.Year, today.Month, 1);
             }
@@ -119,8 +117,8 @@ namespace AM
                 params DateTime[] other
             )
         {
-            DateTime result = first;
-            foreach (DateTime time in other)
+            var result = first;
+            foreach (var time in other)
             {
                 if (time > result)
                 {
@@ -143,8 +141,8 @@ namespace AM
                 params DateTime[] other
             )
         {
-            DateTime result = first;
-            foreach (DateTime time in other)
+            var result = first;
+            foreach (var time in other)
             {
                 if (time < result)
                 {
@@ -175,7 +173,7 @@ namespace AM
                 DateTime dateTime
             )
         {
-            int day = dateTime.Day;
+            var day = dateTime.Day;
             long month = dateTime.Month;
             long year = dateTime.Year;
 
@@ -226,7 +224,7 @@ namespace AM
                 DateTime gregorian
             )
         {
-            JulianCalendar calendar = new JulianCalendar();
+            var calendar = new JulianCalendar();
             var dateInJulian = calendar.ToDateTime
                 (
                     gregorian.Year,
@@ -244,7 +242,6 @@ namespace AM
         /// <summary>
         /// Универсальное длинное представление.
         /// </summary>
-        [NotNull]
         public static string ToLongUniformString
             (
                 this DateTime dateTime
@@ -256,7 +253,6 @@ namespace AM
         /// <summary>
         /// Универсальное короткое представление.
         /// </summary>
-        [NotNull]
         public static string ToShortUniformString
             (
                 this DateTime dateTime

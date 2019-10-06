@@ -41,21 +41,17 @@ namespace AM.Net
         /// Resolve IPv4 address
         /// </summary>
         /// <returns>Resolved IP address of the host.</returns>
-        [NotNull]
         public static IPAddress ResolveAddressIPv4
             (
-                [NotNull] string address
+                string address
             )
         {
-            Sure.NotNull(address, nameof(address));
-
             if (address.OneOf("localhost", "local", "(local)"))
             {
                 return IPAddress.Loopback;
             }
 
-            IPAddress result = null;
-
+            IPAddress? result = default;
             try
             {
                 result = IPAddress.Parse(address);
@@ -63,7 +59,9 @@ namespace AM.Net
                 {
                     Log.Error
                         (
-                            nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv4)
+                            nameof(SocketUtility)
+                            + "::"
+                            + nameof(ResolveAddressIPv4)
                             + Resources.AddressMustBeIPv4ButGiven
                             + result.AddressFamily
                         );
@@ -73,11 +71,10 @@ namespace AM.Net
             }
             catch
             {
-                IPHostEntry entry = Dns.GetHostEntry(address);
-
-                if (entry?.AddressList != null && entry.AddressList.Length != 0)
+                var entry = Dns.GetHostEntry(address);
+                if (entry.AddressList != null && entry.AddressList.Length != 0)
                 {
-                    IPAddress[] addresses = entry.AddressList
+                    var addresses = entry.AddressList
                         .Where(item => item.AddressFamily == AddressFamily.InterNetwork)
                         .ToArray();
 
@@ -129,8 +126,7 @@ namespace AM.Net
                 return IPAddress.IPv6Loopback;
             }
 
-            IPAddress result = null;
-
+            IPAddress? result = default;
             try
             {
                 result = IPAddress.Parse(address);
@@ -138,7 +134,9 @@ namespace AM.Net
                 {
                     Log.Error
                         (
-                            nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                            nameof(SocketUtility)
+                            + "::"
+                            + nameof(ResolveAddressIPv6)
                             + Resources.AddressMustBeIPv6ButGiven
                             + result.AddressFamily
                         );
@@ -148,11 +146,10 @@ namespace AM.Net
             }
             catch
             {
-                IPHostEntry entry = Dns.GetHostEntry(address);
-
-                if (entry?.AddressList != null && entry.AddressList.Length != 0)
+                var entry = Dns.GetHostEntry(address);
+                if (entry.AddressList != null && entry.AddressList.Length != 0)
                 {
-                    IPAddress[] addresses = entry.AddressList
+                    var addresses = entry.AddressList
                         .Where(item => item.AddressFamily == AddressFamily.InterNetworkV6)
                         .ToArray();
 
@@ -160,7 +157,9 @@ namespace AM.Net
                     {
                         Log.Error
                             (
-                                nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                                nameof(SocketUtility)
+                                + "::"
+                                + nameof(ResolveAddressIPv6)
                                 + Resources.CantResolveIPv6Address2
                             );
 
@@ -177,7 +176,9 @@ namespace AM.Net
             {
                 Log.Error
                     (
-                        nameof(SocketUtility) + "::" + nameof(ResolveAddressIPv6)
+                        nameof(SocketUtility)
+                        + "::"
+                        + nameof(ResolveAddressIPv6)
                         + Resources.CantResolveAddress2
                     );
 
@@ -190,85 +191,74 @@ namespace AM.Net
         /// <summary>
         /// Receive specified amount of data from the socket.
         /// </summary>
-        [NotNull]
         public static byte[] ReceiveExact
             (
-                [NotNull] this Socket socket,
+                this Socket socket,
                 int dataLength
             )
         {
-            Sure.NotNull(socket, nameof(socket));
             Sure.NonNegative(dataLength, nameof(dataLength));
 
-            using (MemoryStream result = new MemoryStream(dataLength))
+            using var result = new MemoryStream(dataLength);
+            var buffer = new byte[32 * 1024];
+            while (dataLength > 0)
             {
-                byte[] buffer = new byte[32 * 1024];
+                var readed = socket.Receive(buffer);
 
-                while (dataLength > 0)
+                if (readed <= 0)
                 {
-                    int readed = socket.Receive(buffer);
+                    Log.Error
+                        (
+                            nameof(SocketUtility)
+                            + "::"
+                            + nameof(ReceiveExact)
+                            + Resources.ErrorReadingSocket
+                        );
 
-                    if (readed <= 0)
-                    {
-                        Log.Error
-                            (
-                                nameof(SocketUtility) + "::" + nameof(ReceiveExact)
-                                + Resources.ErrorReadingSocket
-                            );
-
-                        throw new ArsMagnaException(Resources.SocketReadingError);
-                    }
-
-                    result.Write(buffer, 0, readed);
-
-                    dataLength -= readed;
+                    throw new ArsMagnaException(Resources.SocketReadingError);
                 }
 
-                return result.ToArray();
+                result.Write(buffer, 0, readed);
+
+                dataLength -= readed;
             }
+
+            return result.ToArray();
         }
 
         /// <summary>
         /// Read from the socket as many data as possible.
         /// </summary>
-        [NotNull]
         public static byte[] ReceiveToEnd
             (
-                [NotNull] this Socket socket
+                this Socket socket
             )
         {
-            Sure.NotNull(socket, nameof(socket));
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                return socket.ReceiveToEnd(stream);
-            }
+            using var stream = new MemoryStream();
+            return socket.ReceiveToEnd(stream);
         }
 
         /// <summary>
         /// Read from the socket as many data as possible.
         /// </summary>
-        [NotNull]
         public static byte[] ReceiveToEnd
             (
-                [NotNull] this Socket socket,
-                [NotNull] MemoryStream stream
+                this Socket socket,
+                MemoryStream stream
             )
         {
-            Sure.NotNull(socket, nameof(socket));
-            Sure.NotNull(stream, nameof(stream));
-
-            byte[] buffer = new byte[32 * 1024];
-
+            var buffer = new byte[32 * 1024];
             while (true)
             {
-                int readed = socket.Receive(buffer);
+                var readed = socket.Receive(buffer);
 
                 if (readed < 0)
                 {
                     Log.Error
                         (
-                            nameof(SocketUtility) + "::" + nameof(ReceiveToEnd)
+                            nameof(SocketUtility)
+                            + "::"
+                            + nameof(ReceiveToEnd)
                             + Resources.ErrorReadingSocket
                         );
 

@@ -40,15 +40,12 @@ namespace AM
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sourceArray"/> is <c>null</c>.
         /// </exception>
-        [NotNull]
         public static TTo[] ChangeType<TFrom, TTo>
             (
-                [NotNull] TFrom[] sourceArray
+                TFrom[] sourceArray
             )
         {
-            Sure.NotNull(sourceArray, nameof(sourceArray));
-
-            TTo[] result = new TTo[sourceArray.Length];
+            var result = new TTo[sourceArray.Length];
             Array.Copy(sourceArray, result, sourceArray.Length);
 
             return result;
@@ -63,15 +60,12 @@ namespace AM
         /// <exception cref="ArgumentNullException">
         /// <paramref name="sourceArray"/> is <c>null</c>.
         /// </exception>
-        [NotNull]
         public static TTo[] ChangeType<TTo>
             (
-                [NotNull] Array sourceArray
+                Array sourceArray
             )
         {
-            Sure.NotNull(sourceArray, nameof(sourceArray));
-
-            TTo[] result = new TTo[sourceArray.Length];
+            var result = new TTo[sourceArray.Length];
             Array.Copy(sourceArray, result, sourceArray.Length);
 
             return result;
@@ -82,15 +76,12 @@ namespace AM
         /// </summary>
         public static T[] Clone<T>
             (
-                [NotNull] T[] array
+                T[] array
             )
             where T: ICloneable
         {
-            Sure.NotNull(array, nameof(array));
-
-            T[] result = (T[]) array.Clone();
-
-            for (int i = 0; i < array.Length; i++)
+            var result = (T[]) array.Clone();
+            for (var i = 0; i < array.Length; i++)
             {
                 result[i] = (T) array[i].Clone();
             }
@@ -104,16 +95,14 @@ namespace AM
         /// </summary>
         public static bool Coincide<T>
             (
-                [NotNull] T[] firstArray,
+                T[] firstArray,
                 int firstOffset,
-                [NotNull] T[] secondArray,
+                T[] secondArray,
                 int secondOffset,
                 int length
             )
             where T: IEquatable<T>
         {
-            Sure.NotNull(firstArray, nameof(firstArray));
-            Sure.NotNull(secondArray, nameof(secondArray));
             Sure.NonNegative(firstOffset, nameof(firstOffset));
             Sure.NonNegative(secondOffset, nameof(secondOffset));
             Sure.NonNegative(length, nameof(length));
@@ -121,10 +110,10 @@ namespace AM
             // Совпадают ли два куска массивов?
             // Куски нулевой длины считаются совпадающими.
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
-                T first = firstArray[firstOffset + i];
-                T second = secondArray[secondOffset + i];
+                var first = firstArray[firstOffset + i];
+                var second = secondArray[secondOffset + i];
                 if (!first.Equals(second))
                 {
                     return false;
@@ -154,28 +143,27 @@ namespace AM
         /// </exception>
         public static int Compare<T>
             (
-                [NotNull] T[] firstArray,
-                [NotNull] T[] secondArray
+                T[] firstArray,
+                T[] secondArray
             )
             where T : IComparable<T>
         {
-            Sure.NotNull(firstArray, nameof(firstArray));
-            Sure.NotNull(secondArray, nameof(secondArray));
-
             if (firstArray.Length != secondArray.Length)
             {
                 Log.Error
                     (
-                        nameof(ArrayUtility) + "::" + nameof(Compare)
+                        nameof(ArrayUtility)
+                        + "::"
+                        + nameof(Compare)
                         + ": length not equal"
                     );
 
                 throw new ArgumentException();
             }
 
-            for (int i = 0; i < firstArray.Length; i++)
+            for (var i = 0; i < firstArray.Length; i++)
             {
-                int result = firstArray[i].CompareTo(secondArray[i]);
+                var result = firstArray[i].CompareTo(secondArray[i]);
                 if (result != 0)
                 {
                     return result;
@@ -188,17 +176,13 @@ namespace AM
         /// <summary>
         /// Converts the specified array.
         /// </summary>
-        [NotNull]
         public static TTo[] Convert<TFrom, TTo>
             (
-                [NotNull] TFrom[] array
+                TFrom[] array
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            TTo[] result = new TTo[array.Length];
-
-            for (int i = 0; i < array.Length; i++)
+            var result = new TTo[array.Length];
+            for (var i = 0; i < array.Length; i++)
             {
                 result[i] = ConversionUtility.ConvertTo<TTo>(array[i]);
             }
@@ -215,7 +199,6 @@ namespace AM
         /// array items.</param>
         /// <returns>Created and initialized array.</returns>
         /// <typeparam name="T">Type of array item.</typeparam>
-        [NotNull]
         public static T[] Create<T>
             (
                 int length,
@@ -224,8 +207,8 @@ namespace AM
         {
             Sure.NonNegative(length, nameof(length));
 
-            T[] result = new T[length];
-            for (int i = 0; i < length; i++)
+            var result = new T[length];
+            for (var i = 0; i < length; i++)
             {
                 result[i] = initialValue;
             }
@@ -242,22 +225,20 @@ namespace AM
         /// При выходе за границы массива
         /// выдаётся значение по умолчанию.
         /// </remarks>
-        [CanBeNull]
+#nullable disable
         public static T GetOccurrence<T>
             (
-                [NotNull] this T[] array,
+                this T[] array,
                 int occurrence
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            int length = array.Length;
+            var length = array.Length;
 
             occurrence = occurrence >= 0
                 ? occurrence
                 : length + occurrence;
 
-            T result = default(T);
+            var result = default(T);
 
             if (length != 0
                 && occurrence >= 0
@@ -268,6 +249,7 @@ namespace AM
 
             return result;
         }
+#nullable restore
 
         /// <summary>
         /// Выборка элемента из массива.
@@ -278,23 +260,20 @@ namespace AM
         /// При выходе за границы массива
         /// выдаётся значение по умолчанию.
         /// </remarks>
-        [CanBeNull]
         public static T GetOccurrence<T>
             (
-                [NotNull] this T[] array,
+                this T[] array,
                 int occurrence,
-                [CanBeNull] T defaultValue
+                T defaultValue
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            int length = array.Length;
+            var length = array.Length;
 
             occurrence = occurrence >= 0
                 ? occurrence
                 : length + occurrence;
 
-            T result = defaultValue;
+            var result = defaultValue;
 
             if (length != 0
                 && occurrence >= 0
@@ -309,15 +288,13 @@ namespace AM
         /// <summary>
         /// Get span of the array.
         /// </summary>
-        [NotNull]
         public static T[] GetSpan<T>
             (
-                [NotNull] this T[] array,
+                this T[] array,
                 int offset,
                 int count
             )
         {
-            Sure.NotNull(array, nameof(array));
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(count, nameof(count));
 
@@ -334,7 +311,7 @@ namespace AM
                 return new T[0];
             }
 
-            T[] result = new T[count];
+            var result = new T[count];
             Array.Copy(array, offset, result, 0, count);
 
             return result;
@@ -343,14 +320,12 @@ namespace AM
         /// <summary>
         /// Get span of the array.
         /// </summary>
-        [NotNull]
         public static T[] GetSpan<T>
             (
-                [NotNull] this T[] array,
+                this T[] array,
                 int offset
             )
         {
-            Sure.NotNull(array, nameof(array));
             Sure.NonNegative(offset, nameof(offset));
 
             if (offset >= array.Length)
@@ -358,7 +333,7 @@ namespace AM
                 return new T[0];
             }
 
-            int count = array.Length - offset;
+            var count = array.Length - offset;
             T[] result = array.GetSpan(offset, count);
 
             return result;
@@ -376,7 +351,7 @@ namespace AM
         public static bool IsNullOrEmpty
             (
                 [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
-                [CanBeNull] Array array
+                Array? array
             )
         {
             return ReferenceEquals(array, null) || array.Length == 0;
@@ -392,22 +367,21 @@ namespace AM
         /// <exception cref="ArgumentNullException">
         /// At least one of <paramref name="arrays"/> is <c>null</c>.
         /// </exception>
-        [NotNull]
         public static T[] Merge<T>
             (
-                [NotNull] params T[][] arrays
+                params T[][] arrays
             )
         {
-            Sure.NotNull(arrays, nameof(arrays));
-
-            int resultLength = 0;
-            for (int i = 0; i < arrays.Length; i++)
+            var resultLength = 0;
+            for (var i = 0; i < arrays.Length; i++)
             {
                 if (ReferenceEquals(arrays[i], null))
                 {
                     Log.Error
                         (
-                            nameof(ArrayUtility) + "::" + nameof(Merge)
+                            nameof(ArrayUtility)
+                            + "::"
+                            + nameof(Merge)
                             + ": array["
                             + i
                             + "] is null"
@@ -418,9 +392,9 @@ namespace AM
                 resultLength += arrays[i].Length;
             }
 
-            T[] result = new T[resultLength];
-            int offset = 0;
-            for (int i = 0; i < arrays.Length; i++)
+            var result = new T[resultLength];
+            var offset = 0;
+            for (var i = 0; i < arrays.Length; i++)
             {
                 arrays[i].CopyTo(result, offset);
                 offset += arrays[i].Length;
@@ -434,7 +408,7 @@ namespace AM
         /// </summary>
         public static int SafeLength<T>
             (
-                [CanBeNull] this T[] array
+                this T[]? array
             )
         {
             return array?.Length ?? 0;
@@ -443,29 +417,34 @@ namespace AM
         /// <summary>
         /// Разбиение массива на (почти) равные части.
         /// </summary>
-        [NotNull]
         public static T[][] SplitArray<T>
             (
-                [NotNull] T[] array,
+                T[] array,
                 int partCount
             )
         {
-            Sure.NotNull(array, nameof(array));
             Sure.Positive(partCount, nameof(partCount));
 
-            List<T[]> result = new List<T[]>(partCount);
-            int length = array.Length;
-            int chunkSize = length / partCount;
+            var result = new List<T[]>(partCount);
+            var length = array.Length;
+            var chunkSize = length / partCount;
             while (chunkSize * partCount < length)
             {
                 chunkSize++;
             }
-            int offset = 0;
-            for (int i = 0; i < partCount; i++)
+            var offset = 0;
+            for (var i = 0; i < partCount; i++)
             {
-                int size = Math.Min(chunkSize, length - offset);
-                T[] chunk = new T[size];
-                Array.Copy(array, offset, chunk, 0, size);
+                var size = Math.Min(chunkSize, length - offset);
+                var chunk = new T[size];
+                Array.Copy
+                    (
+                        array,
+                        offset,
+                        chunk,
+                        0,
+                        size
+                    );
                 result.Add(chunk);
                 offset += size;
             }
@@ -477,25 +456,29 @@ namespace AM
         /// Converts to string array using
         /// <see cref="object.ToString"/> method.
         /// </summary>
+#nullable disable
         public static string[] ToString<T>
             (
-                [NotNull] T[] array
+                T[] array
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            string[] result = new string[array.Length];
-            for (int i = 0; i < array.Length; i++)
+            var result = new string[array.Length];
+            for (var i = 0; i < array.Length; i++)
             {
                 object o = array[i];
-                if (o != null)
+                if (ReferenceEquals(o, null))
                 {
-                    result[i] = array[i].ToString();
+                    result[i] = "(null)";
+                }
+                else
+                {
+                    result[i] = o!.ToString();
                 }
             }
 
             return result;
         }
+#nullable restore
 
         #endregion
     }

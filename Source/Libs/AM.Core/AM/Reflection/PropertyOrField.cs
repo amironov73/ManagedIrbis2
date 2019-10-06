@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* PropertyOrField.cs -- 
+/* PropertyOrField.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -22,7 +22,7 @@ using JetBrains.Annotations;
 namespace AM.Reflection
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class PropertyOrField
@@ -34,8 +34,7 @@ namespace AM.Reflection
         /// Gets the field info.
         /// </summary>
         /// <value>The field info.</value>
-        [CanBeNull]
-        public FieldInfo FieldInfo
+        public FieldInfo? FieldInfo
         {
             [DebuggerStepThrough]
             get
@@ -79,7 +78,6 @@ namespace AM.Reflection
         /// <summary>
         /// Gets the member info.
         /// </summary>
-        [NotNull]
         public MemberInfo MemberInfo
         {
             [DebuggerStepThrough]
@@ -92,7 +90,6 @@ namespace AM.Reflection
         /// <summary>
         /// Gets the type of the member.
         /// </summary>
-        [NotNull]
         public Type MemberType
         {
             [DebuggerStepThrough]
@@ -111,7 +108,6 @@ namespace AM.Reflection
         /// Gets the name.
         /// </summary>
         /// <value>The name.</value>
-        [NotNull]
         public string Name
         {
             [DebuggerStepThrough]
@@ -125,8 +121,7 @@ namespace AM.Reflection
         /// Gets the property info.
         /// </summary>
         /// <value>The property info.</value>
-        [CanBeNull]
-        public PropertyInfo PropertyInfo
+        public PropertyInfo? PropertyInfo
         {
             [DebuggerStepThrough]
             get
@@ -138,7 +133,7 @@ namespace AM.Reflection
         /// <summary>
         /// Gets a value indicating whether [read only].
         /// </summary>
-        /// <value><c>true</c> if [read only]; 
+        /// <value><c>true</c> if [read only];
         /// otherwise, <c>false</c>.</value>
         public bool ReadOnly
         {
@@ -159,11 +154,9 @@ namespace AM.Reflection
         /// </summary>
         public PropertyOrField
             (
-                [NotNull] PropertyInfo propertyInfo
+                PropertyInfo propertyInfo
             )
         {
-            Sure.NotNull(propertyInfo, nameof(propertyInfo));
-
             _memberInfo = propertyInfo;
         }
 
@@ -172,11 +165,9 @@ namespace AM.Reflection
         /// </summary>
         public PropertyOrField
             (
-                [NotNull] FieldInfo fieldInfo
+                FieldInfo fieldInfo
             )
         {
-            Sure.NotNull(fieldInfo, nameof(fieldInfo));
-
             _memberInfo = fieldInfo;
         }
 
@@ -185,18 +176,16 @@ namespace AM.Reflection
         /// </summary>
         public PropertyOrField
             (
-                [NotNull] MemberInfo memberInfo
+                MemberInfo memberInfo
             )
         {
-            Sure.NotNull(memberInfo, "memberInfo");
-
             if (!(memberInfo is PropertyInfo)
                  && !(memberInfo is FieldInfo))
             {
                 Log.Error
                     (
-                        "PropertyOrField::Constructor: "
-                        + "member="
+                        nameof(PropertyOrField)
+                        + "::Constructor: member="
                         + memberInfo.Name
                         + "is neither property nor field"
                     );
@@ -224,7 +213,7 @@ namespace AM.Reflection
         /// </summary>
         /// <param name="inherit">if set to <c>true</c> [inherit].</param>
         /// <returns>First found attribute or <c>null</c>.</returns>
-        [CanBeNull]
+#nullable disable
         public T GetCustomAttribute<T>
             (
                 bool inherit
@@ -237,16 +226,16 @@ namespace AM.Reflection
                 return attribute;
             }
 
-            return null;
+            return default;
         }
+#nullable restore
 
         /// <summary>
         /// Gets the value.
         /// </summary>
-        [CanBeNull]
-        public object GetValue
+        public object? GetValue
             (
-                object obj
+                object? obj
             )
         {
             if (IsProperty)
@@ -297,10 +286,10 @@ namespace AM.Reflection
         /// <inheritdoc cref="IComparable{T}.CompareTo" />
         int IComparable<PropertyOrField>.CompareTo
             (
-                [NotNull] PropertyOrField other
+                PropertyOrField other
             )
         {
-            return Name.SafeCompare(other.Name); // ???
+            return string.Compare(Name, other.Name); // ???
         }
 
         #endregion

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* ReflectionUtility.cs -- 
+/* ReflectionUtility.cs --
  *  Ars Magna project, http://arsmagna.ru
  *  ------------------------------------------------------
  *  Status: poor
@@ -23,7 +23,7 @@ using JetBrains.Annotations;
 namespace AM.Reflection
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class ReflectionUtility
@@ -35,7 +35,7 @@ namespace AM.Reflection
         ///// в текущий домен.
         ///// </summary>
         ///// <returns></returns>
-        ///// <remarks>Осторожно: могут быть загружены сборки только 
+        ///// <remarks>Осторожно: могут быть загружены сборки только
         ///// для рефлексии. Типы в них непригодны для использования.
         ///// </remarks>
         //public static Type[] GetAllTypes()
@@ -56,34 +56,29 @@ namespace AM.Reflection
         /// </summary>
         public static T GetCustomAttribute<T>
             (
-                [NotNull] Type classType
+                Type classType
             )
             where T : Attribute
         {
-            Sure.NotNull(classType, nameof(classType));
-
             var all = classType.GetCustomAttributes
                 (
                     typeof(T),
                     false
                 );
-            
+
             return (T)all.FirstOrDefault();
         }
 
         /// <summary>
         /// Get the custom attribute.
         /// </summary>
-        [CanBeNull]
         public static T GetCustomAttribute<T>
             (
-                [NotNull] Type classType,
+                Type classType,
                 bool inherit
             )
             where T : Attribute
         {
-            Sure.NotNull(classType, nameof(classType));
-
             var all = classType.GetCustomAttributes
                 (
                     typeof(T),
@@ -96,15 +91,12 @@ namespace AM.Reflection
         /// <summary>
         /// Gets the custom attribute.
         /// </summary>
-        [CanBeNull]
         public static T GetCustomAttribute<T>
             (
-                [NotNull] MemberInfo member
+                MemberInfo member
             )
             where T : Attribute
         {
-            Sure.NotNull(member, nameof(member));
-
             var all = member.GetCustomAttributes
                 (
                     typeof(T),
@@ -117,15 +109,12 @@ namespace AM.Reflection
         /// <summary>
         /// Gets the custom attribute.
         /// </summary>
-        [CanBeNull]
         public static T GetCustomAttribute<T>
             (
-                [NotNull] FieldInfo fieldInfo
+                FieldInfo fieldInfo
             )
             where T : Attribute
         {
-            Sure.NotNull(fieldInfo, nameof(fieldInfo));
-
             var all = fieldInfo.GetCustomAttributes
                 (
                     typeof(T),
@@ -138,15 +127,12 @@ namespace AM.Reflection
         /// <summary>
         /// Gets the custom attribute.
         /// </summary>
-        [CanBeNull]
         public static T GetCustomAttribute<T>
             (
-                [NotNull] PropertyInfo propertyInfo
+                PropertyInfo propertyInfo
             )
             where T : Attribute
         {
-            Sure.NotNull(propertyInfo, nameof(propertyInfo));
-
             var all = propertyInfo.GetCustomAttributes
                 (
                     typeof(T),
@@ -162,7 +148,7 @@ namespace AM.Reflection
         //[CanBeNull]
         //public static T GetCustomAttribute<T>
         //    (
-        //        [NotNull] PropertyDescriptor propertyDescriptor
+        //        [PropertyDescriptor propertyDescriptor
         //    )
         //    where T : Attribute
         //{
@@ -176,7 +162,7 @@ namespace AM.Reflection
         ///// <returns></returns>
         //public static ConstructorInfo GetDefaultConstructor
         //    (
-        //        [NotNull] Type type
+        //        Type type
         //    )
         //{
         //    ConstructorInfo result = type.GetConstructor
@@ -192,15 +178,15 @@ namespace AM.Reflection
         /// <summary>
         /// Get field value either public or private.
         /// </summary>
-        public static object GetFieldValue<T>
+        public static object? GetFieldValue<T>
             (
-                T target, 
-                [NotNull] string fieldName
+                T target,
+                string fieldName
             )
         {
             Sure.NotNullNorEmpty(fieldName, nameof(fieldName));
 
-            FieldInfo fieldInfo = typeof(T).GetField
+            var fieldInfo = typeof(T).GetField
                 (
                     fieldName,
                     BindingFlags.Public | BindingFlags.NonPublic
@@ -226,13 +212,11 @@ namespace AM.Reflection
         /// </summary>
         public static bool HasAttribute<T>
             (
-                [NotNull] Type type,
+                Type type,
                 bool inherit
             )
             where T : Attribute
         {
-            Sure.NotNull(type, nameof(type));
-
             return !ReferenceEquals
                 (
                     GetCustomAttribute<T>(type, inherit),
@@ -245,12 +229,10 @@ namespace AM.Reflection
         /// </summary>
         public static bool HasAttribute<T>
             (
-                [NotNull] MemberInfo member
+                MemberInfo member
             )
             where T : Attribute
         {
-            Sure.NotNull(member, nameof(member));
-
             return !ReferenceEquals
                 (
                     GetCustomAttribute<T>(member),
@@ -263,15 +245,15 @@ namespace AM.Reflection
         /// </summary>
         public static void SetFieldValue<TTarget, TValue>
             (
-                TTarget target, 
-                [NotNull] string fieldName, 
+                TTarget target,
+                string fieldName,
                 TValue value
             )
             where TTarget : class
         {
             Sure.NotNullNorEmpty(fieldName, nameof(fieldName));
 
-            FieldInfo fieldInfo = typeof(TTarget).GetField
+            var fieldInfo = typeof(TTarget).GetField
                 (
                     fieldName,
                     BindingFlags.Public | BindingFlags.NonPublic
@@ -295,15 +277,15 @@ namespace AM.Reflection
         /// <summary>
         /// Get property value either public or private.
         /// </summary>
-        public static object GetPropertyValue<T>
+        public static object? GetPropertyValue<T>
             (
-                T target, 
-                [NotNull] string propertyName
+                T target,
+                string propertyName
             )
         {
             Sure.NotNullNorEmpty(propertyName, nameof(propertyName));
 
-            PropertyInfo propertyInfo = typeof(T).GetProperty
+            var propertyInfo = typeof(T).GetProperty
                 (
                     propertyName,
                     BindingFlags.Public | BindingFlags.NonPublic
@@ -335,12 +317,12 @@ namespace AM.Reflection
         {
             Sure.NotNull(type, nameof(type));
 
-            List<PropertyOrField> result = new List<PropertyOrField>();
-            foreach (PropertyInfo property in type.GetProperties(bindingFlags))
+            var result = new List<PropertyOrField>();
+            foreach (var property in type.GetProperties(bindingFlags))
             {
                 result.Add(new PropertyOrField(property));
             }
-            foreach (FieldInfo field in type.GetFields(bindingFlags))
+            foreach (var field in type.GetFields(bindingFlags))
             {
                 result.Add(new PropertyOrField(field));
             }
@@ -353,14 +335,14 @@ namespace AM.Reflection
         /// </summary>
         public static void SetPropertyValue<TTarget, TValue>
             (
-                TTarget target, 
-                [NotNull] string propertyName, 
+                TTarget target,
+                string propertyName,
                 TValue value
             )
         {
             Sure.NotNullNorEmpty(propertyName, nameof(propertyName));
 
-            PropertyInfo propertyInfo = typeof(TTarget).GetProperty
+            var propertyInfo = typeof(TTarget).GetProperty
                 (
                     propertyName,
                     BindingFlags.Public | BindingFlags.NonPublic
