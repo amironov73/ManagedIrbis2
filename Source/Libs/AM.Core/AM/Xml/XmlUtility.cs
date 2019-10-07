@@ -39,11 +39,10 @@ namespace AM.Xml
         {
             Sure.FileExists(fileName, nameof(fileName));
 
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (Stream stream = File.OpenRead(fileName))
-            {
-                return (T) serializer.Deserialize(stream);
-            }
+            var serializer = new XmlSerializer(typeof(T));
+            using Stream stream = File.OpenRead(fileName);
+
+            return (T) serializer.Deserialize(stream);
         }
 
         /// <summary>
@@ -56,8 +55,8 @@ namespace AM.Xml
         {
             Sure.NotNullNorEmpty(xmlText, nameof(xmlText));
 
-            StringReader reader = new StringReader(xmlText);
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            var reader = new StringReader(xmlText);
+            var serializer = new XmlSerializer(typeof(T));
             return (T)serializer.Deserialize(reader);
         }
 
@@ -69,13 +68,9 @@ namespace AM.Xml
                 string fileName,
                 T obj
             )
+            where T: class
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-
-            if (ReferenceEquals(obj, null))
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
 
             var settings = new XmlWriterSettings
             {
@@ -95,26 +90,23 @@ namespace AM.Xml
         /// Serialize to string without standard
         /// XML header and namespaces.
         /// </summary>
-        [NotNull]
         public static string SerializeShort
             (
                 object obj
             )
         {
-            Sure.NotNull(obj, nameof(obj));
-
-            XmlWriterSettings settings = new XmlWriterSettings
+            var settings = new XmlWriterSettings
             {
                 OmitXmlDeclaration = true,
                 Indent = false,
                 NewLineHandling = NewLineHandling.None
             };
-            StringBuilder output = new StringBuilder();
-            XmlSerializerNamespaces namespaces = new XmlSerializerNamespaces();
+            var output = new StringBuilder();
+            var namespaces = new XmlSerializerNamespaces();
             namespaces.Add(string.Empty, string.Empty);
-            using (XmlWriter writer = XmlWriter.Create(output, settings))
+            using (var writer = XmlWriter.Create(output, settings))
             {
-                XmlSerializer serializer = new XmlSerializer(obj.GetType());
+                var serializer = new XmlSerializer(obj.GetType());
                 serializer.Serialize(writer, obj, namespaces);
             }
 

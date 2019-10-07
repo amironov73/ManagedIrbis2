@@ -1,8 +1,8 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* Sequence.cs -- 
- * Ars Magna project, http://arsmagna.ru 
+/* Sequence.cs --
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -347,14 +347,14 @@ namespace AM
         /// </summary>
         public static IEnumerable Separate
             (
-                [NotNull] this IEnumerable sequence,
-                [CanBeNull] object separator
+                this IEnumerable sequence,
+                object? separator
             )
         {
             Sure.NotNull(sequence, nameof(sequence));
 
             bool first = true;
-            foreach (object obj in sequence)
+            foreach (object? obj in sequence)
             {
                 if (first)
                 {

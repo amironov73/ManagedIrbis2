@@ -31,7 +31,7 @@ namespace AM.Text.Output
         /// <summary>
         /// Имя файла.
         /// </summary>
-        public string FileName { get { return _fileName; } }
+        public string? FileName { get { return _fileName; } }
 
         #endregion
 
@@ -52,19 +52,16 @@ namespace AM.Text.Output
                 string fileName
             )
         {
-            Open
-                (
-                    fileName
-                );
+            Open (fileName);
         }
 
         #endregion
 
         #region Private members
 
-        private string _fileName;
+        private string? _fileName;
 
-        private TextWriter _writer;
+        private TextWriter? _writer;
 
         #endregion
 
@@ -83,7 +80,7 @@ namespace AM.Text.Output
         /// </summary>
         public void Open
             (
-                string fileName,
+                string? fileName,
                 bool append
             )
         {
@@ -106,7 +103,7 @@ namespace AM.Text.Output
         /// </summary>
         public void Open
             (
-                string fileName
+                string? fileName
             )
         {
             Open
@@ -127,7 +124,6 @@ namespace AM.Text.Output
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
             Close();
             _fileName = fileName;
@@ -185,7 +181,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             )
         {
             // TODO: implement properly
@@ -201,7 +197,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             if (!ReferenceEquals(_writer, null))
@@ -219,7 +215,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput WriteError
             (
-                string text
+                string? text
             )
         {
             HaveError = true;

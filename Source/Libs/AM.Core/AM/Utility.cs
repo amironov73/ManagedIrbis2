@@ -183,14 +183,14 @@ namespace AM
         /// <summary>
         /// Выборка элемента из массива.
         /// </summary>
+#nullable disable
         [Pure]
-        public static T? GetItem<T>
+        public static T GetItem<T>
             (
                 this T[] array,
                 int index,
-                T? defaultValue
+                T defaultValue
             )
-            where T: class
         {
             Sure.NotNull(array, nameof(array));
 
@@ -204,6 +204,7 @@ namespace AM
 
             return result;
         }
+#nullable restore
 
         /// <summary>
         /// Get item from the array by specified index.
@@ -546,12 +547,12 @@ namespace AM
         /// </summary>
         /// <returns>Для <c>null</c> возвращается "(null)".
         /// </returns>
+#nullable disable
         [Pure]
         public static string ToVisibleString<T>
             (
-                this T? value
+                this T value
             )
-            where T: class
         {
             if (ReferenceEquals(value, null))
             {
@@ -568,6 +569,7 @@ namespace AM
                 ? "(null)"
                 : result2;
         }
+#nullable restore
 
         #endregion
     }

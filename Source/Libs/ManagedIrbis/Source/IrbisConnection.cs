@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 
 using AM;
 using AM.Collections;
+using AM.IO;
 using AM.Logging;
 
 using JetBrains.Annotations;
@@ -103,7 +104,7 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public object? IniFile { get; private set; }
+        public IniFile? IniFile { get; private set; }
 
         /// <summary>
         ///
@@ -190,14 +191,14 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        public async Task<bool> ConnectAsync()
+        public async Task<IniFile?> ConnectAsync()
         {
             if (Connected)
             {
-                return true;
+                return IniFile;
             }
 
-        AGAIN:
+            AGAIN:
             ClientId = new Random().Next(100000, 999999);
             QueryId = 1;
             var query = new ClientQuery(this, "A");
@@ -207,7 +208,7 @@ namespace ManagedIrbis
             var response = await ExecuteAsync(query);
             if (ReferenceEquals(response, null))
             {
-                return false;
+                return null;
             }
 
             if (response.GetReturnCode() == -3337)
@@ -217,15 +218,16 @@ namespace ManagedIrbis
 
             if (response.ReturnCode < 0)
             {
-                return false;
+                return null;
             }
 
             Connected = true;
             ServerVersion = response.ServerVersion;
             Interval = response.ReadInteger();
             // TODO Read INI-file
+            IniFile = new IniFile();
 
-            return true;
+            return IniFile;
         } // method ConnectAsync
 
         /// <summary>
@@ -493,6 +495,21 @@ namespace ManagedIrbis
 
             return result;
         } // method GetServerVersionAsync
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public async Task<DatabaseInfo[]> ListDatabasesAsync
+            (
+                string fileName
+            )
+        {
+            await Task.Delay(0);
+            throw new NotImplementedException("ListDatabasesAsync");
+        }
 
         /// <summary>
         ///

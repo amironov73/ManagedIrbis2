@@ -65,11 +65,11 @@ namespace AM.Text.Output
 
         #region Private members
 
-        private static AbstractOutput _null;
+        private static AbstractOutput? _null;
 
-        private static AbstractOutput _console;
+        private static AbstractOutput? _console;
 
-        private static AbstractOutput _current;
+        private static AbstractOutput? _current;
 
         #endregion
 
@@ -90,7 +90,7 @@ namespace AM.Text.Output
         /// <returns></returns>
         public abstract AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             );
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace AM.Text.Output
         /// вывода.</returns>
         public abstract AbstractOutput Write
             (
-                string text
+                string? text
             );
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace AM.Text.Output
         /// <returns></returns>
         public abstract AbstractOutput WriteError
             (
-                string text
+                string? text
             );
 
         /// <summary>

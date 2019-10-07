@@ -78,7 +78,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             )
         {
             Inner.Configure(configuration);
@@ -92,7 +92,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             Inner.Write(text);
@@ -104,9 +104,9 @@ namespace AM.Text.Output
         /// Writes the error.
         /// </summary>
         public override AbstractOutput WriteError
-                    (
-                        string text
-                    )
+            (
+                string? text
+            )
         {
             Inner.WriteError(text);
 
