@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* NullConsole.cs -- 
+/* SystemConsole.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -19,31 +19,49 @@ using JetBrains.Annotations;
 namespace AM.ConsoleIO
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     [ExcludeFromCodeCoverage]
-    public sealed class NullConsole
+    public sealed class SystemConsole
         : IConsoleDriver
     {
         #region IConsoleDriver members
 
         /// <inheritdoc cref="IConsoleDriver.BackgroundColor" />
-        public ConsoleColor BackgroundColor { get; set; }
+        public ConsoleColor BackgroundColor
+        {
+            get => Console.BackgroundColor;
+            set => Console.BackgroundColor = value;
+        }
 
         /// <inheritdoc cref="IConsoleDriver.ForegroundColor" />
-        public ConsoleColor ForegroundColor { get; set; }
+        public ConsoleColor ForegroundColor
+        {
+            get => Console.ForegroundColor;
+            set => Console.ForegroundColor = value;
+        }
 
         /// <inheritdoc cref="IConsoleDriver.KeyAvailable" />
-        public bool KeyAvailable => false;
+        public bool KeyAvailable => Console.KeyAvailable;
 
         /// <inheritdoc cref="IConsoleDriver.Title" />
-        public string Title { get; set; }
+        public string? Title
+        {
+            get => Console.Title;
+            set => Console.Title = value;
+        }
 
         /// <inheritdoc cref="IConsoleDriver.Clear" />
         public void Clear()
         {
-            // Nothing to do here
+            Console.Clear();
+        }
+
+        /// <inheritdoc cref="IConsoleDriver.Read" />
+        public int Read()
+        {
+            return Console.Read();
         }
 
         /// <inheritdoc cref="IConsoleDriver.ReadKey" />
@@ -52,34 +70,28 @@ namespace AM.ConsoleIO
                 bool intercept
             )
         {
-            return new ConsoleKeyInfo();
-        }
-
-        /// <inheritdoc cref="IConsoleDriver.Read" />
-        public int Read()
-        {
-            return -1;
+            return Console.ReadKey(intercept);
         }
 
         /// <inheritdoc cref="IConsoleDriver.ReadLine" />
         public string ReadLine()
         {
-            return null;
+            return Console.ReadLine();
         }
 
         /// <inheritdoc cref="IConsoleDriver.Write" />
         public void Write
             (
-                string text
+                string? text
             )
         {
-            // Nothing to do here
+            Console.Write(text);
         }
 
         /// <inheritdoc cref="IConsoleDriver.WriteLine" />
         public void WriteLine()
         {
-            // Nothing to do here
+            Console.WriteLine();
         }
 
         #endregion

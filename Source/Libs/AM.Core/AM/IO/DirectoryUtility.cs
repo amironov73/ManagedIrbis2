@@ -67,10 +67,10 @@ namespace AM.IO
         /// </summary>
         public static void ClearDirectory
             (
-                [NotNull] string path
+                string path
             )
         {
-            Sure.NotNull(path, nameof(path));
+            Sure.NotNullNorEmpty(path, nameof(path));
 
             foreach (var subdirectory in Directory.GetDirectories(path))
             {
@@ -80,6 +80,7 @@ namespace AM.IO
                         true
                     );
             }
+
             foreach (var fileName in Directory.GetFiles(path))
             {
                 File.Delete(Path.Combine(path, fileName));
@@ -89,11 +90,10 @@ namespace AM.IO
         /// <summary>
         /// Gets list of files in specified path.
         /// </summary>
-        [NotNull]
         public static string[] GetFiles
             (
-                [NotNull] string path,
-                [NotNull] string mask,
+                string path,
+                string mask,
                 bool recursive
             )
         {
@@ -123,10 +123,9 @@ namespace AM.IO
         /// будет содержать имя директории.</returns>
         /// <remarks>В поиске участвуют только файлы, но не директории.
         /// </remarks>
-        [NotNull]
         public static string[] Glob
             (
-                [NotNull] string wildcard
+                string wildcard
             )
         {
             Sure.NotNullNorEmpty(wildcard, nameof(wildcard));

@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TestingPlatformAbstraction.cs -- 
+/* TestingPlatformAbstraction.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -49,7 +49,7 @@ namespace AM.PlatformAbstraction
         /// Environment variables.
         /// </summary>
         [NotNull]
-        public CaseInsensitiveDictionary<string> Variables{get; private set; }
+        public CaseInsensitiveDictionary<string> Variables { get; private set; }
 
         #endregion
 
@@ -68,12 +68,12 @@ namespace AM.PlatformAbstraction
         #region PlatformAbstractionLevel members
 
         /// <inheritdoc cref="PlatformAbstractionLayer.GetEnvironmentVariable" />
-        public override string GetEnvironmentVariable
+        public override string? GetEnvironmentVariable
             (
                 string variableName
             )
         {
-            Variables.TryGetValue(variableName, out string result);
+            Variables.TryGetValue(variableName, out string? result);
 
             return result;
         }

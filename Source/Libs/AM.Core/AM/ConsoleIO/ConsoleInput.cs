@@ -37,7 +37,6 @@ namespace AM.ConsoleIO
         /// <summary>
         /// Driver for the console.
         /// </summary>
-        [NotNull]
         public static IConsoleDriver Driver => _driver;
 
         /// <summary>
@@ -57,7 +56,7 @@ namespace AM.ConsoleIO
         /// <summary>
         /// Console title.
         /// </summary>
-        public static string Title
+        public static string? Title
         {
             get => Driver.Title;
             set => Driver.Title = value;
@@ -112,8 +111,7 @@ namespace AM.ConsoleIO
         /// <summary>
         /// Read line.
         /// </summary>
-        [CanBeNull]
-        public static string ReadLine()
+        public static string? ReadLine()
         {
             return Driver.ReadLine();
         }
@@ -121,16 +119,12 @@ namespace AM.ConsoleIO
         /// <summary>
         /// Set driver.
         /// </summary>
-        [NotNull]
         public static IConsoleDriver SetDriver
             (
-                [NotNull] IConsoleDriver driver
+                IConsoleDriver driver
             )
         {
-            Sure.NotNull(driver, nameof(driver));
-
             IConsoleDriver previousDriver = _driver;
-
             _driver = driver;
 
             return previousDriver;
@@ -141,7 +135,7 @@ namespace AM.ConsoleIO
         /// </summary>
         public static void Write
             (
-                string text
+                string? text
             )
         {
             if (!string.IsNullOrEmpty(text))
@@ -163,7 +157,7 @@ namespace AM.ConsoleIO
         /// </summary>
         public static void WriteLine
             (
-                string text
+                string? text
             )
         {
             Write(text);

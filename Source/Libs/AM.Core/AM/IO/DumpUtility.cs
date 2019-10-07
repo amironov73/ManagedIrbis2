@@ -100,7 +100,7 @@ namespace AM.IO
         /// </summary>
         public static void DumpToConsole<T>
             (
-                [NotNull] T[] data
+                T[] data
             )
             where T: struct
         {
@@ -112,14 +112,11 @@ namespace AM.IO
 //        /// </summary>
 //        public static void DumpToOutput<T>
 //            (
-//                [NotNull] AbstractOutput output,
-//                [NotNull] T[] data
+//                AbstractOutput output,
+//                T[] data
 //            )
 //            where T : struct
 //        {
-//            Sure.NotNull(output, nameof(output));
-//            Sure.NotNull(data, nameof(data));
-//
 //            string text = DumpToText(data);
 //            output.WriteLine(text);
 //        }
@@ -143,6 +140,6 @@ namespace AM.IO
             return writer.ToString();
         }
 
-#endregion
+        #endregion
     }
 }

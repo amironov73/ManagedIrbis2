@@ -40,24 +40,21 @@ namespace AM.Parameters
         /// <summary>
         /// Name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("name")]
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Value.
         /// </summary>
         /// <remarks>Can be <c>string.Empty</c>.</remarks>
-        [CanBeNull]
         [XmlAttribute("value")]
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public string? Value { get; set; }
 
         /// <summary>
         /// Values.
         /// </summary>
-        [NotNull]
         public NonNullCollection<string> Values { get; private set; }
 
         #endregion
@@ -79,8 +76,8 @@ namespace AM.Parameters
         /// <param name="value"></param>
         public Parameter
             (
-                [NotNull] string name,
-                [CanBeNull] string value
+                string name,
+                string? value
             )
         {
             Sure.NotNullNorEmpty(name, nameof(name));
@@ -103,8 +100,6 @@ namespace AM.Parameters
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             Name = reader.ReadNullableString();
             Value = reader.ReadNullableString();
         }
@@ -115,8 +110,6 @@ namespace AM.Parameters
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             writer
                 .WriteNullable(Name)
                 .WriteNullable(Value);
@@ -132,7 +125,7 @@ namespace AM.Parameters
                 bool throwOnError
             )
         {
-            Verifier<Parameter> verifier = new Verifier<Parameter>
+            var verifier = new Verifier<Parameter>
                 (
                     this,
                     throwOnError

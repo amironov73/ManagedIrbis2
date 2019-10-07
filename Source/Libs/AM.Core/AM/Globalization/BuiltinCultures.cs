@@ -1,13 +1,15 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CultureCode.cs --
+/* BuiltinCultures.cs --
  * Ars Magna project, https://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
+
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -19,16 +21,22 @@ namespace AM.Globalization
     ///
     /// </summary>
     [PublicAPI]
-    public static class CultureCode
+    public static class BuiltinCultures
     {
+        #region Properties
+
         /// <summary>
         /// American English.
         /// </summary>
-        public const string AmericanEnglish = "en-US";
+        [NotNull]
+        public static CultureInfo AmericanEnglish => new CultureInfo(CultureCode.AmericanEnglish);
 
         /// <summary>
-        /// Russian in Russia.
+        /// Gets the russian culture.
         /// </summary>
-        public const string Russian = "ru-RU";
+        [NotNull]
+        public static CultureInfo Russian => new CultureInfo(CultureCode.Russian);
+
+        #endregion
     }
 }

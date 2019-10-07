@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TaskUtility.cs -- 
+/* TaskUtility.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -41,11 +41,9 @@ namespace AM.Threading.Tasks
         /// <param name="task">The task. May not be <c>null</c>.</param>
         public static void WaitAndUnwrapException
             (
-                [NotNull] this Task task
+                this Task task
             )
         {
-            Sure.NotNull(task, nameof(task));
-
             task.GetAwaiter().GetResult();
         }
 
@@ -57,11 +55,9 @@ namespace AM.Threading.Tasks
         /// <returns>The result of the task.</returns>
         public static TResult WaitAndUnwrapException<TResult>
             (
-                [NotNull] this Task<TResult> task
+                this Task<TResult> task
             )
         {
-            Sure.NotNull(task, nameof(task));
-
             return task.GetAwaiter().GetResult();
         }
 
@@ -71,11 +67,9 @@ namespace AM.Threading.Tasks
         /// <param name="task">The task. May not be <c>null</c>.</param>
         public static void WaitWithoutException
             (
-                [NotNull] this Task task
+                this Task task
             )
         {
-            Sure.NotNull(task, nameof(task));
-
             try
             {
                 task.Wait();
@@ -93,12 +87,10 @@ namespace AM.Threading.Tasks
         /// <exception cref="OperationCanceledException">The <paramref name="cancellationToken"/> was cancelled before the <paramref name="task"/> completed.</exception>
         public static void WaitWithoutException
             (
-                [NotNull] this Task task,
+                this Task task,
                 CancellationToken cancellationToken
             )
         {
-            Sure.NotNull(task, nameof(task));
-
             try
             {
                 task.Wait(cancellationToken);

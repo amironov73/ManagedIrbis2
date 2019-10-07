@@ -1,8 +1,8 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CultureSaver.cs -- saves and restores current thread culture
- * Ars Magna project, https://arsmagna.ru
+/* UICultureSaver.cs -- saves and restores current thread UI culture
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -21,34 +21,34 @@ using JetBrains.Annotations;
 namespace AM.Globalization
 {
     /// <summary>
-    /// Saves and restores current thread culture.
+    /// Saves and restores current thread UI culture.
     /// </summary>
     /// <example>
-    /// <para>This example changes current thread culture to
+    /// <para>This example changes current thread UI culture to
     /// for a while.
     /// </para>
     /// <code>
     /// using System.Globalization;
     /// using AM.Globalization;
     ///
-    /// using ( new CultureSaver ( "ru-RU" ) )
+    /// using ( new UICultureSaver ( "ru-RU" ) )
     /// {
-    ///     // do something
+    ///		// do something
     /// }
     /// // here old culture is restored.
     /// </code>
     /// </example>
     [PublicAPI]
     [DebuggerDisplay("{" + nameof(PreviousCulture) + "}")]
-    public sealed class CultureSaver
+    // ReSharper disable once InconsistentNaming
+    public sealed class UICultureSaver
         : IDisposable
     {
         #region Properties
 
         /// <summary>
-        /// Gets the previous culture.
+        /// Gets the previous UI culture.
         /// </summary>
-        [NotNull]
         public CultureInfo PreviousCulture { get; }
 
         #endregion
@@ -56,48 +56,42 @@ namespace AM.Globalization
         #region Construction
 
         /// <summary>
-        /// Saves current thread culture for a while.
+        /// Saves current thread UI culture for a while.
         /// </summary>
-        public CultureSaver()
+        public UICultureSaver()
         {
-            PreviousCulture = Thread.CurrentThread.CurrentCulture;
+            PreviousCulture = Thread.CurrentThread.CurrentUICulture;
         }
 
         /// <summary>
-        /// Sets new current thread culture to the given
+        /// Sets new current thread UI culture to the given
         /// <see cref="T:System.Globalization.CultureInfo"/>.
         /// </summary>
-        public CultureSaver
+        public UICultureSaver
             (
-                [NotNull] CultureInfo newCulture
+                CultureInfo newCulture
             )
             : this()
         {
-            Sure.NotNull(newCulture, nameof(newCulture));
-
-            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
         }
 
         /// <summary>
-        /// Sets current thread culture to based on the given name.
+        /// Sets current thread UI culture to based on the given name.
         /// </summary>
-        /// <param name="cultureName">Name of the culture.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        /// <paramref name="cultureName"/> is <c>null</c>.
-        /// </exception>
-        public CultureSaver
+        public UICultureSaver
             (
-                [NotNull] string cultureName
+                string cultureName
             )
             : this(new CultureInfo(cultureName))
         {
         }
 
         /// <summary>
-        /// Sets current thread culture to based on the given identifier.
+        /// Sets current thread UI culture to based on the given identifier.
         /// </summary>
         /// <param name="cultureIdentifier">The culture identifier.</param>
-        public CultureSaver
+        public UICultureSaver
             (
                 int cultureIdentifier
             )
@@ -112,10 +106,9 @@ namespace AM.Globalization
         /// <summary>
         /// Temporary switch current thread culture for testing purposes.
         /// </summary>
-        [NotNull]
-        public static CultureSaver ForTesting()
+        public static UICultureSaver ForTesting()
         {
-            return new CultureSaver(BuiltinCultures.AmericanEnglish);
+            return new UICultureSaver(BuiltinCultures.AmericanEnglish);
         }
 
         #endregion
@@ -123,11 +116,11 @@ namespace AM.Globalization
         #region IDisposable members
 
         /// <summary>
-        /// Restores old current thread UI culture.
+        /// Restores old current thread culture.
         /// </summary>
         public void Dispose()
         {
-            Thread.CurrentThread.CurrentCulture = PreviousCulture;
+            Thread.CurrentThread.CurrentUICulture = PreviousCulture;
         }
 
         #endregion

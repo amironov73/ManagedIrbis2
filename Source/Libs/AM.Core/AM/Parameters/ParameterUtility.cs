@@ -9,10 +9,10 @@
 
 #region Using directives
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using AM.Collections;
 using AM.Text;
 
 using JetBrains.Annotations;
@@ -51,20 +51,17 @@ namespace AM.Parameters
         /// <summary>
         /// Encode parameters to sting representation.
         /// </summary>
-        [NotNull]
         public static string Encode
             (
-                [NotNull] Parameter[] parameters
+                Parameter[] parameters
             )
         {
-            Sure.NotNull(parameters, nameof(parameters));
-
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             char[] badNameCharacters = { NameSeparator };
             char[] badValueCharacters = { ValueSeparator };
 
-            foreach (Parameter parameter in parameters)
+            foreach (var parameter in parameters)
             {
                 result.Append
                     (
@@ -79,11 +76,11 @@ namespace AM.Parameters
                 result.Append
                     (
                         StringUtility.Mangle
-                        (
-                            parameter.Value,
-                            EscapeCharacter,
-                            badValueCharacters
-                        )
+                            (
+                                parameter.Value,
+                                EscapeCharacter,
+                                badValueCharacters
+                            )
                     );
                 result.Append(ValueSeparator);
             }
@@ -94,21 +91,19 @@ namespace AM.Parameters
         /// <summary>
         /// Get the parameter with specified name.
         /// </summary>
-        [CanBeNull]
-        public static string GetParameter
+        public static string? GetParameter
             (
-                [NotNull] this Parameter[] parameters,
-                [NotNull] string name,
-                [CanBeNull] string defaultValue
+                this Parameter[] parameters,
+                string name,
+                string? defaultValue
             )
         {
-            Sure.NotNull(parameters, nameof(parameters));
             Sure.NotNullNorEmpty(name, nameof(name));
 
-            Parameter found = parameters
+            var found = parameters
                 .FirstOrDefault(p => p.Name.SameString(name));
 
-            string result = ReferenceEquals(found, null)
+            var result = ReferenceEquals(found, null)
                 ? defaultValue
                 : found.Value;
 
@@ -118,21 +113,20 @@ namespace AM.Parameters
         /// <summary>
         /// Get the parameter with specified name.
         /// </summary>
-        [CanBeNull]
+#nullable disable
         public static T GetParameter<T>
             (
-                [NotNull] this Parameter[] parameters,
-                [NotNull] string name,
+                this Parameter[] parameters,
+                string name,
                 [CanBeNull] T defaultValue
             )
         {
-            Sure.NotNull(parameters, nameof(parameters));
             Sure.NotNullNorEmpty(name, nameof(name));
 
-            Parameter found = parameters
+            var found = parameters
                 .FirstOrDefault(p => p.Name.SameString(name));
 
-            T result = ReferenceEquals(found, null)
+            var result = ReferenceEquals(found, null)
                 ? defaultValue
                 : ConversionUtility.ConvertTo<T>(found.Value);
 
@@ -145,33 +139,32 @@ namespace AM.Parameters
         [CanBeNull]
         public static T GetParameter<T>
             (
-                [NotNull] this Parameter[] parameters,
-                [NotNull] string name
+                this Parameter[] parameters,
+                string name
             )
         {
             return GetParameter(parameters, name, default(T));
         }
+#nullable restore
 
         /// <summary>
         /// Parse specified string.
         /// </summary>
-        [NotNull]
+        [ItemNotNull]
         public static Parameter[] ParseString
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
-            List<Parameter> result = new List<Parameter>();
-            TextNavigator navigator = new TextNavigator(text);
+            var result = new LocalList<Parameter>();
+            var navigator = new TextNavigator(text);
             navigator.SkipWhitespace();
 
             while (!navigator.IsEOF)
             {
                 while (true)
                 {
-                    bool flag = false;
+                    var flag = false;
                     if (navigator.IsWhiteSpace())
                     {
                         flag = true;
@@ -188,7 +181,7 @@ namespace AM.Parameters
                     }
                 }
 
-                string name = navigator.ReadEscapedUntil
+                var name = navigator.ReadEscapedUntil
                     (
                         EscapeCharacter,
                         NameSeparator
@@ -201,12 +194,12 @@ namespace AM.Parameters
 
                 navigator.SkipWhitespace();
 
-                string value = navigator.ReadEscapedUntil
+                var value = navigator.ReadEscapedUntil
                     (
                         EscapeCharacter,
                         ValueSeparator
                     );
-                Parameter parameter = new Parameter(name, value);
+                var parameter = new Parameter(name, value);
                 result.Add(parameter);
             }
 

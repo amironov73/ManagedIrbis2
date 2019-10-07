@@ -309,36 +309,6 @@ namespace AM
         }
 
         /// <summary>
-        /// Mangle given text with the escape character.
-        /// </summary>
-        [CanBeNull]
-        public static string Mangle
-            (
-                [CanBeNull] string text,
-                char escape,
-                [NotNull] char[] badCharacters
-            )
-        {
-            if (ReferenceEquals(text, null) || text.Length == 0)
-            {
-                return text;
-            }
-
-            StringBuilder result = new StringBuilder(text.Length);
-
-            foreach (char c in text)
-            {
-                if (c.OneOf(badCharacters) || c == escape)
-                {
-                    result.Append(escape);
-                }
-                result.Append(c);
-            }
-
-            return result.ToString();
-        }
-
-        /// <summary>
         /// Склейка строк в сплошной текст, разделенный переводами строки.
         /// </summary>
         /// <param name="lines">Строки для склейки.</param>

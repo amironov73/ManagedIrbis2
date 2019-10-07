@@ -33,14 +33,12 @@ namespace AM.Runtime
         /// <summary>
         /// Namespace for short type names.
         /// </summary>
-        [CanBeNull]
-        public string Namespace { get; set; }
+        public string? Namespace { get; set; }
 
         /// <summary>
         /// Assembly for short type names.
         /// </summary>
-        [CanBeNull]
-        public Assembly Assembly { get; set; }
+        public Assembly? Assembly { get; set; }
 
         /// <summary>
         /// Prefix length.
@@ -77,26 +75,25 @@ namespace AM.Runtime
         /// <summary>
         /// Deserialize object.
         /// </summary>
-        [NotNull]
         public IHandmadeSerializable Deserialize
             (
-                [NotNull] BinaryReader reader
+                BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            string typeName = reader.ReadString();
+            var typeName = reader.ReadString();
 
             if (PrefixLength == PrefixLength.Short)
             {
                 typeName = Namespace + "." + typeName;
             }
 
-            Type type = ReferenceEquals(Assembly, null)
+            var type = ReferenceEquals(Assembly, null)
                 ? Type.GetType(typeName, true)
                 : Assembly.GetType(typeName, true);
+            type = type.ThrowIfNull("type");
 
-            IHandmadeSerializable result = (IHandmadeSerializable) Activator.CreateInstance(type);
+            var result = (IHandmadeSerializable) Activator.CreateInstance(type)
+                .ThrowIfNull("Activator.CreateInstance");
 
             result.RestoreFromStream(reader);
 
@@ -106,32 +103,31 @@ namespace AM.Runtime
         /// <summary>
         /// Deserialize array of objects.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public IHandmadeSerializable[] DeserializeArray
             (
-                [NotNull] BinaryReader reader
+                BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            int count = reader.ReadPackedInt32();
-            string typeName = reader.ReadString();
+            var count = reader.ReadPackedInt32();
+            var typeName = reader.ReadString();
 
             if (PrefixLength == PrefixLength.Short)
             {
                 typeName = Namespace + "." + typeName;
             }
 
-            Type type = ReferenceEquals(Assembly, null)
+            var type = ReferenceEquals(Assembly, null)
                 ? Type.GetType(typeName, true)
                 : Assembly.GetType(typeName, true);
+            type = type.ThrowIfNull("type");
 
-            IHandmadeSerializable[] result = new IHandmadeSerializable[count];
+            var result = new IHandmadeSerializable[count];
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
-                IHandmadeSerializable obj = (IHandmadeSerializable) Activator.CreateInstance(type);
+                var obj = (IHandmadeSerializable) Activator.CreateInstance(type)
+                    .ThrowIfNull("Activator.CreateInstances");
                 obj.RestoreFromStream(reader);
                 result[i] = obj;
             }
@@ -142,15 +138,14 @@ namespace AM.Runtime
         /// <summary>
         /// Get name of specified type.
         /// </summary>
-        [NotNull]
         public string GetTypeName
             (
-                [NotNull] object obj
+                object obj
             )
         {
             Sure.NotNull(obj, nameof(obj));
 
-            Type type = obj.GetType();
+            var type = obj.GetType().ThrowIfNull("obj.GetType()");
             string result;
 
             switch (PrefixLength)
@@ -160,17 +155,20 @@ namespace AM.Runtime
                     break;
 
                 case PrefixLength.Moderate:
-                    result = type.FullName;
+                    result = type.FullName.ThrowIfNull("type.FullName");
                     break;
 
                 case PrefixLength.Full:
-                    result = type.AssemblyQualifiedName;
+                    result = type.AssemblyQualifiedName
+                        .ThrowIfNull("type.AssemblyQualifiedName");
                     break;
 
                 default:
                     Log.Error
                         (
-                            nameof(HandmadeSerializer) + "::" + nameof(GetTypeName)
+                            nameof(HandmadeSerializer)
+                            + "::"
+                            + nameof(GetTypeName)
                             + ": unexpected PrefixLength="
                             + PrefixLength
                         );
@@ -184,17 +182,13 @@ namespace AM.Runtime
         /// <summary>
         /// Serialize the object.
         /// </summary>
-        [NotNull]
         public HandmadeSerializer Serialize
             (
-                [NotNull] BinaryWriter writer,
-                [NotNull] IHandmadeSerializable obj
+                BinaryWriter writer,
+                IHandmadeSerializable obj
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(obj, nameof(obj));
-
-            string typeName = GetTypeName(obj);
+            var typeName = GetTypeName(obj);
             writer.Write(typeName);
 
             obj.SaveToStream(writer);
@@ -205,17 +199,13 @@ namespace AM.Runtime
         /// <summary>
         /// Serialize the object.
         /// </summary>
-        [NotNull]
         public HandmadeSerializer Serialize
             (
-                [NotNull] BinaryWriter writer,
-                [NotNull][ItemNotNull] IHandmadeSerializable[] array
+                BinaryWriter writer,
+                [ItemNotNull] IHandmadeSerializable[] array
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-            Sure.NotNull(array, nameof(array));
-
-            int count = array.Length;
+            var count = array.Length;
             if (count == 0)
             {
                 Log.Error
@@ -229,12 +219,12 @@ namespace AM.Runtime
 
             writer.WritePackedInt32(count);
 
-            IHandmadeSerializable first = array[0];
+            var first = array[0];
 
-            string typeName = GetTypeName(first);
+            var typeName = GetTypeName(first);
             writer.Write(typeName);
 
-            foreach (IHandmadeSerializable obj in array)
+            foreach (var obj in array)
             {
                 obj.SaveToStream(writer);
             }

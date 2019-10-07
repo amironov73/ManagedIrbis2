@@ -42,10 +42,9 @@ namespace AM
         /// Числа допускаются только неотрицательные.
         /// </remarks>
         /// <returns>Строковое представление набора чисел.</returns>
-        [NotNull]
         public static string CompressRange
             (
-                [CanBeNull] IEnumerable<int> n
+                IEnumerable<int>? n
             )
         {
             // TODO rewrite without .Any()
@@ -87,14 +86,11 @@ namespace AM
         /// Convert the floating point number text representation
         /// to <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
-        [NotNull]
         public static string ConvertFloatToInvariant
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
             if (text.Contains(','))
             {
                 text = text.Contains('.')
@@ -109,14 +105,11 @@ namespace AM
         /// Convert the integer number text representation
         /// to <see cref="CultureInfo.InvariantCulture"/>.
         /// </summary>
-        [NotNull]
         public static string ConvertIntegerToInvariant
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
             if (text.Contains(','))
             {
                 text = text.Replace(",", string.Empty);
@@ -176,7 +169,7 @@ namespace AM
                 params int[] many
             )
         {
-            foreach (int i in many)
+            foreach (var i in many)
             {
                 if (i == one)
                 {
@@ -193,12 +186,10 @@ namespace AM
         public static bool OneOf
             (
                 this int one,
-                [NotNull] IEnumerable<int> many
+                IEnumerable<int> many
             )
         {
-            Sure.NotNull(many, nameof(many));
-
-            foreach (int i in many)
+            foreach (var i in many)
             {
                 if (i == one)
                 {
@@ -215,14 +206,14 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static decimal ParseDecimal
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
             text = ConvertFloatToInvariant(text);
 
-            decimal result = decimal.Parse
+            var result = decimal.Parse
                 (
                     text,
                     NumberStyles.Any,
@@ -245,7 +236,7 @@ namespace AM
 
             text = ConvertFloatToInvariant(text);
 
-            double result = double.Parse
+            var result = double.Parse
                 (
                     text,
                     NumberStyles.Any,
@@ -268,7 +259,7 @@ namespace AM
 
             text = ConvertIntegerToInvariant(text);
 
-            short result = short.Parse
+            var result = short.Parse
                 (
                     text,
                     NumberStyles.Any,
@@ -291,7 +282,7 @@ namespace AM
 
             text = ConvertIntegerToInvariant(text);
 
-            int result = int.Parse
+            var result = int.Parse
                 (
                     text,
                     NumberStyles.Any,
@@ -314,7 +305,7 @@ namespace AM
 
             text = ConvertFloatToInvariant(text);
 
-            long result = long.Parse
+            var result = long.Parse
                 (
                     text,
                     NumberStyles.Any,
@@ -339,7 +330,7 @@ namespace AM
                 return defaultValue;
             }
 
-            if (!TryParseDecimal(text, out decimal result))
+            if (!TryParseDecimal(text, out var result))
             {
                 result = defaultValue;
             }
@@ -362,7 +353,7 @@ namespace AM
                 return defaultValue;
             }
 
-            if (!TryParseDouble(text, out double result))
+            if (!TryParseDouble(text, out var result))
             {
                 result = defaultValue;
             }
@@ -386,7 +377,7 @@ namespace AM
                 return defaultValue;
             }
 
-            if (!TryParseInt32(text, out int result))
+            if (!TryParseInt32(text, out var result))
             {
                 result = defaultValue;
             }
@@ -414,7 +405,7 @@ namespace AM
                 return defaultValue;
             }
 
-            if (!TryParseInt32(text, out int result))
+            if (!TryParseInt32(text, out var result))
             {
                 result = defaultValue;
             }
@@ -435,7 +426,7 @@ namespace AM
                 return 0;
             }
 
-            if (!TryParseInt32(text, out int result))
+            if (!TryParseInt32(text, out var result))
             {
                 result = 0;
             }
@@ -456,7 +447,7 @@ namespace AM
                 return 0;
             }
 
-            if (!TryParseInt64(text, out long result))
+            if (!TryParseInt64(text, out var result))
             {
                 result = 0;
             }
@@ -607,7 +598,7 @@ namespace AM
             }
 
             text = ConvertFloatToInvariant(text);
-            bool result = decimal.TryParse
+            var result = decimal.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -635,7 +626,7 @@ namespace AM
             }
 
             text = ConvertFloatToInvariant(text);
-            bool result = double.TryParse
+            var result = double.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -663,7 +654,7 @@ namespace AM
             }
 
             text = ConvertFloatToInvariant(text);
-            bool result = float.TryParse
+            var result = float.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -691,7 +682,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = short.TryParse
+            var result = short.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -720,7 +711,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = ushort.TryParse
+            var result = ushort.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -748,7 +739,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = int.TryParse
+            var result = int.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -777,7 +768,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = uint.TryParse
+            var result = uint.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -805,7 +796,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = long.TryParse
+            var result = long.TryParse
                 (
                     text,
                     NumberStyles.Any,
@@ -834,7 +825,7 @@ namespace AM
             }
 
             text = ConvertIntegerToInvariant(text);
-            bool result = ulong.TryParse
+            var result = ulong.TryParse
                 (
                     text,
                     NumberStyles.Any,

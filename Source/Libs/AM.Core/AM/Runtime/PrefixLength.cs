@@ -16,9 +16,8 @@ using JetBrains.Annotations;
 namespace AM.Runtime
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
-
     [PublicAPI]
     public enum PrefixLength
     {

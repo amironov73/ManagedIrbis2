@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 using AM.Collections;
 
@@ -32,7 +33,6 @@ namespace AM
         /// <summary>
         /// Empty array of <see cref="string"/>.
         /// </summary>
-        [NotNull]
         public static readonly string[] EmptyArray = new string[0];
 
         #endregion
@@ -111,6 +111,34 @@ namespace AM
         }
 
         /// <summary>
+        /// Mangle given text with the escape character.
+        /// </summary>
+        public static string? Mangle
+            (
+                string? text,
+                char escape,
+                char[] badCharacters
+            )
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return text;
+            }
+
+            var result = new StringBuilder(text.Length);
+            foreach (char c in text)
+            {
+                if (c.OneOf(badCharacters) || c == escape)
+                {
+                    result.Append(escape);
+                }
+                result.Append(c);
+            }
+
+            return result.ToString();
+        }
+
+        /// <summary>
         /// Проверяет, является ли искомая строка одной
         /// из перечисленных. Регистр символов не учитывается.
         /// </summary>
@@ -120,7 +148,7 @@ namespace AM
         public static bool OneOf
             (
                 [CanBeNull] this string one,
-                [NotNull] IEnumerable<string> many
+                IEnumerable<string> many
             )
         {
             foreach (string s in many)
@@ -291,7 +319,6 @@ namespace AM
         /// Пример: "(null)".
         /// </summary>
         [Pure]
-        [NotNull]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToVisibleString
             (
@@ -302,6 +329,7 @@ namespace AM
             {
                 return "(null)";
             }
+
             if (string.IsNullOrEmpty(text))
             {
                 return "(empty)";

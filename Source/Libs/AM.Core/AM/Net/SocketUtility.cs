@@ -46,6 +46,8 @@ namespace AM.Net
                 string address
             )
         {
+            Sure.NotNullNorEmpty(address, nameof(address));
+
             if (address.OneOf("localhost", "local", "(local)"))
             {
                 return IPAddress.Loopback;
@@ -113,13 +115,12 @@ namespace AM.Net
         /// Resolve IPv6 address
         /// </summary>
         /// <returns>Resolved IP address of the host.</returns>
-        [NotNull]
         public static IPAddress ResolveAddressIPv6
             (
-                [NotNull] string address
+                string address
             )
         {
-            Sure.NotNull(address, nameof(address));
+            Sure.NotNullNorEmpty(address, nameof(address));
 
             if (address.OneOf("localhost", "local", "(local)"))
             {

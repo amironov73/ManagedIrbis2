@@ -41,12 +41,10 @@ namespace AM
         [Pure]
         public static string DumpBytes
             (
-                [NotNull] byte[] buffer
+                byte[] buffer
             )
         {
-            Sure.NotNull(buffer, nameof(buffer));
-
-            StringBuilder result = new StringBuilder(buffer.Length * 5);
+            var result = new StringBuilder(buffer.Length * 5);
 
             int offset;
 
@@ -58,9 +56,9 @@ namespace AM
                         offset
                     );
 
-                int run = Math.Min(buffer.Length - offset, 16);
+                var run = Math.Min(buffer.Length - offset, 16);
 
-                for (int i = 0; i < run; i++)
+                for (var i = 0; i < run; i++)
                 {
                     result.AppendFormat
                         (
@@ -101,10 +99,10 @@ namespace AM
                 return true;
             }
 
-            IEnumerator rightEnumerator = right.GetEnumerator();
+            var rightEnumerator = right.GetEnumerator();
             rightEnumerator.Reset();
 
-            foreach (object? leftItem in left)
+            foreach (var leftItem in left)
             {
                 // unequal amount of items
                 if (!rightEnumerator.MoveNext())
@@ -147,7 +145,7 @@ namespace AM
         [Pure]
         public static int GetHashCodeAggregate<T>
             (
-                [NotNull] this IEnumerable<T> source
+                this IEnumerable<T> source
             )
         {
             return GetHashCodeAggregate(source, 17);
@@ -162,7 +160,7 @@ namespace AM
         [Pure]
         public static int GetHashCodeAggregate<T>
             (
-                [NotNull] this IEnumerable<T> source,
+                this IEnumerable<T> source,
                 int hash
             )
         {
@@ -272,7 +270,7 @@ namespace AM
             )
             where T : IComparable<T>
         {
-            foreach (T one in array)
+            foreach (var one in array)
             {
                 if (value.CompareTo(one) == 0)
                 {
@@ -310,7 +308,7 @@ namespace AM
                 return true;
             }
 
-            Type type = left.GetType();
+            var type = left.GetType();
             if (type != right.GetType())
             {
                 return false;
@@ -331,8 +329,8 @@ namespace AM
                 return left.Equals(right);
             }
 
-            IEnumerable? leftEnumerable = left as IEnumerable;
-            IEnumerable? rightEnumerable = right as IEnumerable;
+            var leftEnumerable = left as IEnumerable;
+            var rightEnumerable = right as IEnumerable;
             if (!ReferenceEquals(leftEnumerable, null))
             {
                 return EnumerableEquals
@@ -343,7 +341,7 @@ namespace AM
             }
 
             // compare each property
-            foreach (PropertyInfo info in type.GetProperties
+            foreach (var info in type.GetProperties
                 (
                     BindingFlags.Public
                     | BindingFlags.NonPublic
@@ -363,7 +361,7 @@ namespace AM
             }
 
             // compare each field
-            foreach (FieldInfo info in type.GetFields
+            foreach (var info in type.GetFields
                 (
                     BindingFlags.GetField
                     | BindingFlags.NonPublic
@@ -410,22 +408,22 @@ namespace AM
                 return true;
             }
 
-            Type type = left.GetType();
+            var type = left.GetType();
             if (type != right.GetType())
             {
                 return false;
             }
 
-            PropertyInfo[] properties = type.GetProperties
+            var properties = type.GetProperties
                 (
                     BindingFlags.Public
                     | BindingFlags.Instance
                 );
 
-            foreach (PropertyInfo property in properties)
+            foreach (var property in properties)
             {
-                object? leftValue = property.GetValue(left, null);
-                object? rightValue = property.GetValue(right, null);
+                var leftValue = property.GetValue(left, null);
+                var rightValue = property.GetValue(right, null);
 
                 if (ReferenceEquals(leftValue, null)
                     || ReferenceEquals(rightValue, null))
@@ -464,12 +462,11 @@ namespace AM
         /// if given value is <c>null</c>.
         /// </summary>
         [Pure]
-        [NotNull]
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ThrowIfNull<T>
             (
-                [CanBeNull] this T value
+                this T? value
             )
             where T : class
         {
@@ -491,12 +488,11 @@ namespace AM
         /// if given value is <c>null</c>.
         /// </summary>
         [Pure]
-        [NotNull]
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T1 ThrowIfNull<T1, T2>
             (
-                [CanBeNull] this T1 value
+                this T1? value
             )
             where T1 : class
             where T2 : Exception, new()
@@ -519,7 +515,6 @@ namespace AM
         /// if given value is <c>null</c>.
         /// </summary>
         [Pure]
-        [NotNull]
         [DebuggerStepThrough]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ThrowIfNull<T>
@@ -552,7 +547,6 @@ namespace AM
         /// <returns>Для <c>null</c> возвращается "(null)".
         /// </returns>
         [Pure]
-        [NotNull]
         public static string ToVisibleString<T>
             (
                 this T? value
@@ -564,10 +558,10 @@ namespace AM
                 return "(null)";
             }
 
-            string? result1 = value.ToString();
+            var result1 = value.ToString();
 
             // ReSharper disable InvokeAsExtensionMethod
-            string? result2 = StringUtility.ToVisibleString(result1);
+            var result2 = StringUtility.ToVisibleString(result1);
             // ReSharper restore InvokeAsExtensionMethod
 
             return string.IsNullOrEmpty(result2)

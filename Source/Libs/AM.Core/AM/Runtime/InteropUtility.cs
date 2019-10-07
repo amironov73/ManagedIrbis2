@@ -38,8 +38,8 @@ namespace AM.Runtime
         {
             Sure.Positive(size, nameof(size));
 
-            IntPtr result = Marshal.AllocHGlobal(size);
-            for (int i = 0; i < size; i++)
+            var result = Marshal.AllocHGlobal(size);
+            for (var i = 0; i < size; i++)
             {
                 Marshal.WriteByte(result, i, 0);
             }
@@ -58,12 +58,12 @@ namespace AM.Runtime
         /// </returns>
         public static IntPtr BufferToPtr
             (
-                [NotNull] byte[] buffer
+                byte[] buffer
             )
         {
-            Sure.NotNull(buffer, nameof(buffer));
+            // TODO rewrite
 
-            IntPtr result = Marshal.AllocHGlobal(buffer.Length);
+            var result = Marshal.AllocHGlobal(buffer.Length);
             Marshal.Copy(buffer, 0, result, buffer.Length);
 
             return result;
@@ -77,15 +77,13 @@ namespace AM.Runtime
         /// <remarks>Годится только для простых структур.</remarks>
         public static byte[] StructToPtr
             (
-                [NotNull] object structure
+                object structure
             )
         {
-            Sure.NotNull(structure, nameof(structure));
-
-            int size = Marshal.SizeOf(structure);
-            IntPtr ptr = Marshal.AllocHGlobal(size);
+            var size = Marshal.SizeOf(structure);
+            var ptr = Marshal.AllocHGlobal(size);
             Marshal.StructureToPtr(structure, ptr, false);
-            byte[] result = new byte[size];
+            var result = new byte[size];
             Marshal.Copy(ptr, result, 0, size);
             Marshal.FreeHGlobal(ptr);
 
@@ -101,17 +99,15 @@ namespace AM.Runtime
         /// <remarks>Годится только для простых структур.</remarks>
         public static void PtrToStruct
             (
-                [NotNull] byte[] block,
+                byte[] block,
                 int offset,
-                [NotNull] object structure
+                object structure
             )
         {
-            Sure.NotNull(block, nameof(block));
             Sure.NonNegative(offset, nameof(offset));
-            Sure.NotNull(structure, nameof(structure));
 
-            int size = Marshal.SizeOf(structure);
-            IntPtr ptr = Marshal.AllocHGlobal(size);
+            var size = Marshal.SizeOf(structure);
+            var ptr = Marshal.AllocHGlobal(size);
             Marshal.Copy(block, offset, ptr, size);
             Marshal.PtrToStructure(ptr, structure);
             Marshal.FreeHGlobal(ptr);
@@ -123,22 +119,20 @@ namespace AM.Runtime
         /// </summary>
         public static T ByteArrayToStructure<T>
             (
-                [NotNull] byte[] bytes
+                byte[] bytes
             )
             where T : struct
         {
-            Sure.NotNull(bytes, nameof(bytes));
-
-            GCHandle handle = GCHandle.Alloc
+            var handle = GCHandle.Alloc
                 (
                     bytes,
                     GCHandleType.Pinned
                 );
-            T stuff = (T)Marshal.PtrToStructure
+            var stuff = (T)Marshal.PtrToStructure
                 (
                     handle.AddrOfPinnedObject(),
                     typeof(T)
-                );
+                )!;
             handle.Free();
 
             return stuff;
@@ -154,7 +148,7 @@ namespace AM.Runtime
                 int blockLength
             )
         {
-            byte[] result = new byte[blockLength];
+            var result = new byte[blockLength];
 
             Marshal.Copy(pointer, result, 0, blockLength);
 
@@ -171,8 +165,8 @@ namespace AM.Runtime
                 int count
             )
         {
-            byte[] bytes = new byte[count];
-            for (int i = 0; i < bytes.Length; i++)
+            var bytes = new byte[count];
+            for (var i = 0; i < bytes.Length; i++)
             {
                 bytes[i] = Marshal.ReadByte(pointer, i);
             }
@@ -198,9 +192,9 @@ namespace AM.Runtime
                 }
             }
 
-            byte[] buffer = new byte[pos];
+            var buffer = new byte[pos];
             Marshal.Copy(pointer, buffer, 0, pos);
-            string result = encoding.GetString(buffer, 0, pos);
+            var result = encoding.GetString(buffer, 0, pos);
 
             return result;
         }

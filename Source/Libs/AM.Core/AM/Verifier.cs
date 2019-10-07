@@ -243,7 +243,7 @@ namespace AM
         /// </summary>
         public Verifier<T> NotNull
             (
-                object value
+                object? value
             )
         {
             return Assert(!ReferenceEquals(value, null));
@@ -254,7 +254,7 @@ namespace AM
         /// </summary>
         public Verifier<T> NotNull
             (
-                object value,
+                object? value,
                 string name
             )
         {
@@ -270,7 +270,7 @@ namespace AM
         /// </summary>
         public Verifier<T> NotNullNorEmpty
             (
-                string value
+                string? value
             )
         {
             return Assert(!string.IsNullOrEmpty(value));

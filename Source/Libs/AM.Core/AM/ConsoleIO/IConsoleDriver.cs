@@ -45,7 +45,7 @@ namespace AM.ConsoleIO
         /// Gets or sets the title to display
         /// in the console title bar.
         /// </summary>
-        string Title { get; set; }
+        string? Title { get; set; }
 
         #endregion
 
@@ -72,15 +72,14 @@ namespace AM.ConsoleIO
         /// <summary>
         /// Read one line.
         /// </summary>
-        [CanBeNull]
-        string ReadLine();
+        string? ReadLine();
 
         /// <summary>
         /// Write text.
         /// </summary>
         void Write
             (
-                [CanBeNull] string text
+                string? text
             );
 
         /// <summary>

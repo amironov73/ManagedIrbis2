@@ -42,7 +42,7 @@ namespace AM.PlatformAbstraction
         /// </summary>
         public virtual void FailFast
             (
-                [NotNull] string message
+                string message
             )
         {
             Environment.FailFast(message);
@@ -51,10 +51,9 @@ namespace AM.PlatformAbstraction
         /// <summary>
         /// Get environment variable.
         /// </summary>
-        [CanBeNull]
-        public virtual string GetEnvironmentVariable
+        public virtual string? GetEnvironmentVariable
             (
-                [NotNull] string variableName
+                string variableName
             )
         {
             return Environment.GetEnvironmentVariable(variableName);
@@ -63,7 +62,6 @@ namespace AM.PlatformAbstraction
         /// <summary>
         /// Get the machine name.
         /// </summary>
-        [NotNull]
         public virtual string GetMachineName()
         {
             return Environment.MachineName;
