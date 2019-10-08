@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* NumberText.cs -- string containing numbers
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -24,6 +24,8 @@ using AM.Runtime;
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace AM.Text
 {
@@ -55,8 +57,7 @@ namespace AM.Text
             /// <summary>
             /// Prefix.
             /// </summary>
-            [CanBeNull]
-            public string Prefix { get; set; }
+            public string? Prefix { get; set; }
 
             /// <summary>
             /// Have value?
@@ -83,7 +84,7 @@ namespace AM.Text
                     StringBuilder number
                 )
             {
-                bool result = false;
+                var result = false;
                 if (str.Length != 0)
                 {
                     result = true;
@@ -106,7 +107,7 @@ namespace AM.Text
                     Chunk other
                 )
             {
-                int result = string.Compare
+                var result = string.Compare
                     (
                         Prefix,
                         other.Prefix,
@@ -125,7 +126,7 @@ namespace AM.Text
 
             public Chunk Copy()
             {
-                Chunk result = new Chunk
+                var result = new Chunk
                 {
                     Prefix = Prefix,
                     HaveValue = HaveValue,
@@ -177,7 +178,7 @@ namespace AM.Text
                     bool throwOnError
                 )
             {
-                Verifier<Chunk> verifier = new Verifier<Chunk>(this, throwOnError);
+                var verifier = new Verifier<Chunk>(this, throwOnError);
 
                 verifier.Assert(HavePrefix || HaveValue, "Must have prefix or value");
 
@@ -190,7 +191,7 @@ namespace AM.Text
 
             public override string ToString()
             {
-                StringBuilder result = new StringBuilder();
+                var result = new StringBuilder();
 
                 if (!ReferenceEquals(Prefix, null))
                 {
@@ -201,7 +202,7 @@ namespace AM.Text
                 {
                     if (Length > 0)
                     {
-                        string format = new string('0', Length);
+                        var format = new string('0', Length);
                         result.Append(Value.ToString(format));
                     }
                     else
@@ -225,7 +226,7 @@ namespace AM.Text
         //    /// <inheritdoc cref="Comparer{T}.Compare" />
         //    public override int Compare
         //        (
-        //            string x, 
+        //            string x,
         //            string y
         //        )
         //    {
@@ -288,7 +289,7 @@ namespace AM.Text
         /// </summary>
         public NumberText
             (
-                [CanBeNull] string text
+                string? text
             )
             : this()
         {
@@ -299,11 +300,9 @@ namespace AM.Text
 
         #region Private members
 
-        [NotNull]
         private readonly LinkedList<Chunk> _chunks;
 
-        [CanBeNull]
-        private Chunk this[int index]
+        private Chunk? this[int index]
         {
             get
             {
@@ -312,7 +311,7 @@ namespace AM.Text
                     return null;
                 }
 
-                LinkedListNode<Chunk> result = _chunks.First;
+                var result = _chunks.First;
                 while (index > 0)
                 {
                     if (result == null)
@@ -334,7 +333,6 @@ namespace AM.Text
         /// <summary>
         /// Appends the chunk.
         /// </summary>
-        [NotNull]
         public NumberText AppendChunk
             (
                 string prefix,
@@ -342,7 +340,7 @@ namespace AM.Text
                 int length
             )
         {
-            Chunk chunk = new Chunk
+            var chunk = new Chunk
             {
                 Prefix = prefix,
                 HaveValue = true,
@@ -357,13 +355,12 @@ namespace AM.Text
         /// <summary>
         /// Append chunk to the number tail.
         /// </summary>
-        [NotNull]
         public NumberText AppendChunk
             (
                 string prefix
             )
         {
-            Chunk chunk = new Chunk
+            var chunk = new Chunk
             {
                 Prefix = prefix
             };
@@ -375,13 +372,12 @@ namespace AM.Text
         /// <summary>
         /// Append chunk to the number tail.
         /// </summary>
-        [NotNull]
         public NumberText AppendChunk
             (
                 long value
             )
         {
-            Chunk chunk = new Chunk
+            var chunk = new Chunk
             {
                 HaveValue = true,
                 Value = value
@@ -394,11 +390,10 @@ namespace AM.Text
         /// <summary>
         /// Clone the number.
         /// </summary>
-        [NotNull]
         public NumberText Clone()
         {
-            NumberText result = new NumberText();
-            foreach (Chunk chunk in _chunks)
+            var result = new NumberText();
+            foreach (var chunk in _chunks)
             {
                 result._chunks.AddLast(chunk.Copy());
             }
@@ -425,7 +420,7 @@ namespace AM.Text
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             return chunk == null
                 ? 0
                 : chunk.HaveValue
@@ -436,12 +431,12 @@ namespace AM.Text
         /// <summary>
         /// Gets the prefix.
         /// </summary>
-        public string GetPrefix
+        public string? GetPrefix
             (
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             return chunk?.Prefix;
         }
 
@@ -453,7 +448,7 @@ namespace AM.Text
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             return chunk == null
                 ? 0
                 : chunk.HaveValue
@@ -481,7 +476,7 @@ namespace AM.Text
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             return chunk != null && chunk.HavePrefix;
         }
 
@@ -494,7 +489,7 @@ namespace AM.Text
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             return chunk != null && chunk.HaveValue;
         }
 
@@ -535,7 +530,7 @@ namespace AM.Text
                 int delta
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (chunk != null
                 && chunk.HaveValue)
             {
@@ -554,7 +549,7 @@ namespace AM.Text
                 long delta
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (chunk != null
                 && chunk.HaveValue)
             {
@@ -568,7 +563,7 @@ namespace AM.Text
         /// </summary>
         public void Parse
             (
-                [CanBeNull] string text
+                string? text
             )
         {
             _chunks.Clear();
@@ -577,16 +572,16 @@ namespace AM.Text
                 return;
             }
 
-            StringReader reader = new StringReader(text);
-            Chunk chunk = new Chunk();
+            var reader = new StringReader(text);
+            var chunk = new Chunk();
             _chunks.AddLast(chunk);
-            bool textPart = true;
-            StringBuilder str = new StringBuilder();
-            StringBuilder number = new StringBuilder();
+            var textPart = true;
+            var str = new StringBuilder();
+            var number = new StringBuilder();
             int code;
             while ((code = reader.Read()) != -1)
             {
-                char c = (char)code;
+                var c = (char)code;
                 if (textPart)
                 {
                     if (char.IsDigit(c))
@@ -636,10 +631,10 @@ namespace AM.Text
                 yield break;
             }
 
-            StringReader reader = new StringReader(text);
+            var reader = new StringReader(text);
 
-            StringBuilder firstBuffer = new StringBuilder();
-            StringBuilder secondBuffer = new StringBuilder();
+            var firstBuffer = new StringBuilder();
+            var secondBuffer = new StringBuilder();
             NumberText firstNumber;
 
         BEGIN:
@@ -647,7 +642,7 @@ namespace AM.Text
             int c1;
             while ((c1 = reader.Read()) != -1)
             {
-                char c2 = (char)c1;
+                var c2 = (char)c1;
                 if (c2 == '-')
                 {
                     if (firstBuffer.Length == 0)
@@ -695,7 +690,7 @@ namespace AM.Text
                 int c3;
                 while ((c3 = reader.Read()) != -1)
                 {
-                    char c4 = (char)c3;
+                    var c4 = (char)c3;
 
                     if (char.IsWhiteSpace(c4))
                     {
@@ -729,7 +724,7 @@ namespace AM.Text
                 }
 
                 firstNumber = new NumberText(firstBuffer.ToString());
-                NumberText secondNumber = new NumberText(secondBuffer.ToString());
+                var secondNumber = new NumberText(secondBuffer.ToString());
 
                 if (firstNumber.GetPrefix(0) != secondNumber.GetPrefix(0))
                 {
@@ -770,7 +765,7 @@ namespace AM.Text
                 int index
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (!ReferenceEquals(chunk, null))
             {
                 _chunks.Remove(chunk);
@@ -789,7 +784,7 @@ namespace AM.Text
                 int length
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (chunk != null)
             {
                 chunk.Length = length;
@@ -807,7 +802,7 @@ namespace AM.Text
                 string prefix
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (chunk != null)
             {
                 chunk.Prefix = prefix;
@@ -825,7 +820,7 @@ namespace AM.Text
                 long value
             )
         {
-            Chunk chunk = this[index];
+            var chunk = this[index];
             if (chunk != null)
             {
                 chunk.HaveValue = true;
@@ -843,7 +838,7 @@ namespace AM.Text
                 IEnumerable<string> lines
             )
         {
-            List<NumberText> result = lines
+            var result = lines
                 .Select(item => new NumberText(item))
                 .ToList();
 
@@ -860,7 +855,7 @@ namespace AM.Text
                 IEnumerable<NumberText> numbers
             )
         {
-            List<NumberText> result = new List<NumberText>(numbers);
+            var result = new List<NumberText>(numbers);
             result.Sort();
 
             return result;
@@ -869,10 +864,9 @@ namespace AM.Text
         /// <summary>
         /// Implicit conversion operator.
         /// </summary>
-        [NotNull]
         public static implicit operator NumberText
             (
-                [CanBeNull] string text
+                string? text
             )
         {
             return new NumberText(text);
@@ -885,16 +879,16 @@ namespace AM.Text
         /// <inheritdoc cref="IComparable{T}.CompareTo" />
         public int CompareTo
             (
-                [NotNull] NumberText other
+                NumberText other
             )
         {
-            for (int i = 0; i < int.MaxValue; i++) //-V3022
+            for (var i = 0; i < int.MaxValue; i++) //-V3022
             {
-                Chunk c1 = this[i];
-                Chunk c2 = other[i];
+                var c1 = this[i];
+                var c2 = other[i];
                 if (c1 != null && c2 != null)
                 {
-                    int result = c1.CompareTo(c2);
+                    var result = c1.CompareTo(c2);
                     if (result != 0)
                     {
                         return result;
@@ -924,7 +918,7 @@ namespace AM.Text
                 long value
             )
         {
-            Chunk chunk = this[0];
+            var chunk = this[0];
             if (chunk == null)
             {
                 return -1;
@@ -963,8 +957,8 @@ namespace AM.Text
                 string right
             )
         {
-            NumberText one = new NumberText(left);
-            NumberText two = new NumberText(right);
+            var one = new NumberText(left);
+            var two = new NumberText(right);
 
             return one.CompareTo(two);
         }
@@ -1283,7 +1277,7 @@ namespace AM.Text
         /// <inheritdoc cref="object.Equals(object)" />
         public override bool Equals
             (
-                object obj
+                object? obj
             )
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -1306,10 +1300,9 @@ namespace AM.Text
         /// <summary>
         /// Implements the + operator.
         /// </summary>
-        [NotNull]
         public static NumberText operator +
             (
-                [NotNull] NumberText left,
+                NumberText left,
                 int right
             )
         {
@@ -1321,8 +1314,8 @@ namespace AM.Text
         /// </summary>
         public static long operator -
             (
-                [NotNull] NumberText left,
-                [NotNull] NumberText right
+                NumberText left,
+                NumberText right
             )
         {
             return left.GetDifference(right);
@@ -1341,7 +1334,7 @@ namespace AM.Text
         /// <inheritdoc cref="IEnumerable{T}.GetEnumerator" />
         public IEnumerator<string> GetEnumerator()
         {
-            foreach (Chunk chunk in _chunks)
+            foreach (var chunk in _chunks)
             {
                 yield return chunk.ToString();
             }
@@ -1357,14 +1350,12 @@ namespace AM.Text
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             _chunks.Clear();
 
-            int count = reader.ReadPackedInt32();
-            for (int i = 0; i < count; i++)
+            var count = reader.ReadPackedInt32();
+            for (var i = 0; i < count; i++)
             {
-                Chunk chunk = new Chunk();
+                var chunk = new Chunk();
                 chunk.RestoreFromStream(reader);
                 _chunks.AddLast(chunk);
             }
@@ -1376,11 +1367,9 @@ namespace AM.Text
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            int count = _chunks.Count;
+            var count = _chunks.Count;
             writer.WritePackedInt32(count);
-            foreach (Chunk chunk in _chunks)
+            foreach (var chunk in _chunks)
             {
                 chunk.SaveToStream(writer);
             }
@@ -1396,10 +1385,10 @@ namespace AM.Text
                 bool throwOnError
             )
         {
-            Verifier<NumberText> verifier = new Verifier<NumberText>(this, throwOnError);
+            var verifier = new Verifier<NumberText>(this, throwOnError);
 
             verifier.Positive(_chunks.Count, "_chunks.Count");
-            foreach (Chunk chunk in _chunks)
+            foreach (var chunk in _chunks)
             {
                 verifier.VerifySubObject(chunk, "chunk");
             }
@@ -1414,9 +1403,9 @@ namespace AM.Text
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
-            foreach (Chunk chunk in _chunks)
+            foreach (var chunk in _chunks)
             {
                 result.Append(chunk);
             }

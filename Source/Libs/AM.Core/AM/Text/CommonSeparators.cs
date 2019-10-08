@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* CommonSeparators.cs -- 
+/* CommonSeparators.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -27,6 +27,10 @@ namespace AM.Text
         #region Properties
 
         /// <summary>
+        /// Colon.
+        /// </summary>
+        public static readonly char[] Colon = { ':' };
+        /// <summary>
         /// Comma.
         /// </summary>
         public static readonly char[] Comma = { ',' };
@@ -35,11 +39,6 @@ namespace AM.Text
         /// Comma and semicolon.
         /// </summary>
         public static readonly char[] CommaAndSemicolon = { ',', ';' };
-
-        /// <summary>
-        /// Colon.
-        /// </summary>
-        public static readonly char[] Colon = { ':' };
 
         /// <summary>
         /// Dot.
@@ -66,6 +65,10 @@ namespace AM.Text
         /// </summary>
         public static readonly char[] NumberSign = { '#' };
 
+        /// <summary>
+        /// Pipe sign.
+        /// </summary>
+        public static readonly char[] Pipe = { '|' };
         /// <summary>
         /// Semicolon.
         /// </summary>

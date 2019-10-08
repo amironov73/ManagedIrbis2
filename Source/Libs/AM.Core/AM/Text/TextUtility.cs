@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class TextUtility
@@ -28,10 +28,10 @@ namespace AM.Text
         /// </summary>
         public static TextKind DetermineTextKind
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return TextKind.PlainText;
             }
@@ -46,8 +46,8 @@ namespace AM.Text
                 return TextKind.Html;
             }
 
-            bool curly = text.Contains("{") && text.Contains("}");
-            bool angle = text.Contains("<") && text.Contains(">");
+            var curly = text.Contains("{") && text.Contains("}");
+            var angle = text.Contains("<") && text.Contains(">");
 
             if (curly && !angle)
             {

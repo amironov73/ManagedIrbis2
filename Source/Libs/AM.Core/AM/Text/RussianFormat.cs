@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class RussianFormat
@@ -41,14 +41,13 @@ namespace AM.Text
         /// <summary>
         /// Format string.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
-                [CanBeNull] object arg0
+                string format,
+                object? arg0
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -61,15 +60,14 @@ namespace AM.Text
         /// <summary>
         /// Format string.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
-                [CanBeNull] object arg0,
-                [CanBeNull] object arg1
+                string format,
+                object? arg0,
+                object? arg1
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -83,16 +81,15 @@ namespace AM.Text
         /// <summary>
         /// Format string.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
-                [CanBeNull] object arg0,
-                [CanBeNull] object arg1,
-                [CanBeNull] object arg2
+                string format,
+                object? arg0,
+                object? arg1,
+                object? arg2
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -107,14 +104,13 @@ namespace AM.Text
         /// <summary>
         /// Format string.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
-                params object[] args
+                string format,
+                params object?[] args
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -127,14 +123,13 @@ namespace AM.Text
         /// <summary>
         /// Format integer.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
+                string format,
                 int arg0
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -147,14 +142,13 @@ namespace AM.Text
         /// <summary>
         /// Format double.
         /// </summary>
-        [NotNull]
         public static string Format
             (
-                [NotNull] string format,
+                string format,
                 double arg0
             )
         {
-            string result = string.Format
+            var result = string.Format
                 (
                     FormatProvider,
                     format,
@@ -167,13 +161,12 @@ namespace AM.Text
         /// <summary>
         /// Format integer.
         /// </summary>
-        [NotNull]
         public static string Format
             (
                 int arg0
             )
         {
-            string result = arg0.ToString(FormatProvider);
+            var result = arg0.ToString(FormatProvider);
 
             return result;
         }
@@ -181,13 +174,12 @@ namespace AM.Text
         /// <summary>
         /// Format double.
         /// </summary>
-        [NotNull]
         public static string Format
             (
                 double arg0
             )
         {
-            string result = arg0.ToString(FormatProvider);
+            var result = arg0.ToString(FormatProvider);
 
             return result;
         }
@@ -195,13 +187,12 @@ namespace AM.Text
         /// <summary>
         /// Format decimal.
         /// </summary>
-        [NotNull]
         public static string Format
             (
                 decimal arg0
             )
         {
-            string result = arg0.ToString(FormatProvider);
+            var result = arg0.ToString(FormatProvider);
 
             return result;
         }

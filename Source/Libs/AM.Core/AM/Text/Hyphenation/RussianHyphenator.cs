@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* EnglishHyphenator.cs -- simple hyphenator for English language
+/* RussianHyphenator.cs -- simple hyphenator for Russian language
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -20,31 +20,41 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+// ReSharper disable StringLiteralTypo
+
 namespace AM.Text.Hyphenation
 {
     /// <summary>
-    /// Simple <see cref="Hyphenator"/> for English language.
+    /// Simple <see cref="Hyphenator"/> for Russian language.
     /// </summary>
     [PublicAPI]
-    public class EnglishHyphenator
+    public class RussianHyphenator
         : Hyphenator
     {
         #region Private members
 
-        private static char[] _vowels =
+        private static readonly char[] _vowels =
             {
-                'a', 'e', 'i', 'o', 'u', 'y'
+                'а', 'е', 'ё', 'и', 'о', 'ы', 'у', 'ю', 'я'
             };
 
-        private static char[] _consonants =
+        private static readonly char[] _consonants =
             {
-                'b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm',
-                'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'z'
+                'б', 'в', 'г', 'д', 'ж', 'з', 'к', 'л', 'м', 'н',
+                'п', 'р', 'с', 'т', 'ф', 'х', 'ц', 'ч', 'ш', 'щ'
+            };
+
+        private static readonly char[] _forbidden =
+            {
+                'й', 'ь', 'ъ'
             };
 
         private static string[] _prefixes =
             {
-                "dis", "per", "pre", "sub"
+                "без", "бес", "дез", "дис", "контр", "над", "под", "раз",
+                "рас", "сверх", "супер", "экс"
             };
 
         private static bool _IsVowel(string str, int index)
@@ -57,14 +67,19 @@ namespace AM.Text.Hyphenation
             return Array.IndexOf(_consonants, str[index]) >= 0;
         }
 
+        private static bool _IsForbidden(string str, int index)
+        {
+            return Array.IndexOf(_forbidden, str[index]) >= 0;
+        }
+
         #endregion
 
         #region Hyphenator members
 
         /// <inheritdoc cref="Hyphenator.LanguageName" />
-        public override string LanguageName => "English";
+        public override string LanguageName => "Русский";
 
-        /// <inheritdoc cref="Hyphenator.RecognizeWord"/>
+        /// <inheritdoc cref="Hyphenator.RecognizeWord" />
         [ExcludeFromCodeCoverage]
         public override bool RecognizeWord
             (
@@ -73,7 +88,9 @@ namespace AM.Text.Hyphenation
         {
             Log.Error
                 (
-                    nameof(EnglishHyphenator) + "::" + nameof(RecognizeWord)
+                    nameof(RussianHyphenator)
+                    + "::"
+                    + nameof(RecognizeWord)
                     + ": not implemented"
                 );
 
@@ -83,20 +100,17 @@ namespace AM.Text.Hyphenation
         /// <inheritdoc cref="Hyphenator.Hyphenate" />
         public override int[] Hyphenate
             (
-                string word
+                [CanBeNull] string word
             )
         {
-            Sure.NotNull(word, nameof(word));
-
-            if (string.IsNullOrEmpty(word)
-                 || word.Length < 4)
+            if (ReferenceEquals(word, null) || word.Length < 4)
             {
                 return Array.Empty<int>();
             }
 
             // Нельзя переносить слова, содержащие прописные буквы
             // (кроме первой, разумеется).
-            for (int i = 1; i < word.Length; i++)
+            for (var i = 1; i < word.Length; i++)
             {
                 if (char.IsUpper(word, i))
                 {
@@ -104,10 +118,10 @@ namespace AM.Text.Hyphenation
                 }
             }
 
-            List<int> result = new List<int>();
-            int len = word.Length - 2;
+            var result = new List<int>();
+            var len = word.Length - 2;
             // Можно переносить сразу за гласной
-            for (int i = 1; i < len; i++)
+            for (var i = 1; i < len; i++)
             {
                 if (_IsVowel(word, i))
                 {
@@ -128,7 +142,7 @@ namespace AM.Text.Hyphenation
                 }
             }
             // Можно переносить между двумя согласными
-            for (int i = 1; i < len; i++)
+            for (var i = 1; i < len; i++)
             {
                 if (_IsConsonant(word, i)
                      && _IsConsonant(word, i + 1))
@@ -136,11 +150,44 @@ namespace AM.Text.Hyphenation
                     result.Add(i);
                 }
             }
+            // Нельзя отрывать й, ь и ъ от предшествующих гласных
+            for (var i = 0; i < result.Count; i++)
+            {
+                var pos = result[i];
+                if (_IsForbidden(word, pos + 1))
+                {
+                    result[i] = pos + 1;
+                }
+            }
+            result.Sort();
+            // Нельзя разрывать приставку. Также нельзя, чтобы
+            // после приставки была буква й, ы, ь, ъ
+            if (result.Count > 0)
+            {
+                foreach (var prefix in _prefixes)
+                {
+                    if (word.StartsWith(prefix))
+                    {
+                        int first;
+                        if (_IsForbidden(word, prefix.Length)
+                             || word[prefix.Length] == 'ы')
+                        {
+                            first = prefix.Length;
+                        }
+                        else
+                        {
+                            first = prefix.Length - 1;
+                        }
+                        result[0] = first;
+                        break;
+                    }
+                }
+            }
             result.Sort();
             // Отдаем предпочтение переносу по удвоенной согласной
-            for (int i = 0; i < result.Count; )
+            for (var i = 0; i < result.Count; )
             {
-                int pos = result[i];
+                var pos = result[i];
                 if (_IsConsonant(word, pos + 1)
                      && word[pos + 1] == word[pos + 2])
                 {
@@ -157,9 +204,9 @@ namespace AM.Text.Hyphenation
                 i++;
             }
             // Нельзя переносить после двух согласных подряд
-            for (int i = 0; i < result.Count; )
+            for (var i = 0; i < result.Count; )
             {
-                int pos = result[i];
+                var pos = result[i];
                 if (pos > 2 && _IsConsonant(word, pos)
                      && _IsConsonant(word, pos - 1))
                 {
@@ -170,26 +217,13 @@ namespace AM.Text.Hyphenation
                     i++;
                 }
             }
-            result.Sort();
-            // Нельзя разрывать приставку
-            if (result.Count > 0)
-            {
-                foreach (string prefix in _prefixes)
-                {
-                    if (word.StartsWith(prefix))
-                    {
-                        result[0] = prefix.Length - 1;
-                        break;
-                    }
-                }
-            }
-            // Нельзя переносить часть слова, состоящую только 
+            // Нельзя переносить часть слова, состоящую только
             // из согласных
             if (result.Count > 0)
             {
-                int last = result[result.Count - 1];
-                bool canBreak = false;
-                for (int i = last + 1; i < word.Length; i++)
+                var last = result[result.Count - 1];
+                var canBreak = false;
+                for (var i = last + 1; i < word.Length; i++)
                 {
                     if (_IsVowel(word, i))
                     {

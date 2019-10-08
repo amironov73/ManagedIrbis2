@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
+using AM.Text;
+
 //using AM.Reflection;
 
 using JetBrains.Annotations;
@@ -67,7 +69,7 @@ namespace AM
         public static Version NetCoreVersion()
         {
             var description = RuntimeInformation.FrameworkDescription;
-            var parts = description.Split(Delimiters.Space);
+            var parts = description.Split(CommonSeparators.Space);
             return Version.Parse(parts[2]);
         }
 

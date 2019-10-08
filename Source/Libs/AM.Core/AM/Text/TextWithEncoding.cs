@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* TextWithEncoding.cs -- text with given encoding
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -32,15 +32,13 @@ namespace AM.Text
         /// <summary>
         /// Text itself.
         /// </summary>
-        [CanBeNull]
-        public string Text { get; }
+        public string? Text { get; }
 
         /// <summary>
         /// Encoding.
         /// </summary>
         /// <remarks><c>null</c> treated as default encoding.</remarks>
-        [CanBeNull]
-        public Encoding Encoding { get; }
+        public Encoding? Encoding { get; }
 
         #endregion
 
@@ -59,7 +57,7 @@ namespace AM.Text
         /// </summary>
         public TextWithEncoding
             (
-                [CanBeNull] string text
+                string? text
             )
         {
             Text = text;
@@ -71,7 +69,7 @@ namespace AM.Text
         /// </summary>
         public TextWithEncoding
             (
-                [CanBeNull] string text,
+                string? text,
                 bool ansi
             )
         {
@@ -86,12 +84,10 @@ namespace AM.Text
         /// </summary>
         public TextWithEncoding
             (
-                [CanBeNull] string text,
-                [NotNull] Encoding encoding
+                string? text,
+                Encoding encoding
             )
         {
-            Sure.NotNull(encoding, nameof(encoding));
-
             Text = text;
             Encoding = encoding;
         }
@@ -103,15 +99,14 @@ namespace AM.Text
         /// <summary>
         /// Convert text to byte representation.
         /// </summary>
-        [NotNull]
         public byte[] ToBytes()
         {
             if (ReferenceEquals(Text, null))
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
-            Encoding encoding = Encoding ?? Encoding.Default;
+            var encoding = Encoding ?? Encoding.Default;
 
             return encoding.GetBytes(Text);
         }
@@ -119,17 +114,8 @@ namespace AM.Text
         /// <summary>
         /// Implicit conversion.
         /// </summary>
-        [NotNull]
-        public static implicit operator TextWithEncoding
-            (
-                [CanBeNull] string text
-            )
-        {
-            return new TextWithEncoding
-                (
-                    text
-                );
-        }
+        public static implicit operator TextWithEncoding(string? text)
+            => new TextWithEncoding (text);
 
         #endregion
 
@@ -138,7 +124,7 @@ namespace AM.Text
         /// <inheritdoc cref="IComparable{T}.CompareTo" />
         public int CompareTo
             (
-                [CanBeNull] TextWithEncoding other
+                TextWithEncoding? other
             )
         {
             if (ReferenceEquals(other, null))
@@ -159,8 +145,8 @@ namespace AM.Text
         /// </summary>
         public static bool operator ==
             (
-                [CanBeNull] TextWithEncoding left,
-                [CanBeNull] TextWithEncoding right
+                TextWithEncoding? left,
+                TextWithEncoding? right
             )
         {
             if (ReferenceEquals(left, null))
@@ -181,8 +167,8 @@ namespace AM.Text
         /// </summary>
         public static bool operator !=
             (
-                [CanBeNull] TextWithEncoding left,
-                [CanBeNull] TextWithEncoding right
+                TextWithEncoding? left,
+                TextWithEncoding? right
             )
         {
             if (ReferenceEquals(left, null))
@@ -201,46 +187,34 @@ namespace AM.Text
         /// Determines whether the specified
         /// <see cref="TextWithEncoding" /> is equal to this instance.
         /// </summary>
-        private bool Equals
-            (
-                [NotNull] TextWithEncoding other
-            )
-        {
-            Sure.NotNull(other, nameof(other));
-
-            return string.Equals(Text, other.Text);
-        }
+        private bool Equals (TextWithEncoding other)
+            => string.Equals(Text, other.Text);
 
         /// <inheritdoc cref="object.Equals(object)" />
         public override bool Equals
             (
-                [CanBeNull] object obj
+                object? obj
             )
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            return obj is TextWithEncoding 
+            return obj is TextWithEncoding
                 && Equals((TextWithEncoding) obj);
         }
 
         /// <inheritdoc cref="object.GetHashCode" />
-        public override int GetHashCode()
-        {
-            return ReferenceEquals(Text, null)
+        public override int GetHashCode() =>
+            string.IsNullOrEmpty(Text)
                 ? 0
                 : Text.GetHashCode();
-        }
 
         #endregion
 
         #region Object members
 
         /// <inheritdoc cref="object.ToString" />
-        public override string ToString()
-        {
-            return Text ?? string.Empty;
-        }
+        public override string ToString() => Text ?? "(null)";
 
         #endregion
     }

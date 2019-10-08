@@ -16,6 +16,9 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+
 namespace AM.Text.Hyphenation
 {
     /// <summary>
@@ -30,7 +33,6 @@ namespace AM.Text.Hyphenation
         /// Gets the language name (e. g. "English" or "Russian").
         /// </summary>
         /// <value>The name of the language.</value>
-        [NotNull]
         public abstract string LanguageName { get; }
 
         /// <summary>
@@ -40,7 +42,10 @@ namespace AM.Text.Hyphenation
         /// <param name="theWord">Word to check.</param>
         /// <returns><c>true</c> if word can be processed;
         /// otherwise <c>false</c>.</returns>
-        public abstract bool RecognizeWord(string theWord);
+        public abstract bool RecognizeWord
+            (
+                string theWord
+            );
 
         /// <summary>
         /// Hyphenates the word.
@@ -48,10 +53,9 @@ namespace AM.Text.Hyphenation
         /// <param name="word">Word to hyphenate.</param>
         /// <returns>Array of positions where hyphen can be inserted.
         /// </returns>
-        [NotNull]
         public abstract int[] Hyphenate
             (
-                [NotNull] string word
+                string word
             );
 
         /// <summary>
@@ -61,18 +65,16 @@ namespace AM.Text.Hyphenation
         /// <param name="positions">Possible positions of hyphen.
         /// </param>
         /// <returns>Hyphenated word.</returns>
-        [NotNull]
         public static string ShowHyphenated
             (
-                [NotNull] string word,
+                string word,
                 int[] positions
             )
         {
             Sure.NotNullNorEmpty(word, nameof(word));
-            Sure.NotNull(positions, nameof(positions));
 
-            StringBuilder result = new StringBuilder();
-            for (int i = 0; i < word.Length; i++)
+            var result = new StringBuilder();
+            for (var i = 0; i < word.Length; i++)
             {
                 result.Append(word[i]);
                 if (Array.IndexOf(positions, i) >= 0)

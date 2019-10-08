@@ -44,7 +44,6 @@ namespace AM.Text
         /// <summary>
         /// Closing sequence.
         /// </summary>
-        [NotNull]
         public string Close
         {
             get => new string(_close);
@@ -59,7 +58,6 @@ namespace AM.Text
         /// <summary>
         /// Nested text opening sequence.
         /// </summary>
-        [NotNull]
         public string Open
         {
             get => new string(_open);
@@ -78,6 +76,24 @@ namespace AM.Text
         /// <summary>
         /// Constructor.
         /// </summary>
+#nullable disable
+        public TextSeparator
+            (
+                string open,
+                string close
+            )
+        {
+            Sure.NotNullNorEmpty(open, nameof(open));
+            Sure.NotNullNorEmpty(close, nameof(close));
+
+            Close = close;
+            Open = open;
+        }
+#nullable restore
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public TextSeparator()
             : this
             (
@@ -85,22 +101,6 @@ namespace AM.Text
                 DefaultClose
             )
         {
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public TextSeparator
-            (
-                [NotNull] string open,
-                [NotNull] string close
-            )
-        {
-            Sure.NotNullNorEmpty(open, nameof(open));
-            Sure.NotNullNorEmpty(close, nameof(close));
-
-            Open = open;
-            Close = close;
         }
 
         #endregion
@@ -138,15 +138,10 @@ namespace AM.Text
         /// </summary>
         public bool SeparateText
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
-            return SeparateText
-                (
-                    new StringReader(text)
-                );
+            return SeparateText (new StringReader(text));
         }
 
         //=================================================
@@ -156,28 +151,26 @@ namespace AM.Text
         /// </summary>
         public bool SeparateText
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            bool inner = false;
-            char[] array = _open;
-            StringBuilder buffer = new StringBuilder();
+            var inner = false;
+            var array = _open;
+            var buffer = new StringBuilder();
 
             while (true)
             {
-                int depth = 0;
+                var depth = 0;
 
                 while (true)
                 {
-                    int i = reader.Read();
+                    var i = reader.Read();
                     if (i < 0)
                     {
                         goto DONE;
                     }
 
-                    char c = (char)i;
+                    var c = (char)i;
                     if (c == array[depth])
                     {
                         depth++;
@@ -207,7 +200,7 @@ namespace AM.Text
                 }
             }
 
-        DONE:
+            DONE:
 
             if (buffer.Length != 0)
             {

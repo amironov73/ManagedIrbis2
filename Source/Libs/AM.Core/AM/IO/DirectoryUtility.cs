@@ -13,9 +13,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using AM.Text;
+
 using JetBrains.Annotations;
 
 #endregion
+
+// ReSharper disable CommentTypo
 
 namespace AM.IO
 {
@@ -104,7 +108,7 @@ namespace AM.IO
 
             var masks = mask.Split
                 (
-                    Delimiters.Semicolon,
+                    CommonSeparators.Semicolon,
                     StringSplitOptions.RemoveEmptyEntries
                 );
             _GetFiles(found, path, masks, recursive);

@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* Transliterator.cs
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -16,6 +16,9 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+// ReSharper disable IdentifierTypo
+
 namespace AM.Text
 {
     /// <summary>
@@ -26,7 +29,6 @@ namespace AM.Text
     {
         #region Construction
 
-        // ReSharper disable once InconsistentNaming
         // ГОСТ 16876-71
         private static readonly Dictionary<string, string> _gost;
 
@@ -123,23 +125,22 @@ namespace AM.Text
         /// <summary>
         /// Transliterates the specified text.
         /// </summary>
-        [CanBeNull]
-        public static string Transliterate
+        public static string? Transliterate
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            StringBuilder result = new StringBuilder(text.Length);
+            var result = new StringBuilder(text.Length);
 
-            foreach (char c in text)
+            foreach (var c in text)
             {
-                string key = new string(c, 1);
-                if (!_gost.TryGetValue(key, out string value))
+                var key = new string(c, 1);
+                if (!_gost.TryGetValue(key, out var value))
                 {
                     value = key;
                 }
