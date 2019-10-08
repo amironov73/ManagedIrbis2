@@ -94,23 +94,12 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Организация, на которую куплен ИРБИС.
         /// </summary>
-        public string Organization
-        {
-            get { return Main["User"]; }
-        }
+        public string? Organization => Main["User"];
 
         /// <summary>
         /// IP адрес ИРБИС сервера.
         /// </summary>
-        [NotNull]
-        public string ServerIP
-        {
-            get
-            {
-                // coverity[dereference]
-                return Main["ServerIP"] ?? "127.0.0.1";
-            }
-        }
+        public string ServerIP => Main["ServerIP"] ?? "127.0.0.1";
 
         /// <summary>
         /// Port number of the IRBIS server.
@@ -132,8 +121,7 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// User login.
         /// </summary>
-        [CanBeNull]
-        public string UserName
+        public string? UserName
         {
             get
             {
@@ -145,8 +133,7 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// User password.
         /// </summary>
-        [CanBeNull]
-        public string UserPassword
+        public string? UserPassword
         {
             get
             {
@@ -164,7 +151,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public LocalCatalogerIniFile
             (
-                [NotNull] IniFile iniFile
+                IniFile iniFile
             )
         {
             Ini = iniFile;
@@ -203,18 +190,17 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Get value.
         /// </summary>
-        [CanBeNull]
-        public string GetValue
+        public string? GetValue
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
-                [CanBeNull] string defaultValue
+                string sectionName,
+                string keyName,
+                string? defaultValue
             )
         {
-            Sure.NotNullNorEmpty(sectionName, "sectionName");
-            Sure.NotNullNorEmpty(keyName, "keyName");
+            Sure.NotNullNorEmpty(sectionName, nameof(sectionName));
+            Sure.NotNullNorEmpty(keyName, nameof(keyName));
 
-            string result = Ini.GetValue
+            var result = Ini.GetValue
                 (
                     sectionName,
                     keyName,

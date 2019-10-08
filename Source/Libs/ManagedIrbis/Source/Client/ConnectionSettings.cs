@@ -69,10 +69,9 @@ namespace ManagedIrbis.Client
         /// IP-address of the server.
         /// </summary>
         /// <remarks>Default value is "127.0.0.1".</remarks>
-        [CanBeNull]
         [XmlAttribute("host")]
         [JsonProperty("host")]
-        public string Host { get; set; }
+        public string? Host { get; set; }
 
         /// <summary>
         /// IP-port of the server.
@@ -87,20 +86,18 @@ namespace ManagedIrbis.Client
         /// </summary>
         /// <remarks>Default value is <c>null</c>,
         /// so connection can't be made.</remarks>
-        [CanBeNull]
         [XmlAttribute("username")]
         [JsonProperty("username")]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         /// <summary>
         /// User logon password.
         /// </summary>
         /// <remarks>Default value is <c>null</c>,
         /// so connection can't be made.</remarks>
-        [CanBeNull]
         [XmlAttribute("password")]
         [JsonProperty("password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         /// <summary>
         /// Database name to connect.
@@ -109,11 +106,10 @@ namespace ManagedIrbis.Client
         /// Database with such a name can be
         /// non-existent.
         /// </remarks>
-        [CanBeNull]
         [DefaultValue(DefaultDatabase)]
         [XmlAttribute("database")]
         [JsonProperty("database")]
-        public string Database { get; set; }
+        public string? Database { get; set; }
 
         /// <summary>
         /// Workstation application kind.
@@ -129,34 +125,30 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Turn on network logging.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("log")]
         [JsonProperty("log")]
-        public string NetworkLogging { get; set; }
+        public string? NetworkLogging { get; set; }
 
         /// <summary>
         /// Type name for ClientSocket.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("socket")]
         [JsonProperty("socket")]
-        public string SocketTypeName { get; set; }
+        public string? SocketTypeName { get; set; }
 
-        /// <summary>
-        /// Type name for CommandFactory.
-        /// </summary>
-        [CanBeNull]
-        [XmlAttribute("factory")]
-        [JsonProperty("factory")]
-        public string FactoryTypeName { get; set; }
+//        /// <summary>
+//        /// Type name for CommandFactory.
+//        /// </summary>
+//        [XmlAttribute("factory")]
+//        [JsonProperty("factory")]
+//        public string? FactoryTypeName { get; set; }
 
-        /// <summary>
-        /// Type name for execution engine.
-        /// </summary>
-        [CanBeNull]
-        [XmlAttribute("engine")]
-        [JsonProperty("engine")]
-        public string EngineTypeName { get; set; }
+//        /// <summary>
+//        /// Type name for execution engine.
+//        /// </summary>
+//        [XmlAttribute("engine")]
+//        [JsonProperty("engine")]
+//        public string? EngineTypeName { get; set; }
 
         /// <summary>
         /// Retry limit.
@@ -168,18 +160,16 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Web CGI URL.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("web")]
         [JsonProperty("web")]
-        public string WebCgi { get; set; }
+        public string? WebCgi { get; set; }
 
         /// <summary>
         /// Arbitrary user data.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("userdata")]
         [JsonProperty("userdata")]
-        public string UserData { get; set; }
+        public string? UserData { get; set; }
 
         /// <summary>
         /// Saved "connected" state.
@@ -213,7 +203,7 @@ namespace ManagedIrbis.Client
             (
                 List<Parameter> list,
                 string name,
-                string value
+                string? value
             )
         {
             if (!string.IsNullOrEmpty(value))
@@ -372,10 +362,10 @@ namespace ManagedIrbis.Client
                 string text
             )
         {
-            byte[] bytes = Convert.FromBase64String(text);
+            var bytes = Convert.FromBase64String(text);
             bytes = CompressionUtility.Decompress(bytes);
-            ConnectionSettings result
-                = bytes.RestoreObjectFromMemory<ConnectionSettings>();
+            var result = bytes.RestoreObjectFromMemory<ConnectionSettings>()
+                .ThrowIfNull("RestoreObjectFromMemory");
 
             return result;
         }
@@ -383,11 +373,10 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Encode parameters to text representation.
         /// </summary>
-        [NotNull]
         [MustUseReturnValue]
         public string Encode()
         {
-            List<Parameter> parameters = new List<Parameter>();
+            var parameters = new List<Parameter>();
 
             _Add(parameters, "host", Host);
             _Add
@@ -410,8 +399,8 @@ namespace ManagedIrbis.Client
                         : new string((char)(byte)Workstation, 1)
                 );
             _Add(parameters, "socket", SocketTypeName);
-            _Add(parameters, "engine", EngineTypeName);
-            _Add(parameters, "factory", FactoryTypeName);
+            //_Add(parameters, "engine", EngineTypeName);
+            //_Add(parameters, "factory", FactoryTypeName);
             _Add(parameters, "log", NetworkLogging);
             _Add
                 (
@@ -623,13 +612,13 @@ namespace ManagedIrbis.Client
                         SocketTypeName = value;
                         break;
 
-                    case "engine":
-                        EngineTypeName = value;
-                        break;
-
-                    case "factory":
-                        FactoryTypeName = value;
-                        break;
+//                    case "engine":
+//                        EngineTypeName = value;
+//                        break;
+//
+//                    case "factory":
+//                        FactoryTypeName = value;
+//                        break;
 
                     case "log":
                         NetworkLogging = value;
@@ -702,8 +691,8 @@ namespace ManagedIrbis.Client
             Workstation = (IrbisWorkstation)reader.ReadPackedInt32();
             NetworkLogging = reader.ReadNullableString();
             SocketTypeName = reader.ReadNullableString();
-            FactoryTypeName = reader.ReadNullableString();
-            EngineTypeName = reader.ReadNullableString();
+            //FactoryTypeName = reader.ReadNullableString();
+            //EngineTypeName = reader.ReadNullableString();
             RetryLimit = reader.ReadPackedInt32();
             WebCgi = reader.ReadNullableString();
 //            Broken = reader.ReadNullableString();
@@ -728,8 +717,8 @@ namespace ManagedIrbis.Client
                 .WritePackedInt32((int)Workstation)
                 .WriteNullable(NetworkLogging)
                 .WriteNullable(SocketTypeName)
-                .WriteNullable(FactoryTypeName)
-                .WriteNullable(EngineTypeName)
+                //.WriteNullable(FactoryTypeName)
+                //.WriteNullable(EngineTypeName)
                 .WritePackedInt32(RetryLimit)
                 .WriteNullable(WebCgi)
 //                .WriteNullable(Broken)

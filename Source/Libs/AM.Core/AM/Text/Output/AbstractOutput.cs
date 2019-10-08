@@ -35,31 +35,24 @@ namespace AM.Text.Output
         /// <summary>
         /// Current <see cref="AbstractOutput"/>.
         /// </summary>
-        [NotNull]
         public static AbstractOutput Current
         {
-            get => _current ?? (_current = Null);
-            set
-            {
-                Sure.NotNull(value, nameof(value));
-
-                _current = value;
-            }
+            get => _current ??= Null;
+            set => _current = value;
         }
 
         /// <summary>
         ///
         /// </summary>
-        [NotNull]
         public static AbstractOutput Null
-            => _null ?? (_null = new NullOutput());
+            => _null ??= new NullOutput();
 
         /// <summary>
         ///
         /// </summary>
         [NotNull]
         public static AbstractOutput Console
-            => _console ?? (_console = new ConsoleOutput());
+            => _console ??= new ConsoleOutput();
 
         #endregion
 
@@ -163,7 +156,7 @@ namespace AM.Text.Output
         /// <returns></returns>
         public AbstractOutput WriteLine
             (
-                string text
+                string? text
             )
         {
             return Write

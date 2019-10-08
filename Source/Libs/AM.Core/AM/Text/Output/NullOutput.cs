@@ -42,7 +42,7 @@ namespace AM.Text.Output
         /// <inheritdoc cref="AbstractOutput.Configure" />
         public override AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             )
         {
             // Noting to do here
@@ -53,7 +53,7 @@ namespace AM.Text.Output
         /// <inheritdoc cref="AbstractOutput.Write(string)" />
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             // Nothing to do here
@@ -64,7 +64,7 @@ namespace AM.Text.Output
         /// <inheritdoc cref="AbstractOutput.WriteError(string)" />
         public override AbstractOutput WriteError
             (
-                string text
+                string? text
             )
         {
             // Nothing to do here

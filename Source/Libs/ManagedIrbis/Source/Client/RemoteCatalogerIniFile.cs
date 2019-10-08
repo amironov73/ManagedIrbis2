@@ -53,10 +53,12 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Имя файла пакетного задания для АВТОВВОДА.
         /// </summary>
-        public string AutoinFile
-        {
-            get { return GetValue(Main, "AUTOINFILE", "autoin.gbl"); }
-        }
+        public string AutoinFile => RequireValue
+            (
+                Main,
+                "AUTOINFILE",
+                "autoin.gbl"
+            );
 
         /// <summary>
         /// Разрешает (значение 1) или запрещает (значение 0)
@@ -67,134 +69,91 @@ namespace ManagedIrbis.Client
         /// по формальному алгоритму: неповторяющиеся поля заменяются,
         /// а оригинальные значения повторяющихся полей суммируются
         /// </summary>
-        public bool AutoMerge
-        {
-            get { return GetBoolean(Main, "AUTOMERGE", "0"); }
-        }
+        public bool AutoMerge => GetBoolean
+            (
+                Main,
+                "AUTOMERGE",
+                "0"
+            );
 
         /// <summary>
         /// Имя краткого (строкa) формата показа.
         /// </summary>
-        public string BriefPft
-        {
-            get { return GetValue(Main, "BRIEFPFT", "brief.pft"); }
-        }
+        public string BriefPft => RequireValue(Main, "BRIEFPFT", "brief.pft");
 
         /// <summary>
         /// Интервал в мин., по истечении которого клиент посылает
         /// на сервер уведомление о том, что он «жив».
         /// </summary>
-        public int ClientTimeLive
-        {
-            get { return GetValue(Main, "CLIENT_TIME_LIVE", 15); }
-        }
+        public int ClientTimeLive => GetValue(Main, "CLIENT_TIME_LIVE", 15);
 
         /// <summary>
         /// Имя файла-справочника со списком ТВП переформатирования
         /// для копирования.
         /// </summary>
-        public string CopyMnu
-        {
-            get { return GetValue(Main, "COPYMNU", "fst.mnu"); }
-        }
+        public string CopyMnu => RequireValue(Main, "COPYMNU", "fst.mnu");
 
         /// <summary>
         /// Метка поля «количество выдач» в БД ЭК.
         /// </summary>
-        public string CountTag
-        {
-            get { return GetValue(Main, "DBNTAGSPROS", "999"); }
-        }
+        public string CountTag => RequireValue(Main, "DBNTAGSPROS", "999");
 
         /// <summary>
         /// Имя файла списка БД для АРМа Каталогизатора/Комплектатора.
         /// </summary>
-        public string DatabaseList
-        {
-            get { return GetValue(Main, "DBNNAMECAT", "dbnam2.mnu"); }
-        }
+        public string DatabaseList => RequireValue(Main, "DBNNAMECAT", "dbnam2.mnu");
 
         /// <summary>
         /// Имя формата для ФЛК документа в целом.
         /// </summary>
-        public string DbnFlc
-        {
-            get { return GetValue(Entry, "DBNFLC", "dbnflc.pft"); }
-        }
+        public string DbnFlc => RequireValue(Entry, "DBNFLC", "dbnflc.pft");
 
         /// <summary>
         /// Имя базы данных по умолчанию.
         /// </summary>
-        public string DefaultDb
-        {
-            get { return GetValue(Main, "DEFAULTDB", "IBIS"); }
-        }
+        public string DefaultDb => RequireValue(Main, "DEFAULTDB", "IBIS");
 
         /// <summary>
         /// Имя шаблона для создания новой БД.
         /// </summary>
-        public string EmptyDbn
-        {
-            get { return GetValue(Main, "EMPTYDBN", "BLANK"); }
-        }
+        public string EmptyDbn => RequireValue(Main, "EMPTYDBN", "BLANK");
 
         /// <summary>
         /// Метка поля «экземпляры» в БД ЭК.
         /// </summary>
-        public string ExemplarTag
-        {
-            get { return GetValue(Main, "DBNTAGEKZ", "910"); }
-        }
+        public string ExemplarTag => RequireValue(Main, "DBNTAGEKZ", "910");
 
         /// <summary>
         /// Имя файла-справочника со списком ТВП переформатирования
         /// для экспорта.
         /// </summary>
-        public string ExportMenu
-        {
-            get { return GetValue(Main, "EXPORTMNU", "export.mnu"); }
-        }
+        public string ExportMenu => RequireValue(Main, "EXPORTMNU", "export.mnu");
 
         /// <summary>
         /// Имя файла-справочника со списком доступных РЛ.
         /// </summary>
-        public string FormatMenu
-        {
-            get { return GetValue(Main, "FMTMNU", "fmt.mnu"); }
-        }
+        public string FormatMenu => RequireValue(Main, "FMTMNU", "fmt.mnu");
 
         /// <summary>
         /// Имя БД, содержащей тематический рубрикатор ГРНТИ.
         /// </summary>
-        public string HelpDbn
-        {
-            get { return GetValue(Main, "HELPDBN", "HELP"); }
-        }
+        public string HelpDbn => RequireValue(Main, "HELPDBN", "HELP");
 
         /// <summary>
         /// Имя файла-справочника со списком ТВП переформатирования
         /// для импорта.
         /// </summary>
-        public string ImportMenu
-        {
-            get { return GetValue(Main, "IMPORTMNU", "import.mnu"); }
-        }
+        public string ImportMenu => RequireValue(Main, "IMPORTMNU", "import.mnu");
 
         /// <summary>
         /// Префикс инверсии для шифра документа в БД ЭК.
         /// </summary>
-        public string IndexPrefix
-        {
-            get { return GetValue(Main, "DBNPREFSHIFR", "I="); }
-        }
+        public string IndexPrefix => RequireValue(Main, "DBNPREFSHIFR", "I=");
 
         /// <summary>
         /// Метка поля «шифр документа» в БД ЭК.
         /// </summary>
-        public string IndexTag
-        {
-            get { return GetValue(Main, "DBNTAGSHIFR", "903"); }
-        }
+        public string IndexTag => RequireValue(Main, "DBNTAGSHIFR", "903");
 
         /// <summary>
         /// INI-file.
@@ -205,35 +164,23 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Имя файла-справочника со списком постоянных запросов.
         /// </summary>
-        public string IriMenu
-        {
-            get { return GetValue(Main, "IRIMNU", "iri.mnu"); }
-        }
+        public string IriMenu => RequireValue(Main, "IRIMNU", "iri.mnu");
 
         /// <summary>
         /// Размер порции для показа кратких описаний.
         /// </summary>
-        public int MaxBriefPortion
-        {
-            get { return GetValue(Main, "MAXBRIEFPORTION", 10); }
-        }
+        public int MaxBriefPortion => GetValue(Main, "MAXBRIEFPORTION", 10);
 
         /// <summary>
         /// Максимальное количество отмеченных документов.
         /// </summary>
-        public int MaxMarked
-        {
-            get { return GetValue(Main, "MAXMARKED", 10); }
-        }
+        public int MaxMarked => GetValue(Main, "MAXMARKED", 10);
 
         /// <summary>
         /// Имя файла-справочника со списком доступных форматов
         /// показа документов.
         /// </summary>
-        public string PftMenu
-        {
-            get { return GetValue(Main, "PFTMNU", "pft.mnu"); }
-        }
+        public string PftMenu => RequireValue(Main, "PFTMNU", "pft.mnu");
 
         /// <summary>
         /// Имя оптимизационного файла, который определяет принцип
@@ -242,10 +189,7 @@ namespace ManagedIrbis.Client
         /// определяет в качестве оптимизированных  RTF-форматы,
         /// а значение PFTW_H.OPT – HTML-форматы
         /// </summary>
-        public string PftOpt
-        {
-            get { return GetValue(Main, "PFTOPT", "pft.opt"); }
-        }
+        public string PftOpt => RequireValue(Main, "PFTOPT", "pft.opt");
 
         ///// <summary>
         ///// Определяет режим работы АРМа для «читателя»,
@@ -269,34 +213,22 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Имя дополнительного INI-файла со сценариями поиска для БД.
         /// </summary>
-        public string SearchIni
-        {
-            get { return GetValue(Main, "SEARCHINI", string.Empty); }
-        }
+        public string SearchIni => RequireValue(Main, "SEARCHINI", string.Empty);
 
         /// <summary>
         /// Имя эталонной БД Электронного каталога.
         /// </summary>
-        public string StandardDbn
-        {
-            get { return GetValue(Main, "ETALONDBN", "IBIS"); }
-        }
+        public string StandardDbn => RequireValue(Main, "ETALONDBN", "IBIS");
 
         /// <summary>
         /// Директория для сохранения временных (выходных) данных.
         /// </summary>
-        public string WorkDirectory
-        {
-            get { return GetValue(Main, "WORKDIR", "/irbiswrk"); }
-        }
+        public string WorkDirectory => RequireValue(Main, "WORKDIR", "/irbiswrk");
 
         /// <summary>
         /// Имя файла оптимизации РЛ ввода.
         /// </summary>
-        public string WsOpt
-        {
-            get { return GetValue(Main, "WSOPT", "ws.opt"); }
-        }
+        public string WsOpt => RequireValue(Main, "WSOPT", "ws.opt");
 
         #endregion
 
@@ -355,12 +287,36 @@ namespace ManagedIrbis.Client
             Sure.NotNullNorEmpty(sectionName, nameof(sectionName));
             Sure.NotNullNorEmpty(keyName, nameof(keyName));
 
-            string result = Ini.GetValue
+            var result = Ini.GetValue
                 (
                     sectionName,
                     keyName,
                     defaultValue
                 );
+
+            return result;
+        }
+
+        /// <summary>
+        /// Get value.
+        /// </summary>
+        public string RequireValue
+            (
+                string sectionName,
+                string keyName,
+                string defaultValue
+            )
+        {
+            Sure.NotNullNorEmpty(sectionName, nameof(sectionName));
+            Sure.NotNullNorEmpty(keyName, nameof(keyName));
+
+            string result = Ini.GetValue
+                (
+                    sectionName,
+                    keyName,
+                    defaultValue
+                )
+                .ThrowIfNull(keyName);
 
             return result;
         }

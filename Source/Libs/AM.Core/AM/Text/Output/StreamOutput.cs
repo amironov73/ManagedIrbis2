@@ -102,7 +102,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             )
         {
             Log.Error
@@ -120,7 +120,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             Writer.Write(text);
@@ -134,7 +134,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput WriteError
             (
-                string text
+                string? text
             )
         {
             Writer.Write(text);

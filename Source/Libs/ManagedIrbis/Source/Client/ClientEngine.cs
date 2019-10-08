@@ -154,7 +154,8 @@ namespace ManagedIrbis.Client
             try
             {
                 Connection.ParseConnectionString(ConnectionString);
-                IniFile iniFile = await Connection.ConnectAsync();
+                var iniFile = await Connection.ConnectAsync()
+                    .ThrowIfNull("Connect");
                 RemoteIni = new RemoteCatalogerIniFile(iniFile);
                 await ReloadContext(true);
             }
@@ -272,15 +273,14 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Require text file from the server.
         /// </summary>
-        [CanBeNull]
-        public async Task<string> ReadTextFile
+        public async Task<string?> ReadTextFile
             (
                 string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            string result = Context.Get(fileName);
+            string? result = Context.Get(fileName);
             if (!string.IsNullOrEmpty(result))
             {
                 WriteLine(string.Format("Reading from cache: {0}", fileName));
@@ -329,7 +329,7 @@ namespace ManagedIrbis.Client
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            string result = Context.Get(fileName);
+            string? result = Context.Get(fileName);
             if (!string.IsNullOrEmpty(result))
             {
                 WriteLine(string.Format("Reading from cache: {0}", fileName));
@@ -340,6 +340,10 @@ namespace ManagedIrbis.Client
                 FileSpecification specification = FileSpecification.Parse(fileName);
                 //result = Connection.RequireTextFile(specification);
                 result = await Connection.ReadTextFileAsync(fileName);
+                if (string.IsNullOrEmpty(result))
+                {
+                    throw new IrbisException(fileName);
+                }
                 Context.Put(fileName, result);
             }
 

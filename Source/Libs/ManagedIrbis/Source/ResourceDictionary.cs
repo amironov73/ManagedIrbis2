@@ -92,29 +92,29 @@ namespace ManagedIrbis
         /// <summary>
         /// Get resource content for name.
         /// </summary>
-        [CanBeNull]
+#nullable disable
         public T Get
             (
-                [NotNull] string name
+                string name
             )
         {
             Sure.NotNullNorEmpty(name, nameof(name));
 
-            IrbisResource<T> resource;
-            if (!_dictionary.TryGetValue(name, out resource))
+            if (!_dictionary.TryGetValue(name, out var resource))
             {
-                return default(T);
+                return default;
             }
 
             return resource.Content;
         }
+#nullable restore
 
         /// <summary>
         /// Determines whether we have the resource with given name.
         /// </summary>
         public bool Have
             (
-                [NotNull] string name
+                string name
             )
         {
             Sure.NotNullNorEmpty(name, nameof(name));

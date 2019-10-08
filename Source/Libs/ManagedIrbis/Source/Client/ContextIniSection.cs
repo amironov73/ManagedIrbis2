@@ -44,25 +44,23 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlElement("database")]
         [JsonProperty("database")]
-        public string Database
+        public string? Database
         {
-            get { return Section["DBN"]; }
-            set { Section["DBN"] = value; }
+            get => Section["DBN"];
+            set => Section["DBN"] = value;
         }
 
         /// <summary>
         /// Display format description.
         /// </summary>
-        [CanBeNull]
         [XmlElement("format")]
         [JsonProperty("format")]
-        public string DisplayFormat
+        public string? DisplayFormat
         {
-            get { return Section["PFT"]; }
-            set { Section["PFT"] = value; }
+            get => Section["PFT"];
+            set => Section["PFT"] = value;
         }
 
         /// <summary>
@@ -72,70 +70,65 @@ namespace ManagedIrbis.Client
         [JsonProperty("mfn")]
         public int Mfn
         {
-            get { return Section.GetValue("CURMFN", 0); }
-            set { Section.SetValue("CURMFN", value); }
+            get => Section.GetValue("CURMFN", 0);
+            set => Section.SetValue("CURMFN", value);
         }
 
         /// <summary>
         /// Password.
         /// </summary>
-        [CanBeNull]
         [XmlElement("password")]
         [JsonProperty("password")]
-        public string Password
+        public string? Password
         {
-            get { return Section["UserPassword"] ?? Section["Password"]; }
-            set { Section["UserPassword"] = value; }
+            get => Section["UserPassword"] ?? Section["Password"];
+            set => Section["UserPassword"] = value;
         }
 
         /// <summary>
         /// Query.
         /// </summary>
-        [CanBeNull]
         [XmlElement("query")]
         [JsonProperty("query")]
-        public string Query
+        public string? Query
         {
             // TODO использовать UTF8
 
-            get { return Section["QUERY"]; }
-            set { Section["QUERY"] = value; }
+            get => Section["QUERY"];
+            set => Section["QUERY"] = value;
         }
 
         /// <summary>
         /// Search prefix.
         /// </summary>
-        [CanBeNull]
         [XmlElement("prefix")]
         [JsonProperty("prefix")]
-        public string SearchPrefix
+        public string? SearchPrefix
         {
-            get { return Section["PREFIX"]; }
-            set { Section["PREFIX"] = value; }
+            get => Section["PREFIX"];
+            set => Section["PREFIX"] = value;
         }
 
         /// <summary>
         /// User name.
         /// </summary>
-        [CanBeNull]
         [XmlElement("username")]
         [JsonProperty("username")]
-        public string UserName
+        public string? UserName
         {
-            get { return Section["UserName"]; }
-            set { Section["UserName"] = value; }
+            get => Section["UserName"];
+            set => Section["UserName"] = value;
         }
 
         /// <summary>
         /// Worksheet code.
         /// </summary>
-        [CanBeNull]
         [XmlElement("worksheet")]
         [JsonProperty("worksheet")]
-        public string Worksheet
+        public string? Worksheet
         {
-            get { return Section["WS"]; }
-            set { Section["WS"] = value; }
+            get => Section["WS"];
+            set => Section["WS"] = value;
         }
 
         #endregion

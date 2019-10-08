@@ -55,18 +55,16 @@ namespace ManagedIrbis
         /// <summary>
         /// Имя базы данных.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("name")]
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Описание базы данных
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("description")]
         [JsonProperty("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         /// <summary>
         /// Максимальный MFN.
@@ -78,38 +76,34 @@ namespace ManagedIrbis
         /// <summary>
         /// Список логически удаленных записей.
         /// </summary>
-        [CanBeNull]
         [XmlArrayItem("mfn")]
         [XmlArray("logicallyDeleted")]
         [JsonProperty("logicallyDeleted", NullValueHandling = NullValueHandling.Ignore)]
-        public int[] LogicallyDeletedRecords { get; set; }
+        public int[]? LogicallyDeletedRecords { get; set; }
 
         /// <summary>
         /// Список физически удаленных записей.
         /// </summary>
-        [CanBeNull]
         [XmlArrayItem("mfn")]
         [XmlArray("physicallyDeleted")]
         [JsonProperty("physicallyDeleted", NullValueHandling = NullValueHandling.Ignore)]
-        public int[] PhysicallyDeletedRecords { get; set; }
+        public int[]? PhysicallyDeletedRecords { get; set; }
 
         /// <summary>
         /// Список неактуализированных записей.
         /// </summary>
-        [CanBeNull]
         [XmlArrayItem("mfn")]
         [XmlArray("nonActualizedRecords")]
         [JsonProperty("nonActualizedRecords", NullValueHandling = NullValueHandling.Ignore)]
-        public int[] NonActualizedRecords { get; set; }
+        public int[]? NonActualizedRecords { get; set; }
 
         /// <summary>
         /// Список заблокированных записей.
         /// </summary>
-        [CanBeNull]
         [XmlArrayItem("mfn")]
         [XmlArray("lockedRecords")]
         [JsonProperty("lockedRecords", NullValueHandling = NullValueHandling.Ignore)]
-        public int[] LockedRecords { get; set; }
+        public int[]? LockedRecords { get; set; }
 
         /// <summary>
         /// Флаг монопольной блокировки базы данных.

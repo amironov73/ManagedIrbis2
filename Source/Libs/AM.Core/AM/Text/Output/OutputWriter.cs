@@ -72,7 +72,10 @@ namespace AM.Text.Output
         /// Writes a string to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write.</param>
-        public override void Write(string? value)
+        public override void Write
+            (
+                string? value
+            )
         {
             Output.Write(value);
         }
@@ -81,7 +84,10 @@ namespace AM.Text.Output
         /// Writes a string followed by a line terminator to the text string or stream.
         /// </summary>
         /// <param name="value">The string to write. If <paramref name="value" /> is null, only the line terminator is written.</param>
-        public override void WriteLine(string value)
+        public override void WriteLine
+            (
+                string? value
+            )
         {
             Output.WriteLine(value);
         }
@@ -99,9 +105,12 @@ namespace AM.Text.Output
         /// Writes a character array to the text string or stream.
         /// </summary>
         /// <param name="buffer">The character array to write to the text stream.</param>
-        public override void Write(char[] buffer)
+        public override void Write(char[]? buffer)
         {
-            Write(new string(buffer));
+            if (!ReferenceEquals(buffer, null))
+            {
+                Write(new string(buffer));
+            }
         }
 
         /// <summary>

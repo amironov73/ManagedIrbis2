@@ -104,9 +104,9 @@ namespace AM.Text.Output
         /// Configures the specified configuration.
         /// </summary>
         public override AbstractOutput Configure
-                    (
-                        string configuration
-                    )
+            (
+                string? configuration
+            )
         {
             InnerOutput.Configure(configuration);
 
@@ -119,7 +119,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             InnerOutput.Write(_GetPrefix());
@@ -134,7 +134,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput WriteError
             (
-                string text
+                string? text
             )
         {
             InnerOutput.WriteError(_GetPrefix());

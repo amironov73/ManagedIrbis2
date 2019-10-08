@@ -28,7 +28,7 @@ namespace ConsoleApp1
             connection.Password = "secret";
             connection.Workstation = "A";
 
-            if (!await connection.ConnectAsync())
+            if (await connection.ConnectAsync() is null)
             {
                 WriteLine("Не удалось подключиться!");
                 return;

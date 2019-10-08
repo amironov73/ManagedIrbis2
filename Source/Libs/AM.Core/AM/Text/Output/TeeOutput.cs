@@ -100,7 +100,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Configure
             (
-                string configuration
+                string? configuration
             )
         {
             // TODO: implement properly
@@ -116,7 +116,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput Write
             (
-                string text
+                string? text
             )
         {
             foreach (AbstractOutput output in Output)
@@ -131,7 +131,7 @@ namespace AM.Text.Output
         /// </summary>
         public override AbstractOutput WriteError
             (
-                string text
+                string? text
             )
         {
             _haveError = true;

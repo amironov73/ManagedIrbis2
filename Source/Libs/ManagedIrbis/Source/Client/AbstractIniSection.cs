@@ -89,7 +89,7 @@ namespace ManagedIrbis.Client
 
         #region Private members
 
-        private readonly IniFile _ourIniFile;
+        private readonly IniFile? _ourIniFile;
 
         #endregion
 

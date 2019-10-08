@@ -31,7 +31,7 @@ namespace AM.Text.Output
         /// <summary>
         /// Имя файла.
         /// </summary>
-        public string? FileName { get { return _fileName; } }
+        public string? FileName => _fileName;
 
         #endregion
 
@@ -80,8 +80,8 @@ namespace AM.Text.Output
         /// </summary>
         public void Open
             (
-                string? fileName,
-                bool append
+                string fileName,
+                bool append = false
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -95,21 +95,6 @@ namespace AM.Text.Output
             _writer = new StreamWriter
                 (
                     File.Open(fileName, fileMode)
-                );
-        }
-
-        /// <summary>
-        /// Открытие файла.
-        /// </summary>
-        public void Open
-            (
-                string? fileName
-            )
-        {
-            Open
-                (
-                    fileName,
-                    false
                 );
         }
 
@@ -186,7 +171,10 @@ namespace AM.Text.Output
         {
             // TODO: implement properly
 
-            Open(configuration);
+            if (!string.IsNullOrEmpty(configuration))
+            {
+                Open(configuration);
+            }
 
             return this;
         }
@@ -200,7 +188,8 @@ namespace AM.Text.Output
                 string? text
             )
         {
-            if (!ReferenceEquals(_writer, null))
+            if (!ReferenceEquals(_writer, null)
+                && !string.IsNullOrEmpty(text))
             {
                 _writer.Write(text);
                 _writer.Flush();
@@ -235,7 +224,7 @@ namespace AM.Text.Output
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public override void Dispose()
         {
-            if (_writer != null)
+            if (!ReferenceEquals(_writer, null))
             {
                 _writer.Dispose();
                 _writer = null;
