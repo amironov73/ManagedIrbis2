@@ -24,6 +24,16 @@ namespace AM.PlatformAbstraction
     public class PlatformAbstractionLayer
         : IDisposable
     {
+        #region Properties
+
+        /// <summary>
+        /// Current PAL.
+        /// </summary>
+        public static PlatformAbstractionLayer Current
+            = new PlatformAbstractionLayer();
+
+        #endregion
+
         #region Public methods
 
         /// <summary>

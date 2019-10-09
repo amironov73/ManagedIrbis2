@@ -140,7 +140,9 @@ namespace AM
             {
                 Log.Error
                     (
-                        nameof(RetryManager) + "::" + nameof(_Resolve)
+                        nameof(RetryManager)
+                        + "::"
+                        + nameof(_Resolve)
                         + ": couldn't resolve: "
                         + ex.GetType().Name
                     );
@@ -204,14 +206,6 @@ namespace AM
                     _Resolve(i, ex);
                 }
             }
-
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
-
-            throw new ArsMagnaException("RetryManager failed");
         }
 
         /// <summary>
@@ -236,14 +230,6 @@ namespace AM
                     _Resolve(i, ex);
                 }
             }
-
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
-
-            throw new ArsMagnaException("RetryManager failed");
         }
 
         /// <summary>
@@ -269,14 +255,6 @@ namespace AM
                     _Resolve(i, ex);
                 }
             }
-
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
-
-            throw new ArsMagnaException("RetryManager failed");
         }
 
         /// <summary>
@@ -298,12 +276,6 @@ namespace AM
                     _Resolve(i, ex);
                 }
             }
-
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
 
             throw new ArsMagnaException("RetryManager failed");
         }
@@ -329,11 +301,6 @@ namespace AM
                 }
             }
 
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
 
             throw new ArsMagnaException("RetryManager failed");
         }
@@ -360,12 +327,6 @@ namespace AM
                 }
             }
 
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
-
             throw new ArsMagnaException("RetryManager failed");
         }
 
@@ -391,12 +352,6 @@ namespace AM
                     _Resolve(i, ex);
                 }
             }
-
-            Log.Error
-                (
-                    nameof(RetryManager) + "::" + nameof(Try)
-                    + ": giving up"
-                );
 
             throw new ArsMagnaException("RetryManager failed");
         }

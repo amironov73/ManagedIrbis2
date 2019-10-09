@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AM;
 using AM.Collections;
 
+// ReSharper disable InvokeAsExtensionMethod
 // ReSharper disable ForCanBeConvertedToForeach
 
 namespace UnitTests.AM
@@ -215,6 +216,17 @@ namespace UnitTests.AM
         }
 
         [TestMethod]
+        public void ArrayUtility_SafeLength_1()
+        {
+            int[] array = new int[0];
+            Assert.AreEqual(0, ArrayUtility.SafeLength(array));
+            array = new[] { 1, 2, 3 };
+            Assert.AreEqual(3, ArrayUtility.SafeLength(array));
+            array = null;
+            Assert.AreEqual(0, ArrayUtility.SafeLength(array));
+        }
+
+        [TestMethod]
         public void ArrayUtility_ToString_1()
         {
             int[] array = { 1, 2, 3 };
@@ -228,6 +240,17 @@ namespace UnitTests.AM
                         lines[i]
                     );
             }
+        }
+
+        [TestMethod]
+        public void ArrayUtility_ToString_2()
+        {
+            string[] array = {"one", null, "three"};
+            string[] lines = ArrayUtility.ToString(array);
+            Assert.AreEqual(3, lines.Length);
+            Assert.AreEqual("one", lines[0]);
+            Assert.AreEqual("(null)", lines[1]);
+            Assert.AreEqual("three", lines[2]);
         }
 
         [TestMethod]

@@ -22,7 +22,6 @@ namespace AM.ConsoleIO
     ///
     /// </summary>
     [PublicAPI]
-    [ExcludeFromCodeCoverage]
     public sealed class NullConsole
         : IConsoleDriver
     {

@@ -12,6 +12,8 @@
 using System;
 using System.Globalization;
 
+using AM.PlatformAbstraction;
+
 using JetBrains.Annotations;
 
 #endregion
@@ -58,7 +60,7 @@ namespace AM
         {
             get
             {
-                var today = DateTime.Today;
+                var today = PlatformAbstractionLayer.Current.Today();
 
                 return new DateTime(today.Year, today.Month, 1);
             }
@@ -68,19 +70,24 @@ namespace AM
         /// Gets the date of current year first day.
         /// </summary>
         /// <value>Current year first day.</value>
-        public static DateTime ThisYear => new DateTime(DateTime.Today.Year, 1, 1);
+        public static DateTime ThisYear => new DateTime
+            (
+                PlatformAbstractionLayer.Current.Today().Year,
+                1,
+                1
+            );
 
         /// <summary>
         /// Gets the date for tomorrow.
         /// </summary>
         /// <value>Tomorrow date.</value>
-        public static DateTime Tomorrow => DateTime.Today.AddDays(1.0);
+        public static DateTime Tomorrow => PlatformAbstractionLayer.Current.Today().AddDays(1.0);
 
         /// <summary>
         /// Gets the for yesterday.
         /// </summary>
         /// <value>Yesterday date.</value>
-        public static DateTime Yesterday => DateTime.Today.AddDays(-1.0);
+        public static DateTime Yesterday => PlatformAbstractionLayer.Current.Today().AddDays(-1.0);
 
         #endregion
 
