@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* Optional.cs -- 
+/* Optional.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -18,12 +18,13 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <remarks>
     /// Borrowed from StackOverflow:
     /// http://stackoverflow.com/questions/16199227/optional-return-in-c-net
     /// </remarks>
+#nullable disable
     [PublicAPI]
     public struct Optional<T>
         : IEquatable<Optional<T>>
@@ -171,4 +172,5 @@ namespace AM
 
         #endregion
     }
+#nullable restore
 }

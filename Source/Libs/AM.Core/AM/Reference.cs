@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 /* Reference.cs -- Generic reference to given object
- * Ars Magna project, http://arsmagna.ru 
+ * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
  */
@@ -19,11 +19,12 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// Generic reference to given object. Allows 
+    /// Generic reference to given object. Allows
     /// to track object changes.
     /// </summary>
     /// <typeparam name="T">Type of object to reference.
     /// </typeparam>
+#nullable disable
     [PublicAPI]
     [DebuggerDisplay("{Target}")]
     public class Reference<T>
@@ -166,4 +167,5 @@ namespace AM
 
         #endregion
     }
+#nullable restore
 }

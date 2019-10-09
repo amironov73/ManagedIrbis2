@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* TextBuffer.cs -- 
+/* TextBuffer.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -15,10 +15,12 @@ using JetBrains.Annotations;
 
 #endregion
 
+// ReSharper disable CommentTypo
+
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public sealed class TextBuffer
@@ -28,17 +30,17 @@ namespace AM.Text
         /// <summary>
         /// Column number (starting from 1).
         /// </summary>
-        public int Column => _column;
+        public int Column { get; private set; }
 
         /// <summary>
         /// Length (number of characters stored).
         /// </summary>
-        public int Length => _length;
+        public int Length { get; private set; }
 
         /// <summary>
         /// Line number (starting from 1).
         /// </summary>
-        public int Line => _line;
+        public int Line { get; private set; }
 
         #endregion
 
@@ -50,8 +52,8 @@ namespace AM.Text
         public TextBuffer()
         {
             _array = new char[1024];
-            _column = 1;
-            _line = 1;
+            Column = 1;
+            Line = 1;
         }
 
         #endregion
@@ -60,18 +62,16 @@ namespace AM.Text
 
         private char[] _array;
 
-        private int _length, _column, _line;
-
         private void _CalculateColumn()
         {
-            for (int i = _length - 1; i >= 0; i--)
+            for (var i = Length - 1; i >= 0; i--)
             {
                 if (_array[i] == '\n')
                 {
                     break;
                 }
 
-                _column++;
+                Column++;
             }
         }
 
@@ -80,8 +80,8 @@ namespace AM.Text
                 int required
             )
         {
-            int length = _array.Length;
-            bool needResize = false;
+            var length = _array.Length;
+            var needResize = false;
 
             while (length < required)
             {
@@ -104,17 +104,17 @@ namespace AM.Text
         /// </summary>
         public bool Backspace()
         {
-            if (_length == 0)
+            if (Length == 0)
             {
                 return false;
             }
 
-            _length--;
-            _column--;
-            if (_column == 0)
+            Length--;
+            Column--;
+            if (Column == 0)
             {
-                _line--;
-                _column = 1;
+                Line--;
+                Column = 1;
                 _CalculateColumn();
             }
 
@@ -124,12 +124,11 @@ namespace AM.Text
         /// <summary>
         /// Clear all text in the buffer.
         /// </summary>
-        [NotNull]
         public TextBuffer Clear()
         {
-            _length = 0;
-            _line = 1;
-            _column = 1;
+            Length = 0;
+            Line = 1;
+            Column = 1;
 
             return this;
         }
@@ -140,12 +139,12 @@ namespace AM.Text
         [Pure]
         public char GetLastChar()
         {
-            if (_length == 0)
+            if (Length == 0)
             {
                 return '\0';
             }
 
-            char result = _array[_length - 1];
+            var result = _array[Length - 1];
 
             return result;
         }
@@ -155,18 +154,18 @@ namespace AM.Text
         /// </summary>
         public bool PrecededByNewLine()
         {
-            char[] newLine = Environment.NewLine.ToCharArray();
-            int len = newLine.Length;
+            var newLine = Environment.NewLine.ToCharArray();
+            var len = newLine.Length;
 
-            if (_length < len)
+            if (Length < len)
             {
                 return false;
             }
 
-            bool result = ArrayUtility.Coincide
+            var result = ArrayUtility.Coincide
                 (
                     _array,
-                    _length - len,
+                    Length - len,
                     newLine,
                     0,
                     len
@@ -178,18 +177,17 @@ namespace AM.Text
         /// <summary>
         /// Remove last empty lines.
         /// </summary>
-        [NotNull]
         public TextBuffer RemoveEmptyLines()
         {
-            char[] newLine = Environment.NewLine.ToCharArray();
-            int len = newLine.Length;
+            var newLine = Environment.NewLine.ToCharArray();
+            var len = newLine.Length;
 
-            while (_length > len)
+            while (Length > len)
             {
                 if (!ArrayUtility.Coincide
                     (
                         _array,
-                        _length - len,
+                        Length - len,
                         newLine,
                         0,
                         len
@@ -198,9 +196,9 @@ namespace AM.Text
                     break;
                 }
 
-                _length -= len;
-                _line--;
-                _column = 1;
+                Length -= len;
+                Line--;
+                Column = 1;
                 _CalculateColumn();
             }
 
@@ -210,24 +208,23 @@ namespace AM.Text
         /// <summary>
         /// Write the character.
         /// </summary>
-        [NotNull]
         public TextBuffer Write
             (
                 char c
             )
         {
-            _EnsureCapacity(_length + 1);
-            _array[_length] = c;
-            _length++;
+            _EnsureCapacity(Length + 1);
+            _array[Length] = c;
+            Length++;
 
             if (c == '\n')
             {
-                _line++;
-                _column = 1;
+                Line++;
+                Column = 1;
             }
             else
             {
-                _column++;
+                Column++;
             }
 
             return this;
@@ -236,33 +233,32 @@ namespace AM.Text
         /// <summary>
         /// Write the text.
         /// </summary>
-        [NotNull]
         public TextBuffer Write
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return this;
             }
 
-            char[] characters = text.ToCharArray();
-            _EnsureCapacity(_length + characters.Length);
+            var characters = text.ToCharArray();
+            _EnsureCapacity(Length + characters.Length);
 
-            foreach (char c in characters)
+            foreach (var c in characters)
             {
                 if (c == '\n')
                 {
-                    _line++;
-                    _column = 1;
+                    Line++;
+                    Column = 1;
                 }
                 else
                 {
-                    _column++;
+                    Column++;
                 }
-                _array[_length] = c;
-                _length++;
+                _array[Length] = c;
+                Length++;
             }
 
             return this;
@@ -271,16 +267,13 @@ namespace AM.Text
         /// <summary>
         /// Write formatted text.
         /// </summary>
-        [NotNull]
         public TextBuffer Write
             (
-                [NotNull] string format,
+                string format,
                 params object[] arguments
             )
         {
-            Sure.NotNull(format, nameof(format));
-
-            string text = string.Format(format, arguments);
+            var text = string.Format(format, arguments);
 
             return Write(text);
         }
@@ -288,7 +281,6 @@ namespace AM.Text
         /// <summary>
         /// Write new line symbol.
         /// </summary>
-        [NotNull]
         public TextBuffer WriteLine()
         {
             return Write(Environment.NewLine);
@@ -297,10 +289,9 @@ namespace AM.Text
         /// <summary>
         /// Write text followed by new line symbol.
         /// </summary>
-        [NotNull]
         public TextBuffer WriteLine
             (
-                [CanBeNull] string text
+                string? text
             )
         {
             Write(text);
@@ -311,16 +302,15 @@ namespace AM.Text
         /// <summary>
         /// Write formatted text followed by new line symbol.
         /// </summary>
-        [NotNull]
         public TextBuffer WriteLine
             (
-                [NotNull] string format,
+                string format,
                 params object[] arguments
             )
         {
             Sure.NotNull(format, nameof(format));
 
-            string text = string.Format(format, arguments);
+            var text = string.Format(format, arguments);
 
             return WriteLine(text);
         }
@@ -332,7 +322,7 @@ namespace AM.Text
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            return new string(_array, 0, _length);
+            return new string(_array, 0, Length);
         }
 
         #endregion

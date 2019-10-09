@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* Operator.cs -- 
+/* Operator.cs --
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -32,7 +32,7 @@ namespace AM
         /// Operator "new".
         /// </summary>
         // ReSharper disable once ConvertToAutoProperty
-        public static Func<T> New { get { return _new; } }
+        public static Func<T> New => _new;
 
         #endregion
 
