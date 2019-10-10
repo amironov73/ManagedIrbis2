@@ -190,7 +190,7 @@ namespace UnitTests.AM.Text
         public void TextWithEncoding_ToString_1()
         {
             TextWithEncoding text = new TextWithEncoding();
-            Assert.AreEqual(string.Empty, text.ToString());
+            Assert.AreEqual("(null)", text.ToString());
 
             text = "Hello";
             Assert.AreEqual("Hello", text.ToString());

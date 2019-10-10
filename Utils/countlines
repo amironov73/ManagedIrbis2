@@ -7,3 +7,4 @@ echo Lines: `find $SRC/ -name '*.cs' -exec cat {} \; | wc -l`
 echo Bytes: `find $SRC/ -name '*.cs' -exec cat {} \; | wc -c`
 
 cloc --include-lang=C# Source/Libs
+cloc --include-lang=C# Source/UnitTests

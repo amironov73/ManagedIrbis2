@@ -187,18 +187,54 @@ namespace AM
         }
 
         /// <summary>
-        /// Поиск начала строки.
+        /// Replicates given string.
+        /// </summary>
+        /// <param name="text">String to replicate.</param>
+        /// <param name="times">How many times.</param>
+        /// <returns>Replicated string.</returns>
+        /// <remarks><c>Replicate ( null, AnyNumber )</c>
+        /// yields <c>null</c>.
+        /// </remarks>
+        public static string? Replicate
+            (
+                string? text,
+                int times
+            )
+        {
+            if (ReferenceEquals(text, null))
+            {
+                return null;
+            }
+
+            unchecked
+            {
+                var length = text.Length * times;
+                if (length <= 0)
+                {
+                    return string.Empty;
+                }
+
+                var result = new StringBuilder(length);
+                for (; times > 0; times--)
+                {
+                    result.Append(text);
+                }
+
+                return result.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Строка начинается с указанного фрагмента?
         /// </summary>
         public static bool SafeStarts
             (
-                [CanBeNull] this string text,
-                [CanBeNull] string begin
+                this string? text,
+                string? begin
             )
         {
-            if (ReferenceEquals(text, null)
-                || text.Length == 0
-                || ReferenceEquals(begin, null)
-                || begin.Length == 0)
+            if (string.IsNullOrEmpty(text)
+                || string.IsNullOrEmpty(begin))
             {
                 return false;
             }
