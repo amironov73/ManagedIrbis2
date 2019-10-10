@@ -121,13 +121,13 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABC";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual(text, navigator.GetRemainingText());
+            Assert.AreEqual(text, navigator.GetRemainingText().ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC", navigator.GetRemainingText());
+            Assert.AreEqual("BC", navigator.GetRemainingText().ToString());
             navigator.ReadChar();
-            Assert.AreEqual("C", navigator.GetRemainingText());
+            Assert.AreEqual("C", navigator.GetRemainingText().ToString());
             navigator.ReadChar();
-            Assert.IsNull(navigator.GetRemainingText());
+            Assert.IsTrue(navigator.GetRemainingText().IsEmpty);
         }
 
         [TestMethod]
@@ -330,13 +330,13 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABC";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("AB", navigator.PeekString(2));
+            Assert.AreEqual("AB", navigator.PeekString(2).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC", navigator.PeekString(2));
+            Assert.AreEqual("BC", navigator.PeekString(2).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("C", navigator.PeekString(2));
+            Assert.AreEqual("C", navigator.PeekString(2).ToString());
             navigator.ReadChar();
-            Assert.IsNull(navigator.PeekString(2));
+            Assert.IsTrue(navigator.PeekString(2).IsEmpty);
         }
 
         [TestMethod]
@@ -344,16 +344,16 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABC]DEF";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC]", navigator.PeekTo(']'));
+            Assert.AreEqual("ABC]", navigator.PeekTo(']').ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC]", navigator.PeekTo(']'));
+            Assert.AreEqual("BC]", navigator.PeekTo(']').ToString());
             navigator.ReadChar();
             navigator.ReadChar();
-            Assert.AreEqual("]", navigator.PeekTo(']'));
+            Assert.AreEqual("]", navigator.PeekTo(']').ToString());
             navigator.ReadChar();
-            Assert.AreEqual("DEF", navigator.PeekTo(']'));
+            Assert.AreEqual("DEF", navigator.PeekTo(']').ToString());
             navigator.Move(3);
-            Assert.IsNull(navigator.PeekTo(']'));
+            Assert.IsTrue(navigator.PeekTo(']').IsEmpty);
         }
 
         [TestMethod]
@@ -362,18 +362,18 @@ namespace UnitTests.AM.Text
             const string text = "ABC]DE+F";
             char[] stop = { ']', '+' };
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC]", navigator.PeekTo(stop));
+            Assert.AreEqual("ABC]", navigator.PeekTo(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC]", navigator.PeekTo(stop));
+            Assert.AreEqual("BC]", navigator.PeekTo(stop).ToString());
             navigator.ReadChar();
             navigator.ReadChar();
-            Assert.AreEqual("]", navigator.PeekTo(stop));
+            Assert.AreEqual("]", navigator.PeekTo(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("DE+", navigator.PeekTo(stop));
+            Assert.AreEqual("DE+", navigator.PeekTo(stop).ToString());
             navigator.Move(3);
-            Assert.AreEqual("F", navigator.PeekTo(stop));
+            Assert.AreEqual("F", navigator.PeekTo(stop).ToString());
             navigator.ReadChar();
-            Assert.IsNull(navigator.PeekTo(stop));
+            Assert.IsTrue(navigator.PeekTo(stop).IsEmpty);
         }
 
         [TestMethod]
@@ -381,16 +381,16 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABC]DEF";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC", navigator.PeekUntil(']'));
+            Assert.AreEqual("ABC", navigator.PeekUntil(']').ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC", navigator.PeekUntil(']'));
+            Assert.AreEqual("BC", navigator.PeekUntil(']').ToString());
             navigator.ReadChar();
             navigator.ReadChar();
-            Assert.AreEqual(string.Empty, navigator.PeekUntil(']'));
+            Assert.AreEqual(string.Empty, navigator.PeekUntil(']').ToString());
             navigator.ReadChar();
-            Assert.AreEqual("DEF", navigator.PeekUntil(']'));
+            Assert.AreEqual("DEF", navigator.PeekUntil(']').ToString());
             navigator.Move(3);
-            Assert.IsNull(navigator.PeekUntil(']'));
+            Assert.IsTrue(navigator.PeekUntil(']').IsEmpty);
         }
 
         [TestMethod]
@@ -399,18 +399,18 @@ namespace UnitTests.AM.Text
             const string text = "ABC]DE+F";
             char[] stop = { ']', '+' };
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC", navigator.PeekUntil(stop));
+            Assert.AreEqual("ABC", navigator.PeekUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("BC", navigator.PeekUntil(stop));
+            Assert.AreEqual("BC", navigator.PeekUntil(stop).ToString());
             navigator.ReadChar();
             navigator.ReadChar();
-            Assert.AreEqual(string.Empty, navigator.PeekUntil(stop));
+            Assert.AreEqual(string.Empty, navigator.PeekUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("DE", navigator.PeekUntil(stop));
+            Assert.AreEqual("DE", navigator.PeekUntil(stop).ToString());
             navigator.Move(3);
-            Assert.AreEqual("F", navigator.PeekUntil(stop));
+            Assert.AreEqual("F", navigator.PeekUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.IsNull(navigator.PeekUntil(stop));
+            Assert.IsTrue(navigator.PeekUntil(stop).IsEmpty);
         }
 
         [TestMethod]
@@ -462,22 +462,22 @@ namespace UnitTests.AM.Text
         {
             const string text1 = "'ABC'DEF";
             TextNavigator navigator = new TextNavigator(text1);
-            string actual = navigator.ReadFrom('\'', '\'');
+            string actual = navigator.ReadFrom('\'', '\'').ToString();
             Assert.AreEqual("'ABC'", actual);
 
             const string text2 = "'ABCDEF";
             navigator = new TextNavigator(text2);
-            actual = navigator.ReadFrom('\'', '\'');
+            actual = navigator.ReadFrom('\'', '\'').ToString();
             Assert.AreEqual(string.Empty, actual);
 
             const string text3 = "ABC'DEF";
             navigator = new TextNavigator(text3);
-            actual = navigator.ReadFrom('\'', '\'');
+            actual = navigator.ReadFrom('\'', '\'').ToString();
             Assert.AreEqual(string.Empty, actual);
 
             navigator = new TextNavigator(string.Empty);
-            actual = navigator.ReadFrom('\'', '\'');
-            Assert.IsNull(actual);
+            var actual2 = navigator.ReadFrom('\'', '\'');
+            Assert.IsTrue(actual2.IsEmpty);
         }
 
         [TestMethod]
@@ -486,22 +486,22 @@ namespace UnitTests.AM.Text
             const string text1 = "[ABC>DEF";
             char[] open = { '[', '<' }, close = { '>', '>' };
             TextNavigator navigator = new TextNavigator(text1);
-            string actual = navigator.ReadFrom(open, close);
+            string actual = navigator.ReadFrom(open, close).ToString();
             Assert.AreEqual("[ABC>", actual);
 
             const string text2 = "[ABCDEF";
             navigator = new TextNavigator(text2);
-            actual = navigator.ReadFrom(open, close);
+            actual = navigator.ReadFrom(open, close).ToString();
             Assert.AreEqual(string.Empty, actual);
 
             const string text3 = "ABC[DEF";
             navigator = new TextNavigator(text3);
-            actual = navigator.ReadFrom(open, close);
+            actual = navigator.ReadFrom(open, close).ToString();
             Assert.AreEqual(string.Empty, actual);
 
             navigator = new TextNavigator(string.Empty);
-            actual = navigator.ReadFrom(open, close);
-            Assert.IsNull(actual);
+            var actual2 = navigator.ReadFrom(open, close);
+            Assert.IsTrue(actual2.IsEmpty);
         }
 
         [TestMethod]
@@ -509,15 +509,15 @@ namespace UnitTests.AM.Text
         {
             const string text1 = "314abc";
             TextNavigator navigator = new TextNavigator(text1);
-            string actual = navigator.ReadInteger();
+            string actual = navigator.ReadInteger().ToString();
             Assert.AreEqual("314", actual);
 
-            actual = navigator.ReadInteger();
+            actual = navigator.ReadInteger().ToString();
             Assert.AreEqual(string.Empty, actual);
 
             navigator = new TextNavigator(string.Empty);
-            actual = navigator.ReadInteger();
-            Assert.IsNull(actual);
+            var actual2 = navigator.ReadInteger();
+            Assert.IsTrue(actual2.IsEmpty);
         }
 
         [TestMethod]
@@ -525,9 +525,9 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABC\r\nDEF";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC", navigator.ReadLine());
-            Assert.AreEqual("DEF", navigator.ReadLine());
-            Assert.IsNull(navigator.ReadLine());
+            Assert.AreEqual("ABC", navigator.ReadLine().ToString());
+            Assert.AreEqual("DEF", navigator.ReadLine().ToString());
+            Assert.IsTrue(navigator.ReadLine().IsEmpty);
         }
 
         [TestMethod]
@@ -535,9 +535,9 @@ namespace UnitTests.AM.Text
         {
             const string text = "ABCDEF";
             TextNavigator navigator = new TextNavigator(text);
-            Assert.AreEqual("ABC", navigator.ReadString(3));
-            Assert.AreEqual("DEF", navigator.ReadString(4));
-            Assert.IsNull(navigator.ReadString(3));
+            Assert.AreEqual("ABC", navigator.ReadString(3).ToString());
+            Assert.AreEqual("DEF", navigator.ReadString(4).ToString());
+            Assert.IsTrue(navigator.ReadString(3).IsEmpty);
         }
 
         [TestMethod]
@@ -546,17 +546,17 @@ namespace UnitTests.AM.Text
             const string text1 = "'ABC'DEF";
             TextNavigator navigator = new TextNavigator(text1);
             char open = navigator.ReadChar();
-            string actual = navigator.ReadTo(open);
+            string actual = navigator.ReadTo(open).ToString();
             Assert.AreEqual("ABC'", actual);
 
             const string text2 = "'ABC";
             navigator = new TextNavigator(text2);
             open = navigator.ReadChar();
-            actual = navigator.ReadTo(open);
+            actual = navigator.ReadTo(open).ToString();
             Assert.AreEqual("ABC", actual);
 
             navigator = new TextNavigator(string.Empty);
-            Assert.IsNull(navigator.ReadTo(open));
+            Assert.IsTrue(navigator.ReadTo(open).IsEmpty);
         }
 
         [TestMethod]
@@ -564,27 +564,27 @@ namespace UnitTests.AM.Text
         {
             char[] stop = { ']', '>' };
             TextNavigator navigator = new TextNavigator("ABC]>DEF");
-            Assert.AreEqual("ABC]", navigator.ReadTo(stop));
-            Assert.AreEqual(">", navigator.ReadTo(stop));
-            Assert.AreEqual("DEF", navigator.ReadTo(stop));
-            Assert.IsNull(navigator.ReadTo(stop));
+            Assert.AreEqual("ABC]", navigator.ReadTo(stop).ToString());
+            Assert.AreEqual(">", navigator.ReadTo(stop).ToString());
+            Assert.AreEqual("DEF", navigator.ReadTo(stop).ToString());
+            Assert.IsTrue(navigator.ReadTo(stop).IsEmpty);
         }
 
         [TestMethod]
         public void TextNavigator_ReadTo_3()
         {
             TextNavigator navigator = new TextNavigator("314abc>>>hello");
-            string actual = navigator.ReadTo(">>>");
+            string actual = navigator.ReadTo(">>>").ToString();
             Assert.AreEqual("314abc", actual);
-            Assert.AreEqual("hello", navigator.GetRemainingText());
+            Assert.AreEqual("hello", navigator.GetRemainingText().ToString());
 
             navigator = new TextNavigator("314abc>>hello");
-            actual = navigator.ReadTo(">>>");
-            Assert.IsNull(actual);
-            Assert.AreEqual("314abc>>hello", navigator.GetRemainingText());
+            actual = navigator.ReadTo(">>>").ToString();
+            Assert.IsTrue(string.IsNullOrEmpty(actual));
+            Assert.AreEqual("314abc>>hello", navigator.GetRemainingText().ToString());
 
             navigator = new TextNavigator(string.Empty);
-            Assert.IsNull(navigator.ReadTo(">>>"));
+            Assert.IsTrue(navigator.ReadTo(">>>").IsEmpty);
         }
 
         [TestMethod]
@@ -593,11 +593,11 @@ namespace UnitTests.AM.Text
             const string text = "'ABC'DEF";
             TextNavigator navigator = new TextNavigator(text);
             char open = navigator.ReadChar();
-            string actual = navigator.ReadUntil(open);
+            string actual = navigator.ReadUntil(open).ToString();
             Assert.AreEqual("ABC", actual);
 
             navigator = new TextNavigator(string.Empty);
-            Assert.IsNull(navigator.ReadUntil(open));
+            Assert.IsTrue(navigator.ReadUntil(open).IsEmpty);
         }
 
         [TestMethod]
@@ -609,70 +609,70 @@ namespace UnitTests.AM.Text
             char[] stopChars2 = { ']' };
 
             TextNavigator navigator = new TextNavigator("12345)");
-            string actual = navigator.ReadUntil(openChars, closeChars, stopChars);
+            string actual = navigator.ReadUntil(openChars, closeChars, stopChars).ToString();
             Assert.AreEqual("12345", actual);
 
             navigator = new TextNavigator("12(3)(4)5)");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars).ToString();
             Assert.AreEqual("12(3)(4)5", actual);
 
             navigator = new TextNavigator("12(3(4))5)");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars).ToString();
             Assert.AreEqual("12(3(4))5", actual);
 
             navigator = new TextNavigator("12(3(4))5");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars);
-            Assert.IsNull(actual);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars).ToString();
+            Assert.IsTrue(string.IsNullOrEmpty(actual));
 
             navigator = new TextNavigator("12(3(4)5)");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars);
-            Assert.IsNull(actual);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars).ToString();
+            Assert.IsTrue(string.IsNullOrEmpty(actual));
 
             navigator = new TextNavigator("1234]5)");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars2);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars2).ToString();
             Assert.AreEqual("1234", actual);
 
             navigator = new TextNavigator("123(4])]5)");
-            actual = navigator.ReadUntil(openChars, closeChars, stopChars2);
+            actual = navigator.ReadUntil(openChars, closeChars, stopChars2).ToString();
             Assert.AreEqual("123(4])", actual);
 
             navigator = new TextNavigator(string.Empty);
-            Assert.IsNull(navigator.ReadUntil(openChars, closeChars, stopChars));
+            Assert.IsTrue(navigator.ReadUntil(openChars, closeChars, stopChars).IsEmpty);
         }
 
         [TestMethod]
         public void TextNavigator_ReadUntil_3()
         {
             TextNavigator navigator = new TextNavigator("12345<.>");
-            string actual = navigator.ReadUntil("<.>");
+            string actual = navigator.ReadUntil("<.>").ToString();
             Assert.AreEqual("12345", actual);
-            Assert.AreEqual("<.>", navigator.PeekString(3));
-            Assert.AreEqual("<.>", navigator.GetRemainingText());
+            Assert.AreEqual("<.>", navigator.PeekString(3).ToString());
+            Assert.AreEqual("<.>", navigator.GetRemainingText().ToString());
 
             navigator = new TextNavigator("12345");
-            actual = navigator.ReadUntil("<.>");
-            Assert.IsNull(actual);
+            var actual2 = navigator.ReadUntil("<.>");
+            Assert.IsTrue(actual2.IsEmpty);
 
             navigator = new TextNavigator("12345<");
-            actual = navigator.ReadUntil("<.>");
-            Assert.IsNull(actual);
+            actual2 = navigator.ReadUntil("<.>");
+            Assert.IsTrue(actual2.IsEmpty);
 
             navigator = new TextNavigator("12345<.");
-            actual = navigator.ReadUntil("<.>");
-            Assert.IsNull(actual);
+            actual2 = navigator.ReadUntil("<.>");
+            Assert.IsTrue(actual2.IsEmpty);
 
             navigator = new TextNavigator("12345<.6>");
-            actual = navigator.ReadUntil("<.>");
-            Assert.IsNull(actual);
+            actual2 = navigator.ReadUntil("<.>");
+            Assert.IsTrue(actual2.IsEmpty);
 
             navigator = new TextNavigator("12345<.>67890");
-            actual = navigator.ReadUntil("<.>");
+            actual = navigator.ReadUntil("<.>").ToString();
             Assert.AreEqual("12345", actual);
-            Assert.AreEqual("<.>", navigator.PeekString(3));
-            Assert.AreEqual("<.>67890", navigator.GetRemainingText());
+            Assert.AreEqual("<.>", navigator.PeekString(3).ToString());
+            Assert.AreEqual("<.>67890", navigator.GetRemainingText().ToString());
 
             navigator = new TextNavigator(string.Empty);
-            Assert.IsNull(navigator.ReadUntil("<.>"));
+            Assert.IsTrue(navigator.ReadUntil("<.>").IsEmpty);
         }
 
         [TestMethod]
@@ -680,23 +680,23 @@ namespace UnitTests.AM.Text
         {
             char[] stop = { ']', '>' };
             TextNavigator navigator = new TextNavigator("ABC>]DEF");
-            Assert.AreEqual("ABC", navigator.ReadUntil(stop));
+            Assert.AreEqual("ABC", navigator.ReadUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual(string.Empty, navigator.ReadUntil(stop));
+            Assert.AreEqual(string.Empty, navigator.ReadUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.AreEqual("DEF", navigator.ReadUntil(stop));
+            Assert.AreEqual("DEF", navigator.ReadUntil(stop).ToString());
             navigator.ReadChar();
-            Assert.IsNull(navigator.ReadUntil(stop));
+            Assert.IsTrue(navigator.ReadUntil(stop).IsEmpty);
         }
 
         [TestMethod]
         public void TextNavigator_ReadWhile_1()
         {
             TextNavigator navigator = new TextNavigator("111234");
-            Assert.AreEqual("111", navigator.ReadWhile('1'));
-            Assert.AreEqual(string.Empty, navigator.ReadWhile('1'));
+            Assert.AreEqual("111", navigator.ReadWhile('1').ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWhile('1').ToString());
             navigator.Move(3);
-            Assert.IsNull(navigator.ReadWhile('1'));
+            Assert.IsTrue(navigator.ReadWhile('1').IsEmpty);
         }
 
         [TestMethod]
@@ -705,23 +705,23 @@ namespace UnitTests.AM.Text
             const string text1 = "314abc";
             char[] good = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
             TextNavigator navigator = new TextNavigator(text1);
-            Assert.AreEqual("314", navigator.ReadWhile(good));
-            Assert.AreEqual(string.Empty, navigator.ReadWhile(good));
+            Assert.AreEqual("314", navigator.ReadWhile(good).ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWhile(good).ToString());
             navigator.Move(3);
-            Assert.IsNull(navigator.ReadWhile(good));
+            Assert.IsTrue(navigator.ReadWhile(good).IsEmpty);
         }
 
         [TestMethod]
         public void TextNavigator_ReadWord_1()
         {
             TextNavigator navigator = new TextNavigator("Hello, world!");
-            Assert.AreEqual("Hello", navigator.ReadWord());
-            Assert.AreEqual(string.Empty, navigator.ReadWord());
+            Assert.AreEqual("Hello", navigator.ReadWord().ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWord().ToString());
             navigator.Move(2);
-            Assert.AreEqual("world", navigator.ReadWord());
-            Assert.AreEqual(string.Empty, navigator.ReadWord());
+            Assert.AreEqual("world", navigator.ReadWord().ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWord().ToString());
             navigator.Move(2);
-            Assert.IsNull(navigator.ReadWord());
+            Assert.IsTrue(navigator.ReadWord().IsEmpty);
         }
 
         [TestMethod]
@@ -729,28 +729,28 @@ namespace UnitTests.AM.Text
         {
             char[] additional = { '<', '>' };
             TextNavigator navigator = new TextNavigator("<Hello>, world!");
-            Assert.AreEqual("<Hello>", navigator.ReadWord(additional));
-            Assert.AreEqual(string.Empty, navigator.ReadWord(additional));
+            Assert.AreEqual("<Hello>", navigator.ReadWord(additional).ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWord(additional).ToString());
             navigator.Move(2);
-            Assert.AreEqual("world", navigator.ReadWord(additional));
-            Assert.AreEqual(string.Empty, navigator.ReadWord(additional));
+            Assert.AreEqual("world", navigator.ReadWord(additional).ToString());
+            Assert.AreEqual(string.Empty, navigator.ReadWord(additional).ToString());
             navigator.Move(2);
-            Assert.IsNull(navigator.ReadWord(additional));
+            Assert.IsTrue(navigator.ReadWord(additional).IsEmpty);
         }
 
         [TestMethod]
         public void TextNavigator_RecentText_1()
         {
             TextNavigator navigator = new TextNavigator("Hello, world!");
-            Assert.AreEqual(string.Empty, navigator.RecentText(4));
+            Assert.AreEqual(string.Empty, navigator.RecentText(4).ToString());
             navigator.Move(4);
-            Assert.AreEqual(string.Empty, navigator.RecentText(-1));
-            Assert.AreEqual("Hell", navigator.RecentText(4));
+            Assert.AreEqual(string.Empty, navigator.RecentText(-1).ToString());
+            Assert.AreEqual("Hell", navigator.RecentText(4).ToString());
             navigator.Move(9);
-            Assert.AreEqual("rld!", navigator.RecentText(4));
-            Assert.AreEqual("Hello, world!", navigator.RecentText(20));
+            Assert.AreEqual("rld!", navigator.RecentText(4).ToString());
+            Assert.AreEqual("Hello, world!", navigator.RecentText(20).ToString());
             navigator.Move(9);
-            Assert.AreEqual(string.Empty, navigator.RecentText(1));
+            Assert.AreEqual(string.Empty, navigator.RecentText(1).ToString());
         }
 
         [TestMethod]
@@ -921,43 +921,43 @@ namespace UnitTests.AM.Text
             Assert.IsTrue(navigator.IsEOF);
         }
 
-        [TestMethod]
-        public void TextNavigator_SplitByGoodCharacters_1()
-        {
-            char[] good = { 'A', 'B', 'C', 'a', 'b', 'c' };
-            TextNavigator navigator = new TextNavigator("HELLOaworldBc!");
-            string[] result = navigator.SplitByGoodCharacters(good);
-            Assert.AreEqual(2, result.Length);
-            Assert.AreEqual("a", result[0]);
-            Assert.AreEqual("Bc", result[1]);
-        }
-
-        [TestMethod]
-        public void TextNavigator_SplitToWords_1()
-        {
-            TextNavigator navigator = new TextNavigator("Hello, world!");
-            string[] result = navigator.SplitToWords();
-            Assert.AreEqual(2, result.Length);
-            Assert.AreEqual("Hello", result[0]);
-            Assert.AreEqual("world", result[1]);
-        }
-
-        [TestMethod]
-        public void TextNavigator_SplitToWords_2()
-        {
-            char[] additional = { '<', '>' };
-            TextNavigator navigator = new TextNavigator("<Hello>, world!");
-            string[] result = navigator.SplitToWords(additional);
-            Assert.AreEqual(2, result.Length);
-            Assert.AreEqual("<Hello>", result[0]);
-            Assert.AreEqual("world", result[1]);
-        }
+//        [TestMethod]
+//        public void TextNavigator_SplitByGoodCharacters_1()
+//        {
+//            char[] good = { 'A', 'B', 'C', 'a', 'b', 'c' };
+//            TextNavigator navigator = new TextNavigator("HELLOaworldBc!");
+//            string[] result = navigator.SplitByGoodCharacters(good);
+//            Assert.AreEqual(2, result.Length);
+//            Assert.AreEqual("a", result[0]);
+//            Assert.AreEqual("Bc", result[1]);
+//        }
+//
+//        [TestMethod]
+//        public void TextNavigator_SplitToWords_1()
+//        {
+//            TextNavigator navigator = new TextNavigator("Hello, world!");
+//            string[] result = navigator.SplitToWords();
+//            Assert.AreEqual(2, result.Length);
+//            Assert.AreEqual("Hello", result[0]);
+//            Assert.AreEqual("world", result[1]);
+//        }
+//
+//        [TestMethod]
+//        public void TextNavigator_SplitToWords_2()
+//        {
+//            char[] additional = { '<', '>' };
+//            TextNavigator navigator = new TextNavigator("<Hello>, world!");
+//            string[] result = navigator.SplitToWords(additional);
+//            Assert.AreEqual(2, result.Length);
+//            Assert.AreEqual("<Hello>", result[0]);
+//            Assert.AreEqual("world", result[1]);
+//        }
 
         [TestMethod]
         public void TextNavigator_Substring_1()
         {
             TextNavigator navigator = new TextNavigator("Hello, world!");
-            Assert.AreEqual("world", navigator.Substring(7, 5));
+            Assert.AreEqual("world", navigator.Substring(7, 5).ToString());
         }
 
         [TestMethod]

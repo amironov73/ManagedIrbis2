@@ -152,27 +152,27 @@ namespace ManagedIrbis.Infrastructure
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
-            TextNavigator navigator = new TextNavigator(text);
-            int path = NumericUtility.ParseInt32
+            var navigator = new TextNavigator(text);
+            var path = NumericUtility.ParseInt32
                 (
-                    navigator.ReadTo(".").ThrowIfNull(nameof(navigator.ReadTo))
+                    navigator.ReadTo(".")
                 );
-            var database = navigator.ReadTo(".").EmptyToNull();
-            string fileName = navigator.GetRemainingText().ThrowIfNull(nameof(fileName));
-            bool binaryFile = fileName.StartsWith("@");
+            var database = navigator.ReadTo(".").ToString().EmptyToNull();
+            var fileName = navigator.GetRemainingText().ToString();
+            var binaryFile = fileName.StartsWith("@");
             if (binaryFile)
             {
                 fileName = fileName.Substring(1);
             }
 
             string? content = null;
-            int position = fileName.IndexOf("&", StringComparison.InvariantCulture);
+            var position = fileName.IndexOf("&", StringComparison.InvariantCulture);
             if (position >= 0)
             {
                 content = fileName.Substring(position + 1);
                 fileName = fileName.Substring(0, position);
             }
-            FileSpecification result = new FileSpecification
+            var result = new FileSpecification
             {
                 BinaryFile = binaryFile,
                 Path = (IrbisPath)path,

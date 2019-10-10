@@ -1,7 +1,5 @@
 ﻿using System;
 
-using AM.Runtime;
-
 using ManagedIrbis;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -277,7 +275,7 @@ namespace UnitTests.ManagedIrbis.Infrastructure
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [ExpectedException(typeof(FormatException))]
         public void FileSpecification_Parse_5()
         {
             FileSpecification.Parse("Hello");

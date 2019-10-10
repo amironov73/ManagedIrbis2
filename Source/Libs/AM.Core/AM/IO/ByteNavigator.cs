@@ -82,11 +82,10 @@ namespace AM.IO
         /// </summary>
         public ByteNavigator
             (
-                [NotNull] byte[] data,
+                byte[] data,
                 int length
             )
         {
-            Sure.NotNull(data, nameof(data));
             Sure.NonNegative(length, nameof(length));
 
             if (length > data.Length)
@@ -104,14 +103,12 @@ namespace AM.IO
         /// </summary>
         public ByteNavigator
             (
-                [NotNull] byte[] data,
+                byte[] data,
                 int length,
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
-            Sure.NotNull(data, nameof(data));
             Sure.NonNegative(length, nameof(length));
-            Sure.NotNull(encoding, nameof(encoding));
 
             if (length > data.Length)
             {
@@ -163,10 +160,9 @@ namespace AM.IO
         /// <summary>
         /// Clone the navigator.
         /// </summary>
-        [NotNull]
         public ByteNavigator Clone()
         {
-            ByteNavigator result = new ByteNavigator
+            var result = new ByteNavigator
                 (
                     _data,
                     Length
@@ -182,16 +178,15 @@ namespace AM.IO
         /// <summary>
         /// Навигатор по двоичному файлу.
         /// </summary>
-        [NotNull]
         public static ByteNavigator FromFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            byte[] data = File.ReadAllBytes(fileName);
-            ByteNavigator result = new ByteNavigator(data);
+            var data = File.ReadAllBytes(fileName);
+            var result = new ByteNavigator(data);
 
             return result;
         }
@@ -199,108 +194,66 @@ namespace AM.IO
         /// <summary>
         /// Выдать остаток данных.
         /// </summary>
-        [CanBeNull]
-        public byte[] GetRemainingData()
+        public byte[]? GetRemainingData()
         {
             if (IsEOF)
             {
                 return null;
             }
 
-            byte[] result = _data.GetSpan(Position);
-
+            var result = _data.GetSpan(Position);
             return result;
         }
 
         /// <summary>
         /// Управляющий символ?
         /// </summary>
-        public bool IsControl()
-        {
-            char c = PeekChar();
-            return char.IsControl(c);
-        }
+        public bool IsControl() => char.IsControl(PeekChar());
 
         /// <summary>
         /// Цифра?
         /// </summary>
-        public bool IsDigit()
-        {
-            char c = PeekChar();
-            return char.IsDigit(c);
-        }
+        public bool IsDigit() => char.IsDigit(PeekChar());
 
         /// <summary>
         /// Буква?
         /// </summary>
-        public bool IsLetter()
-        {
-            char c = PeekChar();
-            return char.IsLetter(c);
-        }
+        public bool IsLetter() => char.IsLetter(PeekChar());
 
         /// <summary>
         /// Буква или цифра?
         /// </summary>
-        public bool IsLetterOrDigit()
-        {
-            char c = PeekChar();
-            return char.IsLetterOrDigit(c);
-        }
+        public bool IsLetterOrDigit() => char.IsLetterOrDigit(PeekChar());
 
         /// <summary>
         /// Часть числа?
         /// </summary>
-        public bool IsNumber()
-        {
-            char c = PeekChar();
-            return char.IsNumber(c);
-        }
+        public bool IsNumber() => char.IsNumber(PeekChar());
 
         /// <summary>
         /// Знак пунктуации?
         /// </summary>
-        public bool IsPunctuation()
-        {
-            char c = PeekChar();
-            return char.IsPunctuation(c);
-        }
+        public bool IsPunctuation() => char.IsPunctuation(PeekChar());
 
         /// <summary>
         /// Разделитель?
         /// </summary>
-        public bool IsSeparator()
-        {
-            char c = PeekChar();
-            return char.IsSeparator(c);
-        }
+        public bool IsSeparator() => char.IsSeparator(PeekChar());
 
         /// <summary>
         /// Суррогат?
         /// </summary>
-        public bool IsSurrogate()
-        {
-            char c = PeekChar();
-            return char.IsSurrogate(c);
-        }
+        public bool IsSurrogate() => char.IsSurrogate(PeekChar());
 
         /// <summary>
         /// Символ?
         /// </summary>
-        public bool IsSymbol()
-        {
-            char c = PeekChar();
-            return char.IsSymbol(c);
-        }
+        public bool IsSymbol() => char.IsSymbol(PeekChar());
 
         /// <summary>
         /// Пробельный символ?
         /// </summary>
-        public bool IsWhiteSpace()
-        {
-            char c = PeekChar();
-            return char.IsWhiteSpace(c);
-        }
+        public bool IsWhiteSpace() => char.IsWhiteSpace(PeekChar());
 
         /// <summary>
         /// Абсолютное перемещение.
@@ -343,12 +296,9 @@ namespace AM.IO
         /// <summary>
         /// Подсмотреть один байт.
         /// </summary>
-        public int PeekByte()
-        {
-            return Position >= Length
+        public int PeekByte() => Position >= Length
                 ? EOF
                 : _data[Position];
-        }
 
         /// <summary>
         /// Peek one char.
@@ -360,8 +310,7 @@ namespace AM.IO
                 return '\0';
             }
 
-            char result = (char)_data[Position];
-
+            var result = (char)_data[Position];
             return result;
 
             // TODO implement properly
@@ -378,9 +327,8 @@ namespace AM.IO
                 return -1;
             }
 
-            int result = _data[Position];
+            var result = _data[Position];
             Position++;
-
             return result;
         }
 
@@ -394,7 +342,7 @@ namespace AM.IO
                 return '\0';
             }
 
-            char result = (char)_data[Position];
+            var result = (char)_data[Position];
             Position++;
 
             return result;
@@ -412,8 +360,8 @@ namespace AM.IO
             //char[] chars = new char[1];
             //int bytesUsed, charsUsed;
             //bool completed;
-            //decoder.Convert(bytes, 0, count, chars, 0, 1, 
-            //    false, out bytesUsed, out charsUsed, 
+            //decoder.Convert(bytes, 0, count, chars, 0, 1,
+            //    false, out bytesUsed, out charsUsed,
             //    out completed);
             //while (charsUsed != 1)
             //{
@@ -431,8 +379,8 @@ namespace AM.IO
             //    count++;
             //    Position++;
 
-            //    decoder.Convert(bytes, 0, count, chars, 0, 1, 
-            //        false, out bytesUsed, out charsUsed, 
+            //    decoder.Convert(bytes, 0, count, chars, 0, 1,
+            //        false, out bytesUsed, out charsUsed,
             //        out completed);
             //}
 
@@ -442,19 +390,18 @@ namespace AM.IO
         /// <summary>
         /// Чтение до конца строки.
         /// </summary>
-        [CanBeNull]
-        public string ReadLine()
+        public string? ReadLine()
         {
             if (IsEOF)
             {
                 return null;
             }
 
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             while (!IsEOF)
             {
-                char c = PeekChar();
+                var c = PeekChar();
                 if (c == '\r' || c == '\n')
                 {
                     break;
@@ -465,7 +412,7 @@ namespace AM.IO
 
             if (!IsEOF)
             {
-                char c = PeekChar();
+                var c = PeekChar();
 
                 if (c == '\r')
                 {
@@ -493,7 +440,7 @@ namespace AM.IO
 
             while (!IsEOF)
             {
-                char c = PeekChar();
+                var c = PeekChar();
                 if (c == '\r' || c == '\n')
                 {
                     break;
@@ -503,7 +450,7 @@ namespace AM.IO
 
             if (!IsEOF)
             {
-                char c = PeekChar();
+                var c = PeekChar();
 
                 if (c == '\r')
                 {

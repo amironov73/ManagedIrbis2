@@ -24,6 +24,7 @@ using AM;
 using AM.Collections;
 using AM.IO;
 using AM.Logging;
+using AM.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -229,29 +230,29 @@ namespace ManagedIrbis
             return IniFile;
         } // method ConnectAsync
 
-        /// <summary>
-        ///
-        /// </summary>
-        public bool Disconnect()
-        {
-            if (Connected)
-            {
-                var query = new ClientQuery(this, "B");
-                query.AddAnsi(Username);
-                try
-                {
-                    Execute(query);
-                }
-                catch (Exception exception)
-                {
-                    Debug.WriteLine(exception.Message);
-                }
-
-                Connected = false;
-            }
-
-            return true;
-        } // method Disconnect
+//        /// <summary>
+//        ///
+//        /// </summary>
+//        public bool Disconnect()
+//        {
+//            if (Connected)
+//            {
+//                var query = new ClientQuery(this, "B");
+//                query.AddAnsi(Username);
+//                try
+//                {
+//                    Execute(query);
+//                }
+//                catch (Exception exception)
+//                {
+//                    Debug.WriteLine(exception.Message);
+//                }
+//
+//                Connected = false;
+//            }
+//
+//            return true;
+//        } // method Disconnect
 
         /// <summary>
         ///
@@ -277,58 +278,58 @@ namespace ManagedIrbis
             return true;
         } // method DisconnectAsync
 
-        /// <summary>
-        ///
-        /// </summary>
-        public ServerResponse? Execute
-            (
-                ClientQuery query
-            )
-        {
-            SetBusy(true);
-            try
-            {
-                if (_cancellation.IsCancellationRequested)
-                {
-                    _cancellation = new CancellationTokenSource();
-                }
-
-                ServerResponse? result;
-                try
-                {
-                    if (_debug)
-                    {
-                        query.Debug(Console.Out);
-                    }
-
-                    result = Socket.Transact(query);
-                }
-                catch (Exception exception)
-                {
-                    Debug.WriteLine(exception.Message);
-                    return null;
-                }
-
-                if (ReferenceEquals(result, null))
-                {
-                    return null;
-                }
-
-                if (_debug)
-                {
-                    result.Debug(Console.Out);
-                }
-
-                result.Parse();
-                QueryId++;
-
-                return result;
-            }
-            finally
-            {
-                SetBusy(false);
-            }
-        } // method Execute
+//        /// <summary>
+//        ///
+//        /// </summary>
+//        public ServerResponse? Execute
+//            (
+//                ClientQuery query
+//            )
+//        {
+//            SetBusy(true);
+//            try
+//            {
+//                if (_cancellation.IsCancellationRequested)
+//                {
+//                    _cancellation = new CancellationTokenSource();
+//                }
+//
+//                ServerResponse? result;
+//                try
+//                {
+//                    if (_debug)
+//                    {
+//                        query.Debug(Console.Out);
+//                    }
+//
+//                    result = Socket.Transact(query);
+//                }
+//                catch (Exception exception)
+//                {
+//                    Debug.WriteLine(exception.Message);
+//                    return null;
+//                }
+//
+//                if (ReferenceEquals(result, null))
+//                {
+//                    return null;
+//                }
+//
+//                if (_debug)
+//                {
+//                    result.Debug(Console.Out);
+//                }
+//
+//                result.Parse();
+//                QueryId++;
+//
+//                return result;
+//            }
+//            finally
+//            {
+//                SetBusy(false);
+//            }
+//        } // method Execute
 
         /// <summary>
         ///
@@ -1052,7 +1053,7 @@ namespace ManagedIrbis
                 string? database = null
             )
         {
-            database = database ?? Database;
+            database ??= Database;
             var response = await ExecuteAsync("S", database);
 
             return !ReferenceEquals(response, null);
@@ -1081,7 +1082,7 @@ namespace ManagedIrbis
                 IList<int> mfnList
             )
         {
-            database = database ?? Database;
+            database ??= Database;
             var list = string.Join("\n", mfnList.Select(NumericUtility.ToInvariantString));
             var response = await ExecuteAsync("Q", database, list);
 
@@ -1093,7 +1094,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> UpdateIniFileAsync
             (
-                [CanBeNull] IList<string> lines
+                IList<string>? lines
             )
         {
             if (ReferenceEquals(lines, null))
@@ -1112,7 +1113,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<int> WriteRecordAsync
             (
-                [CanBeNull] MarcRecord record,
+                MarcRecord? record,
                 bool lockFlag = false,
                 bool actualize = true,
                 bool dontParse = false
@@ -1179,7 +1180,7 @@ namespace ManagedIrbis
         /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose()
         {
-            Disconnect();
+            DisconnectAsync().WaitWithoutException(Cancellation);
         } // method Dispose
 
         #endregion

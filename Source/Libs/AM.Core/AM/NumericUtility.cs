@@ -275,13 +275,32 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int ParseInt32
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
             text = ConvertIntegerToInvariant(text);
+            var result = int.Parse
+                (
+                    text,
+                    NumberStyles.Any,
+                    CultureInfo.InvariantCulture
+                );
 
+            return result;
+        }
+
+        /// <summary>
+        /// Parse integer in standard manner.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int ParseInt32
+            (
+                ReadOnlyMemory<char> memory
+            )
+        {
+            var text = ConvertIntegerToInvariant(memory.ToString());
             var result = int.Parse
                 (
                     text,

@@ -131,14 +131,14 @@ namespace ManagedIrbis.Menus
             if (!string.IsNullOrEmpty(text))
             {
                 var navigator = new TextNavigator(text);
-                result.FileName = navigator.ReadUntil('\\');
+                result.FileName = navigator.ReadUntil('\\').ToString();
                 if (navigator.PeekChar() == '\\')
                 {
                     navigator.ReadChar();
                 }
                 if (!navigator.IsEOF)
                 {
-                    var db = navigator.ReadUntil('\\');
+                    var db = navigator.ReadUntil('\\').ToString();
                     if (navigator.PeekChar() == '\\')
                     {
                         navigator.ReadChar();
@@ -148,7 +148,7 @@ namespace ManagedIrbis.Menus
 
                     if (!navigator.IsEOF)
                     {
-                        var sortText = navigator.GetRemainingText();
+                        var sortText = navigator.GetRemainingText().ToString();
                         NumericUtility.TryParseInt32(sortText, out var sortMode);
                         result.SortMode = sortMode;
                     }

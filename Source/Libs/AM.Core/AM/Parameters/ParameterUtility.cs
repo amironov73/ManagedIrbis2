@@ -191,7 +191,6 @@ namespace AM.Parameters
                     break;
                 }
                 name = name.Trim();
-
                 navigator.SkipWhitespace();
 
                 var value = navigator.ReadEscapedUntil
