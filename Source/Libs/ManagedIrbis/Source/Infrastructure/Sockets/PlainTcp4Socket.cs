@@ -38,7 +38,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         public PlainTcp4Socket
             (
-                [NotNull] IrbisConnection connection
+                IrbisConnection connection
             )
             : base(connection)
         {

@@ -121,7 +121,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Clone the parameters.
         /// </summary>
-        [NotNull]
         public SearchParameters Clone()
         {
             return (SearchParameters) MemberwiseClone();

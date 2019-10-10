@@ -33,7 +33,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Resource name.
         /// </summary>
-        [NotNull]
         public string Name { get; private set; }
 
         /// <summary>
@@ -51,11 +50,11 @@ namespace ManagedIrbis
         /// </summary>
         public IrbisResource
             (
-                [NotNull] string name,
+                string name,
                 [CanBeNull] T content
             )
         {
-            Sure.NotNullNorEmpty(name, "name");
+            Sure.NotNullNorEmpty(name, nameof(name));
 
             Name = name;
             Content = content;

@@ -33,7 +33,6 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// <summary>
         /// Используемое подключение (для нотификаций).
         /// </summary>
-        [NotNull]
         protected IrbisConnection Connection { get; }
 
         #endregion
@@ -45,11 +44,9 @@ namespace ManagedIrbis.Infrastructure.Sockets
         /// </summary>
         protected ClientSocket
             (
-                [NotNull] IrbisConnection connection
+                IrbisConnection connection
             )
         {
-            Sure.NotNull(connection, nameof(connection));
-
             Connection = connection;
         }
 

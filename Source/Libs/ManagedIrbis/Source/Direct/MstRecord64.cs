@@ -79,12 +79,11 @@ namespace ManagedIrbis.Direct
 
         #region Private members
 
-        [NotNull]
         private string _DumpDictionary()
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
-            foreach (MstDictionaryEntry64 entry in Dictionary)
+            foreach (var entry in Dictionary)
             {
                 result.AppendLine(entry.ToString());
             }
@@ -99,7 +98,6 @@ namespace ManagedIrbis.Direct
         ///// <summary>
         ///// Decode the field.
         ///// </summary>
-        //[NotNull]
         //public RecordField DecodeField
         //    (
         //        MstDictionaryEntry64 entry
@@ -117,7 +115,6 @@ namespace ManagedIrbis.Direct
         ///// <summary>
         ///// Decode the record.
         ///// </summary>
-        //[NotNull]
         //public MarcRecord DecodeRecord()
         //{
         //    MarcRecord result = new MarcRecord
@@ -147,7 +144,7 @@ namespace ManagedIrbis.Direct
         ///// </summary>
         //public static MstDictionaryEntry64 EncodeField
         //    (
-        //        [NotNull] RecordField field
+        //        RecordField field
         //    )
         //{
         //    MstDictionaryEntry64 result = new MstDictionaryEntry64
@@ -162,14 +159,11 @@ namespace ManagedIrbis.Direct
         ///// <summary>
         /////
         ///// </summary>
-        //[NotNull]
         //public static MstRecord64 EncodeRecord
         //    (
-        //        [NotNull] MarcRecord record
+        //        MarcRecord record
         //    )
         //{
-        //    Sure.NotNull(record, nameof(record));
-
         //    MstRecordLeader64 leader = new MstRecordLeader64
         //    {
         //        Mfn = record.Mfn,
@@ -233,11 +227,9 @@ namespace ManagedIrbis.Direct
         ///// </summary>
         //public void Write
         //    (
-        //        [NotNull] Stream stream
+        //        Stream stream
         //    )
         //{
-        //    Sure.NotNull(stream, nameof(stream));
-
         //    Leader.Write(stream);
         //    foreach (MstDictionaryEntry64 entry in Dictionary)
         //    {

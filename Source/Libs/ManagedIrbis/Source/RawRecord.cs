@@ -84,9 +84,9 @@ namespace ManagedIrbis
 
         private static void _AppendIrbisLine
             (
-                [NotNull] StringBuilder builder,
-                [CanBeNull] string delimiter,
-                [NotNull] string format,
+                StringBuilder builder,
+                string? delimiter,
+                string format,
                 params object[] args
             )
         {
@@ -101,7 +101,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Encode record to text.
         /// </summary>
-        [NotNull]
         public string EncodeRecord()
         {
             return EncodeRecord(IrbisText.IrbisDelimiter);
@@ -110,13 +109,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Encode record to text.
         /// </summary>
-        [NotNull]
         public string EncodeRecord
             (
-                [CanBeNull] string delimiter
+                string? delimiter
             )
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             _AppendIrbisLine
                 (
@@ -136,7 +134,7 @@ namespace ManagedIrbis
 
             if (!ReferenceEquals(Fields, null))
             {
-                foreach (string line in Fields)
+                foreach (var line in Fields)
                 {
                     result.Append(line);
                     result.Append(delimiter);
@@ -149,20 +147,18 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse MFN, status and version of the record
         /// </summary>
-        [NotNull]
         public static RawRecord ParseMfnStatusVersion
             (
-                [NotNull] string line1,
-                [NotNull] string line2,
-                [NotNull] RawRecord record
+                string line1,
+                string line2,
+                RawRecord record
             )
         {
             Sure.NotNullNorEmpty(line1, nameof(line1));
             Sure.NotNullNorEmpty(line2, nameof(line2));
-            Sure.NotNull(record, nameof(record));
 
-            Regex regex = new Regex(@"^(-?\d+)\#(\d*)?");
-            Match match = regex.Match(line1);
+            var regex = new Regex(@"^(-?\d+)\#(\d*)?");
+            var match = regex.Match(line1);
             record.Mfn = Math.Abs(int.Parse(match.Groups[1].Value));
             if (match.Groups[2].Length > 0)
             {
@@ -183,10 +179,9 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse text.
         /// </summary>
-        [NotNull]
         public static RawRecord Parse
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
@@ -199,7 +194,7 @@ namespace ManagedIrbis
                 startOffset = 1;
             }
 
-            RawRecord result = Parse(lines, startOffset);
+            var result = Parse(lines, startOffset);
 
             return result;
         }
@@ -207,15 +202,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse text lines.
         /// </summary>
-        [NotNull]
         public static RawRecord Parse
             (
-                [NotNull] string[] lines,
+                string[] lines,
                 int startOffset = 0
             )
         {
-            Sure.NotNull(lines, nameof(lines));
-
             if (lines.Length < 2)
             {
                 Log.Error
@@ -227,10 +219,10 @@ namespace ManagedIrbis
                 throw new IrbisException("Text too short");
             }
 
-            string line1 = lines[startOffset + 0];
-            string line2 = lines[startOffset + 1];
+            var line1 = lines[startOffset + 0];
+            var line2 = lines[startOffset + 1];
 
-            RawRecord result = new RawRecord();
+            var result = new RawRecord();
             result.Fields = new List<string>();
             result.Fields.AddRange(lines.Skip(startOffset + 2));
 

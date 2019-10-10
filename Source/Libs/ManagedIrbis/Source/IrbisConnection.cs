@@ -119,7 +119,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Socket.
         /// </summary>
-        [NotNull]
         public ClientSocket Socket { get; private set; }
 
         /// <summary>
@@ -693,7 +692,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<TermInfo[]> ReadAllTermsAsync
             (
-                [NotNull] string prefix
+                string prefix
             )
         {
             Sure.NotNullNorEmpty(prefix, nameof(prefix));
@@ -755,11 +754,9 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<TermInfo[]> ReadTermsAsync
             (
-                [NotNull] TermParameters parameters
+                TermParameters parameters
             )
         {
-            Sure.NotNull(parameters, nameof(parameters));
-
             if (!Connected)
             {
                 return Array.Empty<TermInfo>();
@@ -844,11 +841,9 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<FoundItem[]> SearchAsync
             (
-                [NotNull] SearchParameters parameters
+                SearchParameters parameters
             )
         {
-            Sure.NotNull(parameters, nameof(parameters));
-
             if (!Connected)
             {
                 return Array.Empty<FoundItem>();
@@ -1044,7 +1039,6 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        [NotNull]
         public string ToConnectionString()
         {
             return $"host={Host};port={Port};username={Username};password={Password};database={Database};arm={Workstation};";
@@ -1083,8 +1077,8 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> UnlockRecordsAsync
             (
-                [CanBeNull] string database,
-                [NotNull] IList<int> mfnList
+                string? database,
+                IList<int> mfnList
             )
         {
             database = database ?? Database;

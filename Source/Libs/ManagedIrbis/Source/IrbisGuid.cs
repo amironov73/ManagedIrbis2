@@ -89,7 +89,7 @@ namespace ManagedIrbis
         /// </summary>
         public static Guid Parse
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
@@ -102,7 +102,7 @@ namespace ManagedIrbis
         ///// </summary>
         //public static Guid? Parse
         //    (
-        //        [NotNull] MarcRecord record
+        //        MarcRecord record
         //    )
         //{
         //    Code.NotNull(record, "record");

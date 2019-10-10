@@ -64,24 +64,24 @@ namespace ManagedIrbis
         /// <summary>
         /// Add resource.
         /// </summary>
-        [NotNull]
+#nullable disable
         public ResourceDictionary<T> Add
             (
-                [NotNull] string name,
+                string name,
                 [CanBeNull] T content
             )
         {
-            Sure.NotNullNorEmpty(name, "name");
+            Sure.NotNullNorEmpty(name, nameof(name));
 
             _dictionary.Add(name, new IrbisResource<T>(name, content));
 
             return this;
         }
+#nullable restore
 
         /// <summary>
         /// Clear the dictionary.
         /// </summary>
-        [NotNull]
         public ResourceDictionary<T> Clear()
         {
             _dictionary.Clear();
@@ -125,10 +125,10 @@ namespace ManagedIrbis
         /// <summary>
         /// Put the content for resource with given name.
         /// </summary>
-        [NotNull]
+#nullable disable
         public ResourceDictionary<T> Put
             (
-                [NotNull] string name,
+                string name,
                 [CanBeNull] T content
             )
         {
@@ -139,14 +139,14 @@ namespace ManagedIrbis
 
             return this;
         }
+#nullable restore
 
         /// <summary>
         /// Remove resource with given name from the dictionary.
         /// </summary>
-        [NotNull]
         public ResourceDictionary<T> Remove
             (
-                [NotNull] string name
+                string name
             )
         {
             Sure.NotNullNorEmpty(name, nameof(name));
@@ -159,7 +159,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Get all resources as array.
         /// </summary>
-        [NotNull]
         public IrbisResource<T>[] ToArray()
         {
             return _dictionary.Values.ToArray();

@@ -92,14 +92,11 @@ namespace ManagedIrbis
         /// <summary>
         /// Get text description of the error.
         /// </summary>
-        [NotNull]
         public static string GetErrorDescription
             (
-                [NotNull] IrbisException exception
+                IrbisException exception
             )
         {
-            Sure.NotNull(exception, nameof(exception));
-
             return string.IsNullOrEmpty(exception.Message)
                 ? GetErrorDescription(exception.ErrorCode)
                 : exception.Message;
@@ -108,13 +105,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Get text description ot the error.
         /// </summary>
-        [NotNull]
         public static string GetErrorDescription
             (
                 int code
             )
         {
-            string result = Resources.ErrorDescription_UnknownError;
+            var result = Resources.ErrorDescription_UnknownError;
 
             if (code > 0)
             {

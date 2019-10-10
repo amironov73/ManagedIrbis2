@@ -37,19 +37,16 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Default single-byte encoding.
         /// </summary>
-        [NotNull]
         public static Encoding Ansi => _ansi;
 
         /// <summary>
         /// OEM encoding.
         /// </summary>
-        [NotNull]
         public static Encoding Oem => _oem;
 
         /// <summary>
         /// UTF8 encoding.
         /// </summary>
-        [NotNull]
         public static Encoding Utf8 => _utf8;
 
         #endregion
@@ -81,10 +78,9 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Get encoding by name.
         /// </summary>
-        [NotNull]
         public static Encoding ByName
             (
-                [CanBeNull] string name
+                string? name
             )
         {
             if (string.IsNullOrEmpty(name))
@@ -111,7 +107,7 @@ namespace ManagedIrbis.Infrastructure
                 return Utf8;
             }
 
-            Encoding result = Encoding.GetEncoding(name);
+            var result = Encoding.GetEncoding(name);
 
             return result;
         }
@@ -119,17 +115,16 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Get encoding from config file.
         /// </summary>
-        [NotNull]
         [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
         public static Encoding FromConfig
             (
-                [NotNull] string key
+                string key
             )
         {
             Sure.NotNullNorEmpty(key, nameof(key));
 
-            string name = CM.AppSettings[key];
-            Encoding result = ByName(name);
+            var name = CM.AppSettings[key];
+            var result = ByName(name);
 
             return result;
         }
@@ -165,11 +160,9 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public static void SetAnsiEncoding
             (
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
-            Sure.NotNull(encoding, nameof(encoding));
-
             if (!encoding.IsSingleByte)
             {
                 Log.Error
@@ -189,11 +182,9 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public static void SetOemEncoding
             (
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
-            Sure.NotNull(encoding, nameof(encoding));
-
             if (!encoding.IsSingleByte)
             {
                 Log.Error

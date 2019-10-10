@@ -208,7 +208,7 @@ namespace ManagedIrbis.Client
         {
             if (!string.IsNullOrEmpty(value))
             {
-                Parameter parameter = new Parameter(name, value);
+                var parameter = new Parameter(name, value);
                 list.Add(parameter);
             }
         }
@@ -244,7 +244,7 @@ namespace ManagedIrbis.Client
 //        /// </summary>
 //        public void ApplyToConnection
 //            (
-//                [NotNull] IrbisConnection connection
+//                IrbisConnection connection
 //            )
 //        {
 //            Code.NotNull(connection, "connection");
@@ -348,7 +348,6 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Clone.
         /// </summary>
-        [NotNull]
         public ConnectionSettings Clone()
         {
             return (ConnectionSettings)MemberwiseClone();
@@ -412,7 +411,7 @@ namespace ManagedIrbis.Client
                 );
             _Add(parameters, "data", UserData);
 
-            string result = ParameterUtility.Encode
+            var result = ParameterUtility.Encode
                 (
                     parameters.ToArray()
                 );
@@ -423,12 +422,11 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Encrypt the connection settings.
         /// </summary>
-        [NotNull]
         public string Encrypt()
         {
-            byte[] bytes = this.SaveToMemory();
+            var bytes = this.SaveToMemory();
             bytes = CompressionUtility.Compress(bytes);
-            string result = Convert.ToBase64String(bytes);
+            var result = Convert.ToBase64String(bytes);
 
             return result;
         }
@@ -437,13 +435,12 @@ namespace ManagedIrbis.Client
         /// Construct <see cref="ConnectionSettings"/>
         /// from <see cref="IrbisConnection"/>.
         /// </summary>
-        [NotNull]
         public static ConnectionSettings FromConnection
             (
                 IrbisConnection connection
             )
         {
-            ConnectionSettings result = new ConnectionSettings
+            var result = new ConnectionSettings
             {
                 Host = connection.Host,
                 Port = connection.Port,
@@ -517,7 +514,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public ConnectionElement GetMissingElements()
         {
-            ConnectionElement result = ConnectionElement.None;
+            var result = ConnectionElement.None;
 
             if (string.IsNullOrEmpty(Host))
             {
@@ -548,20 +545,20 @@ namespace ManagedIrbis.Client
         /// </summary>
         public ConnectionSettings ParseConnectionString
             (
-                [NotNull] string connectionString
+                string connectionString
             )
         {
-            Parameter[] parameters = ParameterUtility.ParseString
+            var parameters = ParameterUtility.ParseString
                 (
                     connectionString
                 );
 
-            foreach (Parameter parameter in parameters)
+            foreach (var parameter in parameters)
             {
-                string name = parameter.Name
+                var name = parameter.Name
                     .ThrowIfNull("parameter.Name")
                     .ToLower();
-                string value = parameter.Value
+                var value = parameter.Value
                     .ThrowIfNull("parameter.Value");
 
                 switch (name)
@@ -660,7 +657,7 @@ namespace ManagedIrbis.Client
                                 + name
                             );
 
-                        string message = string.Format
+                        var message = string.Format
                             (
                                 "Unknown parameter: {0}",
                                 name
@@ -738,7 +735,7 @@ namespace ManagedIrbis.Client
                 bool throwOnError
             )
         {
-            Verifier<ConnectionSettings> verifier
+            var verifier
                 = new Verifier<ConnectionSettings>(this, throwOnError);
 
             verifier

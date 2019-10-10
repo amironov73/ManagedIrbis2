@@ -75,7 +75,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Clone the <see cref="TermParameters"/>.
         /// </summary>
-        [NotNull]
         public TermParameters Clone()
         {
             return (TermParameters) MemberwiseClone();

@@ -87,7 +87,7 @@ namespace ManagedIrbis.Infrastructure
 
         #region Private members
 
-        [NotNull] private readonly List<ArraySegment<byte>> _memory;
+        private readonly List<ArraySegment<byte>> _memory;
         private ArraySegment<byte> _currentChunk;
         private int _currentIndex, _currentOffset;
 
@@ -115,13 +115,11 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public async Task PullDataAsync
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int bufferSize,
                 CancellationToken token
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             while (true)
             {
                 if (token.IsCancellationRequested)
@@ -146,12 +144,10 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public void PullData
             (
-                [NotNull] Stream stream,
+                Stream stream,
                 int bufferSize
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-
             while (true)
             {
                 var buffer = new byte[bufferSize];
@@ -267,7 +263,6 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         ///
         /// </summary>
-        [NotNull]
         public byte[] ReadLine()
         {
             using var result = new MemoryStream();

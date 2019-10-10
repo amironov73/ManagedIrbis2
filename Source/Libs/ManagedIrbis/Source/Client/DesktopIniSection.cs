@@ -213,7 +213,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public DesktopIniSection
             (
-                [NotNull] IniFile iniFile
+                IniFile iniFile
             )
             : base(iniFile, SectionName)
         {
@@ -224,7 +224,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public DesktopIniSection
             (
-                [NotNull] IniFile.Section section
+                IniFile.Section section
             )
             : base(section)
         {

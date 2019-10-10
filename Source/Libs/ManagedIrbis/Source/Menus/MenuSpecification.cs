@@ -100,15 +100,12 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Convert <see cref="FileSpecification"/> to menu specification.
         /// </summary>
-        [NotNull]
         public static MenuSpecification FromFileSpecification
             (
-                [NotNull] FileSpecification specification
+                FileSpecification specification
             )
         {
-            Sure.NotNull(specification, nameof(specification));
-
-            MenuSpecification result = new MenuSpecification
+            var result = new MenuSpecification
             {
                 Database = specification.Database,
                 Path = specification.Path,
@@ -121,18 +118,17 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Parse the text.
         /// </summary>
-        [NotNull]
         public static MenuSpecification Parse
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            MenuSpecification result = new MenuSpecification
+            var result = new MenuSpecification
             {
                 Path = IrbisPath.MasterFile
             };
 
-            if (!ReferenceEquals(text, null) && text.Length != 0)
+            if (!string.IsNullOrEmpty(text))
             {
                 var navigator = new TextNavigator(text);
                 result.FileName = navigator.ReadUntil('\\');
@@ -153,7 +149,7 @@ namespace ManagedIrbis.Menus
                     if (!navigator.IsEOF)
                     {
                         var sortText = navigator.GetRemainingText();
-                        NumericUtility.TryParseInt32(sortText, out int sortMode);
+                        NumericUtility.TryParseInt32(sortText, out var sortMode);
                         result.SortMode = sortMode;
                     }
                 }
@@ -181,10 +177,9 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Convert menu specification to <see cref="FileSpecification"/>.
         /// </summary>
-        [NotNull]
         public FileSpecification ToFileSpecification()
         {
-            FileSpecification result = new FileSpecification
+            var result = new FileSpecification
                 (
                     Path,
                     Database,
@@ -237,7 +232,7 @@ namespace ManagedIrbis.Menus
                 bool throwOnError
             )
         {
-            Verifier<MenuSpecification> verifier
+            var verifier
                 = new Verifier<MenuSpecification>
                     (
                         this,

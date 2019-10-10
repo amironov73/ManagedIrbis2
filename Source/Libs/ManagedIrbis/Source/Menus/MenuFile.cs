@@ -324,14 +324,11 @@ namespace ManagedIrbis.Menus
 //        /// <summary>
 //        /// Parse server response.
 //        /// </summary>
-//        [NotNull]
 //        public static MenuFile ParseServerResponse
 //            (
-//                [NotNull] ServerResponse response
+//                ServerResponse response
 //            )
 //        {
-//            Sure.NotNull(response, nameof(response));
-//
 //            TextReader reader = response.GetReader(IrbisEncoding.Ansi);
 //            MenuFile result = ParseStream(reader);
 //
@@ -341,10 +338,9 @@ namespace ManagedIrbis.Menus
 //        /// <summary>
 //        /// Parse server response.
 //        /// </summary>
-//        [NotNull]
 //        public static MenuFile ParseServerResponse
 //            (
-//                [NotNull] string response
+//                string response
 //            )
 //        {
 //            Sure.NotNullNorEmpty(response, nameof(response));
@@ -358,16 +354,12 @@ namespace ManagedIrbis.Menus
 //        /// <summary>
 //        /// Read <see cref="MenuFile"/> from server.
 //        /// </summary>
-//        [CanBeNull]
-//        public static MenuFile ReadFromServer
+//        public static MenuFile? ReadFromServer
 //            (
-//                [NotNull] IIrbisConnection connection,
-//                [NotNull] FileSpecification fileSpecification
+//                IIrbisConnection connection,
+//                FileSpecification fileSpecification
 //            )
 //        {
-//            Sure.NotNull(connection, nameof(connection));
-//            Sure.NotNull(fileSpecification, nameof(fileSpecification));
-//
 //            string response = connection.ReadTextFile(fileSpecification);
 //            if (string.IsNullOrEmpty(response))
 //            {
@@ -382,7 +374,6 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Sorts the entries.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public MenuEntry[] SortEntries
             (

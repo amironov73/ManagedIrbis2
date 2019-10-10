@@ -108,16 +108,13 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Convert to MFN array.
         /// </summary>
-        [NotNull]
         public static int[] ConvertToMfn
             (
-                [NotNull][ItemNotNull] FoundItem[] found
+                [ItemNotNull] FoundItem[] found
             )
         {
-            Sure.NotNull(found, nameof(found));
-
-            int[] result = new int[found.Length];
-            for (int i = 0; i < found.Length; i++)
+            var result = new int[found.Length];
+            for (var i = 0; i < found.Length; i++)
             {
                 result[i] = found[i].Mfn;
             }
@@ -128,37 +125,35 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Convert to string array.
         /// </summary>
-        [NotNull]
+#nullable disable
         [ItemCanBeNull]
-        public static string?[] ConvertToText
+        public static string[] ConvertToText
             (
-                [NotNull][ItemNotNull] FoundItem[] found
+                [ItemNotNull] FoundItem[] found
             )
         {
-            Sure.NotNull(found, nameof(found));
-
-            string?[] result = new string[found.Length];
-            for (int i = 0; i < found.Length; i++)
+            var result = new string[found.Length];
+            for (var i = 0; i < found.Length; i++)
             {
                 result[i] = found[i].Text.EmptyToNull();
             }
 
             return result;
         }
+#nullable restore
 
         /// <summary>
         /// Parse text line.
         /// </summary>
-        [NotNull]
         public static FoundItem ParseLine
             (
-                [NotNull] string line
+                string line
             )
         {
-            Sure.NotNull(line, nameof(line));
+            Sure.NotNullNorEmpty(line, nameof(line));
 
-            string[] parts = line.Split(_delimiters, 2);
-            FoundItem result = new FoundItem
+            var parts = line.Split(_delimiters, 2);
+            var result = new FoundItem
             {
                 Mfn = int.Parse(parts[0])
             };
@@ -175,25 +170,21 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Parse server response.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public static FoundItem[] ParseServerResponse
             (
-                [NotNull] IEnumerable<string> response,
+                IEnumerable<string> response,
                 int sizeHint
             )
         {
-            Sure.NotNull(response, nameof(response));
-
-            LocalList<FoundItem> result = new LocalList<FoundItem>(sizeHint);
-
+            var result = new LocalList<FoundItem>(sizeHint);
             try
             {
                 foreach (var line in response)
                 {
                     if (!string.IsNullOrEmpty(line))
                     {
-                        FoundItem item = ParseLine(line);
+                        var item = ParseLine(line);
                         result.Add(item);
                     }
                 }
@@ -265,7 +256,7 @@ namespace ManagedIrbis.Search
                 bool throwOnError
             )
         {
-            Verifier<FoundItem> verifier = new Verifier<FoundItem>
+            var verifier = new Verifier<FoundItem>
                 (
                     this,
                     throwOnError

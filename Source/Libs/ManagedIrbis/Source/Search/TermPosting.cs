@@ -92,7 +92,6 @@ namespace ManagedIrbis.Search
         /// Clone the <see cref="TermPosting"/>.
         /// </summary>
         /// <returns></returns>
-        [NotNull]
         public TermPosting Clone()
         {
             return (TermPosting) MemberwiseClone();
@@ -101,14 +100,11 @@ namespace ManagedIrbis.Search
         ///// <summary>
         ///// Parse server response.
         ///// </summary>
-        //[NotNull]
         //public static TermPosting[] Parse
         //    (
-        //        [NotNull] ServerResponse response
+        //        ServerResponse response
         //    )
         //{
-        //    Sure.NotNull(response, nameof(response));
-
         //    // Example return:
         //    // 169#1510#1#2#Пожаровзрывобезопасность : Науч.- техн. журн. - Журнал
 

@@ -94,7 +94,7 @@ namespace ManagedIrbis.Infrastructure
         public FileSpecification
             (
                 IrbisPath path,
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
@@ -145,10 +145,9 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Parse the text specification.
         /// </summary>
-        [NotNull]
         public static FileSpecification Parse
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));

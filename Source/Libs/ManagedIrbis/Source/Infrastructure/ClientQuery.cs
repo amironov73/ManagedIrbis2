@@ -32,11 +32,10 @@ namespace ManagedIrbis.Infrastructure
         /// </summary>
         public ClientQuery
             (
-                [NotNull] IrbisConnection connection,
-                [NotNull] string commandCode
+                IrbisConnection connection,
+                string commandCode
             )
         {
-            Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(commandCode, nameof(commandCode));
 
             _chunks = new List<byte[]>();

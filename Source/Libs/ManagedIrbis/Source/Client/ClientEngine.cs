@@ -52,37 +52,31 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Client INI-file.
         /// </summary>
-        [NotNull]
         public LocalCatalogerIniFile ClientIni { get; private set; }
 
         /// <summary>
         /// Remote INI-file.
         /// </summary>
-        [NotNull]
         public RemoteCatalogerIniFile RemoteIni { get; private set; }
 
         /// <summary>
         /// Connection string.
         /// </summary>
-        [NotNull]
         public string ConnectionString { get; set; }
 
         /// <summary>
         /// Database list.
         /// </summary>
-        [NotNull]
         public DatabaseInfo[] Databases { get; set; }
 
         /// <summary>
         /// Current database.
         /// </summary>
-        [NotNull]
         public DatabaseInfo CurrentDatabase { get; set; }
 
         /// <summary>
         /// Context.
         /// </summary>
-        [NotNull]
         public ResourceDictionary<string> Context { get; private set; }
 
         /// <summary>
@@ -104,7 +98,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public ClientEngine
             (
-                [NotNull] string clientIniName
+                string clientIniName
             )
         {
             Connection = new IrbisConnection();
@@ -130,7 +124,6 @@ namespace ManagedIrbis.Client
 
         #region Private members
 
-        [NotNull]
         private readonly HashSet<string> _fileQueue;
 
         #endregion
@@ -173,7 +166,7 @@ namespace ManagedIrbis.Client
         /// </summary>
         public void EnqueueTextFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNull(fileName, nameof(fileName));

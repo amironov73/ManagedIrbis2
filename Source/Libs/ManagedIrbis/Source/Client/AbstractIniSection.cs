@@ -35,7 +35,6 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// INI file section.
         /// </summary>
-        [NotNull]
         [XmlIgnore]
         [JsonIgnore]
         public IniFile.Section Section { get; protected set; }
@@ -151,10 +150,7 @@ namespace ManagedIrbis.Client
         /// <inheritdoc cref="IDisposable.Dispose" />
         public void Dispose()
         {
-            if (!ReferenceEquals(_ourIniFile, null))
-            {
-                _ourIniFile.Dispose();
-            }
+            _ourIniFile?.Dispose();
         }
 
         #endregion

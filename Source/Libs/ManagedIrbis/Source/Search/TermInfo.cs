@@ -42,7 +42,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Empty array.
         /// </summary>
-        [NotNull]
         public static readonly TermInfo[] EmptyArray = new TermInfo[0];
 
         /// <summary>
@@ -74,7 +73,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Clone the <see cref="TermInfo"/>.
         /// </summary>
-        [NotNull]
         public TermInfo Clone()
         {
             return (TermInfo) MemberwiseClone();
@@ -83,18 +81,15 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Разбор ответа сервера.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public static TermInfo[] Parse
             (
-                [NotNull] IEnumerable<string> response
+                IEnumerable<string> response
             )
         {
-            Sure.NotNull(response, nameof(response));
+            var result = new LocalList<TermInfo>();
 
-            LocalList<TermInfo> result = new LocalList<TermInfo>();
-
-            Regex regex = new Regex(@"^(\d+)\#(.+)$");
+            var regex = new Regex(@"^(\d+)\#(.+)$");
             foreach (var line in response)
             {
                 if (string.IsNullOrEmpty(line))
@@ -102,10 +97,10 @@ namespace ManagedIrbis.Search
                     break;
                 }
 
-                Match match = regex.Match(line);
+                var match = regex.Match(line);
                 if (match.Success)
                 {
-                    TermInfo item = new TermInfo
+                    var item = new TermInfo
                     {
                         Count = int.Parse(match.Groups[1].Value),
                         Text = match.Groups[2].Value
@@ -138,35 +133,31 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Trim prefix from terms.
         /// </summary>
-        [NotNull]
         public static TermInfo[] TrimPrefix
             (
-                [NotNull][ItemNotNull] TermInfo[] terms,
-                [NotNull] string prefix
+                [ItemNotNull] TermInfo[] terms,
+                string prefix
             )
         {
-            Sure.NotNull(terms, nameof(terms));
-            Sure.NotNull(prefix, nameof(prefix));
-
-            int prefixLength = prefix.Length;
-            List<TermInfo> result = new List<TermInfo>(terms.Length);
+            var prefixLength = prefix.Length;
+            var result = new List<TermInfo>(terms.Length);
             if (prefixLength == 0)
             {
-                foreach (TermInfo term in terms)
+                foreach (var term in terms)
                 {
                     result.Add(term.Clone());
                 }
             }
             else
             {
-                foreach (TermInfo term in terms)
+                foreach (var term in terms)
                 {
                     var item = term.Text;
                     if (!string.IsNullOrEmpty(item) && item.StartsWith(prefix))
                     {
                         item = item.Substring(prefixLength);
                     }
-                    TermInfo clone = term.Clone();
+                    var clone = term.Clone();
                     clone.Text = item;
                     result.Add(clone);
                 }
@@ -210,7 +201,7 @@ namespace ManagedIrbis.Search
                 bool throwOnError
             )
         {
-            Verifier<TermInfo> verifier
+            var verifier
                 = new Verifier<TermInfo>(this, throwOnError);
 
             verifier

@@ -87,11 +87,9 @@ namespace ManagedIrbis.Direct
         ///// </summary>
         //public static MstRecordLeader64 Read
         //    (
-        //        [NotNull] Stream stream
+        //        Stream stream
         //    )
         //{
-        //    Sure.NotNull(stream, nameof(stream));
-
         //    MstRecordLeader64 result = new MstRecordLeader64
         //    {
         //        Mfn = stream.ReadInt32Network(),
@@ -114,11 +112,9 @@ namespace ManagedIrbis.Direct
         ///// </summary>
         //public void Write
         //    (
-        //        [NotNull] Stream stream
+        //        Stream stream
         //    )
         //{
-        //    Sure.NotNull(stream, nameof(stream));
-
         //    stream.WriteInt32Network(Mfn);
         //    stream.WriteInt32Network(Length);
         //    stream.WriteInt64Network(Previous);

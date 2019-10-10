@@ -158,7 +158,6 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// INI-file.
         /// </summary>
-        [NotNull]
         public IniFile Ini { get; private set; }
 
         /// <summary>
@@ -328,8 +327,8 @@ namespace ManagedIrbis.Client
         [CanBeNull]
         public T GetValue<T>
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
+                string sectionName,
+                string keyName,
                 [CanBeNull] T defaultValue
             )
         {
@@ -376,8 +375,8 @@ namespace ManagedIrbis.Client
 #nullable disable
         public RemoteCatalogerIniFile SetValue<T>
             (
-                [NotNull] string sectionName,
-                [NotNull] string keyName,
+                string sectionName,
+                string keyName,
                 [CanBeNull] T value
             )
         {

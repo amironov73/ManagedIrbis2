@@ -39,13 +39,11 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// INI-file.
         /// </summary>
-        [NotNull]
         public IniFile Ini { get; private set; }
 
         /// <summary>
         /// Context section.
         /// </summary>
-        [NotNull]
         public ContextIniSection Context
         {
             get { return _contextIniSection; }
@@ -54,7 +52,6 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Desktop section.
         /// </summary>
-        [NotNull]
         private DesktopIniSection Desktop
         {
             get { return _desktopIniSection; }
@@ -64,13 +61,12 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Magna section.
         /// </summary>
-        [NotNull]
         public IniFile.Section MagnaSection
         {
             get
             {
-                IniFile ini = Ini;
-                IniFile.Section result = ini.GetOrCreateSection("Magna");
+                var ini = Ini;
+                var result = ini.GetOrCreateSection("Magna");
 
                 return result;
             }
@@ -79,13 +75,12 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Main section.
         /// </summary>
-        [NotNull]
         public IniFile.Section Main
         {
             get
             {
-                IniFile ini = Ini;
-                IniFile.Section result = ini.GetOrCreateSection("Main");
+                var ini = Ini;
+                var result = ini.GetOrCreateSection("Main");
 
                 return result;
             }
@@ -109,7 +104,7 @@ namespace ManagedIrbis.Client
             get
             {
                 // coverity[dereference]
-                int result = Convert.ToInt32
+                var result = Convert.ToInt32
                     (
                         Main["ServerPort"] ?? "6666"
                     );
@@ -173,10 +168,9 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Build connection string.
         /// </summary>
-        [NotNull]
         public string BuildConnectionString()
         {
-            ConnectionSettings settings = new ConnectionSettings
+            var settings = new ConnectionSettings
             {
                 Host = ServerIP,
                 Port = ServerPort,
@@ -214,17 +208,16 @@ namespace ManagedIrbis.Client
         /// <summary>
         /// Load from specified file.
         /// </summary>
-        [NotNull]
         public static LocalCatalogerIniFile Load
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, "fileName");
 
-            IniFile iniFile = new IniFile();
+            var iniFile = new IniFile();
             iniFile.Read(fileName, IrbisEncoding.Ansi);
-            LocalCatalogerIniFile result = new LocalCatalogerIniFile(iniFile);
+            var result = new LocalCatalogerIniFile(iniFile);
 
             return result;
         }

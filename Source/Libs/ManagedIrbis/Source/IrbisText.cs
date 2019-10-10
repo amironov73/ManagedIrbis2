@@ -51,10 +51,10 @@ namespace ManagedIrbis
 
         private static string _CleanupEvaluator
             (
-                [NotNull] Match match
+                Match match
             )
         {
-            int length = match.Value.Length;
+            var length = match.Value.Length;
 
             if ((length & 1) == 0)
             {
@@ -85,7 +85,7 @@ namespace ManagedIrbis
             while (true)
             {
                 // Remove repeating area delimiters.
-                string result = Regex.Replace
+                var result = Regex.Replace
                     (
                         text,
                         @"\[\[(?<tag>.*?)\]\](?<meat>.*?)\[\[/\k<tag>\]\]",
@@ -119,7 +119,7 @@ namespace ManagedIrbis
             }
 
             // Remove repeating area delimiters.
-            string result = Regex.Replace
+            var result = Regex.Replace
                 (
                     text,
                     @"(\.\s-\s){2,}",
@@ -163,7 +163,7 @@ namespace ManagedIrbis
                 return text;
             }
 
-            string result = text.Replace
+            var result = text.Replace
                 (
                     IrbisDelimiter,
                     WindowsDelimiter
@@ -175,7 +175,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Split IRBIS-delimited text to lines.
         /// </summary>
-        [NotNull]
         public static string[] SplitIrbisToLines
             (
                 string? text
@@ -187,7 +186,7 @@ namespace ManagedIrbis
             }
 
             var provenText = IrbisToWindows(text)!;
-            string[] result = string.IsNullOrEmpty(provenText)
+            var result = string.IsNullOrEmpty(provenText)
                 ? new[] { string.Empty }
                 : provenText.Split
                     (
@@ -211,7 +210,7 @@ namespace ManagedIrbis
                 return text;
             }
 
-            string result = text.ToLowerInvariant();
+            var result = text.ToLowerInvariant();
 
             return result;
         }
@@ -231,7 +230,7 @@ namespace ManagedIrbis
 
             // TODO use isisucw.txt ?
 
-            string result = text.ToUpperInvariant();
+            var result = text.ToUpperInvariant();
 
             return result;
         }
@@ -254,7 +253,7 @@ namespace ManagedIrbis
                 return text;
             }
 
-            string result = text.Replace
+            var result = text.Replace
                 (
                     WindowsDelimiter,
                     IrbisDelimiter

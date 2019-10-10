@@ -94,7 +94,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Clone the parameters.
         /// </summary>
-        [NotNull]
         public PostingParameters Clone()
         {
             return (PostingParameters) MemberwiseClone();
