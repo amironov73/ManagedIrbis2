@@ -36,45 +36,37 @@ namespace ManagedIrbis
         /// <summary>
         /// Database name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("database")]
         [JsonProperty("database", NullValueHandling = NullValueHandling.Ignore)]
-        public string DatabaseName { get; set; }
+        public string? DatabaseName { get; set; }
 
         /// <summary>
         /// Table name.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("table")]
         [JsonProperty("table", NullValueHandling = NullValueHandling.Ignore)]
-        public string Table { get; set; }
+        public string? Table { get; set; }
 
         /// <summary>
         /// Table headers.
         /// </summary>
-        [NotNull]
         [XmlElement("header")]
         [JsonProperty("headers")]
-        public List<string> Headers
-        {
-            get { return _headers; }
-        }
+        public List<string> Headers => _headers;
 
         /// <summary>
         /// Mode.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("mode")]
         [JsonProperty("mode", NullValueHandling = NullValueHandling.Ignore)]
-        public string Mode { get; set; }
+        public string? Mode { get; set; }
 
         /// <summary>
         /// Search query.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("search")]
         [JsonProperty("search", NullValueHandling = NullValueHandling.Ignore)]
-        public string SearchQuery { get; set; }
+        public string? SearchQuery { get; set; }
 
         /// <summary>
         /// Minimal MFN.
@@ -93,21 +85,16 @@ namespace ManagedIrbis
         /// <summary>
         /// Optional sequential query.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("sequential")]
         [JsonProperty("sequential", NullValueHandling = NullValueHandling.Ignore)]
-        public string SequentialQuery { get; set; }
+        public string? SequentialQuery { get; set; }
 
         /// <summary>
         /// List of MFN.
         /// </summary>
-        [NotNull]
         [XmlElement("mfn")]
         [JsonProperty("mfn")]
-        public List<int> MfnList
-        {
-            get { return _mfnList; }
-        }
+        public List<int> MfnList => _mfnList;
 
         #endregion
 

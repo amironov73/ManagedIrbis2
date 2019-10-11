@@ -19,8 +19,11 @@ using AM;
 using AM.IO;
 using AM.Logging;
 using AM.Runtime;
+using AM.Text;
 
 using JetBrains.Annotations;
+
+using ManagedIrbis.Infrastructure;
 
 using Newtonsoft.Json;
 
@@ -105,91 +108,80 @@ namespace ManagedIrbis
         /// <summary>
         /// Путь к файлу XRF
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("xrf")]
         [JsonProperty("xrf")]
-        public string XrfPath { get; set; }
+        public string? XrfPath { get; set; }
 
         /// <summary>
         /// Путь к файлу MST
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("mst")]
         [JsonProperty("mst")]
-        public string MstPath { get; set; }
+        public string? MstPath { get; set; }
 
         /// <summary>
         /// Путь к файлу CNT
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("cnt")]
         [JsonProperty("cnt")]
-        public string CntPath { get; set; }
+        public string? CntPath { get; set; }
 
         /// <summary>
         /// Путь к файлу N01
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("n01")]
         [JsonProperty("n01")]
-        public string N01Path { get; set; }
+        public string? N01Path { get; set; }
 
         /// <summary>
         /// Путь к файлу N02
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("n02")]
         [JsonProperty("n02")]
-        public string N02Path { get; set; }
+        public string? N02Path { get; set; }
 
         /// <summary>
         /// Путь к файлу L01
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("l01")]
         [JsonProperty("l01")]
-        public string L01Path { get; set; }
+        public string? L01Path { get; set; }
 
         /// <summary>
         /// Путь к файлу L02
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("l02")]
         [JsonProperty("l02")]
-        public string L02Path { get; set; }
+        public string? L02Path { get; set; }
 
         /// <summary>
         /// Путь к файлу IFP
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("ifp")]
         [JsonProperty("ifp")]
-        public string IfpPath { get; set; }
+        public string? IfpPath { get; set; }
 
         /// <summary>
         /// Путь к файлу ANY
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("any")]
         [JsonProperty("any")]
-        public string AnyPath { get; set; }
+        public string? AnyPath { get; set; }
 
         /// <summary>
         /// Путь к файлам PFT
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("pft")]
         [JsonProperty("pft")]
-        public string PftPath { get; set; }
+        public string? PftPath { get; set; }
 
         /// <summary>
         /// Расположение внешних объектов (поле 951)
         /// </summary>
         /// <remarks>Параметр появился в версии 2012</remarks>
-        [CanBeNull]
         [XmlAttribute("ext")]
         [JsonProperty("ext")]
-        public string ExtPath { get; set; }
+        public string? ExtPath { get; set; }
 
         #endregion
 
@@ -207,7 +199,7 @@ namespace ManagedIrbis
         /// </summary>
         public ParFile
             (
-                [NotNull] string mstPath
+                string mstPath
             )
         {
             Sure.NotNullNorEmpty(mstPath, nameof(mstPath));
@@ -227,27 +219,18 @@ namespace ManagedIrbis
 
         #endregion
 
-        #region Private members
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
         /// Разбор PAR-файла на строчки вида 1=.\datai\ibis.
         /// </summary>
-        [NotNull]
         public static Dictionary<string, string> ReadDictionary
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            string line;
-            char[] separator = { '=' };
-            Dictionary<string, string> result
-                = new Dictionary<string, string>(11);
+            string? line;
+            var result = new Dictionary<string, string>(11);
             while ((line = reader.ReadLine()) != null)
             {
                 line = line.Trim();
@@ -256,25 +239,29 @@ namespace ManagedIrbis
                     continue;
                 }
 
-                string[] parts = line.Split(separator, 2);
+                var parts = line.Split(CommonSeparators.EqualSign, 2);
 
                 if (parts.Length != 2)
                 {
                     Log.Error
                         (
-                            nameof(ParseFile) + "::" + nameof(ReadDictionary)
+                            nameof(ParseFile)
+                            + "::"
+                            + nameof(ReadDictionary)
                             + ": format error"
                         );
 
                     throw new FormatException();
                 }
-                string key = parts[0].Trim();
-                string value = parts[1].Trim();
+                var key = parts[0].Trim();
+                var value = parts[1].Trim();
                 if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value))
                 {
                     Log.Error
                         (
-                            nameof(ParseFile) + "::" + nameof(ReadDictionary)
+                            nameof(ParseFile)
+                            + "::"
+                            + nameof(ReadDictionary)
                             + ": format error"
                         );
 
@@ -283,7 +270,7 @@ namespace ManagedIrbis
                 result.Add(key, value);
             }
 
-            foreach (string key in Enumerable.Range(1, 10)
+            foreach (var key in Enumerable.Range(1, 10)
                 .Select(NumericUtility.ToInvariantString))
             {
                 if (!result.ContainsKey(key))
@@ -305,39 +292,32 @@ namespace ManagedIrbis
         /// <summary>
         /// Разбор файла.
         /// </summary>
-        [NotNull]
         public static ParFile ParseFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
-                    (
-                        fileName,
-                        IrbisEncoding.Ansi
-                    ))
-            {
-                return ParseText(reader);
-            }
+            using var reader = TextReaderUtility.OpenRead
+                (
+                    fileName,
+                    IrbisEncoding.Ansi
+                );
+            return ParseText(reader);
         }
 
         /// <summary>
         /// Разбор текста.
         /// </summary>
-        [NotNull]
         public static ParFile ParseText
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
+            var dictionary = ReadDictionary(reader);
 
-            Dictionary<string, string> dictionary
-                = ReadDictionary(reader);
-
-            ParFile result = new ParFile
+            var result = new ParFile
             {
                 XrfPath = dictionary["1"],
                 MstPath = dictionary["2"],
@@ -361,11 +341,9 @@ namespace ManagedIrbis
         /// <summary>
         /// Преобразование в словарь.
         /// </summary>
-        [NotNull]
-        public Dictionary<string, string> ToDictionary()
+        public Dictionary<string, string?> ToDictionary()
         {
-            Dictionary<string, string> result
-                = new Dictionary<string, string>(11)
+            var result = new Dictionary<string, string?>(11)
                 {
                     {"1", XrfPath},
                     {"2", MstPath},
@@ -388,19 +366,17 @@ namespace ManagedIrbis
         /// </summary>
         public void WriteFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (StreamWriter writer = TextWriterUtility.Create
-                    (
-                        fileName,
-                        IrbisEncoding.Ansi
-                    ))
-            {
-                WriteText(writer);
-            }
+            using var writer = TextWriterUtility.Create
+                (
+                    fileName,
+                    IrbisEncoding.Ansi
+                );
+            WriteText(writer);
         }
 
         /// <summary>
@@ -408,11 +384,9 @@ namespace ManagedIrbis
         /// </summary>
         public void WriteText
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             writer.WriteLine("1={0}", XrfPath);
             writer.WriteLine("2={0}", MstPath);
             writer.WriteLine("3={0}", CntPath);
@@ -430,14 +404,12 @@ namespace ManagedIrbis
 
         #region IHandmadeSerializable members
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHandmadeSerializable.RestoreFromStream" />
         public void RestoreFromStream
             (
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             XrfPath = reader.ReadNullableString();
             MstPath = reader.ReadNullableString();
             CntPath = reader.ReadNullableString();
@@ -451,14 +423,12 @@ namespace ManagedIrbis
             ExtPath = reader.ReadNullableString();
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IHandmadeSerializable.SaveToStream" />
         public void SaveToStream
             (
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             writer
                 .WriteNullable(XrfPath)
                 .WriteNullable(MstPath)
@@ -483,7 +453,7 @@ namespace ManagedIrbis
                 bool throwOnError
             )
         {
-            Verifier<ParFile> verifier = new Verifier<ParFile>
+            var verifier = new Verifier<ParFile>
                 (
                     this,
                     throwOnError
@@ -508,7 +478,7 @@ namespace ManagedIrbis
 
         #region Object members
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
             return MstPath.ToVisibleString();

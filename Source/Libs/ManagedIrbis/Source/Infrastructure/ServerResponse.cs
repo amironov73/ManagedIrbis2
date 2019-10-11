@@ -303,7 +303,7 @@ namespace ManagedIrbis.Infrastructure
                 Encoding encoding
             )
         {
-            byte[] bytes = ReadLine();
+            var bytes = ReadLine();
             if (bytes.Length == 0)
             {
                 return string.Empty;
@@ -400,6 +400,64 @@ namespace ManagedIrbis.Infrastructure
         ///
         /// </summary>
         public int ReadInteger() => ReadLine(IrbisEncoding.Ansi).SafeToInt32();
+
+        /// <summary>
+        ///
+        /// </summary>
+        public string[]? ReadAnsiStrings
+            (
+                int count
+            )
+        {
+            Sure.Positive(count, nameof(count));
+
+            var result = new LocalList<string>(count);
+            for (var i = 0; i < count; i++)
+            {
+                var line = ReadAnsi();
+                if (string.IsNullOrEmpty(line))
+                {
+                    return null;
+                }
+                result.Add(line);
+            }
+
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Get array of ANSI strings.
+        /// </summary>
+        /// <returns><c>null</c>if there is no lines in
+        /// the server response, otherwise missing lines will
+        /// be added (as empty lines).</returns>
+        public string[]? ReadAnsiStringsPlus
+            (
+                int count
+            )
+        {
+            Sure.Positive(count, nameof(count));
+
+            var result = new LocalList<string>(count);
+            int index = 0;
+            string line;
+            for (; index < 1; index++)
+            {
+                line = ReadAnsi();
+                if (string.IsNullOrEmpty(line))
+                {
+                    return null;
+                }
+                result.Add(line);
+            }
+            for (; index < count; index++)
+            {
+                line = ReadAnsi();
+                result.Add(line);
+            }
+
+            return result.ToArray();
+        }
 
         /// <summary>
         ///

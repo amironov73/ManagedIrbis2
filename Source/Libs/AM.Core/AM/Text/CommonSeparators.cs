@@ -46,6 +46,11 @@ namespace AM.Text
         public static readonly char[] Dot = { '.' };
 
         /// <summary>
+        /// Equal sign.
+        /// </summary>
+        public static readonly char[] EqualSign = { '=' };
+
+        /// <summary>
         /// Minus sign.
         /// </summary>
         public static readonly char[] Minus = { '-' };

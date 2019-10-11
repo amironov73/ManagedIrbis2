@@ -9,7 +9,6 @@
 
 #region Using directives
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -17,6 +16,7 @@ using System.IO;
 using System.Xml.Serialization;
 
 using AM;
+using AM.Collections;
 using AM.IO;
 using AM.Runtime;
 
@@ -46,94 +46,84 @@ namespace ManagedIrbis
         /// <summary>
         /// Номер по порядку.
         /// </summary>
-        [CanBeNull]
         [XmlIgnore]
         [JsonIgnore]
         [Browsable(false)]
-        public string Number { get; set; }
+        public string? Number { get; set; }
 
         /// <summary>
         /// Логин.
         /// </summary>
-        [CanBeNull]
         [XmlElement("name")]
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Пароль.
         /// </summary>
-        [CanBeNull]
         [XmlElement("password")]
         [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
 
         /// <summary>
         /// Доступность АРМ Каталогизатор.
         /// </summary>
-        [CanBeNull]
         [XmlElement("cataloguer")]
         [JsonProperty("cataloguer", NullValueHandling = NullValueHandling.Ignore)]
-        public string Cataloger { get; set; }
+        public string? Cataloger { get; set; }
 
         /// <summary>
         /// АРМ Читатель.
         /// </summary>
-        [CanBeNull]
         [XmlElement("reader")]
         [JsonProperty("reader", NullValueHandling = NullValueHandling.Ignore)]
-        public string Reader { get; set; }
+        public string? Reader { get; set; }
 
         /// <summary>
         /// АРМ Книговыдача.
         /// </summary>
-        [CanBeNull]
         [XmlElement("circulation")]
         [JsonProperty("circulation", NullValueHandling = NullValueHandling.Ignore)]
-        public string Circulation { get; set; }
+        public string? Circulation { get; set; }
 
         /// <summary>
         /// АРМ Комплектатор.
         /// </summary>
-        [CanBeNull]
         [XmlElement("acquisitions")]
         [JsonProperty("acquisitions", NullValueHandling = NullValueHandling.Ignore)]
-        public string Acquisitions { get; set; }
+        public string? Acquisitions { get; set; }
 
         /// <summary>
         /// АРМ Книгообеспеченность.
         /// </summary>
-        [CanBeNull]
         [XmlElement("provision")]
         [JsonProperty("provision", NullValueHandling = NullValueHandling.Ignore)]
-        public string Provision { get; set; }
+        public string? Provision { get; set; }
 
         /// <summary>
         /// АРМ Администратор.
         /// </summary>
         [XmlElement("administrator")]
         [JsonProperty("administrator", NullValueHandling = NullValueHandling.Ignore)]
-        public string Administrator { get; set; }
+        public string? Administrator { get; set; }
 
         /// <summary>
         /// Arbitrary user data.
         /// </summary>
-        [CanBeNull]
         [XmlIgnore]
         [JsonIgnore]
         [Browsable(false)]
-        public object UserData { get; set; }
+        public object? UserData { get; set; }
 
         #endregion
 
         #region Private members
 
-        [NotNull]
         private string _FormatPair
             (
-                [NotNull] string prefix,
-                [CanBeNull] string value,
-                [NotNull] string defaultValue
+                string prefix,
+                string? value,
+                string defaultValue
             )
         {
             if (value.SameString(defaultValue))
@@ -156,7 +146,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Encode.
         /// </summary>
-        [NotNull]
         public string Encode()
         {
             return string.Format
@@ -176,27 +165,24 @@ namespace ManagedIrbis
         /// <summary>
         /// Разбор ответа сервера.
         /// </summary>
-        [NotNull]
         public static UserInfo[] Parse
             (
-                [NotNull] ServerResponse response
+                ServerResponse response
             )
         {
             Sure.NotNull(response, nameof(response));
 
-            List<UserInfo> result = new List<UserInfo>();
-
-            response.GetAnsiStrings(2);
-
+            var result = new LocalList<UserInfo>();
+            response.ReadAnsiStrings(2);
             while (true)
             {
-                string[] lines = response.GetAnsiStringsPlus(9);
+                var lines = response.ReadAnsiStringsPlus(9);
                 if (ReferenceEquals(lines, null))
                 {
                     break;
                 }
 
-                UserInfo user = new UserInfo
+                var user = new UserInfo
                 {
                     Number = lines[0].EmptyToNull(),
                     Name = lines[1].EmptyToNull(),
@@ -284,8 +270,6 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
-
             Number = reader.ReadNullableString();
             Name = reader.ReadNullableString();
             Password = reader.ReadNullableString();
@@ -302,8 +286,6 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
-
             writer
                 .WriteNullable(Number)
                 .WriteNullable(Name)
@@ -326,7 +308,7 @@ namespace ManagedIrbis
                 bool throwOnError
             )
         {
-            Verifier<UserInfo> verifier = new Verifier<UserInfo>
+            var verifier = new Verifier<UserInfo>
                     (
                         this,
                         throwOnError
@@ -349,7 +331,7 @@ namespace ManagedIrbis
                 (
                     "Number: {0}, Name: {1}, Password: {2}, "
                     + "Cataloger: {3}, Reader: {4}, Circulation: {5}, "
-                    + "Acquisitions: {6}, Provision: {7}, " 
+                    + "Acquisitions: {6}, Provision: {7}, "
                     + "Administrator: {8}",
                     Number.ToVisibleString(),
                     Name.ToVisibleString(),
