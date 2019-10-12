@@ -50,7 +50,6 @@ namespace AM.Text.Output
         /// <summary>
         ///
         /// </summary>
-        [NotNull]
         public static AbstractOutput Console
             => _console ??= new ConsoleOutput();
 

@@ -22,7 +22,7 @@ using JetBrains.Annotations;
 namespace AM
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class Sure
@@ -40,7 +40,7 @@ namespace AM
             (
                 [AssertionCondition(AssertionConditionType.IS_FALSE)]
                 bool condition,
-                [NotNull] string message
+                string message
             )
         {
             if (!condition)
@@ -59,7 +59,7 @@ namespace AM
         public static void Defined<T>
             (
                 T value,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
             where T : struct
         {
@@ -79,7 +79,7 @@ namespace AM
         public static void FileExists
             (
                 [CanBeNull] string path,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (string.IsNullOrEmpty(path))
@@ -112,7 +112,7 @@ namespace AM
                 int argument,
                 int fromValue,
                 int toValue,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument < fromValue
@@ -136,7 +136,7 @@ namespace AM
                 long argument,
                 long fromValue,
                 long toValue,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument < fromValue
@@ -180,7 +180,7 @@ namespace AM
         public static void NonNegative
             (
                 int argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument < 0)
@@ -199,7 +199,7 @@ namespace AM
         public static void NonNegative
             (
                 long argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument < 0)
@@ -218,7 +218,7 @@ namespace AM
         public static void NonNegative
             (
                 double argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument < 0.0)
@@ -238,7 +238,7 @@ namespace AM
             (
                 [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
                 [CanBeNull, NoEnumeration] T argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
             where T : class
         {
@@ -259,7 +259,7 @@ namespace AM
             (
                 [AssertionCondition(AssertionConditionType.IS_NOT_NULL)]
                 [CanBeNull, NoEnumeration] T? argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
             where T : struct
         {
@@ -280,7 +280,7 @@ namespace AM
         public static void NotNullNorEmpty
             (
                 [CanBeNull] string argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (string.IsNullOrEmpty(argument))
@@ -299,7 +299,7 @@ namespace AM
         public static void Positive
             (
                 int argument,
-                [NotNull, InvokerParameterName] string argumentName
+                [InvokerParameterName] string argumentName
             )
         {
             if (argument <= 0)
@@ -318,7 +318,7 @@ namespace AM
         public static void Positive
             (
                 long argument,
-                [NotNull] string argumentName
+                string argumentName
             )
         {
             if (argument <= 0.0)
@@ -337,7 +337,7 @@ namespace AM
         public static void Positive
             (
                 double argument,
-                [NotNull] string argumentName
+                string argumentName
             )
         {
             if (argument <= 0.0)

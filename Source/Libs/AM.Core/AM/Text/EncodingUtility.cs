@@ -29,7 +29,6 @@ namespace AM.Text
         /// <summary>
         /// Gets the CP866 (cyrillic) <see cref="Encoding"/>.
         /// </summary>
-        [NotNull]
         public static Encoding Cp866
         {
             [DebuggerStepThrough]
@@ -48,7 +47,6 @@ namespace AM.Text
         /// <summary>
         /// Gets the Windows-1251 (cyrillic) <see cref="Encoding"/>.
         /// </summary>
-        [NotNull]
         public static Encoding Windows1251
         {
             [DebuggerStepThrough]
@@ -77,24 +75,20 @@ namespace AM.Text
         /// <summary>
         /// Change encoding of the text.
         /// </summary>
-        [CanBeNull]
-        public static string ChangeEncoding
+        public static string? ChangeEncoding
             (
-                [CanBeNull] string text,
-                [NotNull] Encoding fromEncoding,
-                [NotNull] Encoding toEncoding
+                string? text,
+                Encoding fromEncoding,
+                Encoding toEncoding
             )
         {
-            Sure.NotNull(fromEncoding, nameof(fromEncoding));
-            Sure.NotNull(toEncoding, nameof(toEncoding));
-
             if (string.IsNullOrEmpty(text))
             {
                 return text;
             }
 
-            byte[] bytes = toEncoding.GetBytes(text);
-            string result = fromEncoding.GetString(bytes);
+            var bytes = toEncoding.GetBytes(text);
+            var result = fromEncoding.GetString(bytes);
 
             return result;
         }

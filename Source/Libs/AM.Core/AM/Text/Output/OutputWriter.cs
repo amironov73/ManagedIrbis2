@@ -30,7 +30,6 @@ namespace AM.Text.Output
         /// <summary>
         /// Inner <see cref="AbstractOutput"/>.
         /// </summary>
-        [NotNull]
         public AbstractOutput Output { get; }
 
         #endregion
@@ -42,11 +41,9 @@ namespace AM.Text.Output
         /// </summary>
         public OutputWriter
             (
-                [NotNull] AbstractOutput output
+                AbstractOutput output
             )
         {
-            Sure.NotNull(output, nameof(output));
-
             Output = output;
         }
 
@@ -113,12 +110,7 @@ namespace AM.Text.Output
             }
         }
 
-        /// <summary>
-        /// Writes a subarray of characters to the text string or stream.
-        /// </summary>
-        /// <param name="buffer">The character array to write data from.</param>
-        /// <param name="index">The character position in the buffer at which to start retrieving data.</param>
-        /// <param name="count">The number of characters to write.</param>
+        /// <inheritdoc cref="TextWriter.Write(char[],int,int)"/>
         public override void Write(char[] buffer, int index, int count)
         {
             Write(new string(buffer, index, count));

@@ -50,7 +50,7 @@ namespace AM.Text
         /// </summary>
         public TextPosition
             (
-                [NotNull] TextNavigator navigator
+                TextNavigator navigator
             )
         {
             Sure.NotNull(navigator, nameof(navigator));
@@ -59,21 +59,6 @@ namespace AM.Text
             Line = navigator.Line;
             Position = navigator.Position;
         }
-
-//        /// <summary>
-//        /// Constructor.
-//        /// </summary>
-//        public TextPosition
-//            (
-//                [NotNull] TextNavigator2 navigator
-//            )
-//        {
-//            Sure.NotNull(navigator, nameof(navigator));
-//
-//            Column = navigator.Column;
-//            Line = navigator.Line;
-//            Position = navigator.Position;
-//        }
 
         #endregion
 

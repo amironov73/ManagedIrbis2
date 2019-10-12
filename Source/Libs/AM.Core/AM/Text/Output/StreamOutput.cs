@@ -33,7 +33,6 @@ namespace AM.Text.Output
         /// <summary>
         /// Inner writer.
         /// </summary>
-        [NotNull]
         public TextWriter Writer { get; }
 
         #endregion
@@ -45,11 +44,9 @@ namespace AM.Text.Output
         /// </summary>
         public StreamOutput
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             Writer = writer;
             _ownWriter = false;
         }
@@ -59,13 +56,10 @@ namespace AM.Text.Output
         /// </summary>
         public StreamOutput
             (
-                [NotNull] Stream stream,
-                [NotNull] Encoding encoding
+                Stream stream,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(encoding, nameof(encoding));
-
             Writer = new StreamWriter(stream, encoding);
             _ownWriter = true;
         }

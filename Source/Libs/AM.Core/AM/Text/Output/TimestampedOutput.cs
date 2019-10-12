@@ -38,13 +38,11 @@ namespace AM.Text.Output
         /// <summary>
         /// Inner output.
         /// </summary>
-        [NotNull]
         public AbstractOutput InnerOutput { get; private set; }
 
         /// <summary>
         /// Format
         /// </summary>
-        [NotNull]
         public string Format { get; set; }
 
         #endregion
@@ -56,11 +54,9 @@ namespace AM.Text.Output
         /// </summary>
         public TimestampedOutput
             (
-                [NotNull] AbstractOutput innerOutput
+                AbstractOutput innerOutput
             )
         {
-            Sure.NotNull(innerOutput, nameof(innerOutput));
-
             InnerOutput = innerOutput;
             Format = DefaultFormat;
         }
@@ -75,10 +71,6 @@ namespace AM.Text.Output
 
             return result;
         }
-
-        #endregion
-
-        #region Public methods
 
         #endregion
 

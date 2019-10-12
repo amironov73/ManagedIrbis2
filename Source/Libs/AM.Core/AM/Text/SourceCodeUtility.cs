@@ -19,7 +19,7 @@ using JetBrains.Annotations;
 namespace AM.Text
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     [PublicAPI]
     public static class SourceCodeUtility
@@ -29,7 +29,6 @@ namespace AM.Text
         /// <summary>
         /// Convert byte value to C# source code.
         /// </summary>
-        [NotNull]
         public static string ToSourceCode
             (
                 byte value
@@ -47,13 +46,11 @@ namespace AM.Text
         /// </summary>
         public static string ToSourceCode
             (
-                [NotNull] byte[] array
+                byte[] array
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            StringBuilder result = new StringBuilder("{");
-            for (int i = 0; i < array.Length; i++)
+            var result = new StringBuilder("{");
+            for (var i = 0; i < array.Length; i++)
             {
                 if (i != 0)
                 {
@@ -127,13 +124,11 @@ namespace AM.Text
         /// </summary>
         public static string ToSourceCode
             (
-                [NotNull] char[] array
+                char[] array
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            StringBuilder result = new StringBuilder("{");
-            for (int i = 0; i < array.Length; i++)
+            var result = new StringBuilder("{");
+            for (var i = 0; i < array.Length; i++)
             {
                 if (i != 0)
                 {
@@ -159,13 +154,11 @@ namespace AM.Text
         /// </summary>
         public static string ToSourceCode
             (
-                [NotNull] int[] array
+                int[] array
             )
         {
-            Sure.NotNull(array, nameof(array));
-
-            StringBuilder result = new StringBuilder("{");
-            for (int i = 0; i < array.Length; i++)
+            var result = new StringBuilder("{");
+            for (var i = 0; i < array.Length; i++)
             {
                 if (i != 0)
                 {

@@ -141,7 +141,6 @@ namespace AM.Runtime
         /// <summary>
         /// Get block of bytes from given pointer.
         /// </summary>
-        [NotNull]
         public static byte[] GetBlock
             (
                 this IntPtr pointer,
@@ -151,7 +150,6 @@ namespace AM.Runtime
             var result = new byte[blockLength];
 
             Marshal.Copy(pointer, result, 0, blockLength);
-
             return result;
         }
 

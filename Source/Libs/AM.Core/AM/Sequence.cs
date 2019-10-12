@@ -33,10 +33,11 @@ namespace AM
         /// <summary>
         /// First or given item of sequence.
         /// </summary>
+#nullable disable
         [CanBeNull]
         public static T FirstOr<T>
             (
-                [NotNull] this IEnumerable<T> list,
+                this IEnumerable<T> list,
                 [CanBeNull] T defaultValue
             )
         {
@@ -49,12 +50,12 @@ namespace AM
 
             return defaultValue;
         }
+#nullable restore
 
         /// <summary>
         /// Sequence of one element.
         /// </summary>
         [Pure]
-        [NotNull]
         public static IEnumerable<T> FromItem<T>
             (
                 T item
@@ -67,7 +68,6 @@ namespace AM
         /// Sequence of two items.
         /// </summary>
         [Pure]
-        [NotNull]
         public static IEnumerable<T> FromItems<T>
             (
                 T item1,
@@ -82,7 +82,6 @@ namespace AM
         /// Sequence of three items.
         /// </summary>
         [Pure]
-        [NotNull]
         public static IEnumerable<T> FromItems<T>
             (
                 T item1,
@@ -99,7 +98,6 @@ namespace AM
         /// Make sequence of given items.
         /// </summary>
         [Pure]
-        [NotNull]
         public static IEnumerable<T> FromItems<T>
             (
                 params T[] items
@@ -114,15 +112,14 @@ namespace AM
         /// <summary>
         /// Get max or default value for the sequence.
         /// </summary>
+#nullable disable
         public static T MaxOrDefault<T>
             (
-                [NotNull] this IEnumerable<T> sequence,
+                this IEnumerable<T> sequence,
                 T defaultValue
             )
         {
-            Sure.NotNull(sequence, nameof(sequence));
-
-            T[] array = sequence.ToArray();
+            var array = sequence.ToArray();
             if (array.Length == 0)
             {
                 return defaultValue;
@@ -132,57 +129,66 @@ namespace AM
 
             return result;
         }
+#nullable restore
 
         /// <summary>
         /// Get max or default value for the sequence.
         /// </summary>
+#nullable disable
         public static TOutput MaxOrDefault<TInput,TOutput>
             (
-                [NotNull] this IEnumerable<TInput> sequence,
-                [NotNull] Func<TInput,TOutput> selector,
+                this IEnumerable<TInput> sequence,
+                Func<TInput,TOutput> selector,
                 TOutput defaultValue
             )
         {
-            Sure.NotNull(sequence, nameof(sequence));
-            Sure.NotNull(selector, nameof(selector));
-
-            TInput[] array = sequence.ToArray();
+            var array = sequence.ToArray();
             if (array.Length == 0)
             {
                 return defaultValue;
             }
 
-            TOutput result = array.Max(selector);
-
+            var result = array.Max(selector);
             return result;
         }
+#nullable restore
 
         /// <summary>
         /// Отбирает из последовательности только
         /// ненулевые элементы.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public static IEnumerable<T> NonNullItems<T>
             (
-                [NotNull] this IEnumerable<T> sequence
+                this IEnumerable<T> sequence
             )
             where T : class
         {
-            Sure.NotNull(sequence, nameof(sequence));
-
-            return sequence.Where(value => !ReferenceEquals(value, null));
+            foreach (var item in sequence)
+            {
+                if (!ReferenceEquals(item, null))
+                {
+                    yield return item;
+                }
+            }
         }
 
         /// <summary>
         /// Отбирает из последовательности только непустые строки.
         /// </summary>
+        [ItemNotNull]
         public static IEnumerable<string> NonEmptyLines
             (
                 this IEnumerable<string> sequence
             )
         {
-            return sequence.Where ( line => !string.IsNullOrEmpty(line) );
+            foreach (var line in sequence)
+            {
+                if (!string.IsNullOrEmpty(line))
+                {
+                    yield return line;
+                }
+            }
         }
 
         /// <summary>
@@ -191,11 +197,11 @@ namespace AM
         /// <param name="value">The value.</param>
         /// <param name="count">The count.</param>
         /// <returns>Sequence of specified values.</returns>
+#nullable disable
         [Pure]
-        [NotNull]
         public static IEnumerable<T> Repeat<T>
             (
-                [CanBeNull] T value,
+                T value,
                 int count
             )
         {
@@ -204,19 +210,17 @@ namespace AM
                 yield return value;
             }
         }
+#nullable restore
 
         /// <summary>
         /// Repeats the specified list.
         /// </summary>
-        [NotNull]
         public static IEnumerable<T> Repeat<T>
             (
-                [NotNull] IEnumerable<T> list,
+                IEnumerable<T> list,
                 int count
             )
         {
-            Sure.NotNull(list, nameof(list));
-
             while (count-- > 0)
             {
                 // ReSharper disable once PossibleMultipleEnumeration
@@ -234,17 +238,15 @@ namespace AM
         /// <param name="replaceFrom">Item to replace from.</param>
         /// <param name="replaceTo">Replacement.</param>
         /// <returns>List with replaced items.</returns>
-        [NotNull]
+#nullable disable
         public static IEnumerable<T> Replace<T>
             (
-                [NotNull] this IEnumerable<T> list,
+                this IEnumerable<T> list,
                 [CanBeNull] T replaceFrom,
                 [CanBeNull] T replaceTo
             )
             where T : IEquatable<T>
         {
-            Sure.NotNull(list, nameof(list));
-
             foreach (T item in list)
             {
                 if (item.Equals(replaceFrom))
@@ -257,6 +259,7 @@ namespace AM
                 }
             }
         }
+#nullable restore
 
         /// <summary>
         /// Extracts segment from the specified list.
@@ -265,19 +268,17 @@ namespace AM
         /// <param name="offset">The offset.</param>
         /// <param name="count">The count.</param>
         /// <returns>Segment.</returns>
-        [NotNull]
         public static IEnumerable<T> Segment<T>
             (
-                [NotNull] this IEnumerable<T> list,
+            this IEnumerable<T> list,
                 int offset,
                 int count
             )
         {
-            Sure.NotNull(list, nameof(list));
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(count, nameof(count));
 
-            int index = 0;
+            var index = 0;
             foreach (T obj in list)
             {
                 if (index < offset)
@@ -300,16 +301,12 @@ namespace AM
         /// Добавляем некоторое действие к каждому
         /// элементу последовательности.
         /// </summary>
-        [NotNull]
         public static IEnumerable<T> Tee<T>
             (
-                [NotNull] this IEnumerable<T> list,
-                [NotNull] Action<T> action
+                this IEnumerable<T> list,
+                Action<T> action
             )
         {
-            Sure.NotNull(list, nameof(list));
-            Sure.NotNull(action, nameof(action));
-
             foreach (T item in list)
             {
                 action(item);
@@ -322,17 +319,13 @@ namespace AM
         /// Добавляем некоторое действие к каждому
         /// элементу последовательности.
         /// </summary>
-        [NotNull]
         public static IEnumerable<T> Tee<T>
             (
-                [NotNull] this IEnumerable<T> list,
-                [NotNull] Action<int, T> action
+                this IEnumerable<T> list,
+                Action<int, T> action
             )
         {
-            Sure.NotNull(list, nameof(list));
-            Sure.NotNull(action, nameof(action));
-
-            int index = 0;
+            var index = 0;
             foreach (T item in list)
             {
                 action(index, item);
@@ -351,10 +344,8 @@ namespace AM
                 object? separator
             )
         {
-            Sure.NotNull(sequence, nameof(sequence));
-
-            bool first = true;
-            foreach (object? obj in sequence)
+            var first = true;
+            foreach (var obj in sequence)
             {
                 if (first)
                 {
@@ -372,14 +363,12 @@ namespace AM
         /// Slice the sequence to pieces
         /// with given size.
         /// </summary>
-        [NotNull]
         public static IEnumerable<T[]> Slice<T>
             (
-                [NotNull] this IEnumerable<T> sequence,
+                this IEnumerable<T> sequence,
                 int pieceSize
             )
         {
-            Sure.NotNull(sequence, nameof(sequence));
             if (pieceSize <= 0)
             {
                 Log.Error
@@ -392,7 +381,7 @@ namespace AM
                 throw new ArgumentOutOfRangeException(nameof(pieceSize));
             }
 
-            List<T> piece = new List<T>(pieceSize);
+            var piece = new List<T>(pieceSize);
             foreach (T item in sequence)
             {
                 piece.Add(item);
