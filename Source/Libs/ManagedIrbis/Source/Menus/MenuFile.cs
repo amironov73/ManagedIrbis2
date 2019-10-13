@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 using AM;
@@ -295,7 +296,7 @@ namespace ManagedIrbis.Menus
                 Encoding encoding
             )
         {
-            using StreamReader reader = TextReaderUtility.OpenRead
+            using var reader = TextReaderUtility.OpenRead
                 (
                     fileName,
                     encoding
@@ -321,55 +322,55 @@ namespace ManagedIrbis.Menus
                 );
         }
 
-//        /// <summary>
-//        /// Parse server response.
-//        /// </summary>
-//        public static MenuFile ParseServerResponse
-//            (
-//                ServerResponse response
-//            )
-//        {
-//            TextReader reader = response.GetReader(IrbisEncoding.Ansi);
-//            MenuFile result = ParseStream(reader);
-//
-//            return result;
-//        }
-//
-//        /// <summary>
-//        /// Parse server response.
-//        /// </summary>
-//        public static MenuFile ParseServerResponse
-//            (
-//                string response
-//            )
-//        {
-//            Sure.NotNullNorEmpty(response, nameof(response));
-//
-//            TextReader reader = new StringReader(response);
-//            MenuFile result = ParseStream(reader);
-//
-//            return result;
-//        }
+        /// <summary>
+        /// Parse server response.
+        /// </summary>
+        public static MenuFile ParseServerResponse
+            (
+                ServerResponse response
+            )
+        {
+            var reader = response.GetReader(IrbisEncoding.Ansi);
+            var result = ParseStream(reader);
 
-//        /// <summary>
-//        /// Read <see cref="MenuFile"/> from server.
-//        /// </summary>
-//        public static MenuFile? ReadFromServer
-//            (
-//                IIrbisConnection connection,
-//                FileSpecification fileSpecification
-//            )
-//        {
-//            string response = connection.ReadTextFile(fileSpecification);
-//            if (string.IsNullOrEmpty(response))
-//            {
-//                return null;
-//            }
-//
-//            MenuFile result = ParseServerResponse(response);
-//
-//            return result;
-//        }
+            return result;
+        }
+
+        /// <summary>
+        /// Parse server response.
+        /// </summary>
+        public static MenuFile ParseServerResponse
+            (
+                string response
+            )
+        {
+            Sure.NotNullNorEmpty(response, nameof(response));
+
+            TextReader reader = new StringReader(response);
+            var result = ParseStream(reader);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Read <see cref="MenuFile"/> from server.
+        /// </summary>
+        public static async Task<MenuFile?> ReadFromServer
+            (
+                IrbisConnection connection,
+                FileSpecification fileSpecification
+            )
+        {
+            var response = await connection.ReadTextFileAsync(fileSpecification.ToString());
+            if (string.IsNullOrEmpty(response))
+            {
+                return null;
+            }
+
+            var result = ParseServerResponse(response);
+
+            return result;
+        }
 
         /// <summary>
         /// Sorts the entries.

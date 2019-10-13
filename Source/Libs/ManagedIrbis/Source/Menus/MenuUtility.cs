@@ -20,6 +20,8 @@ using AM.Collections;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Infrastructure;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -98,11 +100,10 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Collects the comments for code.
         /// </summary>
-        [NotNull]
-        public static string[] CollectStrings
+        public static string?[] CollectStrings
             (
-            [NotNull] this MenuFile menu,
-            [NotNull] string code
+                this MenuFile menu,
+                string code
             )
         {
             return menu.Entries
@@ -119,6 +120,7 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Gets the value.
         /// </summary>
+#nullable disable
         [CanBeNull]
         public static T GetValue<T>
             (
@@ -136,6 +138,7 @@ namespace ManagedIrbis.Menus
                 ? defaultValue
                 : ConversionUtility.ConvertTo<T>(found.Comment);
         }
+#nullable restore
 
         /// <summary>
         /// Gets the value (case sensitive).
@@ -148,12 +151,9 @@ namespace ManagedIrbis.Menus
                 T defaultValue
             )
         {
-            Sure.NotNull(menu, nameof(menu));
-            Sure.NotNull(code, nameof(code));
+            var found = menu.FindEntrySensitive(code);
 
-            MenuEntry found = menu.FindEntrySensitive(code);
-
-            return found == null
+            return ReferenceEquals(found, null)
                 ? defaultValue
                 : ConversionUtility.ConvertTo<T>(found.Comment);
         }
@@ -213,8 +213,8 @@ namespace ManagedIrbis.Menus
 
             File.WriteAllText
                 (
-                    fileName, 
-                    contents, 
+                    fileName,
+                    contents,
                     IrbisEncoding.Utf8
                 );
         }
@@ -243,44 +243,63 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Convert MNU to TRE.
         /// </summary>
-        [NotNull]
         public static IrbisTreeFile ToTree
             (
-                [NotNull] this MenuFile menu
+                this MenuFile menu
             )
         {
-            Sure.NotNull(menu, nameof(menu));
-
-            foreach (MenuEntry entry in menu.Entries)
+            foreach (var entry in menu.Entries)
             {
                 entry.Code = entry.Code.ThrowIfNull("entryCode").Trim();
             }
 
-            foreach (MenuEntry first in menu.Entries)
+            foreach (var first in menu.Entries)
             {
-                foreach (MenuEntry second in menu.Entries)
+                if (ReferenceEquals(first, null))
                 {
+                    continue;
+                }
+                var firstCode = first.Code;
+                if (ReferenceEquals(firstCode, null))
+                {
+                    continue;
+                }
+                foreach (var second in menu.Entries)
+                {
+                    if (ReferenceEquals(second, null))
+                    {
+                        continue;
+                    }
+                    var secondCode = second?.Code;
+                    if (ReferenceEquals(secondCode, null))
+                    {
+                        continue;
+                    }
                     if (ReferenceEquals(first, second))
                     {
                         continue;
                     }
-                    if (first.Code.SameString(second.Code))
+                    if (firstCode.SameString(secondCode))
                     {
                         continue;
                     }
 
-                    if (first.Code.StartsWith(second.Code))
+                    if (firstCode.StartsWith(secondCode))
                     {
-                        if (ReferenceEquals(first.OtherEntry, null))
+                        var otherEntry = first.OtherEntry;
+                        if (ReferenceEquals(otherEntry, null))
                         {
                             first.OtherEntry = second;
                         }
                         else
                         {
-                            if (second.Code.Length
-                                > first.OtherEntry.Code.Length)
+                            var otherCode = otherEntry.Code;
+                            if (!ReferenceEquals(otherCode, null))
                             {
-                                first.OtherEntry = second;
+                                if (secondCode.Length > otherCode.Length)
+                                {
+                                    first.OtherEntry = second;
+                                }
                             }
                         }
                     }

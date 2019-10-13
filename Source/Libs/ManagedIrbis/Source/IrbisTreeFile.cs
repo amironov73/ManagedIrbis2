@@ -65,7 +65,6 @@ namespace ManagedIrbis
             /// <summary>
             /// Children.
             /// </summary>
-            [NotNull]
             [ItemNotNull]
             [JsonProperty("children")]
             public NonNullCollection<Item> Children { get; }
@@ -73,7 +72,7 @@ namespace ManagedIrbis
             /// <summary>
             /// Delimiter.
             /// </summary>
-            public static string Delimiter
+            public static string? Delimiter
             {
                 get => _delimiter;
                 set => SetDelimiter(value);
@@ -83,20 +82,19 @@ namespace ManagedIrbis
             /// Prefix.
             /// </summary>
             [JsonIgnore]
-            public string Prefix => _prefix;
+            public string? Prefix => _prefix;
 
             /// <summary>
             /// Suffix.
             /// </summary>
             [JsonIgnore]
-            public string Suffix => _suffix;
+            public string? Suffix => _suffix;
 
             /// <summary>
             /// Value.
             /// </summary>
-            [CanBeNull]
             [JsonProperty("value")]
-            public string Value
+            public string? Value
             {
                 get => _value;
                 set => SetValue(value);
@@ -119,7 +117,7 @@ namespace ManagedIrbis
             /// </summary>
             public Item
                 (
-                    [CanBeNull] string value
+                    string? value
                 )
                 : this()
             {
@@ -130,9 +128,9 @@ namespace ManagedIrbis
 
             #region Private members
 
-            private static string _delimiter = " - ";
+            private static string? _delimiter = " - ";
 
-            private string _prefix, _suffix, _value;
+            private string? _prefix, _suffix, _value;
 
             internal int Level;
 
@@ -143,13 +141,12 @@ namespace ManagedIrbis
             /// <summary>
             /// Add child.
             /// </summary>
-            [NotNull]
             public Item AddChild
                 (
-                    [CanBeNull] string value
+                    string? value
                 )
             {
-                Item result = new Item(value);
+                var result = new Item(value);
                 Children.Add(result);
 
                 return result;
@@ -160,7 +157,7 @@ namespace ManagedIrbis
             /// </summary>
             public static void SetDelimiter
                 (
-                    [CanBeNull] string value
+                    string? value
                 )
             {
                 _delimiter = value;
@@ -171,10 +168,10 @@ namespace ManagedIrbis
             /// </summary>
             public void SetValue
                 (
-                    [CanBeNull] string value
+                    string? value
                 )
             {
-                Sure.NotNullNorEmpty(value, nameof(value));
+                //Sure.NotNullNorEmpty(value, nameof(value));
 
                 _value = value;
                 _prefix = null;
@@ -184,7 +181,7 @@ namespace ManagedIrbis
                     && !ReferenceEquals(value, null)
                     && value.Length != 0)
                 {
-                    string[] parts = value.Split
+                    var parts = value.Split
                         (
                             new [] {Delimiter},
                             2,
@@ -202,10 +199,9 @@ namespace ManagedIrbis
             /// <summary>
             /// Convert to array of menu items.
             /// </summary>
-            [NotNull]
             public MenuEntry[] ToMenu()
             {
-                List<MenuEntry> result = new List<MenuEntry>
+                var result = new List<MenuEntry>
                 {
                     new MenuEntry
                     {
@@ -214,7 +210,7 @@ namespace ManagedIrbis
                     }
                 };
 
-                foreach (Item child in Children)
+                foreach (var child in Children)
                 {
                     result.AddRange(child.ToMenu());
                 }
@@ -227,13 +223,11 @@ namespace ManagedIrbis
             /// </summary>
             public void Walk
                 (
-                    [NotNull] Action<Item> action
+                    Action<Item> action
                 )
             {
-                Sure.NotNull(action, nameof(action));
-
                 action(this);
-                foreach (Item child in Children)
+                foreach (var child in Children)
                 {
                     child.Walk(action);
                 }
@@ -273,7 +267,7 @@ namespace ManagedIrbis
                     bool throwException
                 )
             {
-                bool result = !string.IsNullOrEmpty(Value);
+                var result = !string.IsNullOrEmpty(Value);
 
                 if (result && Children.Count != 0)
                 {
@@ -311,13 +305,11 @@ namespace ManagedIrbis
         /// <summary>
         /// File name.
         /// </summary>
-        [CanBeNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         /// <summary>
         /// Root items.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public NonNullCollection<Item> Roots { get; }
 
@@ -342,12 +334,12 @@ namespace ManagedIrbis
         /// </summary>
         private static int CountIndent
             (
-                [NotNull] string line
+                string line
             )
         {
-            int result = 0;
+            var result = 0;
 
-            foreach (char c in line)
+            foreach (var c in line)
             {
                 if (c == Indent)
                 {
@@ -370,8 +362,8 @@ namespace ManagedIrbis
                 int count
             )
         {
-            int next = index + 1;
-            int level2 = level + 1;
+            var next = index + 1;
+            var level2 = level + 1;
 
             while (next < count)
             {
@@ -397,12 +389,12 @@ namespace ManagedIrbis
                 int level
             )
         {
-            int count = items.Count;
-            int index = 0;
+            var count = items.Count;
+            var index = 0;
 
             while (index < count)
             {
-                int next = _ArrangeLevel
+                var next = _ArrangeLevel
                     (
                         items,
                         level,
@@ -421,9 +413,9 @@ namespace ManagedIrbis
                 int level
             )
         {
-            foreach (Item item in items)
+            foreach (var item in items)
             {
-                for (int i = 0; i < level; i++)
+                for (var i = 0; i < level; i++)
                 {
                     writer.Write(Indent);
                 }
@@ -445,13 +437,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Add root item.
         /// </summary>
-        [NotNull]
         public Item AddRoot
             (
-                [CanBeNull] string value
+                string? value
             )
         {
-            Item result = new Item(value);
+            var result = new Item(value);
             Roots.Add(result);
 
             return result;
@@ -460,19 +451,16 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse specified stream.
         /// </summary>
-        [NotNull]
         [MustUseReturnValue]
         public static IrbisTreeFile ParseStream
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
+            var result = new IrbisTreeFile();
 
-            IrbisTreeFile result = new IrbisTreeFile();
-
-            List<Item> list = new List<Item>();
-            string line = reader.ReadLine();
+            var list = new List<Item>();
+            var line = reader.ReadLine();
             if (ReferenceEquals(line, null))
             {
                 goto DONE;
@@ -490,10 +478,10 @@ namespace ManagedIrbis
             }
             list.Add(new Item(line));
 
-            int currentLevel = 0;
+            var currentLevel = 0;
             while ((line = reader.ReadLine()) != null)
             {
-                int level = CountIndent(line);
+                var level = CountIndent(line);
                 if (level > currentLevel + 1)
                 {
                     Log.Error
@@ -506,15 +494,15 @@ namespace ManagedIrbis
                 }
                 currentLevel = level;
                 line = line.TrimStart(Indent);
-                Item item = new Item(line)
+                var item = new Item(line)
                 {
                     Level = currentLevel
                 };
                 list.Add(item);
             }
 
-            int maxLevel = list.Max(item => item.Level);
-            for (int level = 0; level < maxLevel; level++)
+            var maxLevel = list.Max(item => item.Level);
+            for (var level = 0; level < maxLevel; level++)
             {
                 _ArrangeLevel(list, level);
             }
@@ -529,28 +517,24 @@ DONE:
         /// <summary>
         /// Read local file.
         /// </summary>
-        [NotNull]
         [MustUseReturnValue]
         public static IrbisTreeFile ReadLocalFile
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
-                    (
-                        fileName,
-                        encoding
-                    ))
-            {
-                IrbisTreeFile result = ParseStream(reader);
-                result.FileName = Path.GetFileName(fileName);
+            using var reader = TextReaderUtility.OpenRead
+                (
+                    fileName,
+                    encoding
+                );
+            var result = ParseStream(reader);
+            result.FileName = Path.GetFileName(fileName);
 
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -558,7 +542,7 @@ DONE:
         /// </summary>
         public void Save
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
             _WriteLevel
@@ -574,32 +558,28 @@ DONE:
         /// </summary>
         public void SaveToLocalFile
             (
-                [NotNull] string fileName,
-                [NotNull] Encoding encoding
+                string fileName,
+                Encoding encoding
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
-            Sure.NotNull(encoding, nameof(encoding));
 
-            using (StreamWriter writer = TextWriterUtility.Create
-                    (
-                        fileName,
-                        encoding
-                    ))
-            {
-                Save(writer);
-            }
+            using var writer = TextWriterUtility.Create
+                (
+                    fileName,
+                    encoding
+                );
+            Save(writer);
         }
 
         /// <summary>
         /// Convert tree to menu.
         /// </summary>
-        [NotNull]
         public MenuFile ToMenu()
         {
-            MenuFile result = new MenuFile();
+            var result = new MenuFile();
 
-            foreach (Item root in Roots)
+            foreach (var root in Roots)
             {
                 result.Entries.AddRange(root.ToMenu());
             }
@@ -612,12 +592,10 @@ DONE:
         /// </summary>
         public void Walk
             (
-                [NotNull] Action<Item> action
+                Action<Item> action
             )
         {
-            Sure.NotNull(action, nameof(action));
-
-            foreach (Item child in Roots)
+            foreach (var child in Roots)
             {
                 child.Walk(action);
             }
@@ -657,7 +635,7 @@ DONE:
                 bool throwException
             )
         {
-            bool result = Roots.Count != 0
+            var result = Roots.Count != 0
                 && Roots.All
                     (
                         root => root.Verify(throwException)
@@ -665,10 +643,6 @@ DONE:
 
             return result;
         }
-
-        #endregion
-
-        #region Object members
 
         #endregion
     }
