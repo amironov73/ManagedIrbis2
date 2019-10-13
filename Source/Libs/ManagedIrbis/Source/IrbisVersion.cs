@@ -1,7 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* IrbisVersion.cs -- информация о версии ИРБИС-сервера.
+/* IrbisVersion.cs -- information about the IRBIS64-server
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
  * Status: poor
@@ -9,7 +9,7 @@
 
 #region Using directives
 
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -31,7 +31,7 @@ using Newtonsoft.Json;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// Информация о версии ИРБИС-сервера.
+    /// Information about the IRBIS64-server.
     /// </summary>
     [PublicAPI]
     [XmlRoot("version")]
@@ -44,19 +44,17 @@ namespace ManagedIrbis
         /// <summary>
         /// На кого приобретен.
         /// </summary>
-        [CanBeNull]
         [XmlAttribute("organization")]
         [JsonProperty("organization", NullValueHandling = NullValueHandling.Ignore)]
-        public string Organization { get; set; }
+        public string? Organization { get; set; }
 
         /// <summary>
         /// Собственно версия.
         /// </summary>
         /// <remarks>Например, 64.2008.1</remarks>
-        [CanBeNull]
         [XmlAttribute("version")]
         [JsonProperty("version", NullValueHandling = NullValueHandling.Ignore)]
-        public string Version { get; set; }
+        public string? Version { get; set; }
 
         /// <summary>
         /// Максимальное количество подключений.
@@ -79,16 +77,13 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse server response.
         /// </summary>
-        [NotNull]
         public static IrbisVersion ParseServerResponse
             (
-                [NotNull] ServerResponse response
+                ServerResponse response
             )
         {
-            Sure.NotNull(response, nameof(response));
-
-            List<string> lines = response.RemainingAnsiStrings();
-            IrbisVersion result = ParseServerResponse(lines);
+            var lines = response.ReadRemainingAnsiLines();
+            var result = ParseServerResponse(lines);
 
             return result;
         }
@@ -96,15 +91,16 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse server response.
         /// </summary>
-        [NotNull]
         public static IrbisVersion ParseServerResponse
             (
-                [NotNull] List<string> lines
+                string[] lines
             )
         {
-            Sure.NotNull(lines, nameof(lines));
-
-            IrbisVersion result = lines.Count == 4
+            if (lines.Length < 3)
+            {
+                throw new ArgumentException(nameof(lines));
+            }
+            var result = lines.Length > 3
                 ? new IrbisVersion
                    {
                        Organization = lines.GetItem(0),

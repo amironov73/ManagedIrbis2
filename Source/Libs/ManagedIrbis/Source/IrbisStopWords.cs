@@ -19,7 +19,6 @@ using AM.Collections;
 using JetBrains.Annotations;
 
 using ManagedIrbis.Infrastructure;
-using ManagedIrbis.Properties;
 
 #endregion
 
@@ -57,8 +56,7 @@ namespace ManagedIrbis
         /// <summary>
         /// File name (for identification only).
         /// </summary>
-        [CanBeNull]
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
 
         #endregion
 
@@ -69,7 +67,7 @@ namespace ManagedIrbis
         /// </summary>
         public IrbisStopWords()
         {
-            _dictionary = new CaseInsensitiveDictionary<object>();
+            _dictionary = new CaseInsensitiveDictionary<object?>();
         }
 
         /// <summary>
@@ -79,83 +77,79 @@ namespace ManagedIrbis
         /// <param name="fileName">The name.</param>
         public IrbisStopWords
             (
-                [CanBeNull] string fileName
+                string? fileName
             )
+            : this()
         {
             FileName = fileName;
-            _dictionary = new CaseInsensitiveDictionary<object>();
         }
 
         #endregion
 
         #region Private members
 
-        private readonly CaseInsensitiveDictionary<object> _dictionary;
+        private readonly CaseInsensitiveDictionary<object?> _dictionary;
 
         #endregion
 
         #region Public methods
 
-        /// <summary>
-        /// Load stopword list from server.
-        /// </summary>
-        [NotNull]
-        public static IrbisStopWords FromServer
-            (
-                [NotNull] IIrbisConnection connection
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
+//        /// <summary>
+//        /// Load stopword list from server.
+//        /// </summary>
+//        public static IrbisStopWords FromServer
+//            (
+//                IrbisConnection connection
+//            )
+//        {
+//            string database = connection.Database
+//                .ThrowIfNull(Resources.DatabaseNotSet);
+//            string fileName = database + ".stw";
+//
+//            return FromServer(connection, database, fileName);
+//        }
 
-            string database = connection.Database
-                .ThrowIfNull(Resources.DatabaseNotSet);
-            string fileName = database + ".stw";
-
-            return FromServer(connection, database, fileName);
-        }
-
-        /// <summary>
-        /// Load stopword list from server.
-        /// </summary>
-        [NotNull]
-        public static IrbisStopWords FromServer
-            (
-                [NotNull] IIrbisConnection connection,
-                [NotNull] string database,
-                [NotNull] string fileName
-            )
-        {
-            Sure.NotNull(connection, nameof(connection));
-            Sure.NotNullNorEmpty(database, nameof(database));
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-
-            FileSpecification specification = new FileSpecification
-                (
-                    path: IrbisPath.MasterFile,
-                    database: database,
-                    fileName: fileName
-                );
-
-            string text = connection.ReadTextFile(specification);
-            if (string.IsNullOrEmpty(text))
-            {
-                text = string.Empty;
-            }
-
-            IrbisStopWords result = ParseText(fileName, text);
-
-            return result;
-        }
+//        /// <summary>
+//        /// Load stopword list from server.
+//        /// </summary>
+//        public static IrbisStopWords FromServer
+//            (
+//                IrbisConnection connection,
+//                string database,
+//                string fileName
+//            )
+//        {
+//            Sure.NotNullNorEmpty(database, nameof(database));
+//            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+//
+//            FileSpecification specification = new FileSpecification
+//                (
+//                    path: IrbisPath.MasterFile,
+//                    database: database,
+//                    fileName: fileName
+//                );
+//
+//            string? text = connection
+//                .ReadTextFileAsync(specification.ToString()).Result;
+//            if (string.IsNullOrEmpty(text))
+//            {
+//                text = string.Empty;
+//            }
+//
+//            IrbisStopWords result = ParseText(fileName, text);
+//
+//            return result;
+//        }
 
         /// <summary>
         /// Is given word is stopword?
         /// </summary>
         public bool IsStopWord
             (
-                [CanBeNull] string word
+                string? word
             )
         {
-            if (ReferenceEquals(word, null) || word.Length == 0)
+            if (string.IsNullOrEmpty(word))
             {
                 return true;
             }
@@ -172,15 +166,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse array of plain text lines.
         /// </summary>
-        [NotNull]
         public static IrbisStopWords ParseLines
             (
-                [CanBeNull] string name,
-                [NotNull][ItemNotNull] string[] lines
+                string? name,
+                [ItemNotNull] string[] lines
             )
         {
-            Sure.NotNull(lines, nameof(lines));
-
             IrbisStopWords result = new IrbisStopWords(name);
 
             foreach (string line in lines)
@@ -195,22 +186,19 @@ namespace ManagedIrbis
             return result;
         }
 
-        /// <summary>
-        /// Parse plain text.
-        /// </summary>
-        [NotNull]
-        public static IrbisStopWords ParseText
-            (
-                [CanBeNull] string name,
-                [NotNull] string text
-            )
-        {
-            Sure.NotNull(text, nameof(text));
-
-            string[] lines = text.SplitLines();
-
-            return ParseLines(name, lines);
-        }
+//        /// <summary>
+//        /// Parse plain text.
+//        /// </summary>
+//        public static IrbisStopWords ParseText
+//            (
+//                string? name,
+//                string text
+//            )
+//        {
+//            string[] lines = text.SplitLines();
+//
+//            return ParseLines(name, lines);
+//        }
 
         /// <summary>
         /// Parse the text file.

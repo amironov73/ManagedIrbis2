@@ -811,7 +811,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<string?> ReadTextFileAsync
             (
-                [CanBeNull] string specification
+                string? specification
             )
         {
             if (string.IsNullOrEmpty(specification))

@@ -21,6 +21,8 @@ using AM.Text;
 
 using JetBrains.Annotations;
 
+using ManagedIrbis.Infrastructure;
+
 #endregion
 
 namespace ManagedIrbis
@@ -59,7 +61,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Имя файла таблицы по умолчанию.
         /// </summary>
-        public const string FileName = "ISISACW.TAB";
+        public const string DefaultFileName = "ISISACW.TAB";
 
         #endregion
 
@@ -77,6 +79,7 @@ namespace ManagedIrbis
         /// <summary>
         /// Constructor.
         /// </summary>
+#nullable disable
         public IrbisAlphabetTable()
         {
             _encoding = IrbisEncoding.Ansi;
@@ -104,49 +107,51 @@ namespace ManagedIrbis
                 };
             _BuildCharacters();
         }
+#nullable restore
 
         /// <summary>
         /// Constructor.
         /// </summary>
+#nullable disable
         public IrbisAlphabetTable
             (
-                [NotNull] Encoding encoding,
-                [NotNull] byte[] table
+                Encoding encoding,
+                byte[] table
             )
         {
-            Sure.NotNull(encoding, nameof(encoding));
-            Sure.NotNull(table, nameof(table));
-
             _encoding = encoding;
             _table = table;
             _BuildCharacters();
         }
+#nullable restore
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public IrbisAlphabetTable
             (
-                [NotNull] IIrbisConnection client,
-                [NotNull] string fileName = FileName
+                IrbisConnection client,
+                string fileName = DefaultFileName
             )
         {
-            Sure.NotNull(client, nameof(client));
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            string text = client.ReadTextFile
+            FileSpecification specification = new FileSpecification
                 (
                     IrbisPath.System,
                     fileName
+                );
+            string text = client.ReadTextFileAsync
+                (
+                    specification.ToString()
                 )
-                .ThrowIfNull("Alphabet table " + fileName);
+                .Result
+                .ThrowIfNull($"Alphabet table: {fileName}");
 
-            using (StringReader reader = new StringReader(text))
-            {
-                _encoding = IrbisEncoding.Ansi;
-                _table = _ParseText(reader);
-                Characters = _encoding.GetChars(_table);
-            }
+            using StringReader reader = new StringReader(text);
+            _encoding = IrbisEncoding.Ansi;
+            _table = _ParseText(reader);
+            Characters = _encoding.GetChars(_table);
         }
 
         #endregion
@@ -155,7 +160,7 @@ namespace ManagedIrbis
 
         private static object _lock = new object();
 
-        private static IrbisAlphabetTable _instance;
+        private static IrbisAlphabetTable? _instance;
 
         private Encoding _encoding;
 
@@ -210,7 +215,7 @@ namespace ManagedIrbis
                     break;
                 }
 
-                string s = navigator.ReadInteger();
+                string s = navigator.ReadInteger().ToString();
                 if (string.IsNullOrEmpty(s))
                 {
                     throw new IrbisException("Bad Alphabet table");
@@ -236,14 +241,11 @@ namespace ManagedIrbis
         /// Get global instance of the
         /// <see cref="IrbisAlphabetTable"/>.
         /// </summary>
-        [NotNull]
         public static IrbisAlphabetTable GetInstance
             (
-                [NotNull] IIrbisConnection connection
+                IrbisConnection connection
             )
         {
-            Sure.NotNull(connection, nameof(connection));
-
             lock (_lock)
             {
                 if (ReferenceEquals(_instance, null))
