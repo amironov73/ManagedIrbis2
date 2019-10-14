@@ -78,7 +78,6 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Clone the <see cref="TermLink"/>.
         /// </summary>
-        [NotNull]
         public TermLink Clone()
         {
             return (TermLink) MemberwiseClone();
@@ -89,14 +88,11 @@ namespace ManagedIrbis.Search
         /// </summary>
         public static void Dump
             (
-                [NotNull] IEnumerable<TermLink> links,
-                [NotNull] TextWriter writer
+                IEnumerable<TermLink> links,
+                TextWriter writer
             )
         {
-            Sure.NotNull(links, "links");
-            Sure.NotNull(writer, "writer");
-
-            foreach (TermLink link in links)
+            foreach (var link in links)
             {
                 writer.WriteLine(link);
             }
@@ -106,15 +102,12 @@ namespace ManagedIrbis.Search
         /// Convert <see cref="TermPosting"/>
         /// to <see cref="TermLink"/>.
         /// </summary>
-        [NotNull]
         public static TermLink FromPosting
             (
-                [NotNull] TermPosting posting
+                TermPosting posting
             )
         {
-            Sure.NotNull(posting, "posting");
-
-            TermLink result = new TermLink
+            var result = new TermLink
             {
                 Mfn = posting.Mfn,
                 Tag = posting.Tag,
@@ -129,16 +122,13 @@ namespace ManagedIrbis.Search
         /// Convert array of <see cref="TermPosting"/>
         /// to array of <see cref="TermLink"/>.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public static TermLink[] FromPostings
             (
-                [NotNull][ItemNotNull] TermPosting[] postings
+                [ItemNotNull] TermPosting[] postings
             )
         {
-            Sure.NotNull(postings, "postings");
-
-            TermLink[] result = new TermLink[postings.Length];
+            var result = new TermLink[postings.Length];
             for (int i = 0; i < postings.Length; i++)
             {
                 result[i] = FromPosting(postings[i]);
@@ -150,15 +140,12 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Чтение ссылки из файла.
         /// </summary>
-        [NotNull]
         public static TermLink Read
             (
-                [NotNull] Stream stream
+                Stream stream
             )
         {
-            Sure.NotNull(stream, "stream");
-
-            TermLink result = new TermLink
+            var result = new TermLink
             {
                 Mfn = stream.ReadInt32Network(),
                 Tag = stream.ReadInt32Network(),
@@ -171,16 +158,13 @@ namespace ManagedIrbis.Search
         /// <summary>
         /// Convert array of <see cref="TermLink"/> into array of MFN.
         /// </summary>
-        [NotNull]
         public static int[] ToMfn
             (
-                [NotNull] TermLink[] links
+                TermLink[] links
             )
         {
-            Sure.NotNull(links, nameof(links));
-
-            int[] result = new int[links.Length];
-            for (int i = 0; i < links.Length; i++)
+            var result = new int[links.Length];
+            for (var i = 0; i < links.Length; i++)
             {
                 result[i] = links[i].Mfn;
             }
@@ -194,13 +178,11 @@ namespace ManagedIrbis.Search
         /// <returns></returns>
         public static TermLink[] FromMfn
             (
-                [NotNull] int[] array
+                int[] array
             )
         {
-            Sure.NotNull(array, "array");
-
-            TermLink[] result = new TermLink[array.Length];
-            for (int i = 0; i < array.Length; i++)
+            var result = new TermLink[array.Length];
+            for (var i = 0; i < array.Length; i++)
             {
                 result[i] = new TermLink
                 {
@@ -221,8 +203,6 @@ namespace ManagedIrbis.Search
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, "reader");
-
             Mfn = reader.ReadPackedInt32();
             Tag = reader.ReadPackedInt32();
             Occurrence = reader.ReadPackedInt32();
@@ -235,8 +215,6 @@ namespace ManagedIrbis.Search
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, "writer");
-
             writer
                 .WritePackedInt32(Mfn)
                 .WritePackedInt32(Tag)
@@ -254,8 +232,7 @@ namespace ManagedIrbis.Search
                 bool throwOnError
             )
         {
-            Verifier<TermLink> verifier
-                = new Verifier<TermLink>(this, throwOnError);
+            var verifier = new Verifier<TermLink>(this, throwOnError);
 
             verifier
                 .Assert(Mfn > 0, "Mfn")
@@ -273,14 +250,7 @@ namespace ManagedIrbis.Search
         /// <inheritdoc cref="object.ToString"/>
         public override string ToString()
         {
-            return string.Format
-                (
-                    "[{0}] {1}/{2} {3}",
-                    Mfn, 
-                    Tag, 
-                    Occurrence, 
-                    Index
-                );
+            return $"[{Mfn}] {Tag}/{Occurrence} {Index}";
         }
 
         /// <summary>
@@ -288,11 +258,9 @@ namespace ManagedIrbis.Search
         /// </summary>
         public bool Equals
             (
-                [NotNull] TermLink other
+                TermLink other
             )
         {
-            Sure.NotNull(other, "other");
-
             return Mfn == other.Mfn
                 && Tag == other.Tag
                 && Occurrence == other.Occurrence
@@ -302,7 +270,7 @@ namespace ManagedIrbis.Search
         /// <inheritdoc cref="object.Equals(object)"/>
         public override bool Equals
             (
-                object obj
+                object? obj
             )
         {
             if (ReferenceEquals(null, obj))
@@ -314,7 +282,7 @@ namespace ManagedIrbis.Search
                 return true;
             }
 
-            TermLink termLink = obj as TermLink;
+            var termLink = obj as TermLink;
 
             return !ReferenceEquals(termLink, null)
                    && Equals(termLink);
@@ -325,7 +293,7 @@ namespace ManagedIrbis.Search
         {
             unchecked
             {
-                int hashCode = Mfn;
+                var hashCode = Mfn;
                 hashCode = (hashCode*397) ^ Tag;
                 hashCode = (hashCode*397) ^ Occurrence;
                 hashCode = (hashCode*397) ^ Index;

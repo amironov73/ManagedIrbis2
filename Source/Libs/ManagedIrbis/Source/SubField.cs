@@ -21,6 +21,25 @@ namespace ManagedIrbis
     [PublicAPI]
     public sealed class SubField
     {
+        #region Constants
+
+        /// <summary>
+        /// Нет кода подполя, т. е. код пока не задан.
+        /// </summary>
+        public const char NoCode = '\0';
+
+        /// <summary>
+        /// Нет кода подполя, т. е. код пока не задан.
+        /// </summary>
+        public const string NoCodeString = "\0";
+
+        /// <summary>
+        /// Subfield delimiter.
+        /// </summary>
+        public const char Delimiter = '^';
+
+        #endregion
+
         /// <summary>
         ///
         /// </summary>
@@ -30,6 +49,26 @@ namespace ManagedIrbis
         ///
         /// </summary>
         public string? Value { get; set; }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SubField()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public SubField
+            (
+                char code,
+                string? value = default
+            )
+        {
+            Code = code;
+            Value = value;
+        }
 
         /// <summary>
         ///

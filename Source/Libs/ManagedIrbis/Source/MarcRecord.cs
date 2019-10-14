@@ -53,6 +53,11 @@ namespace ManagedIrbis
         public List<RecordField> Fields { get; } = new List<RecordField>();
 
         /// <summary>
+        /// Описание в произвольной форме (опциональное).
+        /// </summary>
+        public string? Description { get; set; }
+
+        /// <summary>
         /// Добавление поля в запись.
         /// </summary>
         /// <returns>

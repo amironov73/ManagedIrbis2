@@ -460,6 +460,44 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
+        /// Require ANSI-encoded line.
+        /// </summary>
+        public string RequireAnsi()
+        {
+            var result = ReadAnsi();
+            if (string.IsNullOrEmpty(result))
+            {
+                throw new IrbisException();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Require UTF8-encoded line.
+        /// </summary>
+        public string RequireUtf()
+        {
+            var result = ReadUtf();
+            if (string.IsNullOrEmpty(result))
+            {
+                throw new IrbisException();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Require integer value.
+        /// </summary>
+        public int RequireInteger()
+        {
+            var line = ReadAnsi();
+            var result = int.Parse(line);
+            return result;
+        }
+
+        /// <summary>
         ///
         /// </summary>
         public IEnumerable<string> EnumRemainingAnsiLines()

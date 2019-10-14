@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 using ManagedIrbis;
 using ManagedIrbis.ImportExport;
+using ManagedIrbis.Infrastructure;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -123,106 +124,106 @@ namespace UnitTests.ManagedIrbis.ImportExport
             return result;
         }
 
-        [NotNull]
-        private static MarcRecord GetRecord2()
-        {
-            MarcRecord result = new MarcRecord()
-                .AddField(new RecordField(1, "RU\\NLR\\bibl\\3415"))
-                .AddField(new RecordField(5, "20031126124354.0"))
-                .AddField(new RecordField(10,
-                    new SubField('a', "5-7443-0043-0"),
-                    new SubField('9', "700")))
-                .AddField(new RecordField(21,
-                    new SubField('a', "RU"),
-                    new SubField('9', "78"),
-                    new SubField('b', "98-1576")))
-                .AddField(new RecordField(21,
-                    new SubField('a', "RU"),
-                    new SubField('b', "2001-1566п"),
-                    new SubField('9', "57п")))
-                .AddField(new RecordField(100,
-                    new SubField('a', "19980716d1997    u  y0rusy0189    ca")))
-                .AddField(new RecordField(101,
-                    new SubField('a', "rus")))
-                .AddField(new RecordField(102,
-                    new SubField('a', "RU")))
-                .AddField(new RecordField(105,
-                    new SubField('a', "ac  |||||||||")))
-                .AddField(new RecordField(200,
-                    new SubField('a', "Вып. 13.")))
-                .AddField(new RecordField(210,
-                    new SubField('d', "1997")))
-                .AddField(new RecordField(215,
-                    new SubField('a', "80 с."),
-                    new SubField('c', "ил., портр.")))
-                .AddField(new RecordField(461,
-                    new SubField('1', "001RU\\NLR\\bibl\\5996"),
-                    new SubField('1', "2001 "),
-                    new SubField('a', "Задачи и этюды"),
-                    new SubField('v', "Вып. 13")))
-                .AddField(new RecordField(801,
-                    new SubField('a', "RU"),
-                    new SubField('b', "NLR"),
-                    new SubField('c', "19980716"),
-                    new SubField('g', "PSBO")))
-                .AddField(new RecordField(801,
-                    new SubField('a', "RU"),
-                    new SubField('b', "NLR"),
-                    new SubField('c', "19980716")))
-                .AddField(new RecordField(899,
-                    new SubField('a', "NLR"),
-                    new SubField('j', "97-4/119")));
+//        [NotNull]
+//        private static MarcRecord GetRecord2()
+//        {
+//            MarcRecord result = new MarcRecord()
+//                .AddField(new RecordField(1, "RU\\NLR\\bibl\\3415"))
+//                .AddField(new RecordField(5, "20031126124354.0"))
+//                .AddField(new RecordField(10,
+//                    new SubField('a', "5-7443-0043-0"),
+//                    new SubField('9', "700")))
+//                .AddField(new RecordField(21,
+//                    new SubField('a', "RU"),
+//                    new SubField('9', "78"),
+//                    new SubField('b', "98-1576")))
+//                .AddField(new RecordField(21,
+//                    new SubField('a', "RU"),
+//                    new SubField('b', "2001-1566п"),
+//                    new SubField('9', "57п")))
+//                .AddField(new RecordField(100,
+//                    new SubField('a', "19980716d1997    u  y0rusy0189    ca")))
+//                .AddField(new RecordField(101,
+//                    new SubField('a', "rus")))
+//                .AddField(new RecordField(102,
+//                    new SubField('a', "RU")))
+//                .AddField(new RecordField(105,
+//                    new SubField('a', "ac  |||||||||")))
+//                .AddField(new RecordField(200,
+//                    new SubField('a', "Вып. 13.")))
+//                .AddField(new RecordField(210,
+//                    new SubField('d', "1997")))
+//                .AddField(new RecordField(215,
+//                    new SubField('a', "80 с."),
+//                    new SubField('c', "ил., портр.")))
+//                .AddField(new RecordField(461,
+//                    new SubField('1', "001RU\\NLR\\bibl\\5996"),
+//                    new SubField('1', "2001 "),
+//                    new SubField('a', "Задачи и этюды"),
+//                    new SubField('v', "Вып. 13")))
+//                .AddField(new RecordField(801,
+//                    new SubField('a', "RU"),
+//                    new SubField('b', "NLR"),
+//                    new SubField('c', "19980716"),
+//                    new SubField('g', "PSBO")))
+//                .AddField(new RecordField(801,
+//                    new SubField('a', "RU"),
+//                    new SubField('b', "NLR"),
+//                    new SubField('c', "19980716")))
+//                .AddField(new RecordField(899,
+//                    new SubField('a', "NLR"),
+//                    new SubField('j', "97-4/119")));
+//
+//            return result;
+//        }
 
-            return result;
-        }
+//        [TestMethod]
+//        public void Iso2709_ReadRecord_1()
+//        {
+//            string fileName = Path.Combine(TestDataPath, "TEST1.ISO");
+//
+//            using (Stream stream = File.OpenRead(fileName))
+//            {
+//                MarcRecord record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
+//                Assert.IsNotNull(record);
+//                Assert.AreEqual(16, record.Fields.Count);
+//                Assert.AreEqual("Вып. 13.", record.FM(200, 'a'));
+//
+//                record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
+//                Assert.IsNotNull(record);
+//                Assert.AreEqual(15, record.Fields.Count);
+//                Assert.AreEqual("Задачи и этюды", record.FM(200, 'a'));
+//
+//                int count = 0;
+//                while (true)
+//                {
+//                    record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
+//                    if (ReferenceEquals(record, null))
+//                    {
+//                        break;
+//                    }
+//
+//                    count++;
+//                }
+//
+//                Assert.AreEqual(79, count);
+//            }
+//        }
 
-        [TestMethod]
-        public void Iso2709_ReadRecord_1()
-        {
-            string fileName = Path.Combine(TestDataPath, "TEST1.ISO");
-
-            using (Stream stream = File.OpenRead(fileName))
-            {
-                MarcRecord record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
-                Assert.IsNotNull(record);
-                Assert.AreEqual(16, record.Fields.Count);
-                Assert.AreEqual("Вып. 13.", record.FM(200, 'a'));
-
-                record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
-                Assert.IsNotNull(record);
-                Assert.AreEqual(15, record.Fields.Count);
-                Assert.AreEqual("Задачи и этюды", record.FM(200, 'a'));
-
-                int count = 0;
-                while (true)
-                {
-                    record = Iso2709.ReadRecord(stream, IrbisEncoding.Ansi);
-                    if (ReferenceEquals(record, null))
-                    {
-                        break;
-                    }
-
-                    count++;
-                }
-
-                Assert.AreEqual(79, count);
-            }
-        }
-
-        [TestMethod]
-        public void Iso2709_WriteRecord_1()
-        {
-            string fileName = Path.GetTempFileName();
-
-            using (Stream stream = File.OpenWrite(fileName))
-            {
-                MarcRecord record = GetRecord2();
-                Iso2709.WriteRecord(record, stream, IrbisEncoding.Ansi);
-            }
-
-            FileInfo info = new FileInfo(fileName);
-            Assert.AreEqual(562L, info.Length);
-        }
+//        [TestMethod]
+//        public void Iso2709_WriteRecord_1()
+//        {
+//            string fileName = Path.GetTempFileName();
+//
+//            using (Stream stream = File.OpenWrite(fileName))
+//            {
+//                MarcRecord record = GetRecord2();
+//                Iso2709.WriteRecord(record, stream, IrbisEncoding.Ansi);
+//            }
+//
+//            FileInfo info = new FileInfo(fileName);
+//            Assert.AreEqual(562L, info.Length);
+//        }
 
         [TestMethod]
         public void Iso2709_WriteRecord_2()

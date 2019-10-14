@@ -71,12 +71,12 @@ namespace ManagedIrbis.ImportExport
             }
         }
 
-        private static int _Encode(byte[] bytes, int pos, string str, Encoding encoding)
+        private static int _Encode(byte[] bytes, int pos, string? str, Encoding encoding)
         {
             if (!ReferenceEquals(str, null))
             {
-                byte[] encoded = encoding.GetBytes(str);
-                for (int i = 0; i < encoded.Length; pos++, i++)
+                var encoded = encoding.GetBytes(str);
+                for (var i = 0; i < encoded.Length; pos++, i++)
                 {
                     bytes[pos] = encoded[i];
                 }
@@ -92,29 +92,25 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Разбор 2709.
         /// </summary>
-        [CanBeNull]
-        public static MarcRecord ReadRecord
+        public static MarcRecord? ReadRecord
             (
-                [NotNull] Stream stream,
-                [NotNull] Encoding encoding
+                Stream stream,
+                Encoding encoding
             )
         {
-            Sure.NotNull(stream, nameof(stream));
-            Sure.NotNull(encoding, nameof(encoding));
-
-            MarcRecord result = new MarcRecord();
+            var result = new MarcRecord();
 
             // Считываем длину записи
-            byte[] marker = new byte[5];
+            var marker = new byte[5];
             if (stream.Read(marker, 0, marker.Length) != marker.Length)
             {
                 return null;
             }
 
             // а затем и ее остаток
-            int recordLength = FastNumber.ParseInt32(marker, 0, marker.Length);
-            byte[] record = new byte[recordLength];
-            int need = recordLength - marker.Length;
+            var recordLength = FastNumber.ParseInt32(marker, 0, marker.Length);
+            var record = new byte[recordLength];
+            var need = recordLength - marker.Length;
             if (stream.Read(record, marker.Length, need) != need)
             {
                 return null;
@@ -127,17 +123,17 @@ namespace ManagedIrbis.ImportExport
                 return null;
             }
 
-            int lengthOfLength = FastNumber.ParseInt32(record, 20, 1);
-            int lengthOfOffset = FastNumber.ParseInt32(record, 21, 1);
-            int additionalData = FastNumber.ParseInt32(record, 22, 1);
-            int directoryLength = 3 + lengthOfLength + lengthOfOffset
+            var lengthOfLength = FastNumber.ParseInt32(record, 20, 1);
+            var lengthOfOffset = FastNumber.ParseInt32(record, 21, 1);
+            var additionalData = FastNumber.ParseInt32(record, 22, 1);
+            var directoryLength = 3 + lengthOfLength + lengthOfOffset
                                   + additionalData;
 
-            int indicatorLength = FastNumber.ParseInt32(record, 10, 1);
-            int baseAddress = FastNumber.ParseInt32(record, 12, 5);
+            var indicatorLength = FastNumber.ParseInt32(record, 10, 1);
+            var baseAddress = FastNumber.ParseInt32(record, 12, 5);
 
             // Пошли по полям при помощи справочника
-            for (int directory = MarkerLength; ; directory += directoryLength)
+            for (var directory = MarkerLength; ; directory += directoryLength)
             {
                 // Переходим к следующему полю.
                 // Если нарвались на разделитель, значит, справочник закончился
@@ -146,20 +142,20 @@ namespace ManagedIrbis.ImportExport
                     break;
                 }
 
-                int tag = FastNumber.ParseInt32(record, directory, 3);
-                int fieldLength = FastNumber.ParseInt32
+                var tag = FastNumber.ParseInt32(record, directory, 3);
+                var fieldLength = FastNumber.ParseInt32
                     (
                         record,
                         directory + 3,
                         lengthOfLength
                     );
-                int fieldOffset = baseAddress + FastNumber.ParseInt32
+                var fieldOffset = baseAddress + FastNumber.ParseInt32
                     (
                         record,
                         directory + 3 + lengthOfLength,
                         lengthOfOffset
                     );
-                RecordField field = new RecordField(tag);
+                var field = new RecordField { Tag = tag };
                 result.Fields.Add(field);
                 if (tag < 10)
                 {
@@ -179,9 +175,9 @@ namespace ManagedIrbis.ImportExport
                     // может содерджать подполя
 
                     // пропускаем индикаторы
-                    int start = fieldOffset + indicatorLength;
-                    int stop = fieldOffset + fieldLength - indicatorLength + 1;
-                    int position = start;
+                    var start = fieldOffset + indicatorLength;
+                    var stop = fieldOffset + fieldLength - indicatorLength + 1;
+                    var position = start;
 
                     // Ищем значение поля до первого разделителя
                     while (position < stop)
@@ -217,17 +213,17 @@ namespace ManagedIrbis.ImportExport
                             }
                             position++;
                         }
-                        SubField subField = new SubField
-                            (
-                                (char)record[start + 1],
-                                encoding.GetString
+                        var subField = new SubField
+                            {
+                                Code = (char)record[start + 1],
+                                Value = encoding.GetString
                                     (
                                         record,
                                         start + 2,
                                         position - start - 2
                                     )
-                            );
-                        field.SubFields.Add(subField);
+                            };
+                        field.Subfields.Add(subField);
                         start = position;
                     }
                 }
@@ -246,15 +242,15 @@ namespace ManagedIrbis.ImportExport
                 [NotNull] Encoding encoding
             )
         {
-            int recordLength = MarkerLength;
-            int dictionaryLength = 1; // С учетом ограничителя справочника
-            int[] fieldLength = new int[record.Fields.Count]; // Длины полей
+            var recordLength = MarkerLength;
+            var dictionaryLength = 1; // С учетом ограничителя справочника
+            var fieldLength = new int[record.Fields.Count]; // Длины полей
 
             // Сначала пытаемся подсчитать полную длину
-            for (int i = 0; i < record.Fields.Count; i++)
+            for (var i = 0; i < record.Fields.Count; i++)
             {
                 dictionaryLength += 12; // Одна статья справочника
-                RecordField field = record.Fields[i];
+                var field = record.Fields[i];
                 if (field.Tag <= 0 || field.Tag >= 1000)
                 {
                     throw new IrbisException
@@ -263,26 +259,26 @@ namespace ManagedIrbis.ImportExport
                         );
                 }
 
-                int fldlen = 0;
-                if (field.IsFixed)
+                var fldlen = 0;
+                if (field.Tag < 10)
                 {
                     // В фиксированном поле не бывает подполей.
                     fldlen += encoding.GetByteCount(field.Value ?? string.Empty);
                 }
                 else
                 {
-                    fldlen += RecordField.IndicatorCount; // Индикаторы
+                    fldlen += 2; // RecordField.IndicatorCount; // Индикаторы
                     fldlen += encoding.GetByteCount(field.Value ?? string.Empty);
-                    for (int j = 0; j < field.SubFields.Count; j++)
+                    for (var j = 0; j < field.Subfields.Count; j++)
                     {
-                        SubField subField = field.SubFields[j];
-                        if (!SubFieldCode.IsValidCode(subField.Code))
-                        {
-                            throw new IrbisException
-                                (
-                                    "bad subfield code: " + subField.Code
-                                );
-                        }
+                        SubField subField = field.Subfields[j];
+//                        if (!SubFieldCode.IsValidCode(subField.Code))
+//                        {
+//                            throw new IrbisException
+//                                (
+//                                    "bad subfield code: " + subField.Code
+//                                );
+//                        }
 
                         fldlen += 2; // Признак подполя и его код
                         fldlen += encoding.GetByteCount(subField.Value ?? string.Empty);
@@ -308,13 +304,13 @@ namespace ManagedIrbis.ImportExport
             }
 
             // Приступаем к кодированию
-            int dictionaryPosition = IsoMarker.MarkerLength;
-            int baseAddress = IsoMarker.MarkerLength + dictionaryLength;
-            int currentAddress = baseAddress;
-            byte[] bytes = new byte[recordLength];
+            var dictionaryPosition = IsoMarker.MarkerLength;
+            var baseAddress = IsoMarker.MarkerLength + dictionaryLength;
+            var currentAddress = baseAddress;
+            var bytes = new byte[recordLength];
 
             // Кодируем маркер
-            for (int i = 0; i <= baseAddress; i++)
+            for (var i = 0; i <= baseAddress; i++)
             {
                 bytes[i] = (byte)' ';
             }
@@ -338,16 +334,16 @@ namespace ManagedIrbis.ImportExport
             bytes[baseAddress - 1] = FieldDelimiter;
 
             // Проходим по полям
-            for (int i = 0; i < record.Fields.Count; i++, dictionaryPosition += 12)
+            for (var i = 0; i < record.Fields.Count; i++, dictionaryPosition += 12)
             {
                 // Кодируем справочник
-                RecordField field = record.Fields[i];
+                var field = record.Fields[i];
                 _Encode(bytes, dictionaryPosition, 3, field.Tag);
                 _Encode(bytes, dictionaryPosition + 3, 4, fieldLength[i]);
                 _Encode(bytes, dictionaryPosition + 7, 5, currentAddress - baseAddress);
 
                 // Кодируем поле
-                if (field.IsFixed)
+                if (field.Tag < 10)
                 {
                     // В фиксированном поле не бывает подполей и индикаторов.
                     currentAddress = _Encode
@@ -360,17 +356,9 @@ namespace ManagedIrbis.ImportExport
                 }
                 else
                 {
-#if WITH_INDICATORS
-
-                    chars[currentAddress++] = (byte)fld.Indicator1.Value[0];
-                    chars[currentAddress++] = (byte)fld.Indicator2.Value[0];
-
-#else
-
+                    // Индикаторы
                     bytes[currentAddress++] = (byte)' ';
                     bytes[currentAddress++] = (byte)' ';
-
-#endif
 
                     currentAddress = _Encode
                         (
@@ -380,15 +368,15 @@ namespace ManagedIrbis.ImportExport
                             encoding
                         );
 
-                    for (int j = 0; j < field.SubFields.Count; j++)
+                    for (var j = 0; j < field.Subfields.Count; j++)
                     {
                         bytes[currentAddress++] = SubfieldDelimiter;
-                        bytes[currentAddress++] = (byte)field.SubFields[j].Code;
+                        bytes[currentAddress++] = (byte)field.Subfields[j].Code;
                         currentAddress = _Encode
                             (
                                 bytes,
                                 currentAddress,
-                                field.SubFields[j].Value,
+                                field.Subfields[j].Value,
                                 encoding
                             );
                     }

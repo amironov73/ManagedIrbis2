@@ -43,9 +43,35 @@ namespace ManagedIrbis
         public List<SubField> Subfields { get; } = new List<SubField>();
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public RecordField()
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="value"></param>
+        public RecordField
+            (
+                int tag,
+                string? value = default
+            )
+        {
+            Tag = tag;
+            Value = value;
+        }
+
+        /// <summary>
         ///
         /// </summary>
-        public RecordField Add(char code, string value)
+        public RecordField Add
+            (
+                char code,
+                string value
+            )
         {
             var subfield = new SubField {Code = code, Value = value};
             Subfields.Add(subfield);

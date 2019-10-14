@@ -109,7 +109,7 @@ namespace ManagedIrbis.ImportExport
 
             builder.Append(field.Value);
 
-            foreach (SubField subField in field.SubFields)
+            foreach (SubField subField in field.Subfields)
             {
                 EncodeSubField
                     (
@@ -194,7 +194,7 @@ namespace ManagedIrbis.ImportExport
                     Code = code,
                     Value = text
                 };
-                result.SubFields.Add(subField);
+                result.Subfields.Add(subField);
             }
 
             return result;
@@ -246,20 +246,21 @@ namespace ManagedIrbis.ImportExport
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
+                record.Fields.Clear();
 
                 ParseMfnStatusVersion
                     (
-                        response.RequireUtfString(),
-                        response.RequireUtfString(),
+                        response.RequireUtf(),
+                        response.RequireUtf(),
                         record
                     );
 
-                string line;
+                string? line;
                 while (true)
                 {
-                    line = response.GetUtfString();
-                    if (ReferenceEquals(line, null) || line.Length == 0)
+                    line = response.ReadUtf();
+                    if (string.IsNullOrEmpty(line))
                     {
                         break;
                     }
@@ -275,10 +276,10 @@ namespace ManagedIrbis.ImportExport
                 }
                 if (line == "#")
                 {
-                    int returnCode = response.RequireInt32();
+                    int returnCode = response.RequireInteger();
                     if (returnCode >= 0)
                     {
-                        line = response.RequireUtfString();
+                        line = response.RequireUtf();
                         line = IrbisText.IrbisToWindows(line);
                         record.Description = line;
                     }
@@ -287,8 +288,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -310,21 +311,21 @@ namespace ManagedIrbis.ImportExport
             // Если в БД нет autoin.gbl, сервер не присылает
             // обработанную запись.
 
-            string first = response.GetUtfString();
-            if (ReferenceEquals(first, null) || first.Length == 0)
+            string first = response.ReadUtf();
+            if (string.IsNullOrEmpty(first))
             {
                 return record;
             }
 
-            string second = response.GetUtfString();
-            if (ReferenceEquals(second, null) || second.Length == 0)
+            string second = response.ReadUtf();
+            if (string.IsNullOrEmpty(second))
             {
                 return record;
             }
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
                 string[] split = second.Split('\x1E');
@@ -348,8 +349,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -370,10 +371,10 @@ namespace ManagedIrbis.ImportExport
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string whole = response.RequireUtfString();
+                string whole = response.RequireUtf();
                 string[] split = whole.Split('\x1E');
 
                 ParseMfnStatusVersion
@@ -395,8 +396,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -405,8 +406,7 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse server response for ALL-formatted record.
         /// </summary>
-        [CanBeNull]
-        public static MarcRecord ParseResponseForAllFormat
+        public static MarcRecord? ParseResponseForAllFormat
             (
                 [NotNull] ServerResponse response,
                 [NotNull] MarcRecord record
@@ -417,11 +417,11 @@ namespace ManagedIrbis.ImportExport
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string line = response.GetUtfString();
-                if (ReferenceEquals(line, null) || line.Length == 0)
+                string line = response.ReadUtf();
+                if (string.IsNullOrEmpty(line))
                 {
                     return null;
                 }
@@ -454,8 +454,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -464,8 +464,7 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse server response for ALL-formatted record.
         /// </summary>
-        [CanBeNull]
-        public static MarcRecord ParseResponseForAllFormat
+        public static MarcRecord? ParseResponseForAllFormat
             (
                 [CanBeNull] string line,
                 [NotNull] MarcRecord record
@@ -480,7 +479,7 @@ namespace ManagedIrbis.ImportExport
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
                 string[] split = line.Split('\x1F');
@@ -511,8 +510,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -522,8 +521,7 @@ namespace ManagedIrbis.ImportExport
         /// Parse response for global correction
         /// of virtual record.
         /// </summary>
-        [CanBeNull]
-        public static MarcRecord ParseResponseForGblFormat
+        public static MarcRecord? ParseResponseForGblFormat
             (
                 [CanBeNull] string line,
                 [NotNull] MarcRecord record
@@ -538,7 +536,7 @@ namespace ManagedIrbis.ImportExport
 
             try
             {
-                record.Fields.BeginUpdate();
+                //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
                 string[] split = line.Split('\x1E');
@@ -557,8 +555,8 @@ namespace ManagedIrbis.ImportExport
             }
             finally
             {
-                record.Fields.EndUpdate();
-                record.Modified = false;
+                //record.Fields.EndUpdate();
+                //record.Modified = false;
             }
 
             return record;
@@ -567,18 +565,14 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Convert the record to the protocol text.
         /// </summary>
-        [CanBeNull]
-        public static string ToProtocolText
+        public static string? ToProtocolText
             (
-                [CanBeNull] this MarcRecord record
+                this MarcRecord? record
             )
         {
-            if (ReferenceEquals(record, null))
-            {
-                return null;
-            }
-
-            return EncodeRecord(record);
+            return ReferenceEquals(record, null)
+                ? null
+                : EncodeRecord(record);
         }
 
         #endregion
