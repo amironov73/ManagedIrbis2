@@ -30,68 +30,54 @@ namespace ManagedIrbis
         /// <summary>
         /// Номер
         /// </summary>
-        [CanBeNull]
-        public string Number { get; set; }
+        public string? Number { get; set; }
 
         /// <summary>
         /// Адрес клиента
         /// </summary>
-        [CanBeNull]
         // ReSharper disable once InconsistentNaming
-        public string IPAddress { get; set; }
+        public string? IPAddress { get; set; }
 
         /// <summary>
         /// Порт клиента
         /// </summary>
-        [CanBeNull]
-        public string Port { get; set; }
+        public string? Port { get; set; }
 
         /// <summary>
         /// Логин
         /// </summary>
-        [CanBeNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Идентификатор клиентской программы
         /// </summary>
-        [CanBeNull]
         // ReSharper disable once InconsistentNaming
-        public string ID { get; set; }
+        public string? ID { get; set; }
 
         /// <summary>
         /// Клиентский АРМ
         /// </summary>
-        [CanBeNull]
-        public string Workstation { get; set; }
+        public string? Workstation { get; set; }
 
         /// <summary>
         /// Время подключения к серверу
         /// </summary>
-        [CanBeNull]
-        public string Registered { get; set; }
+        public string? Registered { get; set; }
 
         /// <summary>
         /// Последнее подтверждение
         /// </summary>
-        [CanBeNull]
-        public string Acknowledged { get; set; }
+        public string? Acknowledged { get; set; }
 
         /// <summary>
         /// Последняя команда
         /// </summary>
-        [CanBeNull]
-        public string LastCommand { get; set; }
+        public string? LastCommand { get; set; }
 
         /// <summary>
         /// Номер последней команды
         /// </summary>
-        [CanBeNull]
-        public string CommandNumber { get; set; }
-
-        #endregion
-
-        #region Public methods
+        public string? CommandNumber { get; set; }
 
         #endregion
 
@@ -100,22 +86,22 @@ namespace ManagedIrbis
         /// <inheritdoc cref="object.ToString" />
         public override string ToString ()
         {
-            return string.Format 
-                ( 
+            return string.Format
+                (
                     "Number: {0}, IPAddress: {1}, Port: {2}, "
                   + "Name: {3}, ID: {4}, Workstation: {5}, "
                   + "Registered: {6}, Acknowledged: {7}, "
-                  + "LastCommand: {8}, CommandNumber: {9}", 
-                    Number, 
-                    IPAddress, 
-                    Port, 
-                    Name, 
-                    ID, 
-                    Workstation, 
-                    Registered, 
-                    Acknowledged, 
-                    LastCommand, 
-                    CommandNumber 
+                  + "LastCommand: {8}, CommandNumber: {9}",
+                    Number,
+                    IPAddress,
+                    Port,
+                    Name,
+                    ID,
+                    Workstation,
+                    Registered,
+                    Acknowledged,
+                    LastCommand,
+                    CommandNumber
                 );
         }
 

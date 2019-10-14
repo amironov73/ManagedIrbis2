@@ -111,6 +111,27 @@ namespace ManagedIrbis.Infrastructure
         }
 
         /// <summary>
+        /// Get <see cref="TextReader"/>.
+        /// </summary>
+        public TextReader GetReader
+            (
+                Encoding encoding
+            )
+        {
+            throw new NotImplementedException();
+//            StreamReader result = new StreamReader
+//                (
+//                    _stream,
+//                    encoding,
+//                    false,
+//                    1024,
+//                    true
+//                );
+//
+//            return result;
+        }
+
+        /// <summary>
         /// Pull the data from the stream -- in asynchronous manner.
         /// </summary>
         public async Task PullDataAsync

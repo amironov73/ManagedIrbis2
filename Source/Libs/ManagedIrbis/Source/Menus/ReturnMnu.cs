@@ -12,12 +12,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading.Tasks;
 
 using AM;
 
 using JetBrains.Annotations;
 
-using ManagedIrbis.Client;
 using ManagedIrbis.Infrastructure;
 
 #endregion
@@ -56,8 +56,7 @@ namespace ManagedIrbis.Menus
             /// <summary>
             /// Comment.
             /// </summary>
-            [CanBeNull]
-            public string Comment { get; set; }
+            public string? Comment { get; set; }
 
             #endregion
 
@@ -148,14 +147,12 @@ namespace ManagedIrbis.Menus
         /// <summary>
         /// Read RETURN.MNU from server connection.
         /// </summary>
-        [NotNull]
-        public static ReturnMnu FromConnection
+        public static async Task<ReturnMnu> FromConnection
             (
-                [NotNull] IIrbisConnection connection,
-                [NotNull] string fileName = DefaultFileName
+                IrbisConnection connection,
+                string fileName = DefaultFileName
             )
         {
-            Sure.NotNull(connection, nameof(connection));
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
             FileSpecification specification = new FileSpecification
@@ -163,7 +160,7 @@ namespace ManagedIrbis.Menus
                     IrbisPath.MasterFile,
                     StandardDatabases.Readers
                 );
-            MenuFile menu = MenuFile.ReadFromServer(connection, specification)
+            MenuFile menu = await MenuFile.ReadFromServer(connection, specification)
                 .ThrowIfNull(nameof(menu));
             ReturnMnu result = new ReturnMnu(menu);
 
@@ -187,31 +184,31 @@ namespace ManagedIrbis.Menus
             return result;
         }
 
-        /// <summary>
-        /// Read RETURN.MNU from the provider.
-        /// </summary>
-        [NotNull]
-        public static ReturnMnu FromProvider
-            (
-                [NotNull] IrbisProvider provider,
-                [NotNull] string fileName = DefaultFileName
-            )
-        {
-            Sure.NotNull(provider, nameof(provider));
-            Sure.NotNullNorEmpty(fileName, nameof(fileName));
-
-            FileSpecification specification = new FileSpecification
-                (
-                    IrbisPath.MasterFile,
-                    StandardDatabases.Readers,
-                    fileName
-                );
-            MenuFile menu = provider.ReadMenuFile(specification)
-                .ThrowIfNull(nameof(menu));
-            ReturnMnu result = new ReturnMnu(menu);
-
-            return result;
-        }
+//        /// <summary>
+//        /// Read RETURN.MNU from the provider.
+//        /// </summary>
+//        [NotNull]
+//        public static ReturnMnu FromProvider
+//            (
+//                [NotNull] IrbisProvider provider,
+//                [NotNull] string fileName = DefaultFileName
+//            )
+//        {
+//            Sure.NotNull(provider, nameof(provider));
+//            Sure.NotNullNorEmpty(fileName, nameof(fileName));
+//
+//            FileSpecification specification = new FileSpecification
+//                (
+//                    IrbisPath.MasterFile,
+//                    StandardDatabases.Readers,
+//                    fileName
+//                );
+//            MenuFile menu = provider.ReadMenuFile(specification)
+//                .ThrowIfNull(nameof(menu));
+//            ReturnMnu result = new ReturnMnu(menu);
+//
+//            return result;
+//        }
 
         #endregion
     }

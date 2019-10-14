@@ -1,10 +1,10 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
-/* StandardDatabases.cs --
+/* StandardDatabases.cs -- standard databases included in the IRBIS64 distribution
  * Ars Magna project, http://arsmagna.ru
  * -------------------------------------------------------
- * Status: poor
+ * Status: moderate
  */
 
 #region Using directives
@@ -16,8 +16,7 @@ using JetBrains.Annotations;
 namespace ManagedIrbis
 {
     /// <summary>
-    /// Стандартные базы данных, входящие
-    /// в дистрибутив ИРБИС64.
+    /// Standard databases included in the IRBIS64 distribution.
     /// </summary>
     [PublicAPI]
     public static class StandardDatabases
@@ -25,22 +24,22 @@ namespace ManagedIrbis
         #region Constants
 
         /// <summary>
-        /// Электронный каталог.
+        /// Digital catalogue.
         /// </summary>
         public const string ElectronicCatalog = "IBIS";
 
         /// <summary>
-        /// Комплектование.
+        /// Picking.
         /// </summary>
         public const string Acquisition = "CMPL";
 
         /// <summary>
-        /// Читатели.
+        /// Readers.
         /// </summary>
         public const string Readers = "RDR";
 
         /// <summary>
-        /// Заказы на литературу.
+        /// Orders for books.
         /// </summary>
         public const string Requests = "RQST";
 

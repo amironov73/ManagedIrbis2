@@ -45,8 +45,7 @@ namespace ManagedIrbis.Menus
         /// исходное значение - "RU".
         /// </summary>
         /// <remarks>Параметр 1</remarks>
-        [CanBeNull]
-        public string Country { get; set; }
+        public string? Country { get; set; }
 
         /// <summary>
         /// Организация - используется при формировании файлов экспорта
@@ -54,8 +53,7 @@ namespace ManagedIrbis.Menus
         /// исходное значение - "ГПНТБ России".
         /// </summary>
         /// <remarks>Параметр 2</remarks>
-        [CanBeNull]
-        public string Organization { get; set; }
+        public string? Organization { get; set; }
 
         /// <summary>
         /// Обозначение валюты - используется во всех форматах
@@ -63,8 +61,7 @@ namespace ManagedIrbis.Menus
         /// исходное значение - "р.".
         /// </summary>
         /// <remarks>Параметр 3</remarks>
-        [CanBeNull]
-        public string Currency { get; set; }
+        public string? Currency { get; set; }
 
         /// <summary>
         /// Обозначение единицы измерения в поле Количественные
@@ -73,8 +70,7 @@ namespace ManagedIrbis.Menus
         /// исходное значение - "с".
         /// </summary>
         /// <remarks>Параметр 4</remarks>
-        [CanBeNull]
-        public string Volume { get; set; }
+        public string? Volume { get; set; }
 
         /// <summary>
         /// Обозначение единицы измерения для вывода оглавления
@@ -83,8 +79,7 @@ namespace ManagedIrbis.Menus
         /// "по умолчанию"; исходное значение – "стр.".
         /// </summary>
         /// <remarks>Параметр 5</remarks>
-        [CanBeNull]
-        public string Position { get; set; }
+        public string? Position { get; set; }
 
         /// <summary>
         /// Код национального языка (например, "ukr") - используется
@@ -96,8 +91,7 @@ namespace ManagedIrbis.Menus
         /// (определены в меню SIBIR.MNU).
         /// </summary>
         /// <remarks>Параметр 6</remarks>
-        [CanBeNull]
-        public string Language { get; set; }
+        public string? Language { get; set; }
 
         /// <summary>
         /// "0" или "1" определяют, нужно ли создавать словарь
@@ -113,8 +107,7 @@ namespace ManagedIrbis.Menus
         /// словари, которые формируются независимо от значения
         /// в файле ORG.mnu.
         /// </remarks>
-        [CanBeNull]
-        public string Check { get; set; }
+        public string? Check { get; set; }
 
         /// <summary>
         /// "0" или "1" определяют, нужно ли создавать словарь
@@ -128,8 +121,7 @@ namespace ManagedIrbis.Menus
         /// формированием/неформированием словаря "Технология".
         /// Словарь будет формироваться безусловно.
         /// </remarks>
-        [CanBeNull]
-        public string Technology { get; set; }
+        public string? Technology { get; set; }
 
         /// <summary>
         /// "0" или "1" определяют, нужно ли формировать автоматически
@@ -137,8 +129,7 @@ namespace ManagedIrbis.Menus
         /// исходное значение - "1".
         /// </summary>
         /// <remarks>Параметр 9.</remarks>
-        [CanBeNull]
-        public string AuthorSign { get; set; }
+        public string? AuthorSign { get; set; }
 
         /// <summary>
         /// Словарь авторов - введена возможность отменить включение
@@ -148,16 +139,14 @@ namespace ManagedIrbis.Menus
         /// (введен новый параметр "A").
         /// </summary>
         /// <remarks>Параметр A.</remarks>
-        [CanBeNull]
-        public string ExtendedAuthors { get; set; }
+        public string? ExtendedAuthors { get; set; }
 
         /// <summary>
         /// Сигла библиотеки-поставщика записи в РСКП
         /// (каждый Пользователь должен проставить свою сиглу).
         /// </summary>
         /// <remarks>Параметр S.</remarks>
-        [CanBeNull]
-        public string Sigla { get; set; }
+        public string? Sigla { get; set; }
 
         #endregion
 

@@ -39,7 +39,6 @@ namespace AM.IO
         /// <summary>
         /// Используемая кодировка.
         /// </summary>
-        [NotNull]
         public Encoding Encoding { get; private set; }
 
         /// <summary>
@@ -67,11 +66,9 @@ namespace AM.IO
         /// </summary>
         public ByteNavigator
             (
-                [NotNull] byte[] data
+                byte[] data
             )
         {
-            Sure.NotNull(data, nameof(data));
-
             _data = data;
             Length = data.Length;
             Encoding = Encoding.Default;
@@ -125,16 +122,14 @@ namespace AM.IO
         /// </summary>
         public ByteNavigator
             (
-                [NotNull] byte[] data,
+                byte[] data,
                 int offset,
                 int length,
-                [NotNull] Encoding encoding
+                Encoding encoding
             )
         {
-            Sure.NotNull(data, nameof(data));
             Sure.NonNegative(offset, nameof(offset));
             Sure.NonNegative(length, nameof(length));
-            Sure.NotNull(encoding, nameof(encoding));
 
             if (length > data.Length)
             {

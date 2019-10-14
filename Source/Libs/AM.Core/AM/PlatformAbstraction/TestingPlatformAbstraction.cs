@@ -48,7 +48,6 @@ namespace AM.PlatformAbstraction
         /// <summary>
         /// Environment variables.
         /// </summary>
-        [NotNull]
         public CaseInsensitiveDictionary<string> Variables { get; private set; }
 
         #endregion

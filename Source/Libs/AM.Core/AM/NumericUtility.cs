@@ -229,20 +229,18 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static double ParseDouble
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
             text = ConvertFloatToInvariant(text);
-
             var result = double.Parse
                 (
                     text,
                     NumberStyles.Any,
                     CultureInfo.InvariantCulture
                 );
-
             return result;
         }
 
@@ -252,20 +250,18 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static short ParseInt16
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
             text = ConvertIntegerToInvariant(text);
-
             var result = short.Parse
                 (
                     text,
                     NumberStyles.Any,
                     CultureInfo.InvariantCulture
                 );
-
             return result;
         }
 
@@ -307,7 +303,6 @@ namespace AM
                     NumberStyles.Any,
                     CultureInfo.InvariantCulture
                 );
-
             return result;
         }
 
@@ -317,20 +312,18 @@ namespace AM
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static long ParseInt64
             (
-                [NotNull] string text
+                string text
             )
         {
             Sure.NotNullNorEmpty(text, nameof(text));
 
             text = ConvertFloatToInvariant(text);
-
             var result = long.Parse
                 (
                     text,
                     NumberStyles.Any,
                     CultureInfo.InvariantCulture
                 );
-
             return result;
         }
 
@@ -340,7 +333,7 @@ namespace AM
         /// </summary>
         public static decimal SafeToDecimal
             (
-                [CanBeNull] this string text,
+                this string? text,
                 decimal defaultValue
             )
         {
@@ -353,7 +346,6 @@ namespace AM
             {
                 result = defaultValue;
             }
-
             return result;
         }
 
@@ -363,7 +355,7 @@ namespace AM
         /// </summary>
         public static double SafeToDouble
             (
-                [CanBeNull] this string text,
+                this string? text,
                 double defaultValue
             )
         {
@@ -376,7 +368,6 @@ namespace AM
             {
                 result = defaultValue;
             }
-
             return result;
         }
 
@@ -385,7 +376,7 @@ namespace AM
         /// </summary>
         public static int SafeToInt32
             (
-                [CanBeNull] this string text,
+                this string? text,
                 int defaultValue,
                 int minValue,
                 int maxValue
@@ -415,7 +406,7 @@ namespace AM
         /// </summary>
         public static int SafeToInt32
             (
-                [CanBeNull] this string text,
+                this string? text,
                 int defaultValue
             )
         {
@@ -437,7 +428,7 @@ namespace AM
         /// </summary>
         public static int SafeToInt32
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
             if (string.IsNullOrEmpty(text))
@@ -458,7 +449,7 @@ namespace AM
         /// </summary>
         public static long SafeToInt64
             (
-                [CanBeNull] this string text
+                this string? text
             )
         {
             if (string.IsNullOrEmpty(text))
@@ -509,26 +500,21 @@ namespace AM
         /// </summary>
         /// <param name="value">Число для преобразования.</param>
         /// <returns>Строковое представление числа.</returns>
-        [NotNull]
         public static string ToInvariantString
             (
                 this double value
             )
         {
-            return value.ToString
-                (
-                    CultureInfo.InvariantCulture
-                );
+            return value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
         /// Convert double to string using InvariantCulture.
         /// </summary>
-        [NotNull]
         public static string ToInvariantString
             (
                 this double value,
-                [NotNull] string format
+                string format
             )
         {
             Sure.NotNullNorEmpty(format, nameof(format));
@@ -546,7 +532,6 @@ namespace AM
         /// </summary>
         /// <param name="value">Число для преобразования.</param>
         /// <returns>Строковое представление числа.</returns>
-        [NotNull]
         public static string ToInvariantString
             (
                 this decimal value
@@ -558,11 +543,10 @@ namespace AM
         /// <summary>
         /// Convert decimal value to string using InvariantCulture.
         /// </summary>
-        [NotNull]
         public static string ToInvariantString
             (
                 this decimal value,
-                [NotNull] string format
+                string format
             )
         {
             Sure.NotNullNorEmpty(format, nameof(format));
@@ -605,14 +589,13 @@ namespace AM
         /// </summary>
         public static bool TryParseDecimal
             (
-                [CanBeNull] string text,
+                string? text,
                 out decimal value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0m;
-
                 return false;
             }
 
@@ -633,14 +616,13 @@ namespace AM
         /// </summary>
         public static bool TryParseDouble
             (
-                [CanBeNull] string text,
+                string? text,
                 out double value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0.0;
-
                 return false;
             }
 
@@ -661,14 +643,13 @@ namespace AM
         /// </summary>
         public static bool TryParseSingle
             (
-                [CanBeNull] string text,
+                string? text,
                 out float value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0.0f;
-
                 return false;
             }
 
@@ -689,14 +670,13 @@ namespace AM
         /// </summary>
         public static bool TryParseInt16
             (
-                [CanBeNull] string text,
+                string? text,
                 out short value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 
@@ -718,14 +698,13 @@ namespace AM
         [CLSCompliant(false)]
         public static bool TryParseUInt16
             (
-                [CanBeNull] string text,
+                string? text,
                 out ushort value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 
@@ -753,7 +732,6 @@ namespace AM
             if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 
@@ -775,14 +753,13 @@ namespace AM
         [CLSCompliant(false)]
         public static bool TryParseUInt32
             (
-                [CanBeNull] string text,
+                string? text,
                 out uint value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 
@@ -803,14 +780,13 @@ namespace AM
         /// </summary>
         public static bool TryParseInt64
             (
-                [CanBeNull] string text,
+                string? text,
                 out long value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 
@@ -832,14 +808,13 @@ namespace AM
         [CLSCompliant(false)]
         public static bool TryParseUInt64
             (
-                [CanBeNull] string text,
+                string? text,
                 out ulong value
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 value = 0;
-
                 return false;
             }
 

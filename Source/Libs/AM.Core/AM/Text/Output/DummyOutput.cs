@@ -28,7 +28,6 @@ namespace AM.Text.Output
         /// <summary>
         /// Внутренний поток.
         /// </summary>
-        [NotNull]
         public AbstractOutput Inner { get; }
 
         #endregion
@@ -40,17 +39,11 @@ namespace AM.Text.Output
         /// </summary>
         public DummyOutput
             (
-                [NotNull] AbstractOutput inner
+                AbstractOutput inner
             )
         {
-            Sure.NotNull(inner, nameof(inner));
-
             Inner = inner;
         }
-
-        #endregion
-
-        #region Private members
 
         #endregion
 

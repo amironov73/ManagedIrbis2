@@ -301,7 +301,7 @@ namespace AM.Threading
         /// </summary>
         public static implicit operator bool
             (
-                [NotNull] BusyState state
+                BusyState state
             )
         {
             return state.Busy;

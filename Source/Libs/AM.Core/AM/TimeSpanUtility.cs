@@ -163,7 +163,6 @@ namespace AM
         /// <summary>
         /// Converts time span using format 's.ff'
         /// </summary>
-        [NotNull]
         public static string ToSecondString
             (
                 this TimeSpan span
@@ -179,7 +178,6 @@ namespace AM
         /// <summary>
         /// Converts time span using format 's'
         /// </summary>
-        [NotNull]
         public static string ToWholeSecondsString
             (
                 this TimeSpan span
