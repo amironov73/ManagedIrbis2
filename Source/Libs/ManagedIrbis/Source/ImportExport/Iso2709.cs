@@ -237,9 +237,9 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static void WriteRecord
             (
-                [NotNull] MarcRecord record,
-                [NotNull] Stream stream,
-                [NotNull] Encoding encoding
+                MarcRecord record,
+                Stream stream,
+                Encoding encoding
             )
         {
             var recordLength = MarkerLength;

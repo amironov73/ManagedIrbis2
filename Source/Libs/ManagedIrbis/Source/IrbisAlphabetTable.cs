@@ -136,19 +136,19 @@ namespace ManagedIrbis
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            FileSpecification specification = new FileSpecification
+            var specification = new FileSpecification
                 (
                     IrbisPath.System,
                     fileName
                 );
-            string text = client.ReadTextFileAsync
+            var text = client.ReadTextFileAsync
                 (
                     specification.ToString()
                 )
                 .Result
                 .ThrowIfNull($"Alphabet table: {fileName}");
 
-            using StringReader reader = new StringReader(text);
+            using var reader = new StringReader(text);
             _encoding = IrbisEncoding.Ansi;
             _table = _ParseText(reader);
             Characters = _encoding.GetChars(_table);
@@ -200,13 +200,13 @@ namespace ManagedIrbis
 
         private static byte[] _ParseText
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            List<byte> table = new List<byte>(182);
+            var table = new List<byte>(182);
 
-            string text = reader.ReadToEnd();
-            TextNavigator navigator = new TextNavigator(text);
+            var text = reader.ReadToEnd();
+            var navigator = new TextNavigator(text);
 
             while (true)
             {
@@ -215,13 +215,13 @@ namespace ManagedIrbis
                     break;
                 }
 
-                string s = navigator.ReadInteger().ToString();
+                var s = navigator.ReadInteger().ToString();
                 if (string.IsNullOrEmpty(s))
                 {
                     throw new IrbisException("Bad Alphabet table");
                 }
 
-                byte value = byte.Parse(s);
+                var value = byte.Parse(s);
                 table.Add(value);
             }
 
@@ -278,38 +278,31 @@ namespace ManagedIrbis
         /// <summary>
         /// Парсим локальный файл.
         /// </summary>
-        [NotNull]
         public static IrbisAlphabetTable ParseLocalFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (StreamReader reader = TextReaderUtility.OpenRead
-                    (
-                        fileName,
-                        IrbisEncoding.Ansi
-                    ))
-            {
-                return ParseText(reader);
-            }
+            using var reader = TextReaderUtility.OpenRead
+                (
+                    fileName,
+                    IrbisEncoding.Ansi
+                );
+            return ParseText(reader);
         }
 
         /// <summary>
         /// Парсим таблицу из текстового представления.
         /// </summary>
-        [NotNull]
         public static IrbisAlphabetTable ParseText
             (
-                [NotNull] TextReader reader
+                TextReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
-            byte[] table = _ParseText(reader);
-
-            IrbisAlphabetTable result = new IrbisAlphabetTable
+            var table = _ParseText(reader);
+            var result = new IrbisAlphabetTable
                 (
                     IrbisEncoding.Ansi,
                     table
@@ -333,22 +326,21 @@ namespace ManagedIrbis
         /// <summary>
         /// Разбиваем текст на слова.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public string[] SplitWords
             (
-                [CanBeNull] string text
+                string? text
             )
         {
-            if (ReferenceEquals(text, null) || text.Length == 0)
+            if (string.IsNullOrEmpty(text))
             {
                 return StringUtility.EmptyArray;
             }
 
-            List<string> result = new List<string>();
-            StringBuilder accumulator = new StringBuilder();
+            var result = new List<string>();
+            var accumulator = new StringBuilder();
 
-            foreach (char c in text)
+            foreach (var c in text)
             {
                 if (IsAlpha(c))
                 {
@@ -377,13 +369,13 @@ namespace ManagedIrbis
         /// </summary>
         public void ToSourceCode
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
-            int count = 0;
+            var count = 0;
 
             writer.WriteLine("new char[] {");
-            foreach (char c in Characters)
+            foreach (var c in Characters)
             {
                 if (count == 0)
                 {
@@ -408,16 +400,12 @@ namespace ManagedIrbis
         /// <summary>
         /// Trim the text.
         /// </summary>
-        [NotNull]
         public string TrimText
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
-
-            if (
-                text.Length == 0
+            if (text.Length == 0
                 || IsAlpha(text[0])
                     && IsAlpha(text[text.Length - 1])
                )
@@ -425,7 +413,7 @@ namespace ManagedIrbis
                 return text;
             }
 
-            StringBuilder builder = new StringBuilder(text);
+            var builder = new StringBuilder(text);
 
             // Trim beginning of the text
             while (builder.Length != 0 && !IsAlpha(builder[0]))
@@ -447,19 +435,17 @@ namespace ManagedIrbis
         /// </summary>
         public void WriteLocalFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            using (StreamWriter writer = TextWriterUtility.Create
-                    (
-                        fileName,
-                        IrbisEncoding.Ansi
-                    ))
-            {
-                WriteTable(writer);
-            }
+            using var writer = TextWriterUtility.Create
+                (
+                    fileName,
+                    IrbisEncoding.Ansi
+                );
+            WriteTable(writer);
         }
 
         /// <summary>
@@ -467,14 +453,11 @@ namespace ManagedIrbis
         /// </summary>
         public void WriteTable
             (
-                [NotNull] TextWriter writer
+                TextWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
-            int count = 0;
-
-            foreach (byte b in _table)
+            var count = 0;
+            foreach (var b in _table)
             {
                 if (count != 0)
                 {
@@ -504,8 +487,6 @@ namespace ManagedIrbis
                 BinaryReader reader
             )
         {
-            Sure.NotNull(reader, nameof(reader));
-
             _encoding = Encoding.GetEncoding(reader.ReadInt32());
             _table = reader.ReadByteArray();
             _BuildCharacters();
@@ -517,8 +498,6 @@ namespace ManagedIrbis
                 BinaryWriter writer
             )
         {
-            Sure.NotNull(writer, nameof(writer));
-
             writer.Write(_encoding.CodePage);
             writer.WriteArray(_table);
         }
@@ -533,16 +512,16 @@ namespace ManagedIrbis
                 bool throwOnError
             )
         {
-            Verifier<IrbisAlphabetTable> verifier
+            var verifier
                 = new Verifier<IrbisAlphabetTable>(this, throwOnError);
 
             verifier
                 .Assert(_table.Length != 0, nameof(_table.Length));
 
-            for (int i = 0; i < _table.Length; i++)
+            for (var i = 0; i < _table.Length; i++)
             {
-                byte value = _table[i];
-                for (int j = i + 1; j < _table.Length; j++)
+                var value = _table[i];
+                for (var j = i + 1; j < _table.Length; j++)
                 {
                     if (_table[j] == value)
                     {

@@ -35,8 +35,8 @@ namespace ManagedIrbis.ImportExport
 
         private static void _AppendIrbisLine
             (
-                [NotNull] StringBuilder builder,
-                [NotNull] string format,
+                StringBuilder builder,
+                string format,
                 params object[] args
             )
         {
@@ -50,16 +50,16 @@ namespace ManagedIrbis.ImportExport
                 char delimiter
             )
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             while (true)
             {
-                int next = reader.Read();
+                var next = reader.Read();
                 if (next < 0)
                 {
                     break;
                 }
-                char c = (char)next;
+                var c = (char)next;
                 if (c == delimiter)
                 {
                     break;
@@ -79,8 +79,8 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static void EncodeSubField
             (
-                [NotNull] StringBuilder builder,
-                [NotNull] SubField subField
+                StringBuilder builder,
+                SubField subField
             )
         {
             builder.AppendFormat
@@ -97,8 +97,8 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static void EncodeField
             (
-                [NotNull] StringBuilder builder,
-                [NotNull] RecordField field
+                StringBuilder builder,
+                RecordField field
             )
         {
             builder.AppendFormat
@@ -109,7 +109,7 @@ namespace ManagedIrbis.ImportExport
 
             builder.Append(field.Value);
 
-            foreach (SubField subField in field.Subfields)
+            foreach (var subField in field.Subfields)
             {
                 EncodeSubField
                     (
@@ -133,7 +133,7 @@ namespace ManagedIrbis.ImportExport
                 MarcRecord record
             )
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
 
             _AppendIrbisLine
                 (
@@ -149,7 +149,7 @@ namespace ManagedIrbis.ImportExport
                     record.Version
                 );
 
-            foreach (RecordField field in record.Fields)
+            foreach (var field in record.Fields)
             {
                 EncodeField
                     (
@@ -164,17 +164,15 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse the line.
         /// </summary>
-        [NotNull]
         public static RecordField ParseLine
             (
-                [NotNull] string line
+                string line
             )
         {
             Sure.NotNullNorEmpty(line, nameof(line));
 
-            StringReader reader = new StringReader(line);
-
-            RecordField result = new RecordField
+            var reader = new StringReader(line);
+            var result = new RecordField
             {
                 Tag = FastNumber.ParseInt32(_ReadTo(reader, '#')),
                 Value = _ReadTo(reader, '^').EmptyToNull()
@@ -182,14 +180,14 @@ namespace ManagedIrbis.ImportExport
 
             while (true)
             {
-                int next = reader.Read();
+                var next = reader.Read();
                 if (next < 0)
                 {
                     break;
                 }
-                char code = char.ToLower((char)next);
-                string text = _ReadTo(reader, '^');
-                SubField subField = new SubField
+                var code = char.ToLower((char)next);
+                var text = _ReadTo(reader, '^');
+                var subField = new SubField
                 {
                     Code = code,
                     Value = text
@@ -203,20 +201,18 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse MFN, status and version of the record
         /// </summary>
-        [NotNull]
         public static MarcRecord ParseMfnStatusVersion
             (
-                [NotNull] string line1,
-                [NotNull] string line2,
-                [NotNull] MarcRecord record
+                string line1,
+                string line2,
+                MarcRecord record
             )
         {
             Sure.NotNullNorEmpty(line1, nameof(line1));
             Sure.NotNullNorEmpty(line2, nameof(line2));
-            Sure.NotNull(record, nameof(record));
 
-            Regex regex = new Regex(@"^(-?\d+)\#(\d*)?");
-            Match match = regex.Match(line1);
+            var regex = new Regex(@"^(-?\d+)\#(\d*)?");
+            var match = regex.Match(line1);
             record.Mfn = Math.Abs(FastNumber.ParseInt32(match.Groups[1].Value));
             if (match.Groups[2].Length > 0)
             {
@@ -234,16 +230,12 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse server response for ReadRecordCommand.
         /// </summary>
-        [NotNull]
         public static MarcRecord ParseResponseForReadRecord
             (
-                [NotNull] ServerResponse response,
-                [NotNull] MarcRecord record
+                ServerResponse response,
+                MarcRecord record
             )
         {
-            Sure.NotNull(response, nameof(response));
-            Sure.NotNull(record, nameof(record));
-
             try
             {
                 //record.Fields.BeginUpdate();
@@ -268,7 +260,7 @@ namespace ManagedIrbis.ImportExport
                     {
                         break;
                     }
-                    RecordField field = ParseLine(line);
+                    var field = ParseLine(line);
                     if (field.Tag > 0)
                     {
                         record.Fields.Add(field);
@@ -276,7 +268,7 @@ namespace ManagedIrbis.ImportExport
                 }
                 if (line == "#")
                 {
-                    int returnCode = response.RequireInteger();
+                    var returnCode = response.RequireInteger();
                     if (returnCode >= 0)
                     {
                         line = response.RequireUtf();
@@ -298,26 +290,22 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse server response for WriteRecordCommand.
         /// </summary>
-        [NotNull]
         public static MarcRecord ParseResponseForWriteRecord
             (
-                [NotNull] ServerResponse response,
-                [NotNull] MarcRecord record
+                ServerResponse response,
+                MarcRecord record
             )
         {
-            Sure.NotNull(response, nameof(response));
-            Sure.NotNull(record, nameof(record));
-
             // Если в БД нет autoin.gbl, сервер не присылает
             // обработанную запись.
 
-            string first = response.ReadUtf();
+            var first = response.ReadUtf();
             if (string.IsNullOrEmpty(first))
             {
                 return record;
             }
 
-            string second = response.ReadUtf();
+            var second = response.ReadUtf();
             if (string.IsNullOrEmpty(second))
             {
                 return record;
@@ -328,7 +316,7 @@ namespace ManagedIrbis.ImportExport
                 //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string[] split = second.Split('\x1E');
+                var split = second.Split('\x1E');
 
                 ParseMfnStatusVersion
                     (
@@ -337,10 +325,10 @@ namespace ManagedIrbis.ImportExport
                         record
                     );
 
-                for (int i = 1; i < split.Length; i++)
+                for (var i = 1; i < split.Length; i++)
                 {
-                    string line = split[i];
-                    RecordField field = ParseLine(line);
+                    var line = split[i];
+                    var field = ParseLine(line);
                     if (field.Tag > 0)
                     {
                         record.Fields.Add(field);
@@ -359,23 +347,19 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse server response for WriteRecordsCommand.
         /// </summary>
-        [NotNull]
         public static MarcRecord ParseResponseForWriteRecords
             (
-                [NotNull] ServerResponse response,
-                [NotNull] MarcRecord record
+                ServerResponse response,
+                MarcRecord record
             )
         {
-            Sure.NotNull(response, nameof(response));
-            Sure.NotNull(record, nameof(record));
-
             try
             {
                 //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string whole = response.RequireUtf();
-                string[] split = whole.Split('\x1E');
+                var whole = response.RequireUtf();
+                var split = whole.Split('\x1E');
 
                 ParseMfnStatusVersion
                     (
@@ -384,10 +368,10 @@ namespace ManagedIrbis.ImportExport
                         record
                     );
 
-                for (int i = 2; i < split.Length; i++)
+                for (var i = 2; i < split.Length; i++)
                 {
-                    string line = split[i];
-                    RecordField field = ParseLine(line);
+                    var line = split[i];
+                    var field = ParseLine(line);
                     if (field.Tag > 0)
                     {
                         record.Fields.Add(field);
@@ -408,25 +392,22 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static MarcRecord? ParseResponseForAllFormat
             (
-                [NotNull] ServerResponse response,
-                [NotNull] MarcRecord record
+                ServerResponse response,
+                MarcRecord record
             )
         {
-            Sure.NotNull(response, nameof(response));
-            Sure.NotNull(record, nameof(record));
-
             try
             {
                 //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string line = response.ReadUtf();
+                var line = response.ReadUtf();
                 if (string.IsNullOrEmpty(line))
                 {
                     return null;
                 }
 
-                string[] split = line.Split('\x1F');
+                var split = line.Split('\x1F');
                 if (split.Length < 3)
                 {
                     return null;
@@ -439,12 +420,12 @@ namespace ManagedIrbis.ImportExport
                         record
                     );
 
-                for (int i = 3; i < split.Length; i++)
+                for (var i = 3; i < split.Length; i++)
                 {
                     line = split[i];
                     if (!string.IsNullOrEmpty(line))
                     {
-                        RecordField field = ParseLine(line);
+                        var field = ParseLine(line);
                         if (field.Tag > 0)
                         {
                             record.Fields.Add(field);
@@ -466,13 +447,11 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static MarcRecord? ParseResponseForAllFormat
             (
-                [CanBeNull] string line,
-                [NotNull] MarcRecord record
+                string? line,
+                MarcRecord record
             )
         {
-            Sure.NotNull(record, nameof(record));
-
-            if (ReferenceEquals(line, null) || line.Length == 0)
+            if (string.IsNullOrEmpty(line))
             {
                 return null;
             }
@@ -482,7 +461,7 @@ namespace ManagedIrbis.ImportExport
                 //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string[] split = line.Split('\x1F');
+                var split = line.Split('\x1F');
                 if (split.Length < 3)
                 {
                     return null;
@@ -495,12 +474,12 @@ namespace ManagedIrbis.ImportExport
                         record
                     );
 
-                for (int i = 3; i < split.Length; i++)
+                for (var i = 3; i < split.Length; i++)
                 {
                     line = split[i];
                     if (!string.IsNullOrEmpty(line))
                     {
-                        RecordField field = ParseLine(line);
+                        var field = ParseLine(line);
                         if (field.Tag > 0)
                         {
                             record.Fields.Add(field);
@@ -523,13 +502,11 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public static MarcRecord? ParseResponseForGblFormat
             (
-                [CanBeNull] string line,
-                [NotNull] MarcRecord record
+                string? line,
+                MarcRecord record
             )
         {
-            Sure.NotNull(record, nameof(record));
-
-            if (ReferenceEquals(line, null) || line.Length == 0)
+            if (string.IsNullOrEmpty(line))
             {
                 return null;
             }
@@ -539,13 +516,13 @@ namespace ManagedIrbis.ImportExport
                 //record.Fields.BeginUpdate();
                 record.Fields.Clear();
 
-                string[] split = line.Split('\x1E');
-                for (int i = 1; i < split.Length; i++)
+                var split = line.Split('\x1E');
+                for (var i = 1; i < split.Length; i++)
                 {
                     line = split[i];
                     if (!string.IsNullOrEmpty(line))
                     {
-                        RecordField field = ParseLine(line);
+                        var field = ParseLine(line);
                         if (field.Tag > 0)
                         {
                             record.Fields.Add(field);

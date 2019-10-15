@@ -67,12 +67,10 @@ namespace ManagedIrbis.ImportExport
         /// </summary>
         public void Encode
             (
-                [NotNull] byte[] bytes,
+                byte[] bytes,
                 int offset
             )
         {
-            Sure.NotNull(bytes, nameof(bytes));
-
             unchecked
             {
                 bytes[offset] = (byte) RecordStatus;
@@ -87,10 +85,9 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Заголовок по умолчанию.
         /// </summary>
-        [NotNull]
         public static IsoRecordHeader GetDefault()
         {
-            IsoRecordHeader result = new IsoRecordHeader
+            var result = new IsoRecordHeader
             {
                 RecordStatus = MarcRecordStatus.New,
                 RecordType = MarcRecordType.Text,
@@ -106,15 +103,14 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse text representation.
         /// </summary>
-        [NotNull]
         public static IsoRecordHeader Parse
             (
-                [NotNull] string text
+                string text
             )
         {
-            Sure.NotNull(text, nameof(text));
+            Sure.NotNullNorEmpty(text, nameof(text));
 
-            IsoRecordHeader result = new IsoRecordHeader
+            var result = new IsoRecordHeader
             {
                 RecordStatus = (MarcRecordStatus) text[0],
                 RecordType = (MarcRecordType) text[1],
@@ -130,16 +126,13 @@ namespace ManagedIrbis.ImportExport
         /// <summary>
         /// Parse binary representation.
         /// </summary>
-        [NotNull]
         public static IsoRecordHeader Parse
             (
-                [NotNull] byte[] bytes,
+                byte[] bytes,
                 int offset
             )
         {
-            Sure.NotNull(bytes, nameof(bytes));
-
-            IsoRecordHeader result = new IsoRecordHeader
+            var result = new IsoRecordHeader
             {
                 RecordStatus = (MarcRecordStatus) bytes[offset],
                 RecordType = (MarcRecordType) bytes[offset + 1],
@@ -159,7 +152,7 @@ namespace ManagedIrbis.ImportExport
         /// <inheritdoc cref="object.ToString" />
         public override string ToString()
         {
-            char[] result = new char[6];
+            var result = new char[6];
             unchecked
             {
                 result[0] = (char) RecordStatus;

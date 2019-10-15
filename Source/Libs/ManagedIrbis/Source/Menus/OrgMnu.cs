@@ -9,15 +9,9 @@
 
 #region Using directives
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-
 using AM;
 
 using JetBrains.Annotations;
-
-using ManagedIrbis.Menus;
 
 #endregion
 
@@ -175,7 +169,7 @@ namespace ManagedIrbis.Menus
         /// </summary>
         public OrgMnu
             (
-                [NotNull] MenuFile menu
+                MenuFile menu
             )
             : this()
         {
@@ -203,11 +197,9 @@ namespace ManagedIrbis.Menus
         /// </summary>
         public void ApplyToMenu
             (
-                [NotNull] MenuFile menu
+                MenuFile menu
             )
         {
-            Sure.NotNull(menu, nameof(menu));
-
             menu.Entries.Clear();
             menu.Add("1", Country);
             menu.Add("2", Organization);

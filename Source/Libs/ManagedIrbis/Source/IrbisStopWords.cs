@@ -172,11 +172,11 @@ namespace ManagedIrbis
                 [ItemNotNull] string[] lines
             )
         {
-            IrbisStopWords result = new IrbisStopWords(name);
+            var result = new IrbisStopWords(name);
 
-            foreach (string line in lines)
+            foreach (var line in lines)
             {
-                string trimmed = line.Trim();
+                var trimmed = line.Trim();
                 if (!string.IsNullOrEmpty(trimmed))
                 {
                     result._dictionary[trimmed] = null;
@@ -203,16 +203,15 @@ namespace ManagedIrbis
         /// <summary>
         /// Parse the text file.
         /// </summary>
-        [NotNull]
         public static IrbisStopWords ParseFile
             (
-                [NotNull] string fileName
+                string fileName
             )
         {
             Sure.NotNullNorEmpty(fileName, nameof(fileName));
 
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            string[] lines = File.ReadAllLines
+            var name = Path.GetFileNameWithoutExtension(fileName);
+            var lines = File.ReadAllLines
                 (
                     path: fileName,
                     encoding: IrbisEncoding.Ansi
@@ -225,11 +224,10 @@ namespace ManagedIrbis
         /// Convert <see cref="IrbisStopWords"/> to array
         /// of text lines.
         /// </summary>
-        [NotNull]
         [ItemNotNull]
         public string[] ToLines()
         {
-            string[] result = _dictionary.Keys.ToArray();
+            var result = _dictionary.Keys.ToArray();
             Array.Sort(result);
 
             return result;
@@ -238,7 +236,6 @@ namespace ManagedIrbis
         /// <summary>
         /// Convert <see cref="IrbisStopWords"/> to plain text.
         /// </summary>
-        [NotNull]
         public string ToText()
         {
             return string.Join
