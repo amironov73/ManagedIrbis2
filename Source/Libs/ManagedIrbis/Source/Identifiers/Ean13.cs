@@ -56,17 +56,15 @@ namespace ManagedIrbis.Identifiers
         /// </summary>
         public static char ComputeCheckDigit
             (
-                [NotNull] char[] digits
+                char[] digits
             )
         {
-            Sure.NotNull(digits, nameof(digits));
-
-            int sum = 0;
-            for (int i = 0; i < 12; i++)
+            var sum = 0;
+            for (var i = 0; i < 12; i++)
             {
                 sum = sum + (digits[i] - '0') * _coefficients[i];
             }
-            char result = (char)(10 - sum % 10 + '0');
+            var result = (char)(10 - sum % 10 + '0');
 
             return result;
         }
@@ -76,17 +74,15 @@ namespace ManagedIrbis.Identifiers
         /// </summary>
         public static bool CheckControlDigit
             (
-                [NotNull] char[] digits
+                char[] digits
             )
         {
-            Sure.NotNull(digits, nameof(digits));
-
-            int sum = 0;
-            for (int i = 0; i < 13; i++)
+            var sum = 0;
+            for (var i = 0; i < 13; i++)
             {
                 sum = sum + (digits[i] - '0') * _coefficients[i];
             }
-            bool result = sum % 10 == 0;
+            var result = sum % 10 == 0;
 
             return result;
         }

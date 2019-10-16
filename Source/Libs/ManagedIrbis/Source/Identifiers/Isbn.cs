@@ -181,11 +181,11 @@ namespace ManagedIrbis.Identifiers
         /// контрольные цифры совпадают.</returns>
         public static bool CheckControlDigit
             (
-                [CanBeNull] string isbn,
-                char hyphen
+                string? isbn,
+                char hyphen = StandardHyphen
             )
         {
-            int[] digits = new int[10];
+            var digits = new int[10];
             int i, j, sum;
 
             if (ReferenceEquals(isbn, null)
@@ -198,7 +198,7 @@ namespace ManagedIrbis.Identifiers
             hyphen = char.ToUpper(hyphen);
             for (i = j = 0; i < isbn.Length; i++)
             {
-                char chr = isbn[i];
+                var chr = isbn[i];
                 if (chr == hyphen)
                 {
                     continue;
@@ -236,21 +236,6 @@ namespace ManagedIrbis.Identifiers
         }
 
         /// <summary>
-        /// Проверяем контрольную цифру.
-        /// </summary>
-        public static bool CheckControlDigit
-            (
-                [CanBeNull] string isbn
-            )
-        {
-            return CheckControlDigit
-                (
-                    isbn,
-                    StandardHyphen
-                );
-        }
-
-        /// <summary>
         /// Проверяем дефисы.
         /// </summary>
         /// <param name="isbn">Проверяемая строка.</param>
@@ -259,11 +244,11 @@ namespace ManagedIrbis.Identifiers
         /// </returns>
         public static bool CheckHyphens
             (
-                [CanBeNull] string isbn,
-                char hyphen
+                string? isbn,
+                char hyphen = StandardHyphen
             )
         {
-            int count = 0;
+            var count = 0;
 
             if (ReferenceEquals(isbn, null)
                 ||isbn.Length == 0
@@ -275,7 +260,7 @@ namespace ManagedIrbis.Identifiers
                 return false;
             }
 
-            for (int i = 0; i < isbn.Length - 1; i++)
+            for (var i = 0; i < isbn.Length - 1; i++)
             {
                 if (isbn[i] == hyphen)
                 {
@@ -291,35 +276,17 @@ namespace ManagedIrbis.Identifiers
         }
 
         /// <summary>
-        /// Проверяет дефисы.
-        /// </summary>
-        /// <param name="isbn">Проверяемая строка.</param>
-        /// <returns><c>true</c> если дефисы расставлены правильно.
-        /// </returns>
-        public static bool CheckHyphens
-            (
-                [CanBeNull] string isbn
-            )
-        {
-            return CheckHyphens
-                (
-                    isbn,
-                    StandardHyphen
-                );
-        }
-
-        /// <summary>
         /// Проверяет ISBN.
         /// </summary>
         /// <returns><c>true</c> если ISBN написан правильно.
         /// </returns>
         public static bool Validate
             (
-                [CanBeNull] string isbn,
+                string? isbn,
                 bool throwException
             )
         {
-            bool result = CheckHyphens(isbn)
+            var result = CheckHyphens(isbn)
                 && CheckControlDigit(isbn);
 
             if (!result)
@@ -343,10 +310,9 @@ namespace ManagedIrbis.Identifiers
         /// <summary>
         /// Конвертирует ISBN в штрих-код EAN13.
         /// </summary>
-        [CanBeNull]
-        public static string ToEan13
+        public static string? ToEan13
             (
-                [CanBeNull] string isbn
+                string? isbn
             )
         {
             if (ReferenceEquals(isbn, null)
@@ -362,7 +328,7 @@ namespace ManagedIrbis.Identifiers
             };
             for (int i = 0, j = 2; i < isbn.Length; i++)
             {
-                char chr = isbn[i];
+                var chr = isbn[i];
                 if (chr >= '0' && chr <= '9')
                 {
                     digits[++j] = chr;
@@ -378,10 +344,9 @@ namespace ManagedIrbis.Identifiers
         /// </summary>
         /// <param name="ean">штрих-код.</param>
         /// <returns>Суррогатный ISBN.</returns>
-        [CanBeNull]
-        public static string FromEan13
+        public static string? FromEan13
             (
-                [CanBeNull] string ean
+                string? ean
             )
         {
             if (ReferenceEquals(ean, null) || ean.Length != 13)
@@ -405,8 +370,8 @@ namespace ManagedIrbis.Identifiers
             digits[9] = ean[10];
             digits[10] = ean[11];
             // контрольная цифра
-            string result = null;
-            foreach (char chr in possible)
+            string? result = null;
+            foreach (var chr in possible)
             {
                 digits[12] = chr;
                 result = new string(digits);
