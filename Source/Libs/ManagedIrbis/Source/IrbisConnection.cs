@@ -168,14 +168,33 @@ namespace ManagedIrbis
         #region Public methods
 
         /// <summary>
-        ///
+        /// Актуализация всех неактуализированных записей
+        /// в указанной базе данных.
         /// </summary>
+        /// <param name="database">Имя базы данных.</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> ActualizeDatabaseAsync
+            (
+                string? database = default
+            )
+        {
+            var result = await ActualizeRecordAsync(database, 0);
+            return result;
+        } // method ActualizeDatabase
+
+        /// <summary>
+        /// Актуализация записи с указанным MFN.
+        /// </summary>
+        /// <param name="database">Имя базы данных.</param>
+        /// <param name="mfn">MFN, подлежащий актуализации.</param>
+        /// <returns>Признак успешности операции.</returns>
         public async Task<bool> ActualizeRecordAsync
             (
-                string database,
+                string? database,
                 int mfn
             )
         {
+            database ??= Database;
             var response = await ExecuteAsync("F", database, mfn);
             return !ReferenceEquals(response, null);
         } // method ActualizeRecordAsync
@@ -230,33 +249,113 @@ namespace ManagedIrbis
             return IniFile;
         } // method ConnectAsync
 
-//        /// <summary>
-//        ///
-//        /// </summary>
-//        public bool Disconnect()
-//        {
-//            if (Connected)
-//            {
-//                var query = new ClientQuery(this, "B");
-//                query.AddAnsi(Username);
-//                try
-//                {
-//                    Execute(query);
-//                }
-//                catch (Exception exception)
-//                {
-//                    Debug.WriteLine(exception.Message);
-//                }
-//
-//                Connected = false;
-//            }
-//
-//            return true;
-//        } // method Disconnect
+        /// <summary>
+        /// Создание базы данных.
+        /// </summary>
+        /// <param name="database">Имя создаваемой базы.</param>
+        /// <param name="description">Описание в свободной форме.</param>
+        /// <param name="readerAccess">Читатель будет иметь доступ?</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> CreateDatabaseAsync
+            (
+                string database,
+                string description,
+                bool readerAccess = true
+            )
+        {
+            if (!Connected)
+            {
+                return false;
+            }
+
+            var query = new ClientQuery(this, "T");
+            query.AddAnsi(database).NewLine();
+            query.AddAnsi(description).NewLine();
+            query.Add(readerAccess ? 1 : 0).NewLine();
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
+            if (!response.CheckReturnCode())
+            {
+                return false;
+            }
+
+            return true;
+        } // method CreateDatabaseAsync
+
 
         /// <summary>
-        ///
+        /// Создание словаря в указанной базе данных.
         /// </summary>
+        /// <param name="database">Имя базы данных.</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> CreateDictionaryAsync
+            (
+                string? database = default
+            )
+        {
+            if (!Connected)
+            {
+                return false;
+            }
+
+            database ??= Database;
+            var query = new ClientQuery(this, "Z");
+            query.AddAnsi(database).NewLine();
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
+            if (!response.CheckReturnCode())
+            {
+                return false;
+            }
+
+            return true;
+        } // method CreateDictionaryAsync
+
+        /// <summary>
+        /// Удаление указанной базы данных.
+        /// </summary>
+        /// <param name="database">Имя удаляемой базы данных.</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> DeleteDatabaseAsync
+            (
+                string? database = default
+            )
+        {
+            if (!Connected)
+            {
+                return false;
+            }
+
+            database ??= Database;
+            var query = new ClientQuery(this, "W");
+            query.AddAnsi(database).NewLine();
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
+            if (!response.CheckReturnCode())
+            {
+                return false;
+            }
+
+            return true;
+
+        } // method DeleteDatabaseAsync
+
+        /// <summary>
+        /// Отключение от сервера.
+        /// </summary>
+        /// <returns>Признак успешности операции.</returns>
         public async Task<bool> DisconnectAsync()
         {
             if (Connected)
@@ -278,62 +377,12 @@ namespace ManagedIrbis
             return true;
         } // method DisconnectAsync
 
-//        /// <summary>
-//        ///
-//        /// </summary>
-//        public ServerResponse? Execute
-//            (
-//                ClientQuery query
-//            )
-//        {
-//            SetBusy(true);
-//            try
-//            {
-//                if (_cancellation.IsCancellationRequested)
-//                {
-//                    _cancellation = new CancellationTokenSource();
-//                }
-//
-//                ServerResponse? result;
-//                try
-//                {
-//                    if (_debug)
-//                    {
-//                        query.Debug(Console.Out);
-//                    }
-//
-//                    result = Socket.Transact(query);
-//                }
-//                catch (Exception exception)
-//                {
-//                    Debug.WriteLine(exception.Message);
-//                    return null;
-//                }
-//
-//                if (ReferenceEquals(result, null))
-//                {
-//                    return null;
-//                }
-//
-//                if (_debug)
-//                {
-//                    result.Debug(Console.Out);
-//                }
-//
-//                result.Parse();
-//                QueryId++;
-//
-//                return result;
-//            }
-//            finally
-//            {
-//                SetBusy(false);
-//            }
-//        } // method Execute
-
         /// <summary>
-        ///
+        /// Отправка клиентского запроса на сервер
+        /// и получение ответа от него.
         /// </summary>
+        /// <param name="query">Клиентский запрос.</param>
+        /// <returns>Ответ от сервера.</returns>
         public async Task<ServerResponse?> ExecuteAsync
             (
                 ClientQuery query
@@ -385,8 +434,11 @@ namespace ManagedIrbis
         } // method ExecuteAsync
 
         /// <summary>
-        ///
+        /// Отправка запроса на сервер по упрощённой схеме.
         /// </summary>
+        /// <param name="command">Код команды.</param>
+        /// <param name="args">Опциональные параметры команды (в кодировке ANSI).</param>
+        /// <returns>Ответ сервера.</returns>
         public async Task<ServerResponse?> ExecuteAsync
             (
                 string command,
@@ -410,9 +462,16 @@ namespace ManagedIrbis
         } // method ExecuteAsync
 
         /// <summary>
-        ///
+        /// Форматирование записи с указанием её MFN.
         /// </summary>
-        public async Task<string?> FormatRecordAsync(string format, int mfn)
+        /// <param name="format">Спецификация формата.</param>
+        /// <param name="mfn">MFN записи.</param>
+        /// <returns>Результат расформатирования.</returns>
+        public async Task<string?> FormatRecordAsync
+            (
+                string format,
+                int mfn
+            )
         {
             if (!Connected)
             {
@@ -442,11 +501,14 @@ namespace ManagedIrbis
         } // method FormatRecordAsync
 
         /// <summary>
-        ///
+        /// Получение максимального MFN для указанной базы данных.
         /// </summary>
+        /// <param name="database">Опциональное имя базы данных
+        /// (<c>null</c> означает текущую базу данных).</param>
+        /// <returns>Макисмальный MFN.</returns>
         public async Task<int> GetMaxMfnAsync
             (
-                string? database = null
+                string? database = default
             )
         {
             if (!Connected)
@@ -454,7 +516,7 @@ namespace ManagedIrbis
                 return 0;
             }
 
-            database = database ?? Database;
+            database ??= Database;
             var query = new ClientQuery(this, "O");
             query.AddAnsi(database).NewLine();
             var response = await ExecuteAsync(query);
