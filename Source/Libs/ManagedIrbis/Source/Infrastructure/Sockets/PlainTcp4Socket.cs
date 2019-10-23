@@ -17,8 +17,6 @@ using System.Threading.Tasks;
 
 using AM;
 
-using JetBrains.Annotations;
-
 #endregion
 
 // ReSharper disable CommentTypo
@@ -64,6 +62,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
             catch (Exception exception)
             {
                 Debug.WriteLine(exception.Message);
+                Connection.LastError = -100_002;
                 return null;
             }
 
@@ -91,6 +90,7 @@ namespace ManagedIrbis.Infrastructure.Sockets
             catch (Exception exception)
             {
                 Debug.WriteLine(exception.Message);
+                Connection.LastError = -100_002;
                 return null;
             }
 
@@ -108,84 +108,85 @@ namespace ManagedIrbis.Infrastructure.Sockets
             catch (Exception exception)
             {
                 Debug.WriteLine(exception.Message);
+                Connection.LastError = -100_002;
                 return null;
             }
 
             return result;
         } // method TransactAsync
 
-        /// <inheritdoc cref="ClientSocket.Transact"/>
-        public override ServerResponse? Transact
-            (
-                ClientQuery query
-            )
-        {
-            Connection.Cancellation.ThrowIfCancellationRequested();
-
-            using var client = new TcpClient();
-            try
-            {
-                client.Connect(Connection.Host, Connection.Port);
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception.Message);
-                return null;
-            }
-
-            var socket = client.Client;
-            var stream = client.GetStream();
-
-            var length = query.GetLength();
-            var prefix = Encoding.ASCII.GetBytes
-                (
-                    length.ToInvariantString() + "\n"
-                );
-            var chunks = query.GetChunks();
-            chunks[0] = prefix;
-            try
-            {
-                foreach (var chunk in chunks)
-                {
-                    if (Connection.Cancellation.IsCancellationRequested)
-                    {
-                        throw new OperationCanceledException();
-                    }
-
-                    stream.Write(chunk);
-                }
-
-                // await stream.FlushAsync();
-                socket.Shutdown(SocketShutdown.Send);
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception.Message);
-                return null;
-            }
-
-            var result = new ServerResponse();
-            try
-            {
-                if (Connection.Cancellation.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException();
-                }
-
-                result.PullData
-                (
-                    stream,
-                    2048
-                );
-            }
-            catch (Exception exception)
-            {
-                Debug.WriteLine(exception.Message);
-                return null;
-            }
-
-            return result;
-        } // method Transact
+//        /// <inheritdoc cref="ClientSocket.Transact"/>
+//        public override ServerResponse? Transact
+//            (
+//                ClientQuery query
+//            )
+//        {
+//            Connection.Cancellation.ThrowIfCancellationRequested();
+//
+//            using var client = new TcpClient();
+//            try
+//            {
+//                client.Connect(Connection.Host, Connection.Port);
+//            }
+//            catch (Exception exception)
+//            {
+//                Debug.WriteLine(exception.Message);
+//                return null;
+//            }
+//
+//            var socket = client.Client;
+//            var stream = client.GetStream();
+//
+//            var length = query.GetLength();
+//            var prefix = Encoding.ASCII.GetBytes
+//                (
+//                    length.ToInvariantString() + "\n"
+//                );
+//            var chunks = query.GetChunks();
+//            chunks[0] = prefix;
+//            try
+//            {
+//                foreach (var chunk in chunks)
+//                {
+//                    if (Connection.Cancellation.IsCancellationRequested)
+//                    {
+//                        throw new OperationCanceledException();
+//                    }
+//
+//                    stream.Write(chunk);
+//                }
+//
+//                // await stream.FlushAsync();
+//                socket.Shutdown(SocketShutdown.Send);
+//            }
+//            catch (Exception exception)
+//            {
+//                Debug.WriteLine(exception.Message);
+//                return null;
+//            }
+//
+//            var result = new ServerResponse();
+//            try
+//            {
+//                if (Connection.Cancellation.IsCancellationRequested)
+//                {
+//                    throw new OperationCanceledException();
+//                }
+//
+//                result.PullData
+//                (
+//                    stream,
+//                    2048
+//                );
+//            }
+//            catch (Exception exception)
+//            {
+//                Debug.WriteLine(exception.Message);
+//                return null;
+//            }
+//
+//            return result;
+//        } // method Transact
 
         #endregion
 

@@ -132,6 +132,11 @@ namespace ManagedIrbis
         /// </summary>
         public CancellationToken Cancellation { get; }
 
+        /// <summary>
+        /// Last error code.
+        /// </summary>
+        public int LastError { get; internal set; }
+
         #endregion
 
         #region Construction
@@ -162,6 +167,16 @@ namespace ManagedIrbis
             Busy = busy;
             BusyChanged?.Invoke(this, EventArgs.Empty);
         } // method SetBusy
+
+        private bool CheckConnection()
+        {
+            if (!Connected)
+            {
+                LastError = -100500;
+            }
+
+            return Connected;
+        } // method CheckConnection
 
         #endregion
 
@@ -263,7 +278,7 @@ namespace ManagedIrbis
                 bool readerAccess = true
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return false;
             }
@@ -297,7 +312,7 @@ namespace ManagedIrbis
                 string? database = default
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return false;
             }
@@ -329,7 +344,7 @@ namespace ManagedIrbis
                 string? database = default
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return false;
             }
@@ -437,7 +452,8 @@ namespace ManagedIrbis
         /// Отправка запроса на сервер по упрощённой схеме.
         /// </summary>
         /// <param name="command">Код команды.</param>
-        /// <param name="args">Опциональные параметры команды (в кодировке ANSI).</param>
+        /// <param name="args">Опциональные параметры команды
+        /// (в кодировке ANSI).</param>
         /// <returns>Ответ сервера.</returns>
         public async Task<ServerResponse?> ExecuteAsync
             (
@@ -445,7 +461,7 @@ namespace ManagedIrbis
                 params object[] args
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return null;
             }
@@ -473,7 +489,7 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return null;
             }
@@ -511,7 +527,7 @@ namespace ManagedIrbis
                 string? database = default
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return 0;
             }
@@ -538,7 +554,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<ServerVersion?> GetServerVersionAsync()
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return null;
             }
@@ -561,15 +577,12 @@ namespace ManagedIrbis
         /// <summary>
         ///
         /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public async Task<DatabaseInfo[]> ListDatabasesAsync
             (
                 string fileName
             )
         {
-            await Task.Delay(0);
+            await Task.Delay(0, Cancellation);
             throw new NotImplementedException("ListDatabasesAsync");
         }
 
@@ -581,7 +594,7 @@ namespace ManagedIrbis
                 string specification
             )
         {
-            if (!Connected || string.IsNullOrEmpty(specification))
+            if (!CheckConnection() || string.IsNullOrEmpty(specification))
             {
                 return Array.Empty<string>();
             }
@@ -616,7 +629,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<ProcessInfo[]> ListProcessesAsync()
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return Array.Empty<ProcessInfo>();
             }
@@ -721,7 +734,7 @@ namespace ManagedIrbis
                 int mfn
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return null;
             }
@@ -758,9 +771,7 @@ namespace ManagedIrbis
                 string prefix
             )
         {
-            Sure.NotNullNorEmpty(prefix, nameof(prefix));
-
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return Array.Empty<TermInfo>();
             }
@@ -820,7 +831,7 @@ namespace ManagedIrbis
                 TermParameters parameters
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return Array.Empty<TermInfo>();
             }
@@ -854,7 +865,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<TermInfo[]> ReadTermsAsync
             (
-                [CanBeNull] string startTerm,
+                string? startTerm,
                 int numberOfTerms = 100
             )
         {
@@ -876,12 +887,12 @@ namespace ManagedIrbis
                 string? specification
             )
         {
-            if (string.IsNullOrEmpty(specification))
+            if (!CheckConnection())
             {
                 return null;
             }
 
-            if (!Connected)
+            if (string.IsNullOrEmpty(specification))
             {
                 return null;
             }
@@ -907,7 +918,7 @@ namespace ManagedIrbis
                 SearchParameters parameters
             )
         {
-            if (!Connected)
+            if (!CheckConnection())
             {
                 return Array.Empty<FoundItem>();
             }
@@ -945,9 +956,14 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<int[]> SearchAsync
             (
-                [CanBeNull] string expression
+                string? expression
             )
         {
+            if (!CheckConnection())
+            {
+                return Array.Empty<int>();
+            }
+
             if (string.IsNullOrEmpty(expression))
             {
                 return Array.Empty<int>();
@@ -987,9 +1003,14 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<int> SearchCountAsync
             (
-                [CanBeNull] string expression
+                string? expression
             )
         {
+            if (!CheckConnection())
+            {
+                return 0;
+            }
+
             if (string.IsNullOrEmpty(expression))
             {
                 return 0;
@@ -1020,17 +1041,17 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<MarcRecord[]> SearchReadAsync
             (
-                [CanBeNull] string expression,
+                string? expression,
                 int limit = 0
             )
         {
-            if (string.IsNullOrEmpty(expression)
-                || limit < 0)
+            if (!CheckConnection())
             {
                 return Array.Empty<MarcRecord>();
             }
 
-            if (!Connected)
+            if (string.IsNullOrEmpty(expression)
+                || limit < 0)
             {
                 return Array.Empty<MarcRecord>();
             }
@@ -1078,7 +1099,7 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<MarcRecord> SearchReadOneRecordAsync
             (
-                [CanBeNull] string expression
+                string? expression
             )
         {
             var found = await SearchReadAsync(expression, 1);
@@ -1129,7 +1150,7 @@ namespace ManagedIrbis
                 string? database = null
             )
         {
-            database = database ?? Database;
+            database ??=  Database;
             var response = await ExecuteAsync("U", database);
 
             return !ReferenceEquals(response, null);
@@ -1181,7 +1202,7 @@ namespace ManagedIrbis
                 bool dontParse = false
             )
         {
-            if (!Connected || ReferenceEquals(record, null))
+            if (!CheckConnection() || ReferenceEquals(record, null))
             {
                 return 0;
             }
@@ -1220,10 +1241,10 @@ namespace ManagedIrbis
         /// </summary>
         public async Task<bool> WriteRecordsAsync
             (
-                [CanBeNull] IEnumerable<MarcRecord> records
+                IEnumerable<MarcRecord>? records
             )
         {
-            if (!Connected || ReferenceEquals(records, null))
+            if (!CheckConnection() || ReferenceEquals(records, null))
             {
                 return false;
             }
@@ -1234,6 +1255,32 @@ namespace ManagedIrbis
 
             return true;
         } // method WriteRecordsAsync
+
+        /// <summary>
+        /// Сохранение текстового файла на сервере.
+        /// </summary>
+        /// <param name="specification">Спецификация (включая текст для сохранения).</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> WriteTextFile
+            (
+                FileSpecification specification
+            )
+        {
+            if (!CheckConnection())
+            {
+                return false;
+            }
+
+            var query = new ClientQuery(this, "L");
+            query.AddAnsi(specification.ToString()).NewLine();
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null) || !response.CheckReturnCode())
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         #endregion
 

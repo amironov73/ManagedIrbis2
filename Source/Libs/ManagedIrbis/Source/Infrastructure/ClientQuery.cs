@@ -14,8 +14,6 @@ using System.IO;
 
 using AM;
 
-using JetBrains.Annotations;
-
 #endregion
 
 namespace ManagedIrbis.Infrastructure
@@ -56,7 +54,9 @@ namespace ManagedIrbis.Infrastructure
 
         #region Private members
 
-        private static readonly byte[] _newLine = {10};
+        // ReSharper disable InconsistentNaming
+        private static readonly byte[] _newLine = { 10 };
+        // ReSharper restore InconsistentNaming
 
         private readonly List<byte[]> _chunks;
 

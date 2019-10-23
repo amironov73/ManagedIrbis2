@@ -11,10 +11,6 @@
 
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
-using AM;
-
 #endregion
 
 // ReSharper disable CommentTypo
@@ -62,13 +58,13 @@ namespace ManagedIrbis.Infrastructure.Sockets
                 ClientQuery query
             );
 
-        /// <summary>
-        /// Собственно общение с сервером -- в синхронном режиме.
-        /// </summary>
-        public abstract ServerResponse? Transact
-            (
-                ClientQuery query
-            );
+//        /// <summary>
+//        /// Собственно общение с сервером -- в синхронном режиме.
+//        /// </summary>
+//        public abstract ServerResponse? Transact
+//            (
+//                ClientQuery query
+//            );
 
         #endregion
     }

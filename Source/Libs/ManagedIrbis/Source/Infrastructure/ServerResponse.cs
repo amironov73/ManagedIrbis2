@@ -143,11 +143,7 @@ namespace ManagedIrbis.Infrastructure
         {
             while (true)
             {
-                if (token.IsCancellationRequested)
-                {
-                    throw new OperationCanceledException();
-                }
-
+                token.ThrowIfCancellationRequested();
                 var buffer = new byte[bufferSize];
                 var read = await stream.ReadAsync(buffer, 0, bufferSize, token);
                 if (read <= 0)
@@ -160,28 +156,28 @@ namespace ManagedIrbis.Infrastructure
             }
         } // method PullDataAsync
 
-        /// <summary>
-        /// Pull the data from the stream -- in synchronous manner.
-        /// </summary>
-        public void PullData
-            (
-                Stream stream,
-                int bufferSize
-            )
-        {
-            while (true)
-            {
-                var buffer = new byte[bufferSize];
-                var read = stream.Read(buffer, 0, bufferSize);
-                if (read <= 0)
-                {
-                    break;
-                }
-
-                var chunk = new ArraySegment<byte>(buffer, 0, read);
-                _memory.Add(chunk);
-            }
-        } // method PullData
+//        /// <summary>
+//        /// Pull the data from the stream -- in synchronous manner.
+//        /// </summary>
+//        public void PullData
+//            (
+//                Stream stream,
+//                int bufferSize
+//            )
+//        {
+//            while (true)
+//            {
+//                var buffer = new byte[bufferSize];
+//                var read = stream.Read(buffer, 0, bufferSize);
+//                if (read <= 0)
+//                {
+//                    break;
+//                }
+//
+//                var chunk = new ArraySegment<byte>(buffer, 0, read);
+//                _memory.Add(chunk);
+//            }
+//        } // method PullData
 
         /// <summary>
         /// Parse the answer.
