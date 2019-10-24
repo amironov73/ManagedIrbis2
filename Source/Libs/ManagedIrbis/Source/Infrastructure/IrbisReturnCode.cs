@@ -138,6 +138,16 @@ namespace ManagedIrbis.Infrastructure
         ActualizationError = -403,
 
         /// <summary>
+        /// Запись логически удалена.
+        /// </summary>
+        LogicallyDeleted1 = -600,
+
+        /// <summary>
+        /// Запись физически удалена.
+        /// </summary>
+        PhysicallyDeleted1 = -601,
+
+        /// <summary>
         /// Запись заблокирована на ввод.
         /// </summary>
         RecordLocked = -602,
@@ -215,7 +225,7 @@ namespace ManagedIrbis.Infrastructure
         /// <summary>
         /// Ошибка в клиентском файле формата.
         /// </summary>
-        ClientFormatError = 999,
+        ClientFormatError = -999,
 
         /// <summary>
         /// Ошибка выполнения на сервере.
@@ -288,5 +298,25 @@ namespace ManagedIrbis.Infrastructure
         /// Обрушение при выполнении глобальной корректировки.
         /// </summary>
         GlobalError = -8888,
+
+        /// <summary>
+        /// Операция была отменена.
+        /// </summary>
+        Cancelled = -100_000,
+
+        /// <summary>
+        /// Ошибка создания сокета.
+        /// </summary>
+        SocketCreationError = -100_001,
+
+        /// <summary>
+        /// Сбой сети.
+        /// </summary>
+        NetworkFailure = -100_002,
+
+        /// <summary>
+        /// Не подключен к серверу.
+        /// </summary>
+        NotConnected = -100_003,
     }
 }

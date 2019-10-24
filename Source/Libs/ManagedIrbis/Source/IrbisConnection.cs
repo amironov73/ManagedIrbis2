@@ -1143,13 +1143,20 @@ namespace ManagedIrbis
         } // method TruncateDartabaseAsync
 
         /// <summary>
-        ///
+        /// Разблокирование указанной базы данных.
         /// </summary>
+        /// <param name="database">Имя базы данных.</param>
+        /// <returns>Признак успешности операции.</returns>
         public async Task<bool> UnlockDatabaseAsync
             (
                 string? database = null
             )
         {
+            if (!CheckConnection())
+            {
+                return false;
+            }
+
             database ??=  Database;
             var response = await ExecuteAsync("U", database);
 
@@ -1157,14 +1164,27 @@ namespace ManagedIrbis
         } // method UnlockDatabaseAsync
 
         /// <summary>
-        ///
+        /// Разблокирование записей на сервере.
         /// </summary>
+        /// <param name="database">База данных.</param>
+        /// <param name="mfnList">Массив MFN.</param>
+        /// <returns>Признак успешности операции.</returns>
         public async Task<bool> UnlockRecordsAsync
             (
                 string? database,
                 IList<int> mfnList
             )
         {
+            if (!CheckConnection())
+            {
+                return false;
+            }
+
+            if (mfnList.Count == 0)
+            {
+                return true;
+            }
+
             database ??= Database;
             var list = string.Join("\n", mfnList.Select(NumericUtility.ToInvariantString));
             var response = await ExecuteAsync("Q", database, list);
@@ -1173,13 +1193,21 @@ namespace ManagedIrbis
         } // method UnlockRecordsAsync
 
         /// <summary>
-        ///
+        /// Обновление строк серверного INI-файла
+        /// для текущего пользователя.
         /// </summary>
+        /// <param name="lines">Изменённые строки</param>
+        /// <returns>Признак успешности операции.</returns>
         public async Task<bool> UpdateIniFileAsync
             (
                 IList<string>? lines
             )
         {
+            if (!CheckConnection())
+            {
+                return false;
+            }
+
             if (ReferenceEquals(lines, null))
             {
                 return true;
@@ -1190,6 +1218,36 @@ namespace ManagedIrbis
 
             return !ReferenceEquals(response, null);
         } // method UpdateIniFileAsync
+
+        /// <summary>
+        /// Обновление списка пользователей на сервере.
+        /// </summary>
+        /// <param name="users">Список пользователей.</param>
+        /// <returns>Признак успешности операции.</returns>
+        public async Task<bool> UpdateUserListAsync
+            (
+                IEnumerable<UserInfo> users
+            )
+        {
+            if (!CheckConnection())
+            {
+                return false;
+            }
+
+            var query = new ClientQuery(this, "+7");
+            foreach (var user in users)
+            {
+                query.AddAnsi(user.Encode()).NewLine();
+            }
+
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return false;
+            }
+
+            return true;
+        } // method UpdateUserList
 
         /// <summary>
         ///
@@ -1231,6 +1289,40 @@ namespace ManagedIrbis
                 lines.AddRange(IrbisText.SplitIrbisToLines(response.ReadUtf()));
                 record.Decode(lines.ToArray());
                 record.Database = database;
+            }
+
+            return response.ReturnCode;
+        } // method WriteRecordAsync
+
+        /// <summary>
+        ///
+        /// </summary>
+        public async Task<int> WriteRecordAsync
+            (
+                RawRecord record,
+                bool lockFlag = false,
+                bool actualize = true
+            )
+        {
+            if (!CheckConnection())
+            {
+                return 0;
+            }
+
+            var database = record.Database ?? Database;
+            var query = new ClientQuery(this, "D");
+            query.AddAnsi(database).NewLine();
+            query.Add(Convert.ToInt32(lockFlag)).NewLine();
+            query.Add(Convert.ToInt32(actualize)).NewLine();
+            query.AddUtf(record.EncodeRecord()).NewLine();
+            var response = await ExecuteAsync(query);
+            if (ReferenceEquals(response, null))
+            {
+                return 0;
+            }
+            if (!response.CheckReturnCode())
+            {
+                return 0;
             }
 
             return response.ReturnCode;
