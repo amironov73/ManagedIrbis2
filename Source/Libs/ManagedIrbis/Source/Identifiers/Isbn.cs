@@ -185,54 +185,37 @@ namespace ManagedIrbis.Identifiers
                 char hyphen = StandardHyphen
             )
         {
-            var digits = new int[10];
-            int i, j, sum;
-
-            if (ReferenceEquals(isbn, null)
-                || isbn.Length != 13)
+            if (string.IsNullOrEmpty(isbn))
             {
                 return false;
             }
 
-            isbn = isbn.ToUpper();
-            hyphen = char.ToUpper(hyphen);
-            for (i = j = 0; i < isbn.Length; i++)
+            var sum = 0;
+            var index = 0;
+            var hyphens = 0;
+            foreach (var c in isbn)
             {
-                var chr = isbn[i];
-                if (chr == hyphen)
+                if (c >= '0' && c <= '9')
                 {
-                    continue;
+                    sum += (c - '0') * (10 - index);
+                    ++index;
                 }
-                if (chr == 'X')
+                else if (c == 'X' || c == 'x')
                 {
-                    if (j == 9)
-                    {
-                        digits[j] = 10;
-                    }
-                    else
+                    if (index != 9)
                     {
                         return false;
                     }
+                    --sum;
+                    ++index;
                 }
                 else
                 {
-                    if (chr >= '0' && chr <= '9')
-                    {
-                        digits[j++] = chr - '0';
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    ++hyphens;
                 }
             }
-            for (i = sum = 0; i < 10; i++)
-            {
-                sum += digits[i] * (10 - i);
-            }
             sum %= 11;
-
-            return sum == 0;
+            return index == 10 && sum == 0 && (hyphens == 3 || hyphens == 0);
         }
 
         /// <summary>
@@ -253,8 +236,8 @@ namespace ManagedIrbis.Identifiers
             if (ReferenceEquals(isbn, null)
                 ||isbn.Length == 0
                 || isbn[0] == hyphen
-                || isbn[isbn.Length - 1] == hyphen
-                || isbn[isbn.Length - 2] != hyphen
+                || isbn[^1] == hyphen
+                || isbn[^2] != hyphen
                )
             {
                 return false;
@@ -293,14 +276,13 @@ namespace ManagedIrbis.Identifiers
             {
                 Log.Error
                     (
-                        "Isbn::Validate: "
-                        + "isbn="
+                        nameof(Isbn) + "::" + nameof(Validate) + ": isbn="
                         + isbn.ToVisibleString()
                     );
 
                 if (throwException)
                 {
-                    throw new ArgumentOutOfRangeException("isbn");
+                    throw new ArgumentOutOfRangeException(nameof(isbn));
                 }
             }
 
