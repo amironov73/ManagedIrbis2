@@ -160,9 +160,9 @@ namespace ManagedIrbis.Menus
                     IrbisPath.MasterFile,
                     StandardDatabases.Readers
                 );
-            MenuFile menu = await MenuFile.ReadFromServer(connection, specification)
-                .ThrowIfNull(nameof(menu));
-            ReturnMnu result = new ReturnMnu(menu);
+            var menu = await MenuFile.ReadFromServer(connection, specification);
+            menu = menu.ThrowIfNull(nameof(menu));
+            var result = new ReturnMnu(menu!);
 
             return result;
         }
