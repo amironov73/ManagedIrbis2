@@ -149,7 +149,7 @@ namespace ManagedIrbis.Client
                 Connection.ParseConnectionString(ConnectionString);
                 var iniFile = await Connection.ConnectAsync()
                     .ThrowIfNull("Connect");
-                RemoteIni = new RemoteCatalogerIniFile(iniFile);
+                RemoteIni = new RemoteCatalogerIniFile(iniFile!);
                 await ReloadContext(true);
             }
             catch (Exception exception)
