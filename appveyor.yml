@@ -19,7 +19,6 @@ nuget:
   project_feed: false
 
 before_build:
-- cmd: choco upgrade dotnetcore-sdk
 - cmd: dotnet --info
 - cmd: dotnet restore Source/ManagedIrbis.30.sln
 - cmd: choco install opencover.portable
